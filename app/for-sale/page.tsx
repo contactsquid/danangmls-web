@@ -26,7 +26,7 @@ export default async function ForSalePage() {
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <ListingsGrid listings={listings} types={types} districts={districts} />
+        <ListingsGrid listings={listings} types={types} districts={districts} mode="sale" />
       </main>
 
       <footer className="border-t border-slate-200 mt-12">
