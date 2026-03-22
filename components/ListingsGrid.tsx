@@ -11,10 +11,11 @@ interface Props {
 }
 
 export default function ListingsGrid({ listings, types, districts }: Props) {
-  const [search, setSearch]   = useState('');
-  const [typeFilter, setType] = useState('');
-  const [distFilter, setDist] = useState('');
-  const [bedsFilter, setBeds] = useState('');
+  const [search, setSearch]     = useState('');
+  const [typeFilter, setType]   = useState('');
+  const [distFilter, setDist]   = useState('');
+  const [bedsFilter, setBeds]   = useState('');
+  const [priceFilter, setPrice] = useState('');
 
   const filtered = useMemo(() => {
     return listings.filter(l => {
@@ -29,13 +30,21 @@ export default function ListingsGrid({ listings, types, districts }: Props) {
       if (typeFilter && l.type.toLowerCase() !== typeFilter.toLowerCase()) return false;
       if (distFilter && !l.district.toLowerCase().includes(distFilter.toLowerCase())) return false;
       if (bedsFilter && l.bedrooms !== bedsFilter) return false;
+      if (priceFilter) {
+        const num = parseInt(l.price.replace(/[^0-9]/g, '')) || 0;
+        if (priceFilter === 'u500'  && !(num > 0 && num < 500))    return false;
+        if (priceFilter === '500'   && !(num >= 500 && num < 1000)) return false;
+        if (priceFilter === '1000'  && !(num >= 1000 && num < 2000)) return false;
+        if (priceFilter === '2000'  && !(num >= 2000 && num < 3000)) return false;
+        if (priceFilter === '3000'  && num < 3000)                  return false;
+      }
       return true;
     });
-  }, [listings, search, typeFilter, distFilter, bedsFilter]);
+  }, [listings, search, typeFilter, distFilter, bedsFilter, priceFilter]);
 
-  const hasFilters = search || typeFilter || distFilter || bedsFilter;
+  const hasFilters = search || typeFilter || distFilter || bedsFilter || priceFilter;
 
-  const clearAll = () => { setSearch(''); setType(''); setDist(''); setBeds(''); };
+  const clearAll = () => { setSearch(''); setType(''); setDist(''); setBeds(''); setPrice(''); };
 
   return (
     <div>
@@ -82,6 +91,19 @@ export default function ListingsGrid({ listings, types, districts }: Props) {
           >
             <option value="">Any Beds</option>
             {['1','2','3','4','5','6'].map(n => <option key={n} value={n}>{n} BR</option>)}
+          </select>
+
+          <select
+            value={priceFilter}
+            onChange={e => setPrice(e.target.value)}
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          >
+            <option value="">Any Price</option>
+            <option value="u500">Under $500</option>
+            <option value="500">$500 – $1,000</option>
+            <option value="1000">$1,000 – $2,000</option>
+            <option value="2000">$2,000 – $3,000</option>
+            <option value="3000">$3,000+</option>
           </select>
 
           {hasFilters && (

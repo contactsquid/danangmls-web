@@ -26,7 +26,7 @@ export default async function HomePage() {
             Find your home in Da Nang
           </h1>
           <p className="text-blue-100 text-base mb-0">
-            {listings.length} rental properties in Da Nang &amp; Hoi An
+            {listings.length}{' '}rental properties in Da Nang &amp; Hoi An
           </p>
         </div>
       </div>
