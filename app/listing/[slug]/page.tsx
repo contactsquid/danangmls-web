@@ -1,6 +1,7 @@
 import { getListings } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ImageGallery from '@/components/ImageGallery';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -47,20 +48,7 @@ export default async function ListingPage({ params }: Props) {
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           {/* Image gallery */}
-          {images.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-              {images.slice(0, 4).map((img, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={i}
-                  src={img}
-                  alt={`${listing.title} — photo ${i + 1}`}
-                  className={`w-full object-cover ${i === 0 && images.length === 1 ? 'sm:col-span-2' : ''} ${i === 0 ? 'aspect-video' : 'aspect-video'}`}
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
-              ))}
-            </div>
-          )}
+          <ImageGallery images={images} title={listing.title} />
 
           <div className="p-6">
             {/* Type badge */}
