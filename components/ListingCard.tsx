@@ -46,14 +46,12 @@ export default function ListingCard({ listing }: Props) {
         </div>
 
         {/* View Listing */}
-        <a
-          href={listing.mlsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/listing/${listing.slug}`}
           className="mt-3 text-center text-sm font-medium bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors"
         >
           View Listing
-        </a>
+        </Link>
       </div>
     </div>
   );

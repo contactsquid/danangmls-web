@@ -43,7 +43,7 @@ function NavToggle({ isForSale, fullWidth }: { isForSale: boolean; fullWidth?: b
     <div className={`flex rounded-lg border border-slate-200 overflow-hidden text-sm font-medium ${fullWidth ? 'w-full' : ''}`}>
       <Link
         href="/"
-        className={`flex-1 text-center px-4 py-2 transition-colors ${
+        className={`flex-1 text-center px-4 py-2 whitespace-nowrap transition-colors ${
           !isForSale ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'
         }`}
       >
@@ -51,7 +51,7 @@ function NavToggle({ isForSale, fullWidth }: { isForSale: boolean; fullWidth?: b
       </Link>
       <Link
         href="/for-sale"
-        className={`flex-1 text-center px-4 py-2 border-l border-slate-200 transition-colors ${
+        className={`flex-1 text-center px-4 py-2 whitespace-nowrap border-l border-slate-200 transition-colors ${
           isForSale ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'
         }`}
       >
