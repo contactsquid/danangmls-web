@@ -4,8 +4,8 @@ import SiteHeader from '@/components/SiteHeader';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Properties For Sale in Da Nang — DanangMLS',
-  description: 'Browse houses, apartments, villas and land for sale in Da Nang and Hoi An, Vietnam.',
+  title: 'Houses for Sale in Da Nang, Vietnam',
+  description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An, Vietnam. Updated daily from local agents and live listings.',
 };
 
 export default async function ForSalePage() {
@@ -20,12 +20,15 @@ export default async function ForSalePage() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-blue-700 to-blue-500 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-1">Properties for sale in Da Nang</h1>
-          <p className="text-blue-100 text-base">{listings.length}{' '}properties for sale in Da Nang &amp; Hoi An</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">Houses for Sale in Da Nang, Vietnam</h1>
+          <p className="text-blue-100 text-base max-w-2xl">
+            Browse {listings.length} properties for sale in Da Nang and Hoi An — houses, apartments, villas, and land. Listings sourced daily from local agents and Facebook groups.
+          </p>
         </div>
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <h2 className="text-lg font-semibold text-slate-700 mb-4">Properties for Sale in Da Nang &amp; Hoi An</h2>
         <ListingsGrid listings={listings} types={types} districts={districts} mode="sale" />
       </main>
 

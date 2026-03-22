@@ -33,9 +33,30 @@ export default async function ListingPage({ params }: Props) {
 
   const images = listing.images.filter(Boolean);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: listing.title,
+    description: listing.text || `${listing.type} in ${listing.district}`,
+    url: `https://danangmls.com/listing/${listing.slug}`,
+    ...(listing.price && { price: listing.price }),
+    ...(listing.images[0] && { image: listing.images[0] }),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: listing.district || 'Da Nang',
+      addressRegion: 'Da Nang',
+      addressCountry: 'VN',
+    },
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <SiteHeader />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">

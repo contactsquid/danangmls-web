@@ -13,8 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DanangMLS — Da Nang Real Estate",
-  description: "Search rental properties and homes for sale in Da Nang and Hoi An, Vietnam.",
+  metadataBase: new URL('https://danangmls.com'),
+  title: {
+    default: 'DanangMLS — Houses for Rent & Sale in Da Nang, Vietnam',
+    template: '%s — DanangMLS',
+  },
+  description: 'Browse houses, apartments, and villas for rent and for sale in Da Nang and Hoi An, Vietnam. Updated daily from live listings.',
 };
 
 export default function RootLayout({
