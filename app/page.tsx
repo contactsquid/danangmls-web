@@ -22,7 +22,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <h1 className="text-3xl sm:text-4xl font-bold mb-2">Houses for Rent in Da Nang, Vietnam</h1>
           <p className="text-blue-100 text-base max-w-2xl">
-            Browse {listings.length} rental properties in Da Nang and Hoi An — apartments, houses, villas, and condos. Listings updated daily from local agents and Facebook groups.
+            Browse {listings.length} rental properties in Da Nang and Hoi An — apartments, houses, villas, and condos. Listings updated daily from local agents and property managers.
           </p>
         </div>
       </div>

@@ -22,7 +22,7 @@ export default async function ForSalePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <h1 className="text-3xl sm:text-4xl font-bold mb-2">Houses for Sale in Da Nang, Vietnam</h1>
           <p className="text-blue-100 text-base max-w-2xl">
-            Browse {listings.length} properties for sale in Da Nang and Hoi An — houses, apartments, villas, and land. Listings sourced daily from local agents and Facebook groups.
+            Browse {listings.length} properties for sale in Da Nang and Hoi An — houses, apartments, villas, and land. Listings sourced daily from local agents and property managers.
           </p>
         </div>
       </div>
