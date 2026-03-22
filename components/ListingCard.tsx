@@ -8,7 +8,7 @@ interface Props {
 
 export default function ListingCard({ listing }: Props) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
       <Link href={`/listing/${listing.slug}`} className="block">
         <Carousel images={listing.images} title={listing.title} compact />
@@ -16,28 +16,44 @@ export default function ListingCard({ listing }: Props) {
 
       {/* Details */}
       <div className="p-4 flex flex-col flex-1">
-        <Link href={`/listing/${listing.slug}`} className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 mb-2 hover:underline">
+        {/* Price */}
+        <p className="text-lg font-bold text-slate-900 mb-1">
+          {listing.price || <span className="text-slate-400 text-sm font-normal">Price on request</span>}
+        </p>
+
+        {/* Title */}
+        <Link href={`/listing/${listing.slug}`} className="text-sm text-slate-700 leading-snug line-clamp-2 mb-3 hover:text-blue-600 transition-colors">
           {listing.title}
         </Link>
 
-        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
-          {listing.district && <span>📍 {listing.district}</span>}
-          {listing.bedrooms && <span>🛏 {listing.bedrooms} BR</span>}
+        {/* Meta */}
+        <div className="flex flex-wrap gap-2 mt-auto">
+          {listing.bedrooms && (
+            <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
+              🛏 {listing.bedrooms} BR
+            </span>
+          )}
+          {listing.type && (
+            <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
+              {listing.type}
+            </span>
+          )}
+          {listing.district && (
+            <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
+              📍 {listing.district}
+            </span>
+          )}
         </div>
 
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-base font-bold text-gray-900">
-            {listing.price || 'Price on request'}
-          </span>
-          <a
-            href={listing.mlsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-medium bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            View Listing
-          </a>
-        </div>
+        {/* View Listing */}
+        <a
+          href={listing.mlsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 text-center text-sm font-medium bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          View Listing
+        </a>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { getListings, getUniqueValues } from '@/lib/sheets';
 import ListingsGrid from '@/components/ListingsGrid';
+import Logo from '@/components/Logo';
 
 export default async function HomePage() {
   const listings = await getListings();
@@ -7,26 +8,40 @@ export default async function HomePage() {
   const districts = getUniqueValues(listings, 'district');
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <span className="text-xl font-bold text-gray-900">DanangMLS</span>
-            <span className="ml-2 text-sm text-gray-400">Da Nang &amp; Hoi An</span>
-          </div>
-          <span className="text-sm text-gray-500">{listings.length} listings</span>
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Logo />
+          <span className="text-sm text-slate-400 hidden sm:block">
+            Da Nang &amp; Hoi An, Vietnam
+          </span>
         </div>
       </header>
 
-      {/* Main */}
-      <main className="max-w-7xl mx-auto px-4 py-6">
+      {/* Hero */}
+      <div className="bg-gradient-to-br from-blue-700 to-blue-500 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-1">
+            Find your home in Da Nang
+          </h1>
+          <p className="text-blue-100 text-base mb-0">
+            {listings.length} rental properties in Da Nang &amp; Hoi An
+          </p>
+        </div>
+      </div>
+
+      {/* Listings */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <ListingsGrid listings={listings} types={types} districts={districts} />
       </main>
 
       {/* Footer */}
-      <footer className="text-center text-xs text-gray-400 py-8">
-        © {new Date().getFullYear()} DanangMLS · Updated every 30 minutes
+      <footer className="border-t border-slate-200 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+          <span>© {new Date().getFullYear()} DanangMLS. All rights reserved.</span>
+          <span>Updated every 30 minutes from live listings.</span>
+        </div>
       </footer>
     </div>
   );
