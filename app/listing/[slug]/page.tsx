@@ -38,6 +38,13 @@ export default async function ListingPage({ params }: Props) {
 
   const images = listing.images.filter(Boolean);
 
+  // Strip contact block from description (shown separately in the contact card)
+  const cleanText = listing.text
+    .split('\n')
+    .filter(line => !/zalo|whatsapp|danang4homes|danang\.homes|contact information|\+84\s*\d|📞|📱|📧|🌐/i.test(line))
+    .join('\n')
+    .trim();
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
@@ -130,16 +137,10 @@ export default async function ListingPage({ params }: Props) {
             </div>
 
             {/* Description */}
-            {listing.text && (
+            {cleanText && (
               <div className="mb-8">
                 <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Description</h2>
-                <p className="text-slate-700 leading-relaxed whitespace-pre-line">
-                  {listing.text.split(/(danang\.homes)/gi).map((part, i) =>
-                    /^danang\.homes$/i.test(part)
-                      ? <a key={i} href="https://danang.homes" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes</a>
-                      : part
-                  )}
-                </p>
+                <p className="text-slate-700 leading-relaxed whitespace-pre-line">{cleanText}</p>
               </div>
             )}
           </div>
