@@ -6,7 +6,7 @@ import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
 
 export default function ListingDetail({ listing }: { listing: Listing }) {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
 
   const cleanText = listing.text
@@ -17,7 +17,7 @@ export default function ListingDetail({ listing }: { listing: Listing }) {
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      <Link href="/" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
+      <Link href={lang === 'vi' ? '/vi' : '/'} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>

@@ -6,15 +6,15 @@ import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Houses for Sale in Da Nang, Vietnam',
-  description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An, Vietnam. Updated daily from local agents and live listings.',
+  title: 'Nhà Bán tại Đà Nẵng, Việt Nam | DanangMLS',
+  description: 'Xem danh sách nhà, căn hộ, biệt thự và đất nền bán tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
   alternates: {
-    canonical: 'https://danangmls.com/for-sale',
-    languages: { vi: 'https://danangmls.com/vi/mua-ban' },
+    canonical: 'https://danangmls.com/vi/mua-ban',
+    languages: { en: 'https://danangmls.com/for-sale' },
   },
 };
 
-export default async function ForSalePage() {
+export default async function ViForSalePage() {
   const listings = await getForSaleListings();
   const types     = getUniqueValues(listings, 'type');
   const districts = getUniqueValues(listings, 'district');

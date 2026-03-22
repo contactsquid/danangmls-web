@@ -6,15 +6,15 @@ import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Houses for Rent in Da Nang, Vietnam',
-  description: 'Find houses, apartments, and villas for rent in Da Nang and Hoi An, Vietnam. Browse hundreds of rental listings updated daily from local agents.',
+  title: 'Nhà Cho Thuê tại Đà Nẵng, Việt Nam | DanangMLS',
+  description: 'Xem danh sách nhà, căn hộ, biệt thự cho thuê tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
   alternates: {
-    canonical: 'https://danangmls.com',
-    languages: { vi: 'https://danangmls.com/vi' },
+    canonical: 'https://danangmls.com/vi',
+    languages: { en: 'https://danangmls.com' },
   },
 };
 
-export default async function HomePage() {
+export default async function ViRentPage() {
   const listings = await getListings();
   const types     = getUniqueValues(listings, 'type');
   const districts = getUniqueValues(listings, 'district');
