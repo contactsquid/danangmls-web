@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Listing } from '@/lib/types';
 
 interface Props {
@@ -12,7 +13,7 @@ export default function ListingCard({ listing }: Props) {
   const img = !imgError && listing.images[0] ? listing.images[0] : null;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow group">
       {/* Image */}
       <div className="relative w-full aspect-[4/3] bg-gray-100">
         {img ? (
@@ -39,9 +40,9 @@ export default function ListingCard({ listing }: Props) {
 
       {/* Details */}
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 mb-2">
+        <Link href={`/listing/${listing.slug}`} className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 mb-2 hover:text-blue-600 transition-colors">
           {listing.title}
-        </h3>
+        </Link>
 
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
           {listing.district && <span>📍 {listing.district}</span>}
