@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import ListingCard from './ListingCard';
+
+const PAGE_SIZE = 24;
 
 interface Props {
   listings: Listing[];
@@ -66,7 +68,31 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   }, [listings, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter]);
 
   const hasFilters = search || typeFilter || distFilter || hoodFilter || bedsFilter || priceFilter;
-  const clearAll = () => { setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); };
+  const clearAll = () => { setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); setDisplayCount(PAGE_SIZE); };
+
+  // Infinite scroll
+  const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Reset display count when filters change
+  useEffect(() => { setDisplayCount(PAGE_SIZE); }, [search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter]);
+
+  const loadMore = useCallback(() => {
+    setDisplayCount(c => Math.min(c + PAGE_SIZE, filtered.length));
+  }, [filtered.length]);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting) loadMore(); },
+      { rootMargin: '300px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [loadMore]);
+
+  const visible = filtered.slice(0, displayCount);
 
   return (
     <div>
@@ -155,9 +181,16 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">Clear filters</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((l, i) => <ListingCard key={i} listing={l} />)}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {visible.map((l, i) => <ListingCard key={i} listing={l} />)}
+          </div>
+          {displayCount < filtered.length && (
+            <div ref={sentinelRef} className="flex justify-center py-8">
+              <div className="w-6 h-6 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin" />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

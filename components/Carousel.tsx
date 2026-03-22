@@ -57,6 +57,7 @@ export default function Carousel({ images, title, compact = false }: Props) {
                 src={img}
                 alt={`${title} — photo ${i + 1}`}
                 className="w-full h-full object-cover"
+                loading={i === 0 ? 'eager' : 'lazy'}
                 onError={(e) => {
                   const el = e.target as HTMLImageElement;
                   el.parentElement!.style.display = 'none';
