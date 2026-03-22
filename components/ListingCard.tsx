@@ -13,9 +13,9 @@ export default function ListingCard({ listing }: Props) {
   const img = !imgError && listing.images[0] ? listing.images[0] : null;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow group">
-      {/* Image */}
-      <div className="relative w-full aspect-[4/3] bg-gray-100">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+      {/* Clickable image */}
+      <Link href={`/listing/${listing.slug}`} className="relative w-full aspect-[4/3] bg-gray-100 block">
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -36,11 +36,11 @@ export default function ListingCard({ listing }: Props) {
             {listing.type}
           </span>
         )}
-      </div>
+      </Link>
 
       {/* Details */}
       <div className="p-4 flex flex-col flex-1">
-        <Link href={`/listing/${listing.slug}`} className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 mb-2 hover:text-blue-600 transition-colors">
+        <Link href={`/listing/${listing.slug}`} className="font-semibold text-blue-700 text-sm leading-snug line-clamp-2 mb-2 hover:underline">
           {listing.title}
         </Link>
 
@@ -50,7 +50,7 @@ export default function ListingCard({ listing }: Props) {
         </div>
 
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-base font-bold text-blue-600">
+          <span className="text-base font-bold text-gray-900">
             {listing.price || 'Price on request'}
           </span>
           <a
