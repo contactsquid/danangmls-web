@@ -1,7 +1,7 @@
 import { getListings } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import ImageGallery from '@/components/ImageGallery';
+import Carousel from '@/components/Carousel';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -47,8 +47,8 @@ export default async function ListingPage({ params }: Props) {
         </Link>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          {/* Image gallery */}
-          <ImageGallery images={images} title={listing.title} />
+          {/* Image carousel — all 5 images */}
+          <Carousel images={images} title={listing.title} />
 
           <div className="p-6">
             {/* Type badge */}
