@@ -1,7 +1,7 @@
 import { getListings } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Logo from '@/components/Logo';
+import SiteHeader from '@/components/SiteHeader';
 import Carousel from '@/components/Carousel';
 import type { Metadata } from 'next';
 
@@ -35,12 +35,7 @@ export default async function ListingPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center">
-          <Link href="/"><Logo /></Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">

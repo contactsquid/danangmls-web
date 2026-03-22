@@ -1,9 +1,15 @@
-import { getListings, getUniqueValues } from '@/lib/sheets';
+import { getForSaleListings, getUniqueValues } from '@/lib/sheets';
 import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
+import type { Metadata } from 'next';
 
-export default async function HomePage() {
-  const listings = await getListings();
+export const metadata: Metadata = {
+  title: 'Properties For Sale in Da Nang — DanangMLS',
+  description: 'Browse houses, apartments, villas and land for sale in Da Nang and Hoi An, Vietnam.',
+};
+
+export default async function ForSalePage() {
+  const listings = await getForSaleListings();
   const types     = getUniqueValues(listings, 'type');
   const districts = getUniqueValues(listings, 'district');
 
@@ -14,8 +20,8 @@ export default async function HomePage() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-blue-700 to-blue-500 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-1">Find your home in Da Nang</h1>
-          <p className="text-blue-100 text-base">{listings.length}{' '}rental properties in Da Nang &amp; Hoi An</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-1">Properties for sale in Da Nang</h1>
+          <p className="text-blue-100 text-base">{listings.length}{' '}properties for sale in Da Nang &amp; Hoi An</p>
         </div>
       </div>
 

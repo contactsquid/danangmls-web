@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Listing } from '@/lib/types';
+import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import ListingCard from './ListingCard';
 
 interface Props {
@@ -11,11 +12,21 @@ interface Props {
 }
 
 export default function ListingsGrid({ listings, types, districts }: Props) {
-  const [search, setSearch]     = useState('');
-  const [typeFilter, setType]   = useState('');
-  const [distFilter, setDist]   = useState('');
-  const [bedsFilter, setBeds]   = useState('');
-  const [priceFilter, setPrice] = useState('');
+  const [search, setSearch]         = useState('');
+  const [typeFilter, setType]       = useState('');
+  const [distFilter, setDist]       = useState('');
+  const [hoodFilter, setHood]       = useState('');
+  const [bedsFilter, setBeds]       = useState('');
+  const [priceFilter, setPrice]     = useState('');
+
+  // Neighborhoods available for selected district
+  const neighborhoods = distFilter ? (NEIGHBORHOODS[distFilter] || []) : [];
+
+  // Reset neighborhood when district changes
+  const handleDistChange = (val: string) => {
+    setDist(val);
+    setHood('');
+  };
 
   const filtered = useMemo(() => {
     return listings.filter(l => {
@@ -29,22 +40,25 @@ export default function ListingsGrid({ listings, types, districts }: Props) {
       }
       if (typeFilter && l.type.toLowerCase() !== typeFilter.toLowerCase()) return false;
       if (distFilter && !l.district.toLowerCase().includes(distFilter.toLowerCase())) return false;
+      if (hoodFilter) {
+        const haystack = (l.title + ' ' + l.text).toLowerCase();
+        if (!haystack.includes(hoodFilter.toLowerCase()) && l.neighborhood !== hoodFilter) return false;
+      }
       if (bedsFilter && l.bedrooms !== bedsFilter) return false;
       if (priceFilter) {
         const num = parseInt(l.price.replace(/[^0-9]/g, '')) || 0;
-        if (priceFilter === 'u500'  && !(num > 0 && num < 500))    return false;
-        if (priceFilter === '500'   && !(num >= 500 && num < 1000)) return false;
+        if (priceFilter === 'u500'  && !(num > 0 && num < 500))      return false;
+        if (priceFilter === '500'   && !(num >= 500 && num < 1000))  return false;
         if (priceFilter === '1000'  && !(num >= 1000 && num < 2000)) return false;
         if (priceFilter === '2000'  && !(num >= 2000 && num < 3000)) return false;
-        if (priceFilter === '3000'  && num < 3000)                  return false;
+        if (priceFilter === '3000'  && num < 3000)                   return false;
       }
       return true;
     });
-  }, [listings, search, typeFilter, distFilter, bedsFilter, priceFilter]);
+  }, [listings, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter]);
 
-  const hasFilters = search || typeFilter || distFilter || bedsFilter || priceFilter;
-
-  const clearAll = () => { setSearch(''); setType(''); setDist(''); setBeds(''); setPrice(''); };
+  const hasFilters = search || typeFilter || distFilter || hoodFilter || bedsFilter || priceFilter;
+  const clearAll = () => { setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); };
 
   return (
     <div>
@@ -66,38 +80,35 @@ export default function ListingsGrid({ listings, types, districts }: Props) {
 
         {/* Filter row */}
         <div className="flex flex-wrap gap-2 items-center">
-          <select
-            value={typeFilter}
-            onChange={e => setType(e.target.value)}
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
+          <select value={typeFilter} onChange={e => setType(e.target.value)}
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">All Types</option>
             {types.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
 
-          <select
-            value={distFilter}
-            onChange={e => setDist(e.target.value)}
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
+          <select value={distFilter} onChange={e => handleDistChange(e.target.value)}
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">All Districts</option>
             {districts.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
 
-          <select
-            value={bedsFilter}
-            onChange={e => setBeds(e.target.value)}
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
+          {/* Neighborhood — only shown when a district with known wards is selected */}
+          {neighborhoods.length > 0 && (
+            <select value={hoodFilter} onChange={e => setHood(e.target.value)}
+              className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              <option value="">All Neighborhoods</option>
+              {neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
+            </select>
+          )}
+
+          <select value={bedsFilter} onChange={e => setBeds(e.target.value)}
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">Any Beds</option>
             {['1','2','3','4','5','6'].map(n => <option key={n} value={n}>{n} BR</option>)}
           </select>
 
-          <select
-            value={priceFilter}
-            onChange={e => setPrice(e.target.value)}
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
+          <select value={priceFilter} onChange={e => setPrice(e.target.value)}
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">Any Price</option>
             <option value="u500">Under $500</option>
             <option value="500">$500 – $1,000</option>
@@ -107,10 +118,7 @@ export default function ListingsGrid({ listings, types, districts }: Props) {
           </select>
 
           {hasFilters && (
-            <button
-              onClick={clearAll}
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium px-2"
-            >
+            <button onClick={clearAll} className="text-sm text-blue-600 hover:text-blue-800 font-medium px-2">
               Clear all
             </button>
           )}
@@ -128,9 +136,7 @@ export default function ListingsGrid({ listings, types, districts }: Props) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-lg font-medium text-slate-500">No listings match your search</p>
-          <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">
-            Clear filters
-          </button>
+          <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">Clear filters</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
