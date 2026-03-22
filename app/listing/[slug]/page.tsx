@@ -119,6 +119,16 @@ export default async function ListingPage({ params }: Props) {
               )}
             </div>
 
+            {/* Contact */}
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+              <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">📞 Contact Information</h2>
+              <div className="space-y-1 text-sm text-slate-700">
+                <p>📱 Zalo / WhatsApp: <a href="tel:+84973747373" className="text-blue-600 hover:underline">+84 973 747 373</a></p>
+                <p>📧 Email: <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a></p>
+                <p>🌐 Website: <a href="https://danang.homes" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes</a></p>
+              </div>
+            </div>
+
             {/* Description */}
             {listing.text && (
               <div className="mb-8">
