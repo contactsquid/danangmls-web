@@ -1,12 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import Carousel from './Carousel';
 import { Listing } from '@/lib/types';
+import { useLanguage } from './LanguageProvider';
 
 interface Props {
   listing: Listing;
 }
 
 export default function ListingCard({ listing }: Props) {
+  const { t } = useLanguage();
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
@@ -30,7 +34,7 @@ export default function ListingCard({ listing }: Props) {
         <div className="flex flex-wrap gap-2 mt-auto">
           {listing.bedrooms && (
             <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
-              🛏 {listing.bedrooms} BR
+              🛏 {listing.bedrooms} {t.br}
             </span>
           )}
           {listing.type && (
@@ -50,7 +54,7 @@ export default function ListingCard({ listing }: Props) {
           href={`/listing/${listing.slug}`}
           className="mt-3 text-center text-sm font-medium bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors"
         >
-          View Listing
+          {t.viewListing}
         </Link>
       </div>
     </div>

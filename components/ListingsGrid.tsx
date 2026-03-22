@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import ListingCard from './ListingCard';
+import { useLanguage } from './LanguageProvider';
 
 const PAGE_SIZE = 24;
 
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function ListingsGrid({ listings, types, districts, mode = 'rent' }: Props) {
+  const { t } = useLanguage();
   const [search, setSearch]         = useState('');
   const [typeFilter, setType]       = useState('');
   const [distFilter, setDist]       = useState('');
@@ -105,7 +107,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           </svg>
           <input
             type="text"
-            placeholder="Search by title, district, or keyword..."
+            placeholder={t.searchPlaceholder}
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -116,13 +118,13 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
         <div className="flex flex-wrap gap-2 items-center">
           <select value={typeFilter} onChange={e => setType(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option value="">All Types</option>
-            {types.map(t => <option key={t} value={t}>{t}</option>)}
+            <option value="">{t.allTypes}</option>
+            {types.map(ty => <option key={ty} value={ty}>{ty}</option>)}
           </select>
 
           <select value={distFilter} onChange={e => handleDistChange(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option value="">All Districts</option>
+            <option value="">{t.allDistricts}</option>
             {districts.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
 
@@ -130,43 +132,43 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           {neighborhoods.length > 0 && (
             <select value={hoodFilter} onChange={e => setHood(e.target.value)}
               className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-              <option value="">All Neighborhoods</option>
+              <option value="">{t.allNeighborhoods}</option>
               {neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
             </select>
           )}
 
           <select value={bedsFilter} onChange={e => setBeds(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option value="">Any Beds</option>
-            {['1','2','3','4','5','6'].map(n => <option key={n} value={n}>{n} BR</option>)}
+            <option value="">{t.anyBeds}</option>
+            {['1','2','3','4','5','6'].map(n => <option key={n} value={n}>{n} {t.br}</option>)}
           </select>
 
           <select value={priceFilter} onChange={e => setPrice(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option value="">Any Price</option>
+            <option value="">{t.anyPrice}</option>
             {mode === 'rent' ? <>
-              <option value="u500">Under $500</option>
-              <option value="500">$500 – $1,000</option>
-              <option value="1000">$1,000 – $2,000</option>
-              <option value="2000">$2,000 – $3,000</option>
-              <option value="3000">$3,000+</option>
+              <option value="u500">{t.under500}</option>
+              <option value="500">{t.r500}</option>
+              <option value="1000">{t.r1000}</option>
+              <option value="2000">{t.r2000}</option>
+              <option value="3000">{t.r3000}</option>
             </> : <>
-              <option value="u100k">Under $100,000</option>
-              <option value="100k">$100,000 – $300,000</option>
-              <option value="300k">$300,000 – $500,000</option>
-              <option value="500k">$500,000 – $1,000,000</option>
-              <option value="1m">$1,000,000+</option>
+              <option value="u100k">{t.under100k}</option>
+              <option value="100k">{t.s100k}</option>
+              <option value="300k">{t.s300k}</option>
+              <option value="500k">{t.s500k}</option>
+              <option value="1m">{t.s1m}</option>
             </>}
           </select>
 
           {hasFilters && (
             <button onClick={clearAll} className="text-sm text-blue-600 hover:text-blue-800 font-medium px-2">
-              Clear all
+              {t.clearAll}
             </button>
           )}
 
           <span className="ml-auto text-sm text-slate-400">
-            {filtered.length} {filtered.length === 1 ? 'listing' : 'listings'}
+            {t.listingCount(filtered.length)}
           </span>
         </div>
       </div>
@@ -177,8 +179,8 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-lg font-medium text-slate-500">No listings match your search</p>
-          <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">Clear filters</button>
+          <p className="text-lg font-medium text-slate-500">{t.noListings}</p>
+          <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">{t.clearFilters}</button>
         </div>
       ) : (
         <>

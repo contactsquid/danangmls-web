@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Logo from './Logo';
+import { useLanguage } from './LanguageProvider';
+import type { Lang } from '@/lib/translations';
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -39,6 +41,7 @@ export default function SiteHeader() {
 }
 
 function NavToggle({ isForSale, fullWidth }: { isForSale: boolean; fullWidth?: boolean }) {
+  const { t } = useLanguage();
   return (
     <div className={`flex rounded-lg border border-slate-200 overflow-hidden text-sm font-medium ${fullWidth ? 'w-full' : ''}`}>
       <Link
@@ -47,7 +50,7 @@ function NavToggle({ isForSale, fullWidth }: { isForSale: boolean; fullWidth?: b
           !isForSale ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'
         }`}
       >
-        For Rent
+        {t.forRent}
       </Link>
       <Link
         href="/for-sale"
@@ -55,17 +58,19 @@ function NavToggle({ isForSale, fullWidth }: { isForSale: boolean; fullWidth?: b
           isForSale ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'
         }`}
       >
-        For Sale
+        {t.forSale}
       </Link>
     </div>
   );
 }
 
 function LangDropdown() {
+  const { lang, setLang } = useLanguage();
   return (
     <select
+      value={lang}
+      onChange={e => setLang(e.target.value as Lang)}
       className="text-sm border border-slate-200 rounded-lg px-2 py-1.5 text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-      defaultValue="en"
     >
       <option value="en">EN</option>
       <option value="vi">VI</option>
