@@ -45,6 +45,7 @@ export async function getListings(): Promise<Listing[]> {
 
   return rows
     .filter(r => col(r, 0)) // must have title
+    .reverse() // newest rows (bottom of sheet) first
     .map((r, i) => ({
       title:    col(r, 0),
       text:     col(r, 1),
