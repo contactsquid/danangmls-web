@@ -1,4 +1,4 @@
-import { getListings } from '@/lib/sheets';
+import { getListings, getForSaleListings } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
@@ -9,9 +9,14 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+async function getAllListings() {
+  const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
+  return [...rentals, ...forSale];
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const listings = await getListings();
+  const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
   if (!listing) return { title: 'Listing Not Found' };
   return {
@@ -21,13 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const listings = await getListings();
+  const listings = await getAllListings();
   return listings.map(l => ({ slug: l.slug }));
 }
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
-  const listings = await getListings();
+  const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
   if (!listing) notFound();
 
