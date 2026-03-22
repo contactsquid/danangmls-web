@@ -44,7 +44,7 @@ export async function getListings(): Promise<Listing[]> {
   const rows = parseCSV(text).slice(1); // skip header
 
   return rows
-    .filter(r => col(r, 0) && col(r, 17)) // must have title and mlsUrl
+    .filter(r => col(r, 0)) // must have title
     .map((r, i) => ({
       title:    col(r, 0),
       text:     col(r, 1),
@@ -57,7 +57,7 @@ export async function getListings(): Promise<Listing[]> {
       contact:  col(r, 12),
       postUrl:  col(r, 14),
       date:     col(r, 15),
-      mlsUrl:   col(r, 17),
+      mlsUrl:   col(r, 17) || col(r, 14), // fall back to original post URL
       slug:     slugify(col(r, 0), i),
     }));
 }
