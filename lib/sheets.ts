@@ -63,6 +63,8 @@ function parseRows(rows: string[][]): Listing[] {
         mlsUrl:       col(r, 17) || col(r, 14),
         slug:         slugify(title, i),
         neighborhood: detectNeighborhood(text, title, district),
+        vi_title:     '',
+        vi_text:      '',
       };
     });
 }
@@ -98,6 +100,8 @@ export async function getForSaleListings(): Promise<Listing[]> {
         mlsUrl:       col(r, 19),
         slug:         slugify(title, i),
         neighborhood: detectNeighborhood(text, title, district),
+        vi_title:     col(r, 21),
+        vi_text:      col(r, 22),
       };
     });
 }

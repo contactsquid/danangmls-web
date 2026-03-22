@@ -10,11 +10,12 @@ interface Props {
 }
 
 export default function ListingCard({ listing }: Props) {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+  const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
-      <Link href={`/listing/${listing.slug}`} className="block">
+      <Link href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`} className="block">
         <Carousel images={listing.images} title={listing.title} compact />
       </Link>
 
@@ -26,8 +27,8 @@ export default function ListingCard({ listing }: Props) {
         </p>
 
         {/* Title */}
-        <Link href={`/listing/${listing.slug}`} className="text-sm text-slate-700 leading-snug line-clamp-2 mb-3 hover:text-blue-600 transition-colors">
-          {listing.title}
+        <Link href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`} className="text-sm text-slate-700 leading-snug line-clamp-2 mb-3 hover:text-blue-600 transition-colors">
+          {displayTitle}
         </Link>
 
         {/* Meta */}
@@ -51,7 +52,7 @@ export default function ListingCard({ listing }: Props) {
 
         {/* View Listing */}
         <Link
-          href={`/listing/${listing.slug}`}
+          href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`}
           className="mt-3 text-center text-sm font-medium bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors"
         >
           {t.viewListing}

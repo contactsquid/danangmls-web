@@ -13,4 +13,6 @@ export interface Listing {
   mlsUrl:       string;
   slug:         string;
   neighborhood: string;
+  vi_title:     string;
+  vi_text:      string;
 }

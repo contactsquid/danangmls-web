@@ -8,8 +8,10 @@ import type { Listing } from '@/lib/types';
 export default function ListingDetail({ listing }: { listing: Listing }) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
+  const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
+  const sourceText   = (lang === 'vi' && listing.vi_text)  ? listing.vi_text  : listing.text;
 
-  const cleanText = listing.text
+  const cleanText = sourceText
     .split('\n')
     .filter(line => !/zalo|whatsapp|danang4homes|danang\.homes|contact information|\+84\s*\d|📞|📱|📧|🌐/i.test(line))
     .join('\n')
@@ -47,7 +49,7 @@ export default function ListingDetail({ listing }: { listing: Listing }) {
             </div>
           </div>
 
-          <h1 className="text-xl font-semibold text-slate-800 mb-6">{listing.title}</h1>
+          <h1 className="text-xl font-semibold text-slate-800 mb-6">{displayTitle}</h1>
 
           {/* Key details grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6 p-4 bg-slate-50 rounded-xl">
