@@ -118,23 +118,14 @@ export default async function ListingPage({ params }: Props) {
             {listing.text && (
               <div className="mb-8">
                 <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Description</h2>
-                <p className="text-slate-700 leading-relaxed whitespace-pre-line">{listing.text}</p>
+                <p className="text-slate-700 leading-relaxed whitespace-pre-line">
+                  {listing.text.split(/(danang\.homes)/gi).map((part, i) =>
+                    /^danang\.homes$/i.test(part)
+                      ? <a key={i} href="https://danang.homes" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes</a>
+                      : part
+                  )}
+                </p>
               </div>
-            )}
-
-            {/* CTA */}
-            {listing.mlsUrl && (
-              <a
-                href={listing.mlsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors"
-              >
-                View Original Listing
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
             )}
           </div>
         </div>
