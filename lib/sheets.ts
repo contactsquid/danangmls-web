@@ -79,7 +79,6 @@ export async function getForSaleListings(): Promise<Listing[]> {
   const rows = parseCSV(await res.text()).slice(1);
   return rows
     .filter(r => col(r, 0))
-    .reverse()
     .map((r, i) => {
       const title    = col(r, 0);
       const text     = col(r, 1);
@@ -103,7 +102,8 @@ export async function getForSaleListings(): Promise<Listing[]> {
         vi_title:     col(r, 21),
         vi_text:      col(r, 22),
       };
-    });
+    })
+    .sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
 }
 
 export function getUniqueValues(listings: Listing[], key: keyof Listing): string[] {
