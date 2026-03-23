@@ -70,12 +70,12 @@ function parseRows(rows: string[][]): Listing[] {
 }
 
 export async function getListings(): Promise<Listing[]> {
-  const res = await fetch(CSV_RENTALS, { next: { revalidate: 1800 } });
+  const res = await fetch(CSV_RENTALS, { next: { revalidate: 300 } });
   return parseRows(parseCSV(await res.text()).slice(1));
 }
 
 export async function getForSaleListings(): Promise<Listing[]> {
-  const res = await fetch(CSV_FORSALE, { next: { revalidate: 1800 } });
+  const res = await fetch(CSV_FORSALE, { next: { revalidate: 300 } });
   const rows = parseCSV(await res.text()).slice(1);
   return rows
     .filter(r => col(r, 0))
