@@ -5,6 +5,7 @@ import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
+import { localizeType, localizeDistrict } from '@/lib/price';
 
 const PAGE_SIZE = 24;
 
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export default function ListingsGrid({ listings, types, districts, mode = 'rent' }: Props) {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [search, setSearch]         = useState('');
   const [typeFilter, setType]       = useState('');
   const [distFilter, setDist]       = useState('');
@@ -119,13 +120,13 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <select value={typeFilter} onChange={e => setType(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">{t.allTypes}</option>
-            {types.map(ty => <option key={ty} value={ty}>{ty}</option>)}
+            {types.map(ty => <option key={ty} value={ty}>{localizeType(ty, lang)}</option>)}
           </select>
 
           <select value={distFilter} onChange={e => handleDistChange(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">{t.allDistricts}</option>
-            {districts.map(d => <option key={d} value={d}>{d}</option>)}
+            {districts.map(d => <option key={d} value={d}>{localizeDistrict(d, lang)}</option>)}
           </select>
 
           {/* Neighborhood — only shown when a district with known wards is selected */}
