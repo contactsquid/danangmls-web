@@ -4,12 +4,14 @@ import Link from 'next/link';
 import Carousel from './Carousel';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
+import { convertPriceToVND } from '@/lib/price';
 
 export default function ListingDetail({ listing }: { listing: Listing }) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
   const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
   const sourceText   = (lang === 'vi' && listing.vi_text)  ? listing.vi_text  : listing.text;
+  const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
 
   const cleanText = sourceText
     .split('\n')
@@ -33,7 +35,7 @@ export default function ListingDetail({ listing }: { listing: Listing }) {
           {/* Price + badges */}
           <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
             <p className="text-3xl font-bold text-slate-900">
-              {listing.price || <span className="text-slate-400 text-xl font-normal">Price on request</span>}
+              {displayPrice || <span className="text-slate-400 text-xl font-normal">{lang === 'vi' ? 'Liên hệ để biết giá' : 'Price on request'}</span>}
             </p>
             <div className="flex flex-wrap gap-2">
               {listing.type && (

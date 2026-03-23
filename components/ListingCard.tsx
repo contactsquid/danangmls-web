@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Carousel from './Carousel';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
+import { convertPriceToVND } from '@/lib/price';
 
 interface Props {
   listing: Listing;
@@ -12,6 +13,7 @@ interface Props {
 export default function ListingCard({ listing }: Props) {
   const { lang, t } = useLanguage();
   const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
+  const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
@@ -23,7 +25,7 @@ export default function ListingCard({ listing }: Props) {
       <div className="p-4 flex flex-col flex-1">
         {/* Price */}
         <p className="text-lg font-bold text-slate-900 mb-1">
-          {listing.price || <span className="text-slate-400 text-sm font-normal">Price on request</span>}
+          {displayPrice || <span className="text-slate-400 text-sm font-normal">{lang === 'vi' ? 'Liên hệ để biết giá' : 'Price on request'}</span>}
         </p>
 
         {/* Title */}
