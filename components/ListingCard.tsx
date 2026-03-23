@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Carousel from './Carousel';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
-import { convertPriceToVND } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
 
 interface Props {
   listing: Listing;
@@ -42,12 +42,12 @@ export default function ListingCard({ listing }: Props) {
           )}
           {listing.type && (
             <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
-              {listing.type}
+              {localizeType(listing.type, lang)}
             </span>
           )}
           {listing.district && (
             <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
-              📍 {listing.district}
+              📍 {localizeDistrict(listing.district, lang)}
             </span>
           )}
         </div>

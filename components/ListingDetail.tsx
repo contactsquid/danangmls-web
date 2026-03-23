@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Carousel from './Carousel';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
-import { convertPriceToVND } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
 
 export default function ListingDetail({ listing }: { listing: Listing }) {
   const { lang, t } = useLanguage();
@@ -40,7 +40,7 @@ export default function ListingDetail({ listing }: { listing: Listing }) {
             <div className="flex flex-wrap gap-2">
               {listing.type && (
                 <span className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
-                  {listing.type}
+                  {localizeType(listing.type, lang)}
                 </span>
               )}
               {listing.bedrooms && (
@@ -58,7 +58,7 @@ export default function ListingDetail({ listing }: { listing: Listing }) {
             {listing.district && (
               <div>
                 <p className="text-xs text-slate-400 mb-1">{t.district}</p>
-                <p className="font-semibold text-slate-800">📍 {listing.district}</p>
+                <p className="font-semibold text-slate-800">📍 {localizeDistrict(listing.district, lang)}</p>
               </div>
             )}
             {listing.bedrooms && (
