@@ -220,7 +220,7 @@ async function checkSheetData() {
 // ─── Alert ────────────────────────────────────────────────────────────────────
 function sendAlert(message) {
   try {
-    execSync(`${OPENCLAW} agent --to ${ALERT_TO} --message ${JSON.stringify(message)} --deliver`, {
+    execSync(`${OPENCLAW} message send --channel whatsapp --target ${ALERT_TO} --message ${JSON.stringify(message)}`, {
       stdio: 'pipe',
     });
     console.log('  📲 Alert sent via WhatsApp');
