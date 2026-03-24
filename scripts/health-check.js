@@ -34,7 +34,8 @@ const VALID_TYPES = new Set([
   'House', 'Apartment', 'Villa', 'Land', 'Office',
   'Retail', 'Townhouse', 'Studio', 'Shophouse',
 ]);
-const NON_REALESTATE_RE = /\b(fish|seafood|shrimp|oranges|sticky rice|food for sale|chicken|pork|beef|restaurant|menu|fermented)\b/i;
+// Check title only — body text often mentions restaurants/food as amenities
+const NON_REALESTATE_TITLE_RE = /\b(fish for sale|seafood for sale|shrimp for sale|oranges for sale|sticky rice|chicken for sale|pork for sale|beef for sale|fermented|food for sale)\b/i;
 const REALESTATE_RE = /house|apartment|land|villa|property|bedroom|sqm|m²|m2|townhouse|đất|căn hộ|nhà/i;
 const MIN_RENTALS   = 100;
 const MIN_FOR_SALE  = 50;
@@ -159,9 +160,10 @@ async function checkSheetData() {
     const postUrl  = col(r, 14);
     const img1     = col(r, 7);
 
-    if (district && !VALID_DISTRICTS.has(district)) rentalBadDistrict++;
+    const districtClean = district.replace(/not provided|unknown|n\/a/gi, '').trim();
+    if (districtClean && !VALID_DISTRICTS.has(districtClean)) rentalBadDistrict++;
     if (type && !VALID_TYPES.has(type)) rentalBadType++;
-    if (NON_REALESTATE_RE.test(title + ' ' + text)) rentalNonRealestate++;
+    if (NON_REALESTATE_TITLE_RE.test(title)) rentalNonRealestate++;
     if (!img1) rentalNoImage++;
     rentalSlugs.push(slugifyCheck(title, postUrl));
   }
@@ -191,9 +193,10 @@ async function checkSheetData() {
     const postUrl  = col(r, 19);
     const img1     = col(r, 7);
 
-    if (district && !VALID_DISTRICTS.has(district)) fsBadDistrict++;
+    const districtClean = district.replace(/not provided|unknown|n\/a/gi, '').trim();
+    if (districtClean && !VALID_DISTRICTS.has(districtClean)) fsBadDistrict++;
     if (type && !VALID_TYPES.has(type)) fsBadType++;
-    if (NON_REALESTATE_RE.test(title + ' ' + text) || !REALESTATE_RE.test(title + ' ' + text)) fsNonRealestate++;
+    if (NON_REALESTATE_TITLE_RE.test(title) || !REALESTATE_RE.test(title + ' ' + text)) fsNonRealestate++;
     if (!img1) fsNoImage++;
     fsSlugs.push(slugifyCheck(title, postUrl));
   }
