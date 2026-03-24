@@ -189,6 +189,11 @@ export async function getForSaleListings(): Promise<Listing[]> {
       warnIfBadData(listing, 'For Sale');
       return listing;
     })
+    .filter(listing => {
+      if (!listing.price) return true; // keep price-unknown listings
+      const numeric = parseFloat(listing.price.replace(/[^0-9.]/g, ''));
+      return isNaN(numeric) || numeric >= 10000;
+    })
     .sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
 }
 
