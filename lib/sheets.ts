@@ -141,6 +141,7 @@ function parseRows(rows: string[][]): Listing[] {
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     '',
         vi_text:      '',
+        forSale:      false,
       };
       warnIfBadData(listing, 'Sheet1/Rentals');
       return listing;
@@ -183,6 +184,7 @@ export async function getForSaleListings(): Promise<Listing[]> {
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     col(r, FS.VI_TITLE),
         vi_text:      col(r, FS.VI_TEXT),
+        forSale:      true,
       };
       warnIfBadData(listing, 'For Sale');
       return listing;

@@ -15,4 +15,5 @@ export interface Listing {
   neighborhood: string;
   vi_title:     string;
   vi_text:      string;
+  forSale:      boolean;
 }

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import ListingDetail from '@/components/ListingDetail';
 import type { Metadata } from 'next';
+import type { Listing } from '@/lib/types';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -11,6 +12,21 @@ interface Props {
 async function getAllListings() {
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
   return [...rentals, ...forSale];
+}
+
+function getSimilarListings(current: Listing, all: Listing[], count = 4): Listing[] {
+  const candidates = all.filter(l => l.slug !== current.slug && l.forSale === current.forSale);
+  const tier1 = candidates.filter(l => l.type === current.type && l.district === current.district);
+  const tier2 = candidates.filter(l => l.type === current.type && l.district !== current.district);
+  const tier3 = candidates.filter(l => l.type !== current.type && l.district === current.district);
+  const results: Listing[] = [];
+  for (const tier of [tier1, tier2, tier3]) {
+    for (const l of tier) {
+      if (results.length >= count) return results;
+      results.push(l);
+    }
+  }
+  return results;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -62,7 +78,7 @@ export default async function ViListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ListingDetail listing={listing} />
+      <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} />
     </div>
   );
 }

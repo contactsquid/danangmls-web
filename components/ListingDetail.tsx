@@ -2,11 +2,17 @@
 
 import Link from 'next/link';
 import Carousel from './Carousel';
+import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
 import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
 
-export default function ListingDetail({ listing }: { listing: Listing }) {
+interface Props {
+  listing: Listing;
+  similarListings?: Listing[];
+}
+
+export default function ListingDetail({ listing, similarListings = [] }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
   const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
@@ -92,8 +98,55 @@ export default function ListingDetail({ listing }: { listing: Listing }) {
               <p className="text-slate-700 leading-relaxed whitespace-pre-line">{cleanText}</p>
             </div>
           )}
+
+          {/* Agent awareness callout */}
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-900">
+            <p className="font-semibold mb-1">⚠️ {lang === 'vi' ? 'Đang tìm kiếm trên Facebook?' : 'Browsing Facebook for listings?'}</p>
+            <p className="leading-relaxed">
+              {lang === 'vi'
+                ? 'Hãy cẩn thận với các môi giới không có giấy phép. '
+                : 'Be aware of the risks of using unverified agents. '}
+              <a
+                href="https://danang.homes/renting-in-da-nang-agents-on-facebook-vs-trusted-professionals/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold underline hover:text-amber-700"
+              >
+                {lang === 'vi' ? 'Đọc hướng dẫn của chúng tôi →' : 'Read our guide before you proceed →'}
+              </a>
+            </p>
+          </div>
+
+          {/* Hub link */}
+          <div className="mt-6 pt-6 border-t border-slate-100 text-center">
+            <Link
+              href={listing.forSale ? (lang === 'vi' ? '/vi/mua-ban' : '/for-sale') : (lang === 'vi' ? '/vi' : '/')}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              {listing.forSale
+                ? (lang === 'vi' ? 'Xem tất cả bất động sản bán tại Đà Nẵng' : 'View more properties for sale in Da Nang')
+                : (lang === 'vi' ? 'Xem tất cả bất động sản cho thuê tại Đà Nẵng' : 'View more rentals in Da Nang')}
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* Similar listings */}
+      {similarListings.length > 0 && (
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-10 mb-12">
+          <h2 className="text-lg font-bold text-slate-800 mb-5">
+            {lang === 'vi' ? 'Bất động sản tương tự' : 'Similar Listings'}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {similarListings.map(l => (
+              <ListingCard key={l.slug} listing={l} />
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
