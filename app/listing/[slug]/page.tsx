@@ -1,5 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import ListingDetail from '@/components/ListingDetail';
 import type { Metadata } from 'next';
@@ -33,14 +33,22 @@ export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
-  if (!listing) notFound();
+  if (!listing) {
+    // Redirect old index-based slugs (e.g. "title-496") to current hash-based slugs
+    const prefix = slug.slice(0, slug.lastIndexOf('-'));
+    if (prefix) {
+      const match = listings.find(l => l.slug.slice(0, l.slug.lastIndexOf('-')) === prefix);
+      if (match) redirect(`/listing/${match.slug}`);
+    }
+    notFound();
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
     name: listing.title,
     description: listing.text || `${listing.type} in ${listing.district}`,
-    url: `https://danangmls.com/listing/${listing.slug}`,
+    url: `https://www.danangmls.com/listing/${listing.slug}`,
     ...(listing.price && { price: listing.price }),
     ...(listing.images[0] && { image: listing.images[0] }),
     address: {
