@@ -1,6 +1,7 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
@@ -79,6 +80,7 @@ export default async function ViListingPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} />
+      <SiteFooter />
     </div>
   );
 }

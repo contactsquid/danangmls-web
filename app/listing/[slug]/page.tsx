@@ -2,6 +2,7 @@ import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { notFound, redirect } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
 import type { Metadata } from 'next';
 
@@ -85,6 +86,7 @@ export default async function ListingPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ListingDetail listing={listing} similarListings={similarListings} />
+      <SiteFooter />
     </div>
   );
 }
