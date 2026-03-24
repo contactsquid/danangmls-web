@@ -30,13 +30,19 @@ function col(row: string[], idx: number): string {
   return (row && row[idx] != null) ? String(row[idx]).trim() : '';
 }
 
-function slugify(text: string, index: number): string {
+function slugify(text: string, postUrl: string): string {
+  // Hash the postUrl so slugs are stable regardless of row order in the sheet
+  let h = 0;
+  for (let i = 0; i < postUrl.length; i++) {
+    h = (Math.imul(31, h) + postUrl.charCodeAt(i)) >>> 0;
+  }
+  const suffix = h.toString(36).slice(0, 6) || '0';
   return (
     text
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
-      .slice(0, 60) + '-' + index
+      .slice(0, 60) + '-' + suffix
   );
 }
 
@@ -61,7 +67,7 @@ function parseRows(rows: string[][]): Listing[] {
         postUrl:      col(r, 14),
         date:         col(r, 15),
         mlsUrl:       col(r, 17) || col(r, 14),
-        slug:         slugify(title, i),
+        slug:         slugify(title, col(r, 14)),
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     '',
         vi_text:      '',
@@ -97,7 +103,7 @@ export async function getForSaleListings(): Promise<Listing[]> {
         postUrl:      col(r, 19),
         date:         col(r, 20),
         mlsUrl:       col(r, 19),
-        slug:         slugify(title, i),
+        slug:         slugify(title, col(r, 19)),
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     col(r, 21),
         vi_text:      col(r, 22),
