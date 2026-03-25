@@ -194,7 +194,11 @@ export async function getForSaleListings(): Promise<Listing[]> {
       const numeric = parseFloat(listing.price.replace(/[^0-9.]/g, ''));
       return isNaN(numeric) || numeric >= 10000;
     })
-    .sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
+    .sort((a, b) => {
+      const ta = a.date ? new Date(a.date).getTime() : 0;
+      const tb = b.date ? new Date(b.date).getTime() : 0;
+      return tb - ta;
+    });
 }
 
 export function getUniqueValues(listings: Listing[], key: keyof Listing): string[] {
