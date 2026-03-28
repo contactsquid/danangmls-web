@@ -57,6 +57,13 @@ export default async function ListingPage({ params }: Props) {
       const match = listings.find(l => l.slug.slice(0, l.slug.lastIndexOf('-')) === prefix);
       if (match) redirect(`/listing/${match.slug}`);
     }
+    // Redirect stale slugs where the AI re-generated a different title but same Post URL
+    // The suffix is a hash of the Post URL, so suffix match = same listing
+    const suffix = slug.slice(slug.lastIndexOf('-') + 1);
+    if (suffix && suffix.length >= 4) {
+      const match = listings.find(l => l.slug.endsWith('-' + suffix));
+      if (match) redirect(`/listing/${match.slug}`);
+    }
     notFound();
   }
 
