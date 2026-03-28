@@ -68,6 +68,46 @@ export const VALID_TYPES = new Set([
   'Retail', 'Townhouse', 'Studio', 'Shophouse',
 ]);
 
+// ─── District normalisation ───────────────────────────────────────────────────
+const DISTRICT_LIST = ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son', 'Lien Chieu', 'Cam Le', 'Hoi An'] as const;
+
+// Vietnamese-accented → English equivalents
+const DISTRICT_VN: Record<string, string> = {
+  'Hải Châu': 'Hai Chau',
+  'Thanh Khê': 'Thanh Khe',
+  'Sơn Trà': 'Son Tra',
+  'Ngũ Hành Sơn': 'Ngu Hanh Son',
+  'Liên Chiểu': 'Lien Chieu',
+  'Cẩm Lệ': 'Cam Le',
+  'Hội An': 'Hoi An',
+};
+
+// Known sub-districts → parent district
+const SUB_DISTRICTS: Record<string, string> = {
+  'Hoa Vang': 'Cam Le',
+  'Hoa Xuan': 'Cam Le',
+  'Hoa Minh': 'Lien Chieu',
+  'Hoa Khanh': 'Lien Chieu',
+  'My An': 'Ngu Hanh Son',
+  'An Thuong': 'Ngu Hanh Son',
+};
+
+function normalizeDistrict(raw: string): string {
+  if (!raw) return 'Not Provided';
+  // Exact match
+  if ((DISTRICT_LIST as readonly string[]).includes(raw)) return raw;
+  // English name appears anywhere in the string (e.g. "Ngu Hanh Son (note...)")
+  const eng = DISTRICT_LIST.find(d => raw.includes(d));
+  if (eng) return eng;
+  // Vietnamese name appears anywhere
+  const vn = Object.keys(DISTRICT_VN).find(k => raw.includes(k));
+  if (vn) return DISTRICT_VN[vn];
+  // Sub-district name appears anywhere
+  const sub = Object.keys(SUB_DISTRICTS).find(k => raw.includes(k));
+  if (sub) return SUB_DISTRICTS[sub];
+  return 'Not Provided';
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
@@ -166,7 +206,7 @@ export async function getForSaleListings(): Promise<Listing[]> {
     .map(r => {
       const title    = col(r, FS.TITLE);
       const text     = col(r, FS.TEXT);
-      const district = col(r, FS.DISTRICT);
+      const district = normalizeDistrict(col(r, FS.DISTRICT));
       const listing: Listing = {
         title,
         text,
