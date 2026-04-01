@@ -134,6 +134,18 @@ function col(row: string[], idx: number): string {
   return (row && row[idx] != null) ? String(row[idx]).trim() : '';
 }
 
+/** Extracts the slug from a stored danangmls.com URL (column R).
+ *  Returns the slug string if the URL is valid, otherwise null.
+ *  This makes the stored URL the single source of truth — the slug never
+ *  drifts even if the title or postUrl is later edited in the sheet. */
+function mlsUrlToSlug(storedUrl: string): string | null {
+  if (!storedUrl) return null;
+  const PREFIX = 'https://danangmls.com/listing/';
+  if (!storedUrl.startsWith(PREFIX)) return null;
+  const slug = storedUrl.slice(PREFIX.length).trim();
+  return slug || null;
+}
+
 function slugify(text: string, postUrl: string): string {
   // Hash the postUrl so slugs are stable regardless of row order in the sheet
   let h = 0;
@@ -182,7 +194,7 @@ function parseRows(rows: string[][]): Listing[] {
         postUrl:      col(r, R.POST_URL),
         date:         col(r, R.DATE),
         mlsUrl:       col(r, R.MLS_URL) || col(r, R.POST_URL),
-        slug:         slugify(title, col(r, R.POST_URL)),
+        slug:         mlsUrlToSlug(col(r, R.MLS_URL)) || slugify(title, col(r, R.POST_URL)),
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     '',
         vi_text:      '',
