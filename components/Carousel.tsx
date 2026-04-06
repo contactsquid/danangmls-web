@@ -9,6 +9,13 @@ interface Props {
   compact?: boolean; // true = card thumbnail mode
 }
 
+function proxyImg(url: string): string {
+  if (url.includes('fbcdn.net') || url.includes('facebook.com')) {
+    return `/api/img?url=${encodeURIComponent(url)}`;
+  }
+  return url;
+}
+
 export default function Carousel({ images, title, compact = false }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [current, setCurrent] = useState(0);
@@ -54,13 +61,12 @@ export default function Carousel({ images, title, compact = false }: Props) {
             <div key={i} className={`flex-none w-full ${compact ? 'aspect-[4/3]' : 'aspect-video'} bg-gray-100`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={img}
+                src={proxyImg(img)}
                 alt={`${title} — photo ${i + 1}`}
                 className="w-full h-full object-cover"
                 loading={i === 0 ? 'eager' : 'lazy'}
                 onError={(e) => {
-                  const el = e.target as HTMLImageElement;
-                  el.parentElement!.style.display = 'none';
+                  (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
             </div>
