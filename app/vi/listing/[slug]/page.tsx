@@ -46,8 +46,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const listings = await getAllListings();
-  return listings.map(l => ({ slug: l.slug }));
+  // Return empty — ISR generates and caches pages on first request.
+  // Pre-building all 1900+ pages exhausts Vercel's build disk quota.
+  return [];
 }
 
 export default async function ViListingPage({ params }: Props) {
