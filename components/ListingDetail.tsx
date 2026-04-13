@@ -6,6 +6,7 @@ import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
 import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
+import { getDistrict } from '@/lib/districts';
 
 interface Props {
   listing: Listing;
@@ -18,6 +19,7 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
   const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
   const sourceText   = (lang === 'vi' && listing.vi_text)  ? listing.vi_text  : listing.text;
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
+  const districtInfo = getDistrict(listing.district);
 
   const cleanText = sourceText
     .split('\n')
@@ -57,7 +59,16 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             </div>
           </div>
 
-          <h1 className="text-xl font-semibold text-slate-800 mb-6">{displayTitle}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">{displayTitle}</h1>
+          {(listing.type || listing.district) && (
+            <h2 className="text-base font-medium text-slate-500 mb-6">
+              {[
+                listing.type  ? localizeType(listing.type, lang)                             : null,
+                listing.forSale ? (lang === 'vi' ? 'bán tại' : 'for sale in') : (lang === 'vi' ? 'cho thuê tại' : 'for rent in'),
+                listing.district ? localizeDistrict(listing.district, lang) + ', Da Nang, Vietnam' : 'Da Nang, Vietnam',
+              ].filter(Boolean).join(' ')}
+            </h2>
+          )}
 
           {/* Key details grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6 p-4 bg-slate-50 rounded-xl">
@@ -96,6 +107,33 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             <div className="mb-8">
               <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">{t.description}</h2>
               <p className="text-slate-700 leading-relaxed whitespace-pre-line">{cleanText}</p>
+            </div>
+          )}
+
+          {/* District section */}
+          {districtInfo && (
+            <div className="mb-8">
+              <h2 className="text-lg font-bold text-slate-800 mb-3">
+                {lang === 'vi'
+                  ? `Về Quận ${districtInfo.viName}, Đà Nẵng`
+                  : `About ${districtInfo.name} District, Da Nang`}
+              </h2>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                {lang === 'vi' ? districtInfo.viDescription : districtInfo.description}
+              </p>
+              <div className="rounded-xl overflow-hidden border border-slate-200 h-64">
+                <iframe
+                  title={`Map of ${districtInfo.name} District, Da Nang`}
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${districtInfo.bbox.join(',')}&layer=mapnik&marker=${districtInfo.lat},${districtInfo.lng}`}
+                  className="w-full h-full"
+                  loading="lazy"
+                />
+              </div>
+              <p className="text-xs text-slate-400 mt-1 text-right">
+                <a href={`https://www.openstreetmap.org/?mlat=${districtInfo.lat}&mlon=${districtInfo.lng}#map=14/${districtInfo.lat}/${districtInfo.lng}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  View larger map
+                </a>
+              </p>
             </div>
           )}
 
