@@ -5,6 +5,19 @@ const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
 const CSV_RENTALS   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
 const CSV_FORSALE   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=For%20Sale`;
 
+// Module-level cache: CSVs are fetched once per Node.js process (i.e. once per build).
+// Both sheets exceed Next.js's 2MB fetch-cache limit so without this every statically
+// generated page re-fetches the full CSV, overwhelming Google Sheets and dropping connections.
+const rentalsCache: { value: string | null } = { value: null };
+const forSaleCache: { value: string | null } = { value: null };
+
+async function fetchCSV(url: string, cache: { value: string | null }): Promise<string> {
+  if (cache.value !== null) return cache.value;
+  const res = await fetch(url, { next: { revalidate: 3600 } });
+  cache.value = await res.text();
+  return cache.value;
+}
+
 // ─── Column indices for Sheet1 (Rentals) ─────────────────────────────────────
 // If the sheet column order ever changes, update ONLY these constants.
 const R = {
@@ -206,13 +219,13 @@ function parseRows(rows: string[][]): Listing[] {
 }
 
 export async function getListings(): Promise<Listing[]> {
-  const res = await fetch(CSV_RENTALS, { next: { revalidate: 3600 } });
-  return parseRows(parseCSV(await res.text()).slice(1));
+  const text = await fetchCSV(CSV_RENTALS, rentalsCache);
+  return parseRows(parseCSV(text).slice(1));
 }
 
 export async function getForSaleListings(): Promise<Listing[]> {
-  const res = await fetch(CSV_FORSALE, { next: { revalidate: 3600 } });
-  const rows = parseCSV(await res.text()).slice(1);
+  const text = await fetchCSV(CSV_FORSALE, forSaleCache);
+  const rows = parseCSV(text).slice(1);
   return rows
     .filter(r => col(r, FS.TITLE))
     .map(r => {
