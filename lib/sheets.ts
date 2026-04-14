@@ -266,11 +266,11 @@ export async function getForSaleListings(): Promise<Listing[]> {
       return isNaN(numeric) || numeric >= 10000;
     });
 
-  const undated = listings.filter(l => !l.date).reverse();
   const dated   = listings.filter(l =>  l.date).sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-  return [...undated, ...dated];
+  const undated = listings.filter(l => !l.date).reverse();
+  return [...dated, ...undated];
 }
 
 export function getUniqueValues(listings: Listing[], key: keyof Listing): string[] {
