@@ -227,7 +227,7 @@ export async function getListings(): Promise<Listing[]> {
 export async function getForSaleListings(): Promise<Listing[]> {
   const text = await fetchCSV(CSV_FORSALE, forSaleCache);
   const rows = parseCSV(text).slice(1);
-  return rows
+  const listings = rows
     .filter(r => col(r, FS.TITLE))
     .map(r => {
       const title    = col(r, FS.TITLE);
@@ -264,12 +264,13 @@ export async function getForSaleListings(): Promise<Listing[]> {
       if (!listing.price) return true; // keep price-unknown listings
       const numeric = parseFloat(listing.price.replace(/[^0-9.]/g, ''));
       return isNaN(numeric) || numeric >= 10000;
-    })
-    .sort((a, b) => {
-      const ta = a.date ? new Date(a.date).getTime() : 0;
-      const tb = b.date ? new Date(b.date).getTime() : 0;
-      return tb - ta;
     });
+
+  const undated = listings.filter(l => !l.date).reverse();
+  const dated   = listings.filter(l =>  l.date).sort((a, b) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+  return [...undated, ...dated];
 }
 
 export function getUniqueValues(listings: Listing[], key: keyof Listing): string[] {
