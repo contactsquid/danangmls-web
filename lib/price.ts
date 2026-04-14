@@ -51,6 +51,50 @@ function viSuffix(rest: string): string {
   return '';
 }
 
+function formatAsUSD(vnd: number): string {
+  const usd = Math.round(vnd / VND_RATE);
+  return `$${usd.toLocaleString('en-US')}`;
+}
+
+/**
+ * Extracts a price from free-text listing descriptions when the Price column is empty.
+ * Handles VND amounts common in for-sale posts ("X billion VND", "X tỷ", raw 9-digit numbers)
+ * and USD/month amounts in rental posts. Returns a "$XXX,XXX" or "$XXX/month" string,
+ * or empty string if no extractable price is found.
+ */
+export function extractPriceFromText(text: string, forSale: boolean): string {
+  if (!text) return '';
+
+  if (forSale) {
+    // "5.45 billion VND" / "7 Billion VND" / "8.85 billion"
+    const billionMatch = text.match(/(\d+(?:[.,]\d+)?)\s*[Bb]illion/);
+    if (billionMatch) {
+      const vnd = parseFloat(billionMatch[1].replace(',', '.')) * 1_000_000_000;
+      return formatAsUSD(vnd);
+    }
+    // "4.8 tỷ" / "4,8 tỷ"
+    const tyMatch = text.match(/(\d+(?:[.,]\d+)?)\s*tỷ/);
+    if (tyMatch) {
+      const vnd = parseFloat(tyMatch[1].replace(',', '.')) * 1_000_000_000;
+      return formatAsUSD(vnd);
+    }
+    // "4,400,000,000 VND" — raw VND number followed by currency marker
+    const rawMatch = text.match(/(\d[\d,]*\d)\s*(?:VND|₫)/);
+    if (rawMatch) {
+      const vnd = parseFloat(rawMatch[1].replace(/,/g, ''));
+      if (vnd >= 100_000_000) return formatAsUSD(vnd);
+    }
+  } else {
+    // Rental: "$500/month" or "$500 per month" embedded in text
+    const usdMatch = text.match(/\$\s*(\d[\d,]*)\s*(?:\/\s*month|per\s+month)/i);
+    if (usdMatch) {
+      return `$${parseInt(usdMatch[1].replace(/,/g, ''), 10).toLocaleString('en-US')}/month`;
+    }
+  }
+
+  return '';
+}
+
 export function convertPriceToVND(price: string): string {
   if (!price) return price;
 

@@ -1,5 +1,6 @@
 import { Listing } from './types';
 import { detectNeighborhood } from './neighborhoods';
+import { extractPriceFromText } from './price';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
 const CSV_RENTALS   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
@@ -197,7 +198,7 @@ function parseRows(rows: string[][]): Listing[] {
       const listing: Listing = {
         title,
         text,
-        price:        col(r, R.PRICE),
+        price:        col(r, R.PRICE) || extractPriceFromText(text, false),
         district,
         bedrooms:     col(r, R.BEDROOMS),
         type:         col(r, R.TYPE),
@@ -235,7 +236,7 @@ export async function getForSaleListings(): Promise<Listing[]> {
       const listing: Listing = {
         title,
         text,
-        price:        col(r, FS.PRICE),
+        price:        col(r, FS.PRICE) || extractPriceFromText(text, true),
         district,
         bedrooms:     col(r, FS.BEDROOMS),
         type:         col(r, FS.TYPE),
