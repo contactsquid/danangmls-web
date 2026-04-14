@@ -266,10 +266,19 @@ export async function getForSaleListings(): Promise<Listing[]> {
       return isNaN(numeric) || numeric >= 10000;
     });
 
-  const dated   = listings.filter(l =>  l.date).sort((a, b) =>
+  // Deduplicate by postUrl — keep the last occurrence (most recently added row).
+  const seen = new Set<string>();
+  const deduped = [...listings].reverse().filter(l => {
+    const key = l.postUrl || l.slug;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).reverse();
+
+  const dated   = deduped.filter(l =>  l.date).sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-  const undated = listings.filter(l => !l.date).reverse();
+  const undated = deduped.filter(l => !l.date).reverse();
   return [...dated, ...undated];
 }
 
