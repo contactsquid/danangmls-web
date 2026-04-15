@@ -22,6 +22,8 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
   const districtInfo = getDistrict(listing.district);
 
   const cleanText = sourceText
+    // Strip inline contact block that may be appended without a preceding newline
+    .replace(/\s*📞[\s\S]*$/, '')
     .split('\n')
     .filter(line => !/zalo|whatsapp|danang4homes|danang\.homes|contact information|\+84\s*\d|📞|📱|📧|🌐/i.test(line))
     .join('\n')
