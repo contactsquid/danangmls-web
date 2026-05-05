@@ -9,14 +9,17 @@ const CSV_FORSALE   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/
 // Module-level cache: CSVs are fetched once per Node.js process (i.e. once per build).
 // Both sheets exceed Next.js's 2MB fetch-cache limit so without this every statically
 // generated page re-fetches the full CSV, overwhelming Google Sheets and dropping connections.
-const rentalsCache: { value: string | null } = { value: null };
-const forSaleCache: { value: string | null } = { value: null };
+// TTL: 10 minutes — prevents warm functions from serving stale data indefinitely.
+const CACHE_TTL_MS = 10 * 60 * 1000;
+const rentalsCache: { value: string | null; at: number } = { value: null, at: 0 };
+const forSaleCache: { value: string | null; at: number } = { value: null, at: 0 };
 
-async function fetchCSV(url: string, cache: { value: string | null }): Promise<string> {
-  if (cache.value !== null) return cache.value;
+async function fetchCSV(url: string, cache: { value: string | null; at: number }): Promise<string> {
+  if (cache.value !== null && Date.now() - cache.at < CACHE_TTL_MS) return cache.value;
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to fetch CSV: ${res.status}`);
   cache.value = await res.text();
+  cache.at = Date.now();
   return cache.value;
 }
 
