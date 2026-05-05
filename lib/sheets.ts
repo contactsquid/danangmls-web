@@ -14,7 +14,8 @@ const forSaleCache: { value: string | null } = { value: null };
 
 async function fetchCSV(url: string, cache: { value: string | null }): Promise<string> {
   if (cache.value !== null) return cache.value;
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to fetch CSV: ${res.status}`);
   cache.value = await res.text();
   return cache.value;
 }
