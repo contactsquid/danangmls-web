@@ -11,8 +11,10 @@ interface Props {
 }
 
 async function getAllListings() {
-  const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
-  return [...rentals, ...forSale];
+  const [rentals, forSale] = await Promise.allSettled([getListings(), getForSaleListings()]);
+  const r = rentals.status === 'fulfilled' ? rentals.value : [];
+  const f = forSale.status === 'fulfilled' ? forSale.value : [];
+  return [...r, ...f];
 }
 
 function getSimilarListings(current: Listing, all: Listing[], count = 4): Listing[] {
@@ -30,14 +32,31 @@ function getSimilarListings(current: Listing, all: Listing[], count = 4): Listin
   return results;
 }
 
+function getShareableImage(images: string[]): string | undefined {
+  return images.find(img => img && !img.includes('fbcdn.net') && !img.includes('facebook.com')) || images[0] || undefined;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
   if (!listing) return { title: 'Listing Not Found' };
+  const ogImage = getShareableImage(listing.images);
+  const description = listing.text.slice(0, 160) || `${listing.type} in ${listing.district}. ${listing.price}.`;
   return {
-    title: `${listing.title} — DanangMLS`,
-    description: listing.text.slice(0, 160) || `${listing.type} in ${listing.district}. ${listing.price}.`,
+    title: listing.title,
+    description,
+    alternates: {
+      canonical: `https://danangmls.com/listing/${listing.slug}`,
+      languages: { vi: `https://danangmls.com/vi/listing/${listing.slug}` },
+    },
+    openGraph: {
+      title: listing.title,
+      description,
+      url: `https://danangmls.com/listing/${listing.slug}`,
+      images: ogImage ? [{ url: ogImage, alt: `${listing.title} — DanangMLS` }] : [],
+      type: 'website',
+    },
   };
 }
 
@@ -73,15 +92,26 @@ export default async function ListingPage({ params }: Props) {
     '@type': 'RealEstateListing',
     name: listing.title,
     description: listing.text || `${listing.type} in ${listing.district}`,
-    url: `https://www.danangmls.com/listing/${listing.slug}`,
+    url: `https://danangmls.com/listing/${listing.slug}`,
     ...(listing.price && { price: listing.price }),
     ...(listing.images[0] && { image: listing.images[0] }),
+    ...(listing.bedrooms && { numberOfRooms: listing.bedrooms }),
     address: {
       '@type': 'PostalAddress',
       addressLocality: listing.district || 'Da Nang',
       addressRegion: 'Da Nang',
       addressCountry: 'VN',
     },
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://danangmls.com' },
+      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'For Sale' : 'For Rent', item: `https://danangmls.com/${listing.forSale ? 'for-sale' : ''}` },
+      { '@type': 'ListItem', position: 3, name: listing.title },
+    ],
   };
 
   const similarListings = getSimilarListings(listing, listings);
@@ -92,6 +122,10 @@ export default async function ListingPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <ListingDetail listing={listing} similarListings={similarListings} />
       <SiteFooter />

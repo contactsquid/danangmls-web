@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     canonical: 'https://danangmls.com',
     languages: { vi: 'https://danangmls.com/vi' },
   },
+  openGraph: {
+    title: 'Houses for Rent in Da Nang, Vietnam',
+    description: 'Browse hundreds of houses, apartments, and villas for rent in Da Nang and Hoi An. Updated daily.',
+    url: 'https://danangmls.com',
+    type: 'website',
+  },
 };
 
 export default async function HomePage() {

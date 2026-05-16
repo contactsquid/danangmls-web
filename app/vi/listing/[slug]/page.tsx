@@ -11,8 +11,10 @@ interface Props {
 }
 
 async function getAllListings() {
-  const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
-  return [...rentals, ...forSale];
+  const [rentals, forSale] = await Promise.allSettled([getListings(), getForSaleListings()]);
+  const r = rentals.status === 'fulfilled' ? rentals.value : [];
+  const f = forSale.status === 'fulfilled' ? forSale.value : [];
+  return [...r, ...f];
 }
 
 function getSimilarListings(current: Listing, all: Listing[], count = 4): Listing[] {
@@ -30,17 +32,31 @@ function getSimilarListings(current: Listing, all: Listing[], count = 4): Listin
   return results;
 }
 
+function getShareableImage(images: string[]): string | undefined {
+  return images.find(img => img && !img.includes('fbcdn.net') && !img.includes('facebook.com')) || images[0] || undefined;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
   if (!listing) return { title: 'Không tìm thấy' };
+  const ogImage = getShareableImage(listing.images);
+  const description = listing.text.slice(0, 160) || `${listing.type} tại ${listing.district}. ${listing.price}.`;
   return {
-    title: `${listing.title} | DanangMLS`,
-    description: listing.text.slice(0, 160) || `${listing.type} tại ${listing.district}. ${listing.price}.`,
+    title: listing.title,
+    description,
     alternates: {
       canonical: `https://danangmls.com/vi/listing/${slug}`,
       languages: { en: `https://danangmls.com/listing/${slug}` },
+    },
+    openGraph: {
+      title: listing.title,
+      description,
+      url: `https://danangmls.com/vi/listing/${slug}`,
+      images: ogImage ? [{ url: ogImage, alt: `${listing.title} — DanangMLS` }] : [],
+      type: 'website',
+      locale: 'vi_VN',
     },
   };
 }
@@ -65,6 +81,7 @@ export default async function ViListingPage({ params }: Props) {
     url: `https://danangmls.com/vi/listing/${listing.slug}`,
     ...(listing.price && { price: listing.price }),
     ...(listing.images[0] && { image: listing.images[0] }),
+    ...(listing.bedrooms && { numberOfRooms: listing.bedrooms }),
     address: {
       '@type': 'PostalAddress',
       addressLocality: listing.district || 'Đà Nẵng',
@@ -73,12 +90,26 @@ export default async function ViListingPage({ params }: Props) {
     },
   };
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://danangmls.com/vi' },
+      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'Mua Bán' : 'Cho Thuê', item: `https://danangmls.com/vi/${listing.forSale ? 'mua-ban' : ''}` },
+      { '@type': 'ListItem', position: 3, name: listing.title },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <SiteHeader />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} />
       <SiteFooter />

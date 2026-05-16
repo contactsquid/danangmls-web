@@ -14,11 +14,19 @@ export default function ListingCard({ listing }: Props) {
   const { lang, t } = useLanguage();
   const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
+  const altPrefix = [
+    listing.bedrooms && `${listing.bedrooms}-bedroom`,
+    listing.type,
+    listing.forSale ? 'for sale' : 'for rent',
+    listing.district && `in ${listing.district}`,
+    'Da Nang',
+  ].filter(Boolean).join(' ');
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
       <Link href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`} className="block">
-        <Carousel images={listing.images} title={listing.title} compact />
+        <Carousel images={listing.images} title={listing.title} altPrefix={altPrefix} compact />
       </Link>
 
       {/* Details */}

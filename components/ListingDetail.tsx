@@ -21,6 +21,14 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
   const districtInfo = getDistrict(listing.district);
 
+  const altPrefix = [
+    listing.bedrooms && `${listing.bedrooms}-bedroom`,
+    listing.type,
+    listing.forSale ? 'for sale' : 'for rent',
+    listing.district && `in ${listing.district}`,
+    'Da Nang',
+  ].filter(Boolean).join(' ');
+
   const cleanText = sourceText
     // Strip inline contact block that may be appended without a preceding newline
     .replace(/\s*📞[\s\S]*$/, '')
@@ -39,7 +47,7 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
       </Link>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <Carousel images={images} title={listing.title} />
+        <Carousel images={images} title={listing.title} altPrefix={altPrefix} />
 
         <div className="p-6 sm:p-8">
           {/* Price + badges */}

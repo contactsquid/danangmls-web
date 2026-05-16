@@ -3,9 +3,10 @@
 interface Props {
   images: string[];
   title: string;
+  altPrefix?: string;
 }
 
-export default function ImageGallery({ images, title }: Props) {
+export default function ImageGallery({ images, title, altPrefix }: Props) {
   if (images.length === 0) return null;
 
   return (
@@ -15,7 +16,7 @@ export default function ImageGallery({ images, title }: Props) {
         <img
           key={i}
           src={img}
-          alt={`${title} — photo ${i + 1}`}
+          alt={`${altPrefix || title} — photo ${i + 1}`}
           className="w-full aspect-video object-cover"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 interface Props {
   images: string[];
   title: string;
+  altPrefix?: string; // Rich alt text prefix for SEO (e.g. "3-bedroom house for rent in Son Tra, Da Nang")
   compact?: boolean; // true = card thumbnail mode
 }
 
@@ -16,7 +17,7 @@ function proxyImg(url: string): string {
   return url;
 }
 
-export default function Carousel({ images, title, compact = false }: Props) {
+export default function Carousel({ images, title, altPrefix, compact = false }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [current, setCurrent] = useState(0);
 
@@ -62,7 +63,7 @@ export default function Carousel({ images, title, compact = false }: Props) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={proxyImg(img)}
-                alt={`${title} — photo ${i + 1}`}
+                alt={`${altPrefix || title} — photo ${i + 1}`}
                 className="w-full h-full object-cover"
                 loading={i === 0 ? 'eager' : 'lazy'}
                 onError={(e) => {

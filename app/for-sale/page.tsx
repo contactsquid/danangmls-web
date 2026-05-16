@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     canonical: 'https://danangmls.com/for-sale',
     languages: { vi: 'https://danangmls.com/vi/mua-ban' },
   },
+  openGraph: {
+    title: 'Houses for Sale in Da Nang, Vietnam',
+    description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An. Updated daily.',
+    url: 'https://danangmls.com/for-sale',
+    type: 'website',
+  },
 };
 
 export default async function ForSalePage() {

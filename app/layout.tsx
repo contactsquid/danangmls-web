@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     template: '%s — DanangMLS',
   },
   description: 'Browse houses, apartments, and villas for rent and for sale in Da Nang and Hoi An, Vietnam. Updated daily from live listings.',
+  openGraph: {
+    siteName: 'DanangMLS',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 export default function RootLayout({
