@@ -67,6 +67,12 @@ export async function generateStaticParams() {
   return [];
 }
 
+// The Google-Sheets CSV fetches in lib/sheets.ts use `cache: 'no-store'`,
+// which Next 16 treats as dynamic. Without this export, Next throws a
+// "Page changed from static to dynamic at runtime" 500 on the first
+// cold-cache visit. Marking the route dynamic up front avoids that.
+export const dynamic = 'force-dynamic';
+
 export default async function ViListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
