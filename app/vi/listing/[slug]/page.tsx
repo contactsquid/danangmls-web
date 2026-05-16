@@ -67,6 +67,15 @@ export async function generateStaticParams() {
   return [];
 }
 
+// Refresh in-cache pages hourly so listings stay current after Sheet edits.
+// Stale pages still serve instantly; regeneration happens in the background.
+export const revalidate = 3600;
+
+// Give the function room to fetch both sheets (~1MB each) from Google Sheets
+// on a cold first-visit before Vercel's default 10s timeout kills it. Requires
+// Vercel Pro.
+export const maxDuration = 60;
+
 export default async function ViListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
