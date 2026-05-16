@@ -66,10 +66,6 @@ export async function generateStaticParams() {
   return [];
 }
 
-// Vercel Pro: 60s function timeout (default 10s isn't always enough for the
-// dual Google-Sheets fetch on a cold first-ever visit to a listing).
-export const maxDuration = 60;
-
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
