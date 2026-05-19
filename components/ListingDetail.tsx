@@ -13,10 +13,26 @@ interface Props {
   similarListings?: Listing[];
 }
 
+// Vietnamese fallback title for listings without vi_title — keeps the H1
+// from rendering raw English on /vi/listing/* pages. Sheet1 (rentals)
+// doesn't have a VI_TITLE column yet, so most rentals hit this fallback.
+// Pattern: "Cho thuê Nhà 3 phòng ngủ tại Sơn Trà, Đà Nẵng"
+function viFallbackTitle(listing: Listing): string {
+  const verb  = listing.forSale ? 'Bán' : 'Cho thuê';
+  const type  = listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản';
+  const beds  = listing.bedrooms ? ` ${listing.bedrooms} phòng ngủ` : '';
+  const place = listing.district
+    ? `${localizeDistrict(listing.district, 'vi')}, Đà Nẵng`
+    : 'Đà Nẵng';
+  return `${verb} ${type}${beds} tại ${place}`;
+}
+
 export default function ListingDetail({ listing, similarListings = [] }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
-  const displayTitle = (lang === 'vi' && listing.vi_title) ? listing.vi_title : listing.title;
+  const displayTitle = lang === 'vi'
+    ? (listing.vi_title || viFallbackTitle(listing))
+    : listing.title;
   const sourceText   = (lang === 'vi' && listing.vi_text)  ? listing.vi_text  : listing.text;
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
   const districtInfo = getDistrict(listing.district);
