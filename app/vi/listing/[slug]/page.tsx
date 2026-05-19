@@ -3,8 +3,24 @@ import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
+import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
+
+// Vietnamese fallback title for listings that don't have vi_title populated
+// (currently most rentals — Sheet1 lacks a VI_TITLE column). Generates a
+// keyword-rich Vietnamese title so the page isn't 100% English in <title>.
+// For Sale listings already have vi_title from the sheet so they don't hit
+// this fallback.
+function viFallbackTitle(listing: Listing): string {
+  const verb   = listing.forSale ? 'Bán' : 'Cho thuê';
+  const type   = listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản';
+  const beds   = listing.bedrooms ? ` ${listing.bedrooms} phòng ngủ` : '';
+  const place  = listing.district
+    ? `${localizeDistrict(listing.district, 'vi')}, Đà Nẵng`
+    : 'Đà Nẵng';
+  return `${verb} ${type}${beds} tại ${place}`;
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -41,10 +57,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
   if (!listing) return { title: 'Không tìm thấy' };
+  const displayTitle = listing.vi_title || viFallbackTitle(listing);
   const ogImage = getShareableImage(listing.images);
-  const description = listing.text.slice(0, 160) || `${listing.type} tại ${listing.district}. ${listing.price}.`;
+  const description = (listing.vi_text || listing.text).slice(0, 160) || `${listing.type} tại ${listing.district}. ${listing.price}.`;
   return {
-    title: listing.title,
+    title: displayTitle,
     description,
     alternates: {
       canonical: `https://danangmls.com/vi/listing/${slug}`,
@@ -55,10 +72,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
-      title: listing.title,
+      title: displayTitle,
       description,
       url: `https://danangmls.com/vi/listing/${slug}`,
-      images: ogImage ? [{ url: ogImage, alt: `${listing.title} — DanangMLS` }] : [],
+      images: ogImage ? [{ url: ogImage, alt: `${displayTitle} — DanangMLS` }] : [],
       type: 'website',
       locale: 'vi_VN',
     },
