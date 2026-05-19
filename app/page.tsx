@@ -10,7 +10,11 @@ export const metadata: Metadata = {
   description: 'Find houses, apartments, and villas for rent in Da Nang and Hoi An, Vietnam. Browse hundreds of rental listings updated daily from local agents.',
   alternates: {
     canonical: 'https://danangmls.com',
-    languages: { vi: 'https://danangmls.com/vi' },
+    languages: {
+      en: 'https://danangmls.com',
+      vi: 'https://danangmls.com/vi',
+      'x-default': 'https://danangmls.com',
+    },
   },
   openGraph: {
     title: 'Houses for Rent in Da Nang, Vietnam',

@@ -10,7 +10,14 @@ export const metadata: Metadata = {
   description: 'Xem danh sách nhà, căn hộ, biệt thự cho thuê tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
   alternates: {
     canonical: 'https://danangmls.com/vi',
-    languages: { en: 'https://danangmls.com' },
+    languages: {
+      en: 'https://danangmls.com',
+      vi: 'https://danangmls.com/vi',
+      'x-default': 'https://danangmls.com',
+    },
+  },
+  openGraph: {
+    locale: 'vi_VN',
   },
 };
 

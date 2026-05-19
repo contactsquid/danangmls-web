@@ -10,7 +10,11 @@ export const metadata: Metadata = {
   description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An, Vietnam. Updated daily from local agents and live listings.',
   alternates: {
     canonical: 'https://danangmls.com/for-sale',
-    languages: { vi: 'https://danangmls.com/vi/mua-ban' },
+    languages: {
+      en: 'https://danangmls.com/for-sale',
+      vi: 'https://danangmls.com/vi/mua-ban',
+      'x-default': 'https://danangmls.com/for-sale',
+    },
   },
   openGraph: {
     title: 'Houses for Sale in Da Nang, Vietnam',

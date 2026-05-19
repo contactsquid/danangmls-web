@@ -10,7 +10,14 @@ export const metadata: Metadata = {
   description: 'Xem danh sách nhà, căn hộ, biệt thự và đất nền bán tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
   alternates: {
     canonical: 'https://danangmls.com/vi/mua-ban',
-    languages: { en: 'https://danangmls.com/for-sale' },
+    languages: {
+      en: 'https://danangmls.com/for-sale',
+      vi: 'https://danangmls.com/vi/mua-ban',
+      'x-default': 'https://danangmls.com/for-sale',
+    },
+  },
+  openGraph: {
+    locale: 'vi_VN',
   },
 };
 

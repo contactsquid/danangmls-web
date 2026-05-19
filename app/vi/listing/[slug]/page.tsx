@@ -48,7 +48,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: {
       canonical: `https://danangmls.com/vi/listing/${slug}`,
-      languages: { en: `https://danangmls.com/listing/${slug}` },
+      languages: {
+        en: `https://danangmls.com/listing/${slug}`,
+        vi: `https://danangmls.com/vi/listing/${slug}`,
+        'x-default': `https://danangmls.com/listing/${slug}`,
+      },
     },
     openGraph: {
       title: listing.title,
