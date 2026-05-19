@@ -69,6 +69,7 @@ const FS = {
   IMG9:     15,
   IMG10:    16,
   CONTACT:  17,
+  MLS_URL:  18, // populated by ~/.openclaw/scripts/pin-listing-slugs.js — pins canonical URL so slug stays stable across title re-enrichment
   POST_URL: 19,
   DATE:     20,
   VI_TITLE: 21,
@@ -254,8 +255,8 @@ export async function getForSaleListings(): Promise<Listing[]> {
         contact:      col(r, FS.CONTACT),
         postUrl:      col(r, FS.POST_URL),
         date:         col(r, FS.DATE),
-        mlsUrl:       col(r, FS.POST_URL),
-        slug:         slugify(title, col(r, FS.POST_URL)),
+        mlsUrl:       col(r, FS.MLS_URL) || col(r, FS.POST_URL),
+        slug:         mlsUrlToSlug(col(r, FS.MLS_URL)) || slugify(title, col(r, FS.POST_URL)),
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     col(r, FS.VI_TITLE),
         vi_text:      col(r, FS.VI_TEXT),
