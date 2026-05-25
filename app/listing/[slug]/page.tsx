@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
+import RentalProcessVideo from '@/components/RentalProcessVideo';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -119,7 +120,7 @@ export default async function ListingPage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://danangmls.com' },
-      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'For Sale' : 'For Rent', item: `https://danangmls.com/${listing.forSale ? 'for-sale' : ''}` },
+      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'For Sale' : 'For Rent', item: `https://danangmls.com/${listing.forSale ? 'for-sale' : 'for-rent'}` },
       { '@type': 'ListItem', position: 3, name: listing.title },
     ],
   };
@@ -138,6 +139,7 @@ export default async function ListingPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <ListingDetail listing={listing} similarListings={similarListings} />
+      {!listing.forSale && <RentalProcessVideo />}
       <SiteFooter />
     </div>
   );

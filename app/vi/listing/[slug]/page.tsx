@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
+import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
@@ -122,7 +123,7 @@ export default async function ViListingPage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://danangmls.com/vi' },
-      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'Mua Bán' : 'Cho Thuê', item: `https://danangmls.com/vi/${listing.forSale ? 'mua-ban' : ''}` },
+      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'Mua Bán' : 'Cho Thuê', item: `https://danangmls.com/vi/${listing.forSale ? 'mua-ban' : 'thue'}` },
       { '@type': 'ListItem', position: 3, name: listing.title },
     ],
   };
@@ -139,6 +140,7 @@ export default async function ViListingPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} />
+      {!listing.forSale && <RentalProcessVideo />}
       <SiteFooter />
     </div>
   );
