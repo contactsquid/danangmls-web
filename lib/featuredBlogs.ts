@@ -17,6 +17,13 @@ export const BLOG_BASE_URL = 'https://danang.homes/blog';
 // Last synced: 2026-05-25.
 export const FEATURED_BLOG_POSTS: FeaturedBlogPost[] = [
   {
+    slug: 'understanding-your-lease-foreigners-guide-to-rental-contracts',
+    title: "Understanding Your Lease: A Foreigner's Guide to Rental Contracts & Payments in Da Nang",
+    date: '2026-05-25',
+    excerpt: "A practical guide for foreigners on understanding lease agreements, payment terms, and tenant rights when renting property in Da Nang.",
+    image: 'https://images.danang.homes/blog/understanding-your-lease-foreigners-guide-to-rental-contracts.jpg',
+  },
+  {
     slug: 'renting-in-da-nang-essential-checks-before-signing',
     title: 'Renting in Da Nang: Essential Checks Before You Sign',
     date: '2026-05-25',
@@ -29,12 +36,5 @@ export const FEATURED_BLOG_POSTS: FeaturedBlogPost[] = [
     date: '2026-03-24',
     excerpt: 'Navigating the Da Nang rental market can be tricky. This post breaks down the pros and cons of using casual Facebook agents versus dedicated, licensed real estate agents for your next home.',
     image: 'https://images.danang.homes/blog/renting-in-da-nang-agents-on-facebook-vs-trusted-professionals.jpg',
-  },
-  {
-    slug: 'exploring-da-nangs-best-expat-neighborhoods-for-renters',
-    title: "Exploring Da Nang's Best Expat Neighborhoods for Renters",
-    date: '2026-03-13',
-    excerpt: "Discover the most popular neighborhoods for expats renting in Da Nang. From beach-side serenity to bustling city centers, find the right area for your lifestyle.",
-    image: 'https://images.danang.homes/blog/exploring-da-nangs-best-expat-neighborhoods-for-renters.png',
   },
 ];
