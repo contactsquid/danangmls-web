@@ -9,11 +9,13 @@ import type { Lang } from '@/lib/translations';
 function getLangUrl(pathname: string, targetLang: Lang): string {
   if (targetLang === 'vi') {
     if (pathname === '/') return '/vi';
+    if (pathname === '/for-rent') return '/vi/thue';
     if (pathname === '/for-sale') return '/vi/mua-ban';
     if (pathname.startsWith('/listing/')) return '/vi' + pathname;
     return '/vi';
   } else {
     if (pathname === '/vi') return '/';
+    if (pathname === '/vi/thue') return '/for-rent';
     if (pathname === '/vi/mua-ban') return '/for-sale';
     if (pathname.startsWith('/vi/listing/')) return pathname.replace('/vi', '');
     return '/';
@@ -26,8 +28,9 @@ export default function SiteHeader() {
   const { lang, t } = useLanguage();
   const isVi = lang === 'vi';
   const isForSale = pathname === '/for-sale' || pathname === '/vi/mua-ban';
+  const isForRent = pathname === '/for-rent' || pathname === '/vi/thue';
 
-  const rentHref = isVi ? '/vi' : '/';
+  const rentHref = isVi ? '/vi/thue' : '/for-rent';
   const saleHref = isVi ? '/vi/mua-ban' : '/for-sale';
 
   const handleLangChange = (target: Lang) => {
@@ -42,7 +45,7 @@ export default function SiteHeader() {
           <Link href={isVi ? '/vi' : '/'}><Logo /></Link>
 
           <div className="hidden sm:flex items-center gap-3">
-            <NavToggle isForSale={isForSale} rentHref={rentHref} saleHref={saleHref} />
+            <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} />
             <LangDropdown lang={lang} onChange={handleLangChange} />
           </div>
 
@@ -52,7 +55,7 @@ export default function SiteHeader() {
         </div>
 
         <div className="flex sm:hidden pb-3">
-          <NavToggle isForSale={isForSale} rentHref={rentHref} saleHref={saleHref} fullWidth />
+          <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} fullWidth />
         </div>
 
       </div>
@@ -60,8 +63,9 @@ export default function SiteHeader() {
   );
 }
 
-function NavToggle({ isForSale, rentHref, saleHref, fullWidth }: {
+function NavToggle({ isForSale, isForRent, rentHref, saleHref, fullWidth }: {
   isForSale: boolean;
+  isForRent: boolean;
   rentHref: string;
   saleHref: string;
   fullWidth?: boolean;
@@ -72,7 +76,7 @@ function NavToggle({ isForSale, rentHref, saleHref, fullWidth }: {
       <Link
         href={rentHref}
         className={`flex-1 text-center px-4 py-2 whitespace-nowrap transition-colors ${
-          !isForSale ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'
+          isForRent ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'
         }`}
       >
         {t.forRent}

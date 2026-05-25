@@ -8,11 +8,13 @@ export default async function sitemap() {
 
   return [
     // English
-    { url: BASE,               lastModified: now, changeFrequency: 'hourly' as const, priority: 1.0 },
-    { url: `${BASE}/for-sale`, lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: BASE,                lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
+    { url: `${BASE}/for-rent`,  lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${BASE}/for-sale`,  lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     // Vietnamese
-    { url: `${BASE}/vi`,           lastModified: now, changeFrequency: 'hourly' as const, priority: 1.0 },
-    { url: `${BASE}/vi/mua-ban`,   lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${BASE}/vi`,         lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
+    { url: `${BASE}/vi/thue`,    lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${BASE}/vi/mua-ban`, lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     // English listings
     ...rentals.map(l => ({
       url: `${BASE}/listing/${l.slug}`,

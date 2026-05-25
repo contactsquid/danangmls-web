@@ -1,13 +1,16 @@
-import { getListings, getUniqueValues } from '@/lib/sheets';
-import ListingsGrid from '@/components/ListingsGrid';
+import { getListings, getForSaleListings } from '@/lib/sheets';
+import { getLatestVideo } from '@/lib/youtube';
 import SiteHeader from '@/components/SiteHeader';
-import PageHero from '@/components/PageHero';
 import SiteFooter from '@/components/SiteFooter';
+import HomeHero from '@/components/HomeHero';
+import LatestVideo from '@/components/LatestVideo';
+import FeaturedListings from '@/components/FeaturedListings';
+import FeaturedBlogs from '@/components/FeaturedBlogs';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Houses for Rent in Da Nang, Vietnam',
-  description: 'Find houses, apartments, and villas for rent in Da Nang and Hoi An, Vietnam. Browse hundreds of rental listings updated daily from local agents.',
+  title: 'Da Nang Real Estate Multiple Listing Service - DaNangMLS',
+  description: 'Da Nang Real Estate MLS — the cleanest source for verified rentals and houses for sale across Da Nang and Hoi An, Vietnam. Every listing vetted, every price verified.',
   alternates: {
     canonical: 'https://danangmls.com',
     languages: {
@@ -17,25 +20,28 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Houses for Rent in Da Nang, Vietnam',
-    description: 'Browse hundreds of houses, apartments, and villas for rent in Da Nang and Hoi An. Updated daily.',
+    title: 'Da Nang Real Estate Multiple Listing Service - DaNangMLS',
+    description: 'The cleanest source for verified rentals and houses for sale across Da Nang and Hoi An, Vietnam.',
     url: 'https://danangmls.com',
     type: 'website',
   },
 };
 
 export default async function HomePage() {
-  const listings = await getListings();
-  const types     = getUniqueValues(listings, 'type');
-  const districts = getUniqueValues(listings, 'district');
+  const [rentals, forSale, video] = await Promise.all([
+    getListings(),
+    getForSaleListings(),
+    getLatestVideo(),
+  ]);
 
   return (
     <div className="min-h-screen bg-slate-50">
       <SiteHeader />
-      <PageHero mode="rent" count={listings.length} />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-        <ListingsGrid listings={listings} types={types} districts={districts} />
-      </main>
+      <HomeHero />
+      <LatestVideo video={video} />
+      <FeaturedListings listings={rentals} mode="rent" />
+      <FeaturedListings listings={forSale} mode="sale" />
+      <FeaturedBlogs />
       <SiteFooter />
     </div>
   );
