@@ -14,10 +14,6 @@ export default function LatestVideo({ video }: Props) {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-6">
-        {isVi ? 'Video mới nhất' : 'Latest Video'}
-      </h2>
-
       <div className="grid lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2 aspect-video bg-slate-200 rounded-xl overflow-hidden shadow-md">
           <iframe
