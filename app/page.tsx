@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Da Nang Real Estate Multiple Listing Service - DaNangMLS',
-  description: 'Da Nang Real Estate MLS — the cleanest source for verified rentals and houses for sale across Da Nang and Hoi An, Vietnam. Every listing vetted, every price verified.',
+  description: 'Da Nang Real Estate MLS — the cleanest list of rentals and houses for sale across Da Nang and Hoi An, Vietnam. Aggregated from local agents, refreshed daily, browsable in English and Vietnamese.',
   alternates: {
     canonical: 'https://danangmls.com',
     languages: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Da Nang Real Estate Multiple Listing Service - DaNangMLS',
-    description: 'The cleanest source for verified rentals and houses for sale across Da Nang and Hoi An, Vietnam.',
+    description: 'The cleanest list of rentals and houses for sale across Da Nang and Hoi An. Aggregated from local agents, refreshed daily.',
     url: 'https://danangmls.com',
     type: 'website',
   },

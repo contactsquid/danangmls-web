@@ -35,6 +35,6 @@ export const FEATURED_BLOG_POSTS: FeaturedBlogPost[] = [
     title: "Exploring Da Nang's Best Expat Neighborhoods for Renters",
     date: '2026-03-13',
     excerpt: "Discover the most popular neighborhoods for expats renting in Da Nang. From beach-side serenity to bustling city centers, find the right area for your lifestyle.",
-    image: 'https://images.danang.homes/blog/exploring-da-nangs-best-expat-neighborhoods-for-renters.jpg',
+    image: 'https://images.danang.homes/blog/exploring-da-nangs-best-expat-neighborhoods-for-renters.png',
   },
 ];

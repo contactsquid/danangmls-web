@@ -17,8 +17,8 @@ export default function HomeHero() {
         </h1>
         <p className="text-blue-100 text-base sm:text-xl max-w-3xl mx-auto mb-8">
           {isVi
-            ? 'Danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An. Mỗi tin đăng được xác minh, giá được kiểm tra, ảnh chụp từ chính bất động sản.'
-            : 'The cleanest list of rentals and houses for sale across Da Nang and Hoi An. Every listing vetted, every price verified, every photo from the actual property.'}
+            ? 'Danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày, có thể duyệt bằng tiếng Anh và tiếng Việt.'
+            : 'The cleanest list of rentals and houses for sale across Da Nang and Hoi An. Aggregated from local agents, refreshed daily, browsable in both English and Vietnamese.'}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
