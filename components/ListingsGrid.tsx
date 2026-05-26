@@ -24,6 +24,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   const [hoodFilter, setHood]       = useState('');
   const [bedsFilter, setBeds]       = useState('');
   const [priceFilter, setPrice]     = useState('');
+  const [foreignOnly, setForeignOnly] = useState(false);
 
   // Neighborhoods available for selected district
   const neighborhoods = distFilter ? (NEIGHBORHOODS[distFilter] || []) : [];
@@ -66,19 +67,20 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
         if (priceFilter === '500k'  && !(num >= 500000 && num < 1000000)) return false;
         if (priceFilter === '1m'    && num < 1000000)                     return false;
       }
+      if (foreignOnly && !l.foreignEligible) return false;
       return true;
     });
-  }, [listings, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter]);
+  }, [listings, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
 
-  const hasFilters = search || typeFilter || distFilter || hoodFilter || bedsFilter || priceFilter;
-  const clearAll = () => { setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); setDisplayCount(PAGE_SIZE); };
+  const hasFilters = search || typeFilter || distFilter || hoodFilter || bedsFilter || priceFilter || foreignOnly;
+  const clearAll = () => { setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); setForeignOnly(false); setDisplayCount(PAGE_SIZE); };
 
   // Infinite scroll
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   // Reset display count when filters change
-  useEffect(() => { setDisplayCount(PAGE_SIZE); }, [search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter]);
+  useEffect(() => { setDisplayCount(PAGE_SIZE); }, [search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
 
   const loadMore = useCallback(() => {
     setDisplayCount(c => Math.min(c + PAGE_SIZE, filtered.length));
@@ -161,6 +163,20 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
               <option value="1m">{t.s1m}</option>
             </>}
           </select>
+
+          {mode === 'sale' && (
+            <label className="inline-flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-sm cursor-pointer hover:bg-slate-50 transition-colors">
+              <input
+                type="checkbox"
+                checked={foreignOnly}
+                onChange={e => setForeignOnly(e.target.checked)}
+                className="rounded text-emerald-600 focus:ring-emerald-500"
+              />
+              <span className="text-slate-700">
+                {lang === 'vi' ? 'Người nước ngoài mua được' : 'Foreign Buyer Eligible'}
+              </span>
+            </label>
+          )}
 
           {hasFilters && (
             <button onClick={clearAll} className="text-sm text-blue-600 hover:text-blue-800 font-medium px-2">

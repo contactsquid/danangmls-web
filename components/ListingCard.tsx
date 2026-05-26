@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Carousel from './Carousel';
+import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
 import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
@@ -47,6 +48,12 @@ export default function ListingCard({ listing }: Props) {
 
       {/* Details */}
       <div className="p-4 flex flex-col flex-1">
+        {/* Foreign-eligible badge (above the price for visibility) */}
+        {listing.foreignEligible && (
+          <div className="mb-2">
+            <ForeignEligibleBadge buildingName={listing.foreignEligibleBuilding} size="sm" />
+          </div>
+        )}
         {/* Price */}
         <p className="text-lg font-bold text-slate-900 mb-1">
           {displayPrice || <span className="text-slate-400 text-sm font-normal">{lang === 'vi' ? 'Liên hệ để biết giá' : 'Price on request'}</span>}

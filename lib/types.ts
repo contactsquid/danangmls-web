@@ -16,4 +16,6 @@ export interface Listing {
   vi_title:     string;
   vi_text:      string;
   forSale:      boolean;
+  foreignEligible?: boolean;        // For Sale only — true if in a known foreign-approved building
+  foreignEligibleBuilding?: string; // Building name for the badge tooltip
 }

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Carousel from './Carousel';
 import ListingCard from './ListingCard';
+import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
 import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
@@ -85,6 +86,11 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             </div>
           </div>
 
+          {listing.foreignEligible && (
+            <div className="mb-3">
+              <ForeignEligibleBadge buildingName={listing.foreignEligibleBuilding} size="md" />
+            </div>
+          )}
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">{displayTitle}</h1>
           {(listing.type || listing.district) && (
             <h2 className="text-base font-medium text-slate-500 mb-6">
