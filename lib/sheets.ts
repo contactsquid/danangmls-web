@@ -1,7 +1,7 @@
 import { Listing } from './types';
 import { detectNeighborhood } from './neighborhoods';
 import { extractPriceFromText } from './price';
-import { isForeignEligible, detectForeignApprovedBuilding } from './foreignEligibleBuildings';
+import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
 const CSV_RENTALS   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
@@ -240,9 +240,12 @@ export async function getForSaleListings(): Promise<Listing[]> {
       const text     = col(r, FS.TEXT);
       const district = normalizeDistrict(col(r, FS.DISTRICT));
       const type     = col(r, FS.TYPE);
+      const postUrlForCheck = col(r, FS.POST_URL);
+      const fromCuratedGroup = isFromForeignEligibleGroup(postUrlForCheck);
       const foreignBuilding = isForeignEligible({ type, title, text })
         ? detectForeignApprovedBuilding(title + ' ' + text)
         : null;
+      const foreignEligibleFlag = fromCuratedGroup || foreignBuilding !== null;
       const listing: Listing = {
         title,
         text,
@@ -266,7 +269,7 @@ export async function getForSaleListings(): Promise<Listing[]> {
         vi_title:     col(r, FS.VI_TITLE),
         vi_text:      col(r, FS.VI_TEXT),
         forSale:      true,
-        foreignEligible: foreignBuilding !== null,
+        foreignEligible: foreignEligibleFlag,
         foreignEligibleBuilding: foreignBuilding?.name,
       };
       warnIfBadData(listing, 'For Sale');

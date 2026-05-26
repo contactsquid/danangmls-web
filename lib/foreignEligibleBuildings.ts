@@ -64,3 +64,30 @@ export function isForeignEligible(opts: { type?: string; title?: string; text?: 
   }
   return detectForeignApprovedBuilding(blob) !== null;
 }
+
+// ── Foreign-eligible Facebook groups ──
+//
+// Blake maintains a separate FB group where curated foreigner-eligible listings
+// are posted. An n8n scraper pulls from that group and writes to For Sale Staging
+// alongside the regular for-sale scraper. Every listing whose Post URL traces
+// back to one of these group IDs gets foreignEligible=true automatically — the
+// curation is the trust signal, no per-listing inspection needed.
+//
+// Add a new group ID here when launching another curated group. The match is on
+// the FB group path segment in the Post URL (numeric ID or vanity slug).
+
+export const FOREIGN_ELIGIBLE_GROUP_IDS = new Set<string>([
+  // TODO: add the new foreigner-eligible FB group ID here once the group is set up
+]);
+
+/** Extract the FB group ID/slug from a permalink URL. */
+function extractGroupId(postUrl: string): string | null {
+  const m = (postUrl || '').match(/facebook\.com\/groups\/([^/?#]+)/i);
+  return m ? m[1] : null;
+}
+
+/** True if the Post URL belongs to a curated foreign-eligible FB group. */
+export function isFromForeignEligibleGroup(postUrl: string): boolean {
+  const id = extractGroupId(postUrl);
+  return id !== null && FOREIGN_ELIGIBLE_GROUP_IDS.has(id);
+}
