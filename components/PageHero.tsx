@@ -26,7 +26,7 @@ export default function PageHero({ mode, count }: Props) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
         <h2 className="text-lg font-semibold text-slate-700 mb-4">{h2}</h2>
         {intro.length > 0 && (
-          <div className="text-sm text-slate-600 leading-relaxed space-y-3 mb-6 max-w-4xl">
+          <div className="text-sm text-slate-600 leading-relaxed space-y-3 mb-6">
             {intro.map((p, i) => <p key={i}>{p}</p>)}
           </div>
         )}
