@@ -56,7 +56,7 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      <Link href={lang === 'vi' ? '/vi' : '/'} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
+      <Link href={listing.forSale ? (lang === 'vi' ? '/vi/mua-ban' : '/for-sale') : (lang === 'vi' ? '/vi/thue' : '/for-rent')} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
@@ -190,7 +190,7 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
           {/* Hub link */}
           <div className="mt-6 pt-6 border-t border-slate-100 text-center">
             <Link
-              href={listing.forSale ? (lang === 'vi' ? '/vi/mua-ban' : '/for-sale') : (lang === 'vi' ? '/vi' : '/')}
+              href={listing.forSale ? (lang === 'vi' ? '/vi/mua-ban' : '/for-sale') : (lang === 'vi' ? '/vi/thue' : '/for-rent')}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
