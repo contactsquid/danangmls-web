@@ -2,7 +2,6 @@ import { getListings, getUniqueValues } from '@/lib/sheets';
 import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
 import PageHero from '@/components/PageHero';
-import PopularSearches from '@/components/PopularSearches';
 import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
@@ -34,7 +33,6 @@ export default async function ForRentPage() {
     <div className="min-h-screen bg-slate-50">
       <SiteHeader />
       <PageHero mode="rent" count={listings.length} />
-      <PopularSearches />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <ListingsGrid listings={listings} types={types} districts={districts} />
       </main>

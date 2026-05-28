@@ -6,13 +6,8 @@ export interface Translations {
   rentH1: string;
   rentSubtitle: (n: number) => string;
   rentH2: string;
+  rentH2b: string;
   rentIntro: string[];
-  popularSearchesTitle: string;
-  popularByType: string;
-  popularByBudget: string;
-  popularByArea: string;
-  popular3BedHouses: string;
-  popularFurnished: string;
   saleH1: string;
   saleSubtitle: (n: number) => string;
   saleH2: string;
@@ -54,17 +49,12 @@ export const translations: Record<Lang, Translations> = {
     forSale: 'For Sale',
     rentH1: 'Apartments & Houses for Rent in Da Nang, Vietnam',
     rentSubtitle: (n) => `Browse ${n} rental properties in Da Nang and Hoi An — apartments, houses, villas, and condos. Listings updated daily from local agents and property managers.`,
-    rentH2: 'Explore Furnished Rental Properties in Da Nang & Hoi An',
+    rentH2: 'Furnished Rentals in Da Nang, Vietnam | House & Apartment Listings',
+    rentH2b: 'Explore Rental Properties in Da Nang & Hoi An',
     rentIntro: [
       `Da Nang is one of Vietnam's most popular destinations for expats, digital nomads, and long-term visitors, and the rental market here has something for every budget. Whether you're after a modern apartment near My Khe Beach, a spacious family house in Hai Chau, or a furnished villa with a private pool in Ngu Hanh Son, you'll find current listings updated daily below. Most properties come fully furnished with a kitchen, wifi, air conditioning, and everything you need to move in right away.`,
       `Monthly rentals are the norm in Da Nang, with flexible rental durations to suit both short stays and year-long leases. Prices range from budget studios to premium beachfront apartments, and many homes offer two- and three-bedroom layouts ideal for families or shared living. Browse the listings below to compare bedrooms, bathrooms, districts, and pricing in USD, then reach out about any property that catches your eye.`,
     ],
-    popularSearchesTitle: 'Popular Rental Searches in Da Nang',
-    popularByType: 'Browse by Property Type',
-    popularByBudget: 'Browse by Monthly Budget',
-    popularByArea: 'Browse by Neighborhood',
-    popular3BedHouses: '3-Bedroom Houses',
-    popularFurnished: 'Furnished Rentals',
     saleH1: 'Houses for Sale in Da Nang, Vietnam',
     saleSubtitle: (n) => `Browse ${n} properties for sale in Da Nang and Hoi An — houses, apartments, villas, and land. Listings sourced daily from local agents and property managers.`,
     saleH2: 'Properties for Sale in Da Nang & Hoi An',
@@ -105,17 +95,12 @@ export const translations: Record<Lang, Translations> = {
     forSale: 'Mua Bán',
     rentH1: 'Căn Hộ & Nhà Cho Thuê tại Đà Nẵng, Việt Nam',
     rentSubtitle: (n) => `Xem ${n} bất động sản cho thuê tại Đà Nẵng và Hội An — căn hộ, nhà phố, biệt thự và condotel. Danh sách cập nhật hàng ngày từ các đại lý địa phương.`,
-    rentH2: 'Khám Phá Bất Động Sản Cho Thuê Đầy Đủ Nội Thất tại Đà Nẵng & Hội An',
+    rentH2: 'Cho Thuê Đầy Đủ Nội Thất tại Đà Nẵng, Việt Nam | Nhà & Căn Hộ',
+    rentH2b: 'Khám Phá Bất Động Sản Cho Thuê tại Đà Nẵng & Hội An',
     rentIntro: [
       `Đà Nẵng là một trong những điểm đến được yêu thích nhất Việt Nam đối với người nước ngoài, dân du mục kỹ thuật số và khách lưu trú dài hạn, và thị trường cho thuê tại đây có lựa chọn phù hợp với mọi ngân sách. Dù bạn đang tìm một căn hộ hiện đại gần biển Mỹ Khê, một ngôi nhà rộng rãi cho gia đình ở Hải Châu, hay một biệt thự đầy đủ nội thất có hồ bơi riêng ở Ngũ Hành Sơn, bạn sẽ tìm thấy các tin đăng được cập nhật hàng ngày bên dưới. Hầu hết bất động sản đều có sẵn nội thất đầy đủ với bếp, wifi, điều hòa và mọi tiện nghi để dọn vào ở ngay.`,
       `Cho thuê theo tháng là hình thức phổ biến tại Đà Nẵng, với thời hạn thuê linh hoạt phù hợp cho cả lưu trú ngắn ngày lẫn hợp đồng cả năm. Giá dao động từ studio tiết kiệm đến căn hộ cao cấp view biển, và nhiều căn có thiết kế hai đến ba phòng ngủ lý tưởng cho gia đình hoặc ở ghép. Hãy xem các tin đăng bên dưới để so sánh phòng ngủ, phòng tắm, quận và mức giá theo USD, sau đó liên hệ về bất kỳ bất động sản nào bạn quan tâm.`,
     ],
-    popularSearchesTitle: 'Tìm Kiếm Cho Thuê Phổ Biến tại Đà Nẵng',
-    popularByType: 'Theo Loại Bất Động Sản',
-    popularByBudget: 'Theo Ngân Sách Hàng Tháng',
-    popularByArea: 'Theo Khu Vực',
-    popular3BedHouses: 'Nhà 3 Phòng Ngủ',
-    popularFurnished: 'Đầy Đủ Nội Thất',
     saleH1: 'Nhà Bán tại Đà Nẵng, Việt Nam',
     saleSubtitle: (n) => `Xem ${n} bất động sản bán tại Đà Nẵng và Hội An — nhà phố, căn hộ, biệt thự và đất nền. Danh sách cập nhật hàng ngày từ các đại lý địa phương.`,
     saleH2: 'Bất Động Sản Bán tại Đà Nẵng & Hội An',

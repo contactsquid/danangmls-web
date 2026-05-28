@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef, useCallback, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import ListingCard from './ListingCard';
@@ -17,17 +16,6 @@ interface Props {
   mode?: 'rent' | 'sale';
 }
 
-// Reads the URL query string and pushes it to the parent. Isolated here and
-// rendered under <Suspense> so useSearchParams doesn't force static pages that
-// embed the grid (e.g. the 404 page) into a client-side-rendering bailout.
-function SearchParamSync({ onParams }: { onParams: (sp: URLSearchParams) => void }) {
-  const searchParams = useSearchParams();
-  useEffect(() => {
-    onParams(new URLSearchParams(searchParams.toString()));
-  }, [searchParams, onParams]);
-  return null;
-}
-
 export default function ListingsGrid({ listings, types, districts, mode = 'rent' }: Props) {
   const { lang, t } = useLanguage();
   const [search, setSearch]         = useState('');
@@ -37,20 +25,6 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   const [bedsFilter, setBeds]       = useState('');
   const [priceFilter, setPrice]     = useState('');
   const [foreignOnly, setForeignOnly] = useState(false);
-
-  // URL params (e.g. /for-rent?type=Villa&beds=3 from the Popular Searches links)
-  // are the source of truth for filters on navigation. Applied via a
-  // Suspense-wrapped child (see SearchParamSync) so useSearchParams doesn't
-  // break static prerendering of pages that render this grid (e.g. /404).
-  const applyParams = useCallback((sp: URLSearchParams) => {
-    setSearch(sp.get('search') || '');
-    setType(sp.get('type') || '');
-    setDist(sp.get('district') || '');
-    setHood(sp.get('hood') || '');
-    setBeds(sp.get('beds') || '');
-    setPrice(sp.get('price') || '');
-    setForeignOnly(sp.get('foreign') === '1');
-  }, []);
 
   // Neighborhoods available for selected district
   const neighborhoods = distFilter ? (NEIGHBORHOODS[distFilter] || []) : [];
@@ -127,9 +101,6 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
 
   return (
     <div>
-      <Suspense fallback={null}>
-        <SearchParamSync onParams={applyParams} />
-      </Suspense>
       {/* Search + Filters */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
         {/* Search */}
