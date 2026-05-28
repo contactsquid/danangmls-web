@@ -154,6 +154,16 @@ function col(row: string[], idx: number): string {
   return (row && row[idx] != null) ? String(row[idx]).trim() : '';
 }
 
+/** Whether an image URL is durable enough to display. Facebook CDN URLs expire
+ *  within weeks and then return 403, leaving listings with broken/no images.
+ *  Only rehosted permanent URLs (images.danang.homes via R2) are reliable, so a
+ *  listing is only shown once its photos have been rehosted. The oe= expiry
+ *  timestamp on fbcdn URLs is unreliable (reports "valid" for URLs that 403),
+ *  so we exclude all fbcdn/facebook URLs rather than trusting the timestamp. */
+function isServableImage(url: string): boolean {
+  return url.startsWith('http') && !url.includes('fbcdn.net') && !url.includes('facebook.com');
+}
+
 /** Extracts the slug from a stored danangmls.com URL (column R).
  *  Returns the slug string if the URL is valid, otherwise null.
  *  This makes the stored URL the single source of truth — the slug never
@@ -209,7 +219,7 @@ function parseRows(rows: string[][]): Listing[] {
         bedrooms:     col(r, R.BEDROOMS),
         type:         col(r, R.TYPE),
         agent:        col(r, R.AGENT),
-        images:       [col(r, R.IMG1), col(r, R.IMG2), col(r, R.IMG3), col(r, R.IMG4), col(r, R.IMG5), col(r, R.IMG6), col(r, R.IMG7), col(r, R.IMG8), col(r, R.IMG9), col(r, R.IMG10)].filter(u => u.startsWith('http')),
+        images:       [col(r, R.IMG1), col(r, R.IMG2), col(r, R.IMG3), col(r, R.IMG4), col(r, R.IMG5), col(r, R.IMG6), col(r, R.IMG7), col(r, R.IMG8), col(r, R.IMG9), col(r, R.IMG10)].filter(isServableImage),
         contact:      col(r, R.CONTACT),
         postUrl:      col(r, R.POST_URL),
         date:         col(r, R.DATE),
@@ -222,7 +232,11 @@ function parseRows(rows: string[][]): Listing[] {
       };
       warnIfBadData(listing, 'Sheet1/Rentals');
       return listing;
-    });
+    })
+    // Never show a listing with no servable images — until its photos are
+    // rehosted to permanent storage it would render broken. Self-heals once
+    // sheet-to-r2 rehosts the row.
+    .filter(listing => listing.images.length > 0);
 }
 
 export async function getListings(): Promise<Listing[]> {
@@ -259,7 +273,7 @@ export async function getForSaleListings(): Promise<Listing[]> {
           col(r, FS.IMG4),  col(r, FS.IMG5),  col(r, FS.IMG6),
           col(r, FS.IMG7),  col(r, FS.IMG8),  col(r, FS.IMG9),
           col(r, FS.IMG10),
-        ].filter(u => u.startsWith('http')),
+        ].filter(isServableImage),
         contact:      col(r, FS.CONTACT),
         postUrl:      col(r, FS.POST_URL),
         date:         col(r, FS.DATE),
@@ -276,6 +290,8 @@ export async function getForSaleListings(): Promise<Listing[]> {
       return listing;
     })
     .filter(listing => {
+      // Never show a listing with no servable images (see isServableImage).
+      if (listing.images.length === 0) return false;
       if (!listing.price) return true; // keep price-unknown listings
       const numeric = parseFloat(listing.price.replace(/[^0-9.]/g, ''));
       return isNaN(numeric) || numeric >= 10000;
