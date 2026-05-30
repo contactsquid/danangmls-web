@@ -11,6 +11,8 @@ export interface Translations {
   saleH1: string;
   saleSubtitle: (n: number) => string;
   saleH2: string;
+  saleH2b: string;
+  saleIntro: string[];
   searchPlaceholder: string;
   allTypes: string;
   allDistricts: string;
@@ -55,9 +57,14 @@ export const translations: Record<Lang, Translations> = {
       `Da Nang is one of Vietnam's most popular destinations for expats, digital nomads, and long-term visitors, and the rental market here has something for every budget. Whether you're after a modern apartment near My Khe Beach, a spacious family house in Hai Chau, or a furnished villa with a private pool in Ngu Hanh Son, you'll find current listings updated daily below. Most properties come fully furnished with a kitchen, wifi, air conditioning, and everything you need to move in right away.`,
       `Monthly rentals are the norm in Da Nang, with flexible rental durations to suit both short stays and year-long leases. Prices range from budget studios to premium beachfront apartments, and many homes offer two- and three-bedroom layouts ideal for families or shared living. Browse the listings below to compare bedrooms, bathrooms, districts, and pricing in USD, then reach out about any property that catches your eye.`,
     ],
-    saleH1: 'Houses for Sale in Da Nang, Vietnam',
+    saleH1: 'Houses for Sale in Da Nang, Vietnam | Real Estate & Properties',
     saleSubtitle: (n) => `Browse ${n} properties for sale in Da Nang and Hoi An — houses, apartments, villas, and land. Listings sourced daily from local agents and property managers.`,
-    saleH2: 'Properties for Sale in Da Nang & Hoi An',
+    saleH2: 'Houses, Villas & Real Estate for Sale in Da Nang, Vietnam',
+    saleH2b: 'Explore Properties for Sale Across Da Nang & Hoi An — Houses, Apartments, Villas & Land',
+    saleIntro: [
+      `**Da Nang** is one of **Vietnam's** fastest-growing **real estate** markets, with a strong selection of houses, townhouses, villas, apartments, and land for **sale** across the city's most desirable **residential** neighborhoods. Whether you want to **buy** a modern family **home** in Hai Chau, a multi-story townhouse near the **beach** in Ngu Hanh Son, a prime frontage **property** for investment in Thanh Khe, or a beachfront villa in Hoi An, **Da Nang's real estate** market offers excellent value with several **bedrooms** and bathrooms to suit families of every size.`,
+      `Many condominium **units** in foreign-eligible buildings are also open to international buyers, making **Da Nang** a popular choice for both lifestyle and investment. Browse the listings below to compare neighborhoods, **property** types, **bedrooms**, and pricing in USD, then reach out about any **homes** that catch your eye — local **agents** can help you arrange a viewing for any **property** in the **area**.`,
+    ],
     searchPlaceholder: 'Search by title, district, or keyword...',
     allTypes: 'All Types',
     allDistricts: 'All Districts',
@@ -101,9 +108,14 @@ export const translations: Record<Lang, Translations> = {
       `Đà Nẵng là một trong những điểm đến được yêu thích nhất Việt Nam đối với người nước ngoài, dân du mục kỹ thuật số và khách lưu trú dài hạn, và thị trường cho thuê tại đây có lựa chọn phù hợp với mọi ngân sách. Dù bạn đang tìm một căn hộ hiện đại gần biển Mỹ Khê, một ngôi nhà rộng rãi cho gia đình ở Hải Châu, hay một biệt thự đầy đủ nội thất có hồ bơi riêng ở Ngũ Hành Sơn, bạn sẽ tìm thấy các tin đăng được cập nhật hàng ngày bên dưới. Hầu hết bất động sản đều có sẵn nội thất đầy đủ với bếp, wifi, điều hòa và mọi tiện nghi để dọn vào ở ngay.`,
       `Cho thuê theo tháng là hình thức phổ biến tại Đà Nẵng, với thời hạn thuê linh hoạt phù hợp cho cả lưu trú ngắn ngày lẫn hợp đồng cả năm. Giá dao động từ studio tiết kiệm đến căn hộ cao cấp view biển, và nhiều căn có thiết kế hai đến ba phòng ngủ lý tưởng cho gia đình hoặc ở ghép. Hãy xem các tin đăng bên dưới để so sánh phòng ngủ, phòng tắm, quận và mức giá theo USD, sau đó liên hệ về bất kỳ bất động sản nào bạn quan tâm.`,
     ],
-    saleH1: 'Nhà Bán tại Đà Nẵng, Việt Nam',
+    saleH1: 'Nhà Bán tại Đà Nẵng, Việt Nam | Bất Động Sản & Căn Hộ',
     saleSubtitle: (n) => `Xem ${n} bất động sản bán tại Đà Nẵng và Hội An — nhà phố, căn hộ, biệt thự và đất nền. Danh sách cập nhật hàng ngày từ các đại lý địa phương.`,
-    saleH2: 'Bất Động Sản Bán tại Đà Nẵng & Hội An',
+    saleH2: 'Nhà, Biệt Thự & Bất Động Sản Bán tại Đà Nẵng, Việt Nam',
+    saleH2b: 'Khám Phá Bất Động Sản Bán tại Đà Nẵng & Hội An — Nhà, Căn Hộ, Biệt Thự & Đất Nền',
+    saleIntro: [
+      `Đà Nẵng là một trong những thị trường bất động sản phát triển nhanh nhất Việt Nam, với nhiều lựa chọn nhà phố, biệt thự, căn hộ và đất nền đang bán trên khắp các khu dân cư đáng sống của thành phố. Dù bạn muốn mua một căn nhà gia đình hiện đại ở Hải Châu, một nhà phố nhiều tầng gần biển ở Ngũ Hành Sơn, một bất động sản mặt tiền ở Thanh Khê để đầu tư, hay một biệt thự ven biển ở Hội An, thị trường bất động sản Đà Nẵng đều có lựa chọn phù hợp với mọi quy mô gia đình.`,
+      `Nhiều căn hộ chung cư trong các tòa nhà đủ điều kiện cho người nước ngoài cũng đang mở bán cho khách quốc tế, khiến Đà Nẵng trở thành lựa chọn phổ biến cho cả nhu cầu ở thực và đầu tư. Hãy xem danh sách bên dưới để so sánh khu vực, loại bất động sản, số phòng ngủ và mức giá theo USD, sau đó liên hệ về bất kỳ căn nhà nào bạn quan tâm — các đại lý địa phương có thể giúp bạn sắp xếp xem nhà ở bất kỳ khu vực nào.`,
+    ],
     searchPlaceholder: 'Tìm theo tiêu đề, quận, hoặc từ khóa...',
     allTypes: 'Tất Cả Loại',
     allDistricts: 'Tất Cả Quận',

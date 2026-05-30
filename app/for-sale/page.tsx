@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Houses for Sale in Da Nang, Vietnam',
+  title: 'Houses for Sale in Da Nang, Vietnam | Real Estate & Properties',
   description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An, Vietnam. Updated daily from local agents and live listings.',
   alternates: {
     canonical: 'https://danangmls.com/for-sale',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Houses for Sale in Da Nang, Vietnam',
+    title: 'Houses for Sale in Da Nang, Vietnam | Real Estate & Properties',
     description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An. Updated daily.',
     url: 'https://danangmls.com/for-sale',
     type: 'website',
