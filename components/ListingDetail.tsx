@@ -8,6 +8,7 @@ import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
 import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
+import { getListingNote } from '@/lib/listingNotes';
 
 interface Props {
   listing: Listing;
@@ -133,6 +134,17 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
               <p>🌐 Website: <a href="https://danang.homes" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes</a></p>
             </div>
           </div>
+
+          {/* Per-listing highlighted note (e.g. flexible lease, recent renovation) */}
+          {(() => {
+            const note = getListingNote(listing.slug, lang === 'vi' ? 'vi' : 'en');
+            if (!note) return null;
+            return (
+              <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <p className="text-amber-900 leading-relaxed text-sm font-medium">⭐ {note}</p>
+              </div>
+            );
+          })()}
 
           {/* Description */}
           {cleanText && (
