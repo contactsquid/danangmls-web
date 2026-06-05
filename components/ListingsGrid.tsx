@@ -26,6 +26,36 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   const [priceFilter, setPrice]     = useState('');
   const [foreignOnly, setForeignOnly] = useState(false);
 
+  // Persist filters in sessionStorage so they survive navigation to a listing
+  // detail page and back. Keyed by mode so rent/sale don't bleed into each other.
+  const FILTER_STORAGE_KEY = `dmls:listings:${mode}`;
+  const [filtersHydrated, setFiltersHydrated] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = window.sessionStorage.getItem(FILTER_STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (typeof saved.search      === 'string')  setSearch(saved.search);
+        if (typeof saved.typeFilter  === 'string')  setType(saved.typeFilter);
+        if (typeof saved.distFilter  === 'string')  setDist(saved.distFilter);
+        if (typeof saved.hoodFilter  === 'string')  setHood(saved.hoodFilter);
+        if (typeof saved.bedsFilter  === 'string')  setBeds(saved.bedsFilter);
+        if (typeof saved.priceFilter === 'string')  setPrice(saved.priceFilter);
+        if (typeof saved.foreignOnly === 'boolean') setForeignOnly(saved.foreignOnly);
+      }
+    } catch {}
+    setFiltersHydrated(true);
+  }, [FILTER_STORAGE_KEY]);
+  useEffect(() => {
+    if (!filtersHydrated || typeof window === 'undefined') return;
+    try {
+      window.sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
+        search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly,
+      }));
+    } catch {}
+  }, [FILTER_STORAGE_KEY, filtersHydrated, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
+
   // Neighborhoods available for selected district
   const neighborhoods = distFilter ? (NEIGHBORHOODS[distFilter] || []) : [];
 
@@ -73,7 +103,12 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   }, [listings, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
 
   const hasFilters = search || typeFilter || distFilter || hoodFilter || bedsFilter || priceFilter || foreignOnly;
-  const clearAll = () => { setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); setForeignOnly(false); setDisplayCount(PAGE_SIZE); };
+  const clearAll = () => {
+    setSearch(''); setType(''); setDist(''); setHood(''); setBeds(''); setPrice(''); setForeignOnly(false); setDisplayCount(PAGE_SIZE);
+    if (typeof window !== 'undefined') {
+      try { window.sessionStorage.removeItem(FILTER_STORAGE_KEY); } catch {}
+    }
+  };
 
   // Infinite scroll
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
