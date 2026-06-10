@@ -89,6 +89,9 @@ export function firstImageAltPrefix(
   const { bedrooms, type, district, forSale, slug = '' } = opts;
   const t = (type || '').toLowerCase();
   const isHouse = t === 'house' || t === 'villa';
+  // Villas are frequently typed as "House" in the sheet, so also detect by the
+  // slug (derived from the title) to label the descriptive tail Villa/Biệt Thự.
+  const isVilla = t === 'villa' || /(^|-)villas?(-|$)/i.test(slug);
   const bedCount = Number(bedrooms);
   const hasBeds  = Number.isFinite(bedCount) && bedCount > 0;
 
@@ -105,7 +108,7 @@ export function firstImageAltPrefix(
       else if (t === 'land')      lead = 'Cho thuê Đất Đà Nẵng';
       else                        lead = 'Cho thuê Nhà Đà Nẵng';
     }
-    const typeVi = type ? localizeType(type, 'vi') : 'Bất động sản';
+    const typeVi = isVilla ? 'Biệt Thự' : (type ? localizeType(type, 'vi') : 'Bất động sản');
     const beds   = hasBeds ? ` ${bedCount} phòng ngủ` : '';
     const place  = district ? ` tại ${localizeDistrict(district, 'vi')}` : ''; // no ", Đà Nẵng" — lead has it
     return `${lead} – ${typeVi}${beds}${place}`;
@@ -125,7 +128,7 @@ export function firstImageAltPrefix(
     else                        lead = 'Home for Rent in Da Nang';
   }
   const beds   = hasBeds ? `${bedCount}-bedroom ` : '';
-  const typeEn = type || 'property';
+  const typeEn = isVilla ? 'Villa' : (type || 'property');
   const place  = district ? ` in ${district}` : ''; // no "Da Nang" — lead has it
   return `${lead} – ${beds}${typeEn}${place}`;
 }
