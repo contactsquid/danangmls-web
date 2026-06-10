@@ -66,8 +66,8 @@ export function localizedAltPrefix(
 // lives in the lead phrase only — the descriptive tail must NOT repeat it.
 const VI_SALE_HOUSE_LEADS = ['Bán Nhà Đà Nẵng', 'Nhà Bán Đà Nẵng', 'Mua Bán Nhà Đà Nẵng'];
 const VI_RENT_HOUSE_LEADS = ['Cho thuê Nhà Đà Nẵng', 'Nhà Cho thuê Đà Nẵng', 'Thuê Nhà Đà Nẵng'];
-const EN_SALE_HOUSE_LEADS = ['Houses for Sale in Da Nang', 'Da Nang Houses for Sale', 'Property for Sale in Da Nang'];
-const EN_RENT_HOUSE_LEADS = ['Houses for Rent in Da Nang', 'Da Nang Houses for Rent', 'Homes for Rent in Da Nang'];
+const EN_SALE_HOUSE_LEADS = ['House for Sale in Da Nang', 'Da Nang House for Sale', 'Property for Sale in Da Nang'];
+const EN_RENT_HOUSE_LEADS = ['House for Rent in Da Nang', 'Da Nang House for Rent', 'Home for Rent in Da Nang'];
 
 function slugRotate(slug: string, n: number): number {
   let h = 0;
@@ -122,7 +122,7 @@ export function firstImageAltPrefix(
     if (isHouse)                lead = EN_RENT_HOUSE_LEADS[slugRotate(slug, EN_RENT_HOUSE_LEADS.length)];
     else if (t === 'apartment') lead = 'Apartments for Rent in Da Nang';
     else if (t === 'land')      lead = 'Land for Rent in Da Nang';
-    else                        lead = 'Homes for Rent in Da Nang';
+    else                        lead = 'Home for Rent in Da Nang';
   }
   const beds   = hasBeds ? `${bedCount}-bedroom ` : '';
   const typeEn = type || 'property';
