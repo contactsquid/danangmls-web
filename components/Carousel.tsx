@@ -7,6 +7,7 @@ interface Props {
   images: string[];
   title: string;
   altPrefix?: string; // Rich alt text prefix for SEO (e.g. "3-bedroom house for rent in Son Tra, Da Nang")
+  firstAltPrefix?: string; // Keyphrase-led alt prefix applied to the FIRST photo only (VI image-search targeting)
   compact?: boolean; // true = card thumbnail mode
 }
 
@@ -17,7 +18,7 @@ function proxyImg(url: string): string {
   return url;
 }
 
-export default function Carousel({ images, title, altPrefix, compact = false }: Props) {
+export default function Carousel({ images, title, altPrefix, firstAltPrefix, compact = false }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [current, setCurrent] = useState(0);
 
@@ -63,7 +64,7 @@ export default function Carousel({ images, title, altPrefix, compact = false }: 
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={proxyImg(img)}
-                alt={`${altPrefix || title} — photo ${i + 1}`}
+                alt={`${(i === 0 && firstAltPrefix ? firstAltPrefix : (altPrefix || title))} — photo ${i + 1}`}
                 className="w-full h-full object-cover"
                 loading={i === 0 ? 'eager' : 'lazy'}
                 onError={(e) => {

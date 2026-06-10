@@ -60,6 +60,51 @@ export function localizedAltPrefix(
   ].filter(Boolean).join(' ');
 }
 
+// Vietnamese first-photo lead keyphrases. House phrases rotate per listing (by
+// slug) so the catalogue collectively targets all three high-volume variants
+// without stuffing any single image. Apartments/land use one typed phrase.
+const VI_SALE_HOUSE_LEADS = ['Bán Nhà Đà Nẵng', 'Nhà Bán Đà Nẵng', 'Mua Bán Nhà Đà Nẵng'];
+const VI_RENT_HOUSE_LEADS = ['Cho thuê Nhà Đà Nẵng', 'Nhà Cho thuê Đà Nẵng', 'Thuê Nhà Đà Nẵng'];
+
+function slugRotate(slug: string, n: number): number {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (Math.imul(h, 31) + slug.charCodeAt(i)) >>> 0;
+  return h % n;
+}
+
+/**
+ * Vietnamese alt-text prefix for the FIRST listing photo — the image Google is
+ * most likely to index for image search. Leads with a high-volume search
+ * keyphrase, then appends the specific listing detail (type, beds, district).
+ * Intended for /vi pages only; callers pass this just for the first image and
+ * fall back to localizedAltPrefix() for the rest and for English.
+ */
+export function viFirstImageAltPrefix(
+  opts: { bedrooms?: number | string | null; type?: string | null; district?: string | null; forSale?: boolean; slug?: string },
+): string {
+  const { bedrooms, type, district, forSale, slug = '' } = opts;
+  const t = (type || '').toLowerCase();
+  let lead: string;
+  if (forSale) {
+    if (t === 'house' || t === 'villa') lead = VI_SALE_HOUSE_LEADS[slugRotate(slug, VI_SALE_HOUSE_LEADS.length)];
+    else if (t === 'apartment')         lead = 'Bán Căn Hộ Đà Nẵng';
+    else if (t === 'land')              lead = 'Bán Đất Đà Nẵng';
+    else                                lead = 'Mua Bán Nhà Đất Đà Nẵng';
+  } else {
+    if (t === 'house' || t === 'villa') lead = VI_RENT_HOUSE_LEADS[slugRotate(slug, VI_RENT_HOUSE_LEADS.length)];
+    else if (t === 'apartment')         lead = 'Cho thuê Căn Hộ Đà Nẵng';
+    else if (t === 'land')              lead = 'Cho thuê Đất Đà Nẵng';
+    else                                lead = 'Cho thuê Nhà Đà Nẵng';
+  }
+  // Descriptive tail — no verb, since the lead phrase already carries intent.
+  const bedCount = Number(bedrooms);
+  const hasBeds  = Number.isFinite(bedCount) && bedCount > 0;
+  const typeVi   = type ? localizeType(type, 'vi') : 'Bất động sản';
+  const beds     = hasBeds ? ` ${bedCount} phòng ngủ` : '';
+  const place    = district ? `${localizeDistrict(district, 'vi')}, Đà Nẵng` : 'Đà Nẵng';
+  return `${lead} – ${typeVi}${beds} tại ${place}`;
+}
+
 function vndFormat(vnd: number): string {
   if (vnd >= 1_000_000_000) {
     const ty = vnd / 1_000_000_000;
