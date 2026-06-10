@@ -39,15 +39,20 @@ export function localizedAltPrefix(
   lang: string,
 ): string {
   const { bedrooms, type, district, forSale } = opts;
+  // bedrooms can arrive as the string "0" (truthy!) for land/studio listings;
+  // coerce and treat 0 / non-numeric as "no bedroom count" so we never emit
+  // "0 phòng ngủ" / "0-bedroom".
+  const bedCount = Number(bedrooms);
+  const hasBeds  = Number.isFinite(bedCount) && bedCount > 0;
   if (lang === 'vi') {
     const verb  = forSale ? 'Bán' : 'Cho thuê';
     const t     = type ? localizeType(type, 'vi') : 'Bất động sản';
-    const beds  = bedrooms ? ` ${bedrooms} phòng ngủ` : '';
+    const beds  = hasBeds ? ` ${bedCount} phòng ngủ` : '';
     const place = district ? `${localizeDistrict(district, 'vi')}, Đà Nẵng` : 'Đà Nẵng';
     return `${verb} ${t}${beds} tại ${place}`;
   }
   return [
-    bedrooms && `${bedrooms}-bedroom`,
+    hasBeds && `${bedCount}-bedroom`,
     type,
     forSale ? 'for sale' : 'for rent',
     district && `in ${district}`,
