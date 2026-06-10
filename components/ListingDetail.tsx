@@ -6,7 +6,7 @@ import ListingCard from './ListingCard';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
-import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, viFirstImageAltPrefix } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
 
@@ -43,11 +43,12 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
     { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
     lang,
   );
-  // First photo on /vi pages leads with a high-volume search keyphrase (rotated
-  // per listing for houses) — this is the image most likely indexed in VI image search.
-  const firstAltPrefix = lang === 'vi'
-    ? viFirstImageAltPrefix({ bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale, slug: listing.slug })
-    : undefined;
+  // First photo leads with a high-volume search keyphrase (rotated per listing
+  // for houses) — the image most likely indexed in Google image search.
+  const firstAltPrefix = firstImageAltPrefix(
+    { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale, slug: listing.slug },
+    lang,
+  );
 
   const cleanText = sourceText
     // Strip inline contact block that may be appended without a preceding newline

@@ -60,11 +60,14 @@ export function localizedAltPrefix(
   ].filter(Boolean).join(' ');
 }
 
-// Vietnamese first-photo lead keyphrases. House phrases rotate per listing (by
-// slug) so the catalogue collectively targets all three high-volume variants
-// without stuffing any single image. Apartments/land use one typed phrase.
+// First-photo lead keyphrases. House phrases rotate per listing (by slug) so the
+// catalogue collectively targets all three high-volume variants without stuffing
+// any single image. Apartments/land use one typed phrase. "Đà Nẵng"/"Da Nang"
+// lives in the lead phrase only — the descriptive tail must NOT repeat it.
 const VI_SALE_HOUSE_LEADS = ['Bán Nhà Đà Nẵng', 'Nhà Bán Đà Nẵng', 'Mua Bán Nhà Đà Nẵng'];
 const VI_RENT_HOUSE_LEADS = ['Cho thuê Nhà Đà Nẵng', 'Nhà Cho thuê Đà Nẵng', 'Thuê Nhà Đà Nẵng'];
+const EN_SALE_HOUSE_LEADS = ['Houses for Sale in Da Nang', 'Da Nang Houses for Sale', 'Property for Sale in Da Nang'];
+const EN_RENT_HOUSE_LEADS = ['Houses for Rent in Da Nang', 'Da Nang Houses for Rent', 'Homes for Rent in Da Nang'];
 
 function slugRotate(slug: string, n: number): number {
   let h = 0;
@@ -73,36 +76,58 @@ function slugRotate(slug: string, n: number): number {
 }
 
 /**
- * Vietnamese alt-text prefix for the FIRST listing photo — the image Google is
- * most likely to index for image search. Leads with a high-volume search
- * keyphrase, then appends the specific listing detail (type, beds, district).
- * Intended for /vi pages only; callers pass this just for the first image and
- * fall back to localizedAltPrefix() for the rest and for English.
+ * Alt-text prefix for the FIRST listing photo — the image Google is most likely
+ * to index for image search. Leads with a high-volume search keyphrase (which
+ * already contains the city), then appends the specific listing detail without
+ * repeating the city. Works for both 'vi' and 'en'; callers use it for the first
+ * image only and fall back to localizedAltPrefix() for the rest.
  */
-export function viFirstImageAltPrefix(
+export function firstImageAltPrefix(
   opts: { bedrooms?: number | string | null; type?: string | null; district?: string | null; forSale?: boolean; slug?: string },
+  lang: string,
 ): string {
   const { bedrooms, type, district, forSale, slug = '' } = opts;
   const t = (type || '').toLowerCase();
-  let lead: string;
-  if (forSale) {
-    if (t === 'house' || t === 'villa') lead = VI_SALE_HOUSE_LEADS[slugRotate(slug, VI_SALE_HOUSE_LEADS.length)];
-    else if (t === 'apartment')         lead = 'Bán Căn Hộ Đà Nẵng';
-    else if (t === 'land')              lead = 'Bán Đất Đà Nẵng';
-    else                                lead = 'Mua Bán Nhà Đất Đà Nẵng';
-  } else {
-    if (t === 'house' || t === 'villa') lead = VI_RENT_HOUSE_LEADS[slugRotate(slug, VI_RENT_HOUSE_LEADS.length)];
-    else if (t === 'apartment')         lead = 'Cho thuê Căn Hộ Đà Nẵng';
-    else if (t === 'land')              lead = 'Cho thuê Đất Đà Nẵng';
-    else                                lead = 'Cho thuê Nhà Đà Nẵng';
-  }
-  // Descriptive tail — no verb, since the lead phrase already carries intent.
+  const isHouse = t === 'house' || t === 'villa';
   const bedCount = Number(bedrooms);
   const hasBeds  = Number.isFinite(bedCount) && bedCount > 0;
-  const typeVi   = type ? localizeType(type, 'vi') : 'Bất động sản';
-  const beds     = hasBeds ? ` ${bedCount} phòng ngủ` : '';
-  const place    = district ? `${localizeDistrict(district, 'vi')}, Đà Nẵng` : 'Đà Nẵng';
-  return `${lead} – ${typeVi}${beds} tại ${place}`;
+
+  if (lang === 'vi') {
+    let lead: string;
+    if (forSale) {
+      if (isHouse)                lead = VI_SALE_HOUSE_LEADS[slugRotate(slug, VI_SALE_HOUSE_LEADS.length)];
+      else if (t === 'apartment') lead = 'Bán Căn Hộ Đà Nẵng';
+      else if (t === 'land')      lead = 'Bán Đất Đà Nẵng';
+      else                        lead = 'Mua Bán Nhà Đất Đà Nẵng';
+    } else {
+      if (isHouse)                lead = VI_RENT_HOUSE_LEADS[slugRotate(slug, VI_RENT_HOUSE_LEADS.length)];
+      else if (t === 'apartment') lead = 'Cho thuê Căn Hộ Đà Nẵng';
+      else if (t === 'land')      lead = 'Cho thuê Đất Đà Nẵng';
+      else                        lead = 'Cho thuê Nhà Đà Nẵng';
+    }
+    const typeVi = type ? localizeType(type, 'vi') : 'Bất động sản';
+    const beds   = hasBeds ? ` ${bedCount} phòng ngủ` : '';
+    const place  = district ? ` tại ${localizeDistrict(district, 'vi')}` : ''; // no ", Đà Nẵng" — lead has it
+    return `${lead} – ${typeVi}${beds}${place}`;
+  }
+
+  // English
+  let lead: string;
+  if (forSale) {
+    if (isHouse)                lead = EN_SALE_HOUSE_LEADS[slugRotate(slug, EN_SALE_HOUSE_LEADS.length)];
+    else if (t === 'apartment') lead = 'Apartments for Sale in Da Nang';
+    else if (t === 'land')      lead = 'Land for Sale in Da Nang';
+    else                        lead = 'Property for Sale in Da Nang';
+  } else {
+    if (isHouse)                lead = EN_RENT_HOUSE_LEADS[slugRotate(slug, EN_RENT_HOUSE_LEADS.length)];
+    else if (t === 'apartment') lead = 'Apartments for Rent in Da Nang';
+    else if (t === 'land')      lead = 'Land for Rent in Da Nang';
+    else                        lead = 'Homes for Rent in Da Nang';
+  }
+  const beds   = hasBeds ? `${bedCount}-bedroom ` : '';
+  const typeEn = type || 'property';
+  const place  = district ? ` in ${district}` : ''; // no "Da Nang" — lead has it
+  return `${lead} – ${beds}${typeEn}${place}`;
 }
 
 function vndFormat(vnd: number): string {

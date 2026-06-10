@@ -5,7 +5,7 @@ import Carousel from './Carousel';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
-import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, viFirstImageAltPrefix } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
 
 interface Props {
   listing: Listing;
@@ -35,9 +35,10 @@ export default function ListingCard({ listing }: Props) {
     { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
     lang,
   );
-  const firstAltPrefix = lang === 'vi'
-    ? viFirstImageAltPrefix({ bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale, slug: listing.slug })
-    : undefined;
+  const firstAltPrefix = firstImageAltPrefix(
+    { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale, slug: listing.slug },
+    lang,
+  );
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
