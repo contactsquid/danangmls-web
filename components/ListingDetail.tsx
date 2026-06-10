@@ -6,7 +6,7 @@ import ListingCard from './ListingCard';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import type { Listing } from '@/lib/types';
-import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
 
@@ -39,13 +39,10 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
   const districtInfo = getDistrict(listing.district);
 
-  const altPrefix = [
-    listing.bedrooms && `${listing.bedrooms}-bedroom`,
-    listing.type,
-    listing.forSale ? 'for sale' : 'for rent',
-    listing.district && `in ${listing.district}`,
-    'Da Nang',
-  ].filter(Boolean).join(' ');
+  const altPrefix = localizedAltPrefix(
+    { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
+    lang,
+  );
 
   const cleanText = sourceText
     // Strip inline contact block that may be appended without a preceding newline
@@ -131,7 +128,7 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             <div className="space-y-1 text-sm text-slate-700">
               <p>📱 Zalo / WhatsApp: <a href="tel:+84973747373" className="text-blue-600 hover:underline">+84 973 747 373</a></p>
               <p>📧 Email: <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a></p>
-              <p>🌐 Website: <a href="https://danang.homes" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes</a></p>
+              <p>🌐 Website: <a href={lang === 'vi' ? 'https://danang.homes/vi' : 'https://danang.homes'} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{lang === 'vi' ? 'danang.homes/vi' : 'danang.homes'}</a></p>
             </div>
           </div>
 

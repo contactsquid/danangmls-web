@@ -5,7 +5,7 @@ import Carousel from './Carousel';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
-import { convertPriceToVND, localizeType, localizeDistrict } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix } from '@/lib/price';
 
 interface Props {
   listing: Listing;
@@ -31,13 +31,10 @@ export default function ListingCard({ listing }: Props) {
     ? (listing.vi_title || viFallbackTitle(listing))
     : listing.title;
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
-  const altPrefix = [
-    listing.bedrooms && `${listing.bedrooms}-bedroom`,
-    listing.type,
-    listing.forSale ? 'for sale' : 'for rent',
-    listing.district && `in ${listing.district}`,
-    'Da Nang',
-  ].filter(Boolean).join(' ');
+  const altPrefix = localizedAltPrefix(
+    { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
+    lang,
+  );
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">

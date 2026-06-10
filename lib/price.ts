@@ -29,6 +29,32 @@ export function localizeDistrict(district: string, lang: string): string {
   return VI_DISTRICTS[district] ?? VI_DISTRICTS[Object.keys(VI_DISTRICTS).find(k => k.toLowerCase() === district.toLowerCase()) ?? ''] ?? district;
 }
 
+/**
+ * Builds the SEO alt-text prefix for listing photos, localized to the page language.
+ * On /vi pages this yields e.g. "Cho thuê Nhà Phố 3 phòng ngủ tại Sơn Trà, Đà Nẵng";
+ * the English output is byte-identical to the original inline array, so EN pages are unchanged.
+ */
+export function localizedAltPrefix(
+  opts: { bedrooms?: number | string | null; type?: string | null; district?: string | null; forSale?: boolean },
+  lang: string,
+): string {
+  const { bedrooms, type, district, forSale } = opts;
+  if (lang === 'vi') {
+    const verb  = forSale ? 'Bán' : 'Cho thuê';
+    const t     = type ? localizeType(type, 'vi') : 'Bất động sản';
+    const beds  = bedrooms ? ` ${bedrooms} phòng ngủ` : '';
+    const place = district ? `${localizeDistrict(district, 'vi')}, Đà Nẵng` : 'Đà Nẵng';
+    return `${verb} ${t}${beds} tại ${place}`;
+  }
+  return [
+    bedrooms && `${bedrooms}-bedroom`,
+    type,
+    forSale ? 'for sale' : 'for rent',
+    district && `in ${district}`,
+    'Da Nang',
+  ].filter(Boolean).join(' ');
+}
+
 function vndFormat(vnd: number): string {
   if (vnd >= 1_000_000_000) {
     const ty = vnd / 1_000_000_000;
