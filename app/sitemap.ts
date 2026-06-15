@@ -29,6 +29,11 @@ export default async function sitemap() {
     { url: `${BASE}/vi`,         lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
     { url: `${BASE}/vi/thue`,    lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     { url: `${BASE}/vi/mua-ban`, lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    // Trust / info pages
+    { url: `${BASE}/about`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
+    { url: `${BASE}/contact`,        lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
+    { url: `${BASE}/privacy-policy`, lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.2 },
+    { url: `${BASE}/terms`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.2 },
     // English listings
     ...rentals.map(l => ({
       url: `${BASE}/listing/${l.slug}`,
