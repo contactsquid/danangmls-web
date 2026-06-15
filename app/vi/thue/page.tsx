@@ -3,6 +3,7 @@ import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
 import PageHero from '@/components/PageHero';
 import SiteFooter from '@/components/SiteFooter';
+import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -25,9 +26,11 @@ export default async function ViRentPage() {
   const listings = await getListings();
   const types     = getUniqueValues(listings, 'type');
   const districts = getUniqueValues(listings, 'district');
+  const itemListLd = listingsItemListLd(listings, { forSale: false, vi: true });
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <SiteHeader />
       <PageHero mode="rent" count={listings.length} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
