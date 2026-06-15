@@ -5,7 +5,14 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Terms for using the DanangMLS website.',
-  alternates: { canonical: 'https://danangmls.com/terms' },
+  alternates: {
+    canonical: 'https://danangmls.com/terms',
+    languages: {
+      en: 'https://danangmls.com/terms',
+      vi: 'https://danangmls.com/vi/dieu-khoan',
+      'x-default': 'https://danangmls.com/terms',
+    },
+  },
 };
 
 export default function TermsPage() {

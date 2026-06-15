@@ -34,6 +34,10 @@ export default async function sitemap() {
     { url: `${BASE}/contact`,        lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
     { url: `${BASE}/privacy-policy`, lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.2 },
     { url: `${BASE}/terms`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.2 },
+    { url: `${BASE}/vi/gioi-thieu`,         lastModified: now, changeFrequency: 'yearly' as const, priority: 0.3 },
+    { url: `${BASE}/vi/lien-he`,            lastModified: now, changeFrequency: 'yearly' as const, priority: 0.3 },
+    { url: `${BASE}/vi/chinh-sach-bao-mat`, lastModified: now, changeFrequency: 'yearly' as const, priority: 0.2 },
+    { url: `${BASE}/vi/dieu-khoan`,         lastModified: now, changeFrequency: 'yearly' as const, priority: 0.2 },
     // English listings
     ...rentals.map(l => ({
       url: `${BASE}/listing/${l.slug}`,

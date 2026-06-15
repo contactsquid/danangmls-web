@@ -5,7 +5,14 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'About DanangMLS',
   description: 'DanangMLS is a multiple listing service for houses, apartments, villas, and land for rent and for sale across Da Nang and Hoi An, Vietnam — aggregated from local agents and refreshed daily.',
-  alternates: { canonical: 'https://danangmls.com/about' },
+  alternates: {
+    canonical: 'https://danangmls.com/about',
+    languages: {
+      en: 'https://danangmls.com/about',
+      vi: 'https://danangmls.com/vi/gioi-thieu',
+      'x-default': 'https://danangmls.com/about',
+    },
+  },
 };
 
 export default function AboutPage() {

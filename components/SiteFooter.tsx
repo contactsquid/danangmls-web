@@ -6,12 +6,19 @@ import { useLanguage } from './LanguageProvider';
 export default function SiteFooter() {
   const { lang, t } = useLanguage();
   const vi = lang === 'vi';
-  const links = [
-    { href: '/about',           label: vi ? 'Giới thiệu'         : 'About' },
-    { href: '/contact',         label: vi ? 'Liên hệ'            : 'Contact' },
-    { href: '/privacy-policy',  label: vi ? 'Chính sách bảo mật' : 'Privacy Policy' },
-    { href: '/terms',           label: vi ? 'Điều khoản'         : 'Terms' },
-  ];
+  const links = vi
+    ? [
+        { href: '/vi/gioi-thieu',         label: 'Giới thiệu' },
+        { href: '/vi/lien-he',            label: 'Liên hệ' },
+        { href: '/vi/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },
+        { href: '/vi/dieu-khoan',         label: 'Điều khoản' },
+      ]
+    : [
+        { href: '/about',          label: 'About' },
+        { href: '/contact',        label: 'Contact' },
+        { href: '/privacy-policy', label: 'Privacy Policy' },
+        { href: '/terms',          label: 'Terms' },
+      ];
   return (
     <footer className="border-t border-slate-200 mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-3">
