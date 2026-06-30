@@ -11,9 +11,14 @@ interface Props {
   compact?: boolean; // true = card thumbnail mode
 }
 
+// Facebook-CDN images can't be hot-linked, so they're proxied. We route them
+// through a Cloudflare Worker (free egress) instead of the on-Vercel /api/img
+// route, keeping image bandwidth off Vercel's metered Fast Origin Transfer.
+// R2 (images.danang.homes) and all other images are served directly.
+const IMG_PROXY = 'https://danang-img-proxy.blaremedia.workers.dev/?url=';
 function proxyImg(url: string): string {
   if (url.includes('fbcdn.net') || url.includes('facebook.com')) {
-    return `/api/img?url=${encodeURIComponent(url)}`;
+    return `${IMG_PROXY}${encodeURIComponent(url)}`;
   }
   return url;
 }
