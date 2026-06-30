@@ -39,6 +39,7 @@ export interface Translations {
   district: string;
   bedrooms: string;
   agent: string;
+  listed: string;
   description: string;
   contactInfo: string;
   rights: (year: number) => string;
@@ -91,6 +92,7 @@ export const translations: Record<Lang, Translations> = {
     district: 'District',
     bedrooms: 'Bedrooms',
     agent: 'Agent',
+    listed: 'Listed',
     description: 'Description',
     contactInfo: 'Contact Information',
     rights: (year) => `© ${year} DanangMLS. All rights reserved.`,
@@ -142,6 +144,7 @@ export const translations: Record<Lang, Translations> = {
     district: 'Quận',
     bedrooms: 'Phòng Ngủ',
     agent: 'Đại Lý',
+    listed: 'Ngày Đăng',
     description: 'Mô Tả',
     contactInfo: 'Thông Tin Liên Hệ',
     rights: (year) => `© ${year} DanangMLS. Bảo lưu mọi quyền.`,

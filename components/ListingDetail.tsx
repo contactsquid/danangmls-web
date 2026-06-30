@@ -32,6 +32,17 @@ function viFallbackTitle(listing: Listing): string {
 export default function ListingDetail({ listing, similarListings = [] }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
+  // "Listed" date for the detail page (not on thumbnails). Shown in BOTH English +
+  // Vietnamese (month names avoid M/D vs D/M ambiguity); leads with active language.
+  const listedDate = (() => {
+    if (!listing.date) return null;
+    const d = new Date(listing.date);
+    if (isNaN(d.getTime())) return null;
+    const opts = { year: 'numeric', month: 'long', day: 'numeric' } as const;
+    const en = d.toLocaleDateString('en-US', opts);
+    const vi = d.toLocaleDateString('vi-VN', opts);
+    return lang === 'vi' ? { primary: vi, secondary: en } : { primary: en, secondary: vi };
+  })();
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
     : listing.title;
@@ -124,6 +135,13 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
               <div>
                 <p className="text-xs text-slate-400 mb-1">{t.agent}</p>
                 <p className="font-semibold text-slate-800">{listing.agent}</p>
+              </div>
+            )}
+            {listedDate && (
+              <div>
+                <p className="text-xs text-slate-400 mb-1">{t.listed}</p>
+                <p className="font-semibold text-slate-800">🗓 {listedDate.primary}</p>
+                <p className="text-xs text-slate-500">{listedDate.secondary}</p>
               </div>
             )}
           </div>
