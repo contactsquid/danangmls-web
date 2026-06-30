@@ -161,7 +161,13 @@ function col(row: string[], idx: number): string {
  *  timestamp on fbcdn URLs is unreliable (reports "valid" for URLs that 403),
  *  so we exclude all fbcdn/facebook URLs rather than trusting the timestamp. */
 function isServableImage(url: string): boolean {
-  return url.startsWith('http') && !url.includes('fbcdn.net') && !url.includes('facebook.com');
+  if (!url.startsWith('http')) return false;
+  if (url.includes('fbcdn.net') || url.includes('facebook.com')) return false;
+  // Guard: extension-less images.danang.homes URLs are corrupt R2 objects (an old
+  // rehost bug saved HTML pages as "images" — they render blank). Real R2 photos
+  // always end in an image extension. Don't count these as servable.
+  if (url.includes('images.danang.homes') && !/\.(jpe?g|png|webp|gif|bmp)(\?|$)/i.test(url)) return false;
+  return true;
 }
 
 /** Extracts the slug from a stored danangmls.com URL (column R).
