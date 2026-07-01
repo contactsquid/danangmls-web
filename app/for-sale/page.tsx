@@ -6,8 +6,10 @@ import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
-// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
-export const revalidate = 300;
+// Grid pages render ALL listings in one page (too large to ISR-prerender:
+// FALLBACK_BODY_TOO_LARGE). Keep them dynamic. force-dynamic also forces the
+// shared fetchCSV back to no-store for these routes only.
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Houses for Sale in Da Nang, Vietnam | Real Estate & Properties',

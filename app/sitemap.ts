@@ -1,6 +1,9 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 
+// Sheet-backed; keep dynamic (force-cache fetch would otherwise try to prerender).
+export const dynamic = 'force-dynamic';
+
 const BASE = 'https://danangmls.com';
 
 // Image-sitemap entries (<image:image>). Next renders item.images as raw,

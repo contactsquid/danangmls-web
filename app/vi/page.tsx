@@ -8,8 +8,10 @@ import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
 import type { Metadata } from 'next';
 
-// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
-export const revalidate = 300;
+// Grid pages render ALL listings in one page (too large to ISR-prerender:
+// FALLBACK_BODY_TOO_LARGE). Keep them dynamic. force-dynamic also forces the
+// shared fetchCSV back to no-store for these routes only.
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
