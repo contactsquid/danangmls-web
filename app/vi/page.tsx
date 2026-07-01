@@ -8,6 +8,9 @@ import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
 import type { Metadata } from 'next';
 
+// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
   description: 'DanangMLS — danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An, Việt Nam. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày, có thể duyệt bằng tiếng Anh và tiếng Việt.',

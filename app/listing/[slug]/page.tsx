@@ -71,11 +71,10 @@ export async function generateStaticParams() {
   return [];
 }
 
-// The Google-Sheets CSV fetches in lib/sheets.ts use `cache: 'no-store'`,
-// which Next 16 treats as dynamic. Without this export, Next throws a
-// "Page changed from static to dynamic at runtime" 500 on the first
-// cold-cache visit. Marking the route dynamic up front avoids that.
-export const dynamic = 'force-dynamic';
+// ISR: page is cached and regenerated at most every 5 min. The sheet fetch in
+// lib/sheets.ts is force-cache (module-cached), so no per-request no-store fetch
+// forces this dynamic. Replaces the old force-dynamic (which re-rendered every hit).
+export const revalidate = 300;
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;

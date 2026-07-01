@@ -6,6 +6,9 @@ import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
+// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Houses for Sale in Da Nang, Vietnam | Real Estate & Properties',
   description: 'Browse houses, apartments, villas, and land for sale in Da Nang and Hoi An, Vietnam. Updated daily from local agents and live listings.',

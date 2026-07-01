@@ -6,6 +6,9 @@ import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
+// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Apartments & Houses for Rent in Da Nang, Vietnam',
   description: 'Find houses, apartments, and villas for rent in Da Nang and Hoi An, Vietnam. Browse hundreds of rental listings updated daily from local agents.',

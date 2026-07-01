@@ -17,7 +17,11 @@ const forSaleCache: { value: string | null; at: number } = { value: null, at: 0 
 
 async function fetchCSV(url: string, cache: { value: string | null; at: number }): Promise<string> {
   if (cache.value !== null && Date.now() - cache.at < CACHE_TTL_MS) return cache.value;
-  const res = await fetch(url, { cache: 'no-store' });
+  // Was `cache: 'no-store'` (forced every route dynamic). The CSVs are 6–9MB so
+  // Next's data cache can't store them anyway (>2MB limit) — the module-level
+  // cache above is the real cache. Using force-cache instead removes the
+  // "dynamic" signal so sheet-backed routes can be ISR-cached (revalidate).
+  const res = await fetch(url, { cache: 'force-cache' });
   if (!res.ok) throw new Error(`Failed to fetch CSV: ${res.status}`);
   cache.value = await res.text();
   cache.at = Date.now();

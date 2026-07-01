@@ -8,6 +8,9 @@ import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
 import type { Metadata } from 'next';
 
+// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Da Nang Real Estate Multiple Listing Service - DaNangMLS',
   description: 'Da Nang Real Estate MLS — the cleanest list of rentals and houses for sale across Da Nang and Hoi An, Vietnam. Aggregated from local agents, refreshed daily, browsable in English and Vietnamese.',

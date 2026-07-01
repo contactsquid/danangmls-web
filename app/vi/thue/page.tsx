@@ -6,6 +6,9 @@ import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
+// ISR: cache this sheet-backed page, regenerate at most every 5 min (cost control).
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Nhà Cho Thuê tại Đà Nẵng, Việt Nam | DanangMLS',
   description: 'Xem danh sách nhà, căn hộ, biệt thự cho thuê tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
