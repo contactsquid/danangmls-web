@@ -71,10 +71,12 @@ export async function generateStaticParams() {
   return [];
 }
 
-// ISR: page is cached and regenerated at most every 5 min. The sheet fetch in
-// lib/sheets.ts is force-cache (module-cached), so no per-request no-store fetch
-// forces this dynamic. Replaces the old force-dynamic (which re-rendered every hit).
-export const revalidate = 300;
+// Reverted 2026-07-01: ISR (revalidate=300) here caused intermittent Vercel
+// serverless OOM crashes (500s) — getAllListings() loads + parses BOTH full
+// sheet CSVs (6-9MB each) per render for similar-listings, and ISR's revalidate
+// bursts multiplied concurrent renders. force-dynamic was stable; revisit ISR
+// only after trimming getAllListings()'s memory footprint.
+export const dynamic = 'force-dynamic';
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;

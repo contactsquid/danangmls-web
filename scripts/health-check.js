@@ -237,7 +237,7 @@ async function main() {
   const allIssues = [];
 
   console.log('\n[1/3] Checking live pages...');
-  allIssues.push(...await checkPage(`${SITE}/`,         'Rentals page',  MIN_RENTALS));
+  allIssues.push(...await checkPage(`${SITE}/for-rent`, 'Rentals page',  MIN_RENTALS));
   allIssues.push(...await checkPage(`${SITE}/for-sale`, 'For Sale page', MIN_FOR_SALE));
 
   console.log('\n[2/3] Validating sheet data...');
