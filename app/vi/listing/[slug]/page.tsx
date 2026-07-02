@@ -89,12 +89,11 @@ export async function generateStaticParams() {
   return [];
 }
 
-// Reverted 2026-07-01: ISR (revalidate=300) here caused intermittent Vercel
-// serverless OOM crashes (500s) — getAllListings() loads + parses BOTH full
-// sheet CSVs (6-9MB each) per render for similar-listings, and ISR's revalidate
-// bursts multiplied concurrent renders. force-dynamic was stable; revisit ISR
-// only after trimming getAllListings()'s memory footprint.
-export const dynamic = 'force-dynamic';
+// ISR re-enabled 2026-07-02. See app/listing/[slug]/page.tsx for the full note:
+// the 2026-07-01 OOM revert's two root causes (per-render re-parse + N× parse
+// under regeneration bursts) are now fixed in lib/sheets.ts (parsed-listings
+// cache + in-flight de-dup), so caching these pages is safe.
+export const revalidate = 3600;
 
 export default async function ViListingPage({ params }: Props) {
   const { slug } = await params;

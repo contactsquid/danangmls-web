@@ -71,12 +71,13 @@ export async function generateStaticParams() {
   return [];
 }
 
-// Reverted 2026-07-01: ISR (revalidate=300) here caused intermittent Vercel
-// serverless OOM crashes (500s) — getAllListings() loads + parses BOTH full
-// sheet CSVs (6-9MB each) per render for similar-listings, and ISR's revalidate
-// bursts multiplied concurrent renders. force-dynamic was stable; revisit ISR
-// only after trimming getAllListings()'s memory footprint.
-export const dynamic = 'force-dynamic';
+// ISR re-enabled 2026-07-02. The 2026-07-01 revert was due to OOM: getAllListings()
+// re-parsed BOTH full CSVs per render and ISR regeneration bursts multiplied that
+// N×. Both causes are now fixed in lib/sheets.ts: parsed listings are cached
+// (regeneration = cache hit, no re-parse) and concurrent cold parses share one
+// in-flight promise (no N× memory). Listing pages are small (~1MB) and their
+// content is stable, so caching them is the biggest cost/cold-start win.
+export const revalidate = 3600;
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
