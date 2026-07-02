@@ -15,6 +15,15 @@ const CACHE_TTL_MS = 10 * 60 * 1000;
 const rentalsCache: { value: string | null; at: number } = { value: null, at: 0 };
 const forSaleCache: { value: string | null; at: number } = { value: null, at: 0 };
 
+// Parsed-result cache. fetchCSV caches the raw CSV *text*, but parsing that text
+// into ~7,600 Listing objects (parseCSV + parseRows) is itself several seconds of
+// CPU and ran on EVERY call — and listing detail pages call getListings twice per
+// request (generateMetadata + render). Caching the parsed arrays makes warm
+// requests skip both fetch AND parse. Same 10-min freshness as the text cache.
+// Callers only slice/filter/map (never mutate), so sharing these references is safe.
+const rentalsParsed: { value: Listing[] | null; at: number } = { value: null, at: 0 };
+const forSaleParsed: { value: Listing[] | null; at: number } = { value: null, at: 0 };
+
 async function fetchCSV(url: string, cache: { value: string | null; at: number }): Promise<string> {
   if (cache.value !== null && Date.now() - cache.at < CACHE_TTL_MS) return cache.value;
   // Was `cache: 'no-store'` (forced every route dynamic). The CSVs are 6–9MB so
@@ -250,11 +259,20 @@ function parseRows(rows: string[][]): Listing[] {
 }
 
 export async function getListings(): Promise<Listing[]> {
+  if (rentalsParsed.value !== null && Date.now() - rentalsParsed.at < CACHE_TTL_MS) {
+    return rentalsParsed.value;
+  }
   const text = await fetchCSV(CSV_RENTALS, rentalsCache);
-  return parseRows(parseCSV(text).slice(1));
+  const parsed = parseRows(parseCSV(text).slice(1));
+  rentalsParsed.value = parsed;
+  rentalsParsed.at = Date.now();
+  return parsed;
 }
 
 export async function getForSaleListings(): Promise<Listing[]> {
+  if (forSaleParsed.value !== null && Date.now() - forSaleParsed.at < CACHE_TTL_MS) {
+    return forSaleParsed.value;
+  }
   const text = await fetchCSV(CSV_FORSALE, forSaleCache);
   const rows = parseCSV(text).slice(1);
   const listings = rows
@@ -320,7 +338,10 @@ export async function getForSaleListings(): Promise<Listing[]> {
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
   const undated = deduped.filter(l => !l.date).reverse();
-  return [...dated, ...undated];
+  const result = [...dated, ...undated];
+  forSaleParsed.value = result;
+  forSaleParsed.at = Date.now();
+  return result;
 }
 
 export function getUniqueValues(listings: Listing[], key: keyof Listing): string[] {
