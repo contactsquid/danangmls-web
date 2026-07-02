@@ -24,6 +24,14 @@ const forSaleCache: { value: string | null; at: number } = { value: null, at: 0 
 const rentalsParsed: { value: Listing[] | null; at: number } = { value: null, at: 0 };
 const forSaleParsed: { value: Listing[] | null; at: number } = { value: null, at: 0 };
 
+// In-flight de-duplication. When the parsed cache is cold/expired and N requests
+// arrive concurrently, without this each would independently fetch 15MB + parse
+// ~7,600 objects — multiplying memory N× (this thundering herd is what OOM-crashed
+// the old ISR attempt). Sharing a single in-flight promise means only ONE
+// fetch+parse runs; the rest await it. This is what makes caching/ISR safe.
+let rentalsInFlight: Promise<Listing[]> | null = null;
+let forSaleInFlight: Promise<Listing[]> | null = null;
+
 async function fetchCSV(url: string, cache: { value: string | null; at: number }): Promise<string> {
   if (cache.value !== null && Date.now() - cache.at < CACHE_TTL_MS) return cache.value;
   // Was `cache: 'no-store'` (forced every route dynamic). The CSVs are 6–9MB so
@@ -262,17 +270,35 @@ export async function getListings(): Promise<Listing[]> {
   if (rentalsParsed.value !== null && Date.now() - rentalsParsed.at < CACHE_TTL_MS) {
     return rentalsParsed.value;
   }
-  const text = await fetchCSV(CSV_RENTALS, rentalsCache);
-  const parsed = parseRows(parseCSV(text).slice(1));
-  rentalsParsed.value = parsed;
-  rentalsParsed.at = Date.now();
-  return parsed;
+  if (rentalsInFlight) return rentalsInFlight;
+  rentalsInFlight = (async () => {
+    const text = await fetchCSV(CSV_RENTALS, rentalsCache);
+    const parsed = parseRows(parseCSV(text).slice(1));
+    rentalsParsed.value = parsed;
+    rentalsParsed.at = Date.now();
+    return parsed;
+  })();
+  try {
+    return await rentalsInFlight;
+  } finally {
+    rentalsInFlight = null;
+  }
 }
 
 export async function getForSaleListings(): Promise<Listing[]> {
   if (forSaleParsed.value !== null && Date.now() - forSaleParsed.at < CACHE_TTL_MS) {
     return forSaleParsed.value;
   }
+  if (forSaleInFlight) return forSaleInFlight;
+  forSaleInFlight = parseForSale();
+  try {
+    return await forSaleInFlight;
+  } finally {
+    forSaleInFlight = null;
+  }
+}
+
+async function parseForSale(): Promise<Listing[]> {
   const text = await fetchCSV(CSV_FORSALE, forSaleCache);
   const rows = parseCSV(text).slice(1);
   const listings = rows
