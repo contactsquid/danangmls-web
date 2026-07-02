@@ -1,4 +1,5 @@
 import { getListings, getUniqueValues } from '@/lib/sheets';
+import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
 import PageHero from '@/components/PageHero';
@@ -42,7 +43,7 @@ export default async function ForRentPage() {
       <SiteHeader />
       <PageHero mode="rent" count={listings.length} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-        <ListingsGrid listings={listings} types={types} districts={districts} />
+        <ListingsGrid listings={toGridListings(listings)} types={types} districts={districts} />
       </main>
       <SiteFooter />
     </div>

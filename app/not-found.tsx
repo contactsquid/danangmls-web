@@ -18,8 +18,12 @@ export default async function NotFound() {
     getListings(),
     getForSaleListings(),
   ]);
-  const rentals = rentalsRes.status === 'fulfilled' ? rentalsRes.value : [];
-  const forSale = forSaleRes.status === 'fulfilled' ? forSaleRes.value : [];
+  // The root not-found boundary is serialized into EVERY page's RSC flight data,
+  // so passing the full sheets here bloated every page by ~40k image URLs. A 404
+  // only needs a small browsable sample, so cap it hard.
+  const NOT_FOUND_SAMPLE = 24;
+  const rentals = rentalsRes.status === 'fulfilled' ? rentalsRes.value.slice(0, NOT_FOUND_SAMPLE) : [];
+  const forSale = forSaleRes.status === 'fulfilled' ? forSaleRes.value.slice(0, NOT_FOUND_SAMPLE) : [];
 
   return (
     <div className="min-h-screen bg-slate-50">

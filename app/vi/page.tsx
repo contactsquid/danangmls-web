@@ -45,8 +45,9 @@ export default async function ViHomePage() {
       <SiteHeader />
       <HomeHero />
       <LatestVideo video={video} />
-      <FeaturedListings listings={rentals} mode="rent" />
-      <FeaturedListings listings={forSale} mode="sale" />
+      {/* Slice on the server — FeaturedListings only shows 3 (avoids serializing thousands). */}
+      <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
+      <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />
       <FeaturedBlogs />
       <SiteFooter />
     </div>

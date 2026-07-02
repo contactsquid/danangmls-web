@@ -44,8 +44,10 @@ export default async function HomePage() {
       <SiteHeader />
       <HomeHero />
       <LatestVideo video={video} />
-      <FeaturedListings listings={rentals} mode="rent" />
-      <FeaturedListings listings={forSale} mode="sale" />
+      {/* Only 3 are shown (FeaturedListings slices to 3). Slice on the server so we
+          don't serialize thousands of full listings into the homepage HTML (was 38MB). */}
+      <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
+      <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />
       <FeaturedBlogs />
       <SiteFooter />
     </div>
