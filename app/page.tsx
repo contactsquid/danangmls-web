@@ -1,5 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
-import { getLatestVideo } from '@/lib/youtube';
+import { getLatestVideoByLang } from '@/lib/youtube';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import HomeHero from '@/components/HomeHero';
@@ -36,7 +36,7 @@ export default async function HomePage() {
   const [rentals, forSale, video] = await Promise.all([
     getListings(),
     getForSaleListings(),
-    getLatestVideo(),
+    getLatestVideoByLang('en'),
   ]);
 
   return (
