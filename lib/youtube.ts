@@ -67,16 +67,41 @@ export async function getLatestVideos(): Promise<YouTubeVideo[]> {
   }
 }
 
+// Some uploads (e.g. API-uploaded test/draft videos) end up with embedding
+// disabled on YouTube's side, which silently blanks the homepage <iframe>.
+// oEmbed 401s for those — checking it needs no API key/auth, so we can filter
+// them out before picking what to feature.
+async function isEmbeddable(videoId: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}&format=json`,
+      { next: { revalidate: 3600 } }
+    );
+    return res.ok;
+  } catch {
+    return true; // don't hide a video just because the embeddability check itself failed
+  }
+}
+
+async function firstEmbeddable(candidates: YouTubeVideo[]): Promise<YouTubeVideo | null> {
+  for (const v of candidates) {
+    if (await isEmbeddable(v.videoId)) return v;
+  }
+  return null;
+}
+
 // Newest video in the requested language, falling back to the newest overall
-// video when the channel has no video in that language yet.
+// video when the channel has no video in that language yet. Skips any video
+// that has embedding disabled.
 export async function getLatestVideoByLang(lang: VideoLang): Promise<YouTubeVideo | null> {
   const videos = await getLatestVideos();
   if (videos.length === 0) return null;
-  return videos.find((v) => v.lang === lang) ?? videos[0];
+  const langMatches = videos.filter((v) => v.lang === lang);
+  return (await firstEmbeddable(langMatches)) ?? (await firstEmbeddable(videos));
 }
 
 // Newest video overall, regardless of language. Kept for any non-localized caller.
 export async function getLatestVideo(): Promise<YouTubeVideo | null> {
   const videos = await getLatestVideos();
-  return videos[0] ?? null;
+  return (await firstEmbeddable(videos)) ?? videos[0] ?? null;
 }
