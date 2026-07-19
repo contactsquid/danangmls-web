@@ -67,7 +67,7 @@ export async function getLatestVideos(): Promise<YouTubeVideo[]> {
     const xml = await res.text();
     return [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)]
       .map((m) => parseEntry(m[1]))
-      .filter((v): v is YouTubeVideo => v !== null);
+      .filter((v): v is YouTubeVideo => v !== null && !EXCLUDED_VIDEO_IDS.has(v.videoId));
   } catch {
     return [];
   }
