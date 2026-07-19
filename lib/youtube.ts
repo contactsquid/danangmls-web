@@ -12,6 +12,12 @@
 const CHANNEL_ID = 'UCJwjJcmWodHM7VxxVds0X1w'; // @DaNangHomes43
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
 
+// Internal test/validation uploads that ended up public and would otherwise win
+// the "newest video" homepage slot — they're pipeline proofs-of-concept, not
+// listing content Blake wants featured. Add a video ID here to keep it out of
+// rotation without having to touch its YouTube privacy setting.
+const EXCLUDED_VIDEO_IDS = new Set(['rmA-sDzzkaE']);
+
 export type VideoLang = 'en' | 'vi';
 
 export interface YouTubeVideo {
