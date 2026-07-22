@@ -89,8 +89,27 @@ async function isEmbeddable(videoId: string): Promise<boolean> {
   }
 }
 
-async function firstEmbeddable(candidates: YouTubeVideo[]): Promise<YouTubeVideo | null> {
+// A real YouTube Short stays on /shorts/<id> (HTTP 200); a landscape video
+// 3xx-redirects to /watch. Shorts are vertical (9:16) and look bad letterboxed
+// in the homepage's 16:9 embed, so we keep them out of the featured rotation.
+async function isShort(videoId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`https://www.youtube.com/shorts/${videoId}`, {
+      method: 'HEAD',
+      redirect: 'manual',
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+      next: { revalidate: 86400 }, // a video's Short-ness never changes
+    });
+    return res.status === 200;
+  } catch {
+    return false; // if the check itself fails, don't wrongly hide a video
+  }
+}
+
+// Eligible to feature = landscape (not a Short) AND embeddable.
+async function firstEligible(candidates: YouTubeVideo[]): Promise<YouTubeVideo | null> {
   for (const v of candidates) {
+    if (await isShort(v.videoId)) continue;
     if (await isEmbeddable(v.videoId)) return v;
   }
   return null;
@@ -103,11 +122,11 @@ export async function getLatestVideoByLang(lang: VideoLang): Promise<YouTubeVide
   const videos = await getLatestVideos();
   if (videos.length === 0) return null;
   const langMatches = videos.filter((v) => v.lang === lang);
-  return (await firstEmbeddable(langMatches)) ?? (await firstEmbeddable(videos));
+  return (await firstEligible(langMatches)) ?? (await firstEligible(videos));
 }
 
 // Newest video overall, regardless of language. Kept for any non-localized caller.
 export async function getLatestVideo(): Promise<YouTubeVideo | null> {
   const videos = await getLatestVideos();
-  return (await firstEmbeddable(videos)) ?? videos[0] ?? null;
+  return (await firstEligible(videos)) ?? videos[0] ?? null;
 }
