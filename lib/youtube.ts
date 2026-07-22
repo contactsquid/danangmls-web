@@ -11,6 +11,38 @@
 
 const CHANNEL_ID = 'UCJwjJcmWodHM7VxxVds0X1w'; // @DaNangHomes43
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+const SHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
+
+// Vertical Shorts (9:16) look bad letterboxed in the homepage's 16:9 embed, so we
+// exclude them. The /publish pipeline tags every upload horizontal/vertical in the
+// YT_Queue tab — the deterministic source of truth (better than scraping YouTube from
+// a datacenter IP). Read via the public gviz endpoint (this project has no service
+// account — it reads all sheet data this way). Cols are positional: G=format, J=id.
+// Cached 10 min in module scope so we don't hit the sheet on every render.
+let _verticalCache: { ids: Set<string>; at: number } | null = null;
+async function verticalVideoIds(): Promise<Set<string>> {
+  if (_verticalCache && Date.now() - _verticalCache.at < 10 * 60 * 1000) return _verticalCache.ids;
+  try {
+    const res = await fetch(
+      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=YT_Queue`,
+      { next: { revalidate: 600 } }
+    );
+    const text = await res.text();
+    const json = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+    const rows: Array<{ c: Array<{ v: unknown } | null> }> = json?.table?.rows || [];
+    const ids = new Set<string>();
+    for (const row of rows) {
+      const cells = row.c || [];
+      const fmt = String(cells[6]?.v ?? '').toLowerCase(); // col G = format
+      const vid = String(cells[9]?.v ?? '').trim(); // col J = youtube_video_id
+      if (fmt === 'vertical' && vid) ids.add(vid);
+    }
+    _verticalCache = { ids, at: Date.now() };
+    return ids;
+  } catch {
+    return _verticalCache?.ids || new Set();
+  }
+}
 
 // Internal test/validation uploads that ended up public and would otherwise win
 // the "newest video" homepage slot — they're pipeline proofs-of-concept, not
@@ -62,12 +94,18 @@ function parseEntry(entry: string): YouTubeVideo | null {
 // All recent videos, newest first (the order the RSS feed returns them in).
 export async function getLatestVideos(): Promise<YouTubeVideo[]> {
   try {
-    const res = await fetch(RSS_URL, { next: { revalidate: 3600 } });
+    const [res, verticals] = await Promise.all([
+      fetch(RSS_URL, { next: { revalidate: 3600 } }),
+      verticalVideoIds(),
+    ]);
     if (!res.ok) return [];
     const xml = await res.text();
     return [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)]
       .map((m) => parseEntry(m[1]))
-      .filter((v): v is YouTubeVideo => v !== null && !EXCLUDED_VIDEO_IDS.has(v.videoId));
+      .filter(
+        (v): v is YouTubeVideo =>
+          v !== null && !EXCLUDED_VIDEO_IDS.has(v.videoId) && !verticals.has(v.videoId)
+      );
   } catch {
     return [];
   }
@@ -94,11 +132,13 @@ async function isEmbeddable(videoId: string): Promise<boolean> {
 // in the homepage's 16:9 embed, so we keep them out of the featured rotation.
 async function isShort(videoId: string): Promise<boolean> {
   try {
+    // Plain fetch (no Next cache) — `next:{revalidate}` + `redirect:'manual'` don't
+    // compose and can throw, defeating the check. Secondary net; YT_Queue is primary.
     const res = await fetch(`https://www.youtube.com/shorts/${videoId}`, {
       method: 'HEAD',
       redirect: 'manual',
       headers: { 'User-Agent': 'Mozilla/5.0' },
-      next: { revalidate: 86400 }, // a video's Short-ness never changes
+      cache: 'no-store',
     });
     return res.status === 200;
   } catch {
