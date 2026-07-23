@@ -49,20 +49,30 @@ export function detectForeignApprovedBuilding(haystack: string): ForeignApproved
 }
 
 /**
- * Returns true if a listing is likely eligible for foreign ownership:
- *   - Type is "Apartment" (foreigners can only own apartments under Vietnamese law)
- *   - AND it isn't a whole-building/commercial-block listing
- *   - AND it mentions a known foreign-approved development
+ * The hard LEGAL ownership rules — a listing can only be foreign-owned if:
+ *   - Type is "Apartment" (foreigners can own apartments/condos, not land/houses/villas), AND
+ *   - it isn't a whole-building/commercial-block listing (can't be sold to a foreigner as one unit).
+ * This is the GUARDRAIL applied even to trusted curated-group listings, so an agent who wrongly
+ * posts a house/land/villa in the foreign group doesn't get the badge.
  */
-export function isForeignEligible(opts: { type?: string; title?: string; text?: string }): boolean {
+export function passesForeignOwnershipRules(opts: { type?: string; title?: string; text?: string }): boolean {
   const isApartment = /^apartment$/i.test((opts.type || '').trim());
   if (!isApartment) return false;
   const blob = (opts.title || '') + ' ' + (opts.text || '');
-  // Exclude whole-building plays — those aren't sellable to foreigners as a single unit
   if (/apartment\s+building|multi-?story\s+apartment|apartment\s+complex|whole\s+building|entire\s+building|\d+-?(story|stage|level)\s+(apartment|building)/i.test(blob)) {
     return false;
   }
-  return detectForeignApprovedBuilding(blob) !== null;
+  return true;
+}
+
+/**
+ * Returns true if a listing is likely eligible for foreign ownership:
+ *   - passes the legal ownership rules (apartment, not a whole-building), AND
+ *   - it mentions a known foreign-approved development.
+ */
+export function isForeignEligible(opts: { type?: string; title?: string; text?: string }): boolean {
+  if (!passesForeignOwnershipRules(opts)) return false;
+  return detectForeignApprovedBuilding((opts.title || '') + ' ' + (opts.text || '')) !== null;
 }
 
 // ── Foreign-eligible Facebook groups ──
@@ -77,7 +87,7 @@ export function isForeignEligible(opts: { type?: string; title?: string; text?: 
 // the FB group path segment in the Post URL (numeric ID or vanity slug).
 
 export const FOREIGN_ELIGIBLE_GROUP_IDS = new Set<string>([
-  // TODO: add the new foreigner-eligible FB group ID here once the group is set up
+  'apartmentforsaleindanang', // Blake's curated foreign-buyer apartments group (added 2026-07-23)
 ]);
 
 /** Extract the FB group ID/slug from a permalink URL. */

@@ -1,7 +1,7 @@
 import { Listing } from './types';
 import { detectNeighborhood } from './neighborhoods';
 import { extractPriceFromText } from './price';
-import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup } from './foreignEligibleBuildings';
+import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
 const CSV_RENTALS   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
@@ -309,7 +309,10 @@ async function parseForSale(): Promise<Listing[]> {
       const district = normalizeDistrict(col(r, FS.DISTRICT));
       const type     = col(r, FS.TYPE);
       const postUrlForCheck = col(r, FS.POST_URL);
-      const fromCuratedGroup = isFromForeignEligibleGroup(postUrlForCheck);
+      // Curated foreign-buyer group is trusted for the BUILDING, but still gated by the legal
+      // ownership rules (apartment, not land/house/villa/whole-building) — so an agent's off-rule
+      // post in the group doesn't get the badge. See passesForeignOwnershipRules().
+      const fromCuratedGroup = isFromForeignEligibleGroup(postUrlForCheck) && passesForeignOwnershipRules({ type, title, text });
       const foreignBuilding = isForeignEligible({ type, title, text })
         ? detectForeignApprovedBuilding(title + ' ' + text)
         : null;
