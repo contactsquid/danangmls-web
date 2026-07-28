@@ -6,6 +6,7 @@ import HomeHero from '@/components/HomeHero';
 import LatestVideo from '@/components/LatestVideo';
 import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
+import { fetchBlogPool } from '@/lib/featuredBlogs';
 import type { Metadata } from 'next';
 
 // Grid pages render ALL listings in one page (too large to ISR-prerender:
@@ -33,10 +34,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [rentals, forSale, video] = await Promise.all([
+  const [rentals, forSale, video, blogPool] = await Promise.all([
     getListings(),
     getForSaleListings(),
     getLatestVideoByLang('en'),
+    fetchBlogPool(),
   ]);
 
   return (
@@ -48,7 +50,7 @@ export default async function HomePage() {
           don't serialize thousands of full listings into the homepage HTML (was 38MB). */}
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
       <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />
-      <FeaturedBlogs />
+      <FeaturedBlogs posts={blogPool} />
       <SiteFooter />
     </div>
   );

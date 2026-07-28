@@ -1,20 +1,25 @@
-// Featured blog posts displayed on the danangmls.com homepage. The blogs themselves
-// live on danang.homes/blog/<slug> — danangmls.com doesn't host a blog, so this is
-// cross-promotion. Update this list manually when new blog posts are published on
-// danang.homes (or build an automated sync later — currently a 30s manual edit).
+// Blog posts cross-promoted on the danangmls.com homepage. The posts themselves
+// live on danang.homes/blog/<slug> — danangmls.com doesn't host a blog.
+//
+// The pool is fetched live from danang.homes/api/blog (see fetchBlogPool) so it
+// always reflects what's actually published, and the homepage shows a random 3
+// of them (reshuffled per page load) to feel dynamic. FEATURED_BLOG_POSTS below
+// is only a hard-coded fallback used if that fetch ever fails.
 
 export interface FeaturedBlogPost {
   slug: string;
   title: string;
+  vi_title?: string | null;
   date: string;
   excerpt: string;
+  vi_excerpt?: string | null;
   image: string;
 }
 
 export const BLOG_BASE_URL = 'https://danang.homes/blog';
+export const BLOG_FEED_URL = 'https://danang.homes/api/blog';
 
-// Most recent 3 posts from danang-homes-web/lib/blog.ts (sorted by date desc).
-// Last synced: 2026-05-25.
+// Fallback pool if the live feed is unreachable. A few evergreen posts.
 export const FEATURED_BLOG_POSTS: FeaturedBlogPost[] = [
   {
     slug: 'understanding-your-lease-foreigners-guide-to-rental-contracts',
@@ -38,3 +43,18 @@ export const FEATURED_BLOG_POSTS: FeaturedBlogPost[] = [
     image: 'https://images.danang.homes/blog/renting-in-da-nang-agents-on-facebook-vs-trusted-professionals.jpg',
   },
 ];
+
+// Fetch the full pool of blog posts from danang.homes. Cached for 1h via Next's
+// data cache (so it doesn't hit danang.homes on every render), with a static
+// fallback so the homepage never breaks if the feed is down.
+export async function fetchBlogPool(): Promise<FeaturedBlogPost[]> {
+  try {
+    const res = await fetch(BLOG_FEED_URL, { next: { revalidate: 3600 } });
+    if (!res.ok) return FEATURED_BLOG_POSTS;
+    const data = (await res.json()) as FeaturedBlogPost[];
+    if (Array.isArray(data) && data.length > 0) return data;
+    return FEATURED_BLOG_POSTS;
+  } catch {
+    return FEATURED_BLOG_POSTS;
+  }
+}
