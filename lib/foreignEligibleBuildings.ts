@@ -35,6 +35,7 @@ export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   { name: 'Sun Cosmo',          developer: 'Sun Group',   district: 'Ngu Hanh Son', pattern: /sun\s+cosmo/i },
   { name: 'Monarchy',                                     district: 'Son Tra',      pattern: /monarchy/i },
   { name: 'Wyndham Soleil',                               district: 'Ngu Hanh Son', pattern: /wyndham/i },
+  { name: 'Times Square FUTA Residence',                  district: 'Son Tra',      pattern: /times\s*square|futa\s*residence/i },
 ];
 
 /**
