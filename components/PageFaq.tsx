@@ -1,7 +1,6 @@
 'use client';
 
 import { useLanguage } from './LanguageProvider';
-import { renderInline } from '@/lib/inlineFormat';
 
 // Rent-page FAQ block: renders the visible Q&A (adds subheadings + keyword-rich
 // main content for on-page SEO) and emits FAQPage structured data. Placed below
@@ -30,7 +29,7 @@ export default function PageFaq() {
         {faq.map((f, i) => (
           <div key={i}>
             <h3 className="text-base font-semibold text-slate-800 mb-1">{f.q}</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">{renderInline(f.a)}</p>
+            <p className="text-sm text-slate-600 leading-relaxed">{strip(f.a)}</p>
           </div>
         ))}
       </div>
