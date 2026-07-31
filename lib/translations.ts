@@ -6,6 +6,7 @@ export interface Translations {
   rentH1: string;
   rentSubtitle: (n: number) => string;
   rentH2: string;
+  rentH2mid: string;
   rentH2b: string;
   rentIntro: string[];
   rentBullets: string[];
@@ -56,6 +57,7 @@ export const translations: Record<Lang, Translations> = {
     rentH1: 'Houses for Rent in Da Nang, Vietnam — Furnished Rentals',
     rentSubtitle: (n) => `Browse ${n} rental properties in Da Nang and Hoi An — houses, apartments, villas, and condos. Listings updated daily from local agents and property managers.`,
     rentH2: 'Furnished Houses & Apartments for Rent in Da Nang, Vietnam',
+    rentH2mid: 'Real Estate Property: Furnished Rentals — House/Apartment with Modern Kitchen & Multiple Bedroom Options',
     rentH2b: 'Explore Rental Properties by District Across Da Nang & Hoi An',
     rentIntro: [
       `Looking for **houses for rent in Da Nang**? You're in the right place. **Da Nang** is one of **Vietnam's** most popular **cities** for expats, digital nomads, and long-term visitors, and the **rental** market here has a **house** or **apartment** to **rent** for every budget. Whether you want a modern **apartment** near My Khe Beach, a spacious family **house** in the Hai Chau **area**, or a furnished **villa** with a private pool in Ngu Hanh Son, you'll find current listings updated daily below. Most **rentals** come fully furnished with a **kitchen**, wifi, and air conditioning — ready to move into right away.`,
@@ -134,6 +136,7 @@ export const translations: Record<Lang, Translations> = {
     rentH1: 'Nhà Cho Thuê tại Đà Nẵng, Việt Nam — Cho Thuê Đầy Đủ Nội Thất',
     rentSubtitle: (n) => `Xem ${n} bất động sản cho thuê tại Đà Nẵng và Hội An — căn hộ, nhà phố, biệt thự và condotel. Danh sách cập nhật hàng ngày từ các đại lý địa phương.`,
     rentH2: 'Cho Thuê Đầy Đủ Nội Thất tại Đà Nẵng, Việt Nam | Nhà & Căn Hộ',
+    rentH2mid: 'Bất Động Sản: Nhà/Căn Hộ Cho Thuê Đầy Đủ Nội Thất — Bếp Hiện Đại & Nhiều Lựa Chọn Phòng Ngủ',
     rentH2b: 'Khám Phá Bất Động Sản Cho Thuê tại Đà Nẵng & Hội An',
     rentIntro: [
       `Đang tìm **nhà cho thuê tại Đà Nẵng**? Bạn đã đến đúng nơi. **Đà Nẵng** là một trong những **thành phố** được yêu thích nhất **Việt Nam** đối với người nước ngoài, dân du mục kỹ thuật số và khách lưu trú dài hạn, và thị trường **cho thuê** tại đây có **nhà** hoặc **căn hộ** phù hợp với mọi ngân sách. Dù bạn đang tìm một **căn hộ** hiện đại gần biển Mỹ Khê, một **nhà** rộng rãi cho gia đình ở **khu vực** Hải Châu, hay một **biệt thự** đầy đủ nội thất có hồ bơi riêng ở Ngũ Hành Sơn, bạn sẽ tìm thấy các tin đăng cập nhật hàng ngày bên dưới. Hầu hết **nhà cho thuê** đều có sẵn nội thất với **bếp**, wifi và điều hòa — sẵn sàng dọn vào ở ngay.`,
