@@ -9,7 +9,6 @@ export interface Translations {
   rentH2mid: string;
   rentH2b: string;
   rentIntro: string[];
-  rentBullets: string[];
   rentFaqHeading: string;
   rentFaq: { q: string; a: string }[];
   saleH1: string;
@@ -63,12 +62,7 @@ export const translations: Record<Lang, Translations> = {
       `Looking for **houses for rent in Da Nang**? You're in the right place. **Da Nang** is one of **Vietnam's** most popular **cities** for expats, digital nomads, and long-term visitors, and the **rental** market here has a **house** or **apartment** to **rent** for every budget. Whether you want a modern **apartment** near My Khe Beach, a spacious family **house** in the Hai Chau **area**, or a furnished **villa** with a private pool in Ngu Hanh Son, you'll find current listings updated daily below. Most **rentals** come fully furnished with a **kitchen**, wifi, and air conditioning — ready to move into right away.`,
       `**Monthly rentals** are the norm across the **city**, with flexible **rental** durations for both short stays and long-term, year-long leases. **Rent** ranges from *cheap* budget studios to premium beachfront **houses for rent**, and many **homes** offer two- and three-**bedroom** layouts — including *3-bedroom houses for rent in Da Nang* that are ideal for families or shared living. Compared with buying **real estate**, renting lets you settle into an **area** and get to know each neighborhood before you commit.`,
       `Browse the **houses**, **apartments**, and **villas for rent** below to compare **bedrooms**, bathrooms, districts, and pricing in USD across **Da Nang** and Hoi An. New **rental** listings are added daily from trusted local **agents** and **property** managers, so check back often for the latest options.`,
-    ],
-    rentBullets: [
-      `**Furnished houses and apartments** for **rent** in every district — Hai Chau, Son Tra, Ngu Hanh Son, and more`,
-      `**Monthly** and **long-term rentals**, from *cheap* studios to beachfront **houses** and **villas**`,
-      `Two- and three-**bedroom** layouts for families, couples, and remote workers`,
-      `New **rental** listings added daily from trusted local **agents** and **property** managers`,
+      `You'll find **furnished houses and apartments** for **rent** in every district — from Hai Chau and Son Tra to Ngu Hanh Son and beyond — with **monthly** and **long-term rentals** that range from *cheap* studios to beachfront **houses** and **villas**. Many offer two- and three-**bedroom** layouts suited to families, couples, and remote workers, and new **rental** listings are added daily from trusted local **agents** and **property** managers.`,
     ],
     rentFaqHeading: 'Frequently Asked Questions About Renting in Da Nang',
     rentFaq: [
@@ -142,12 +136,7 @@ export const translations: Record<Lang, Translations> = {
       `Đang tìm **nhà cho thuê tại Đà Nẵng**? Bạn đã đến đúng nơi. **Đà Nẵng** là một trong những **thành phố** được yêu thích nhất **Việt Nam** đối với người nước ngoài, dân du mục kỹ thuật số và khách lưu trú dài hạn, và thị trường **cho thuê** tại đây có **nhà** hoặc **căn hộ** phù hợp với mọi ngân sách. Dù bạn đang tìm một **căn hộ** hiện đại gần biển Mỹ Khê, một **nhà** rộng rãi cho gia đình ở **khu vực** Hải Châu, hay một **biệt thự** đầy đủ nội thất có hồ bơi riêng ở Ngũ Hành Sơn, bạn sẽ tìm thấy các tin đăng cập nhật hàng ngày bên dưới. Hầu hết **nhà cho thuê** đều có sẵn nội thất với **bếp**, wifi và điều hòa — sẵn sàng dọn vào ở ngay.`,
       `**Cho thuê theo tháng** là hình thức phổ biến khắp **thành phố**, với thời hạn **thuê** linh hoạt cho cả lưu trú ngắn ngày lẫn hợp đồng dài hạn cả năm. **Giá thuê** dao động từ studio *giá rẻ* đến **nhà cho thuê** cao cấp view biển, và nhiều căn có thiết kế hai đến ba **phòng ngủ** — bao gồm cả *nhà 3 phòng ngủ cho thuê tại Đà Nẵng* lý tưởng cho gia đình hoặc ở ghép. So với mua **bất động sản**, thuê nhà giúp bạn làm quen với **khu vực** trước khi quyết định.`,
       `Xem các **nhà**, **căn hộ** và **biệt thự cho thuê** bên dưới để so sánh **phòng ngủ**, phòng tắm, quận và mức giá theo USD trên khắp **Đà Nẵng** và Hội An. Tin đăng **cho thuê** mới được thêm hàng ngày từ các **đại lý** và nhà quản lý **bất động sản** uy tín, vậy nên hãy ghé lại thường xuyên để xem các lựa chọn mới nhất.`,
-    ],
-    rentBullets: [
-      `**Nhà và căn hộ** đầy đủ nội thất **cho thuê** ở mọi quận — Hải Châu, Sơn Trà, Ngũ Hành Sơn và hơn thế nữa`,
-      `**Cho thuê theo tháng** và **dài hạn**, từ studio *giá rẻ* đến **nhà** và **biệt thự** view biển`,
-      `Thiết kế hai và ba **phòng ngủ** cho gia đình, cặp đôi và người làm việc từ xa`,
-      `Tin đăng **cho thuê** mới mỗi ngày từ các **đại lý** và nhà quản lý **bất động sản** uy tín`,
+      `Bạn sẽ tìm thấy **nhà và căn hộ** đầy đủ nội thất **cho thuê** ở mọi quận — từ Hải Châu và Sơn Trà đến Ngũ Hành Sơn và hơn thế nữa — với hình thức **cho thuê theo tháng** và **dài hạn**, từ studio *giá rẻ* đến **nhà** và **biệt thự** view biển. Nhiều căn có thiết kế hai đến ba **phòng ngủ** phù hợp cho gia đình, cặp đôi và người làm việc từ xa, và tin đăng **cho thuê** mới được thêm mỗi ngày từ các **đại lý** và nhà quản lý **bất động sản** uy tín.`,
     ],
     rentFaqHeading: 'Câu Hỏi Thường Gặp Về Thuê Nhà tại Đà Nẵng',
     rentFaq: [

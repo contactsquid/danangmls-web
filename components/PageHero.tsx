@@ -16,7 +16,6 @@ export default function PageHero({ mode, count }: Props) {
   const h2      = mode === 'rent' ? t.rentH2      : t.saleH2;
   const h2b     = mode === 'rent' ? t.rentH2b     : t.saleH2b;
   const intro   = mode === 'rent' ? t.rentIntro   : t.saleIntro;
-  const bullets = mode === 'rent' ? t.rentBullets : [];
   const h2mid   = mode === 'rent' ? t.rentH2mid   : '';
 
   return (
@@ -35,11 +34,6 @@ export default function PageHero({ mode, count }: Props) {
             {h2mid && <h2 className="text-lg font-semibold text-slate-700 pt-2">{h2mid}</h2>}
             {intro.slice(1).map((p, i) => <p key={i}>{renderInline(p)}</p>)}
           </div>
-        )}
-        {bullets.length > 0 && (
-          <ul className="text-sm text-slate-600 leading-relaxed list-disc pl-5 space-y-1 mb-6">
-            {bullets.map((b, i) => <li key={i}>{renderInline(b)}</li>)}
-          </ul>
         )}
         {h2b && <h2 className="text-lg font-semibold text-slate-700 mb-4">{h2b}</h2>}
       </div>
