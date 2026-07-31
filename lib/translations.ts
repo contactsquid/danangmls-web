@@ -53,7 +53,7 @@ export const translations: Record<Lang, Translations> = {
   en: {
     forRent: 'For Rent',
     forSale: 'For Sale',
-    rentH1: 'Houses & Apartments for Rent in Da Nang, Vietnam',
+    rentH1: 'Houses for Rent in Da Nang, Vietnam — Furnished Rentals',
     rentSubtitle: (n) => `Browse ${n} rental properties in Da Nang and Hoi An — houses, apartments, villas, and condos. Listings updated daily from local agents and property managers.`,
     rentH2: 'Furnished Houses & Apartments for Rent in Da Nang, Vietnam',
     rentH2b: 'Explore Rental Properties by District Across Da Nang & Hoi An',
@@ -131,7 +131,7 @@ export const translations: Record<Lang, Translations> = {
   vi: {
     forRent: 'Cho Thuê',
     forSale: 'Mua Bán',
-    rentH1: 'Căn Hộ & Nhà Cho Thuê tại Đà Nẵng, Việt Nam',
+    rentH1: 'Nhà Cho Thuê tại Đà Nẵng, Việt Nam — Cho Thuê Đầy Đủ Nội Thất',
     rentSubtitle: (n) => `Xem ${n} bất động sản cho thuê tại Đà Nẵng và Hội An — căn hộ, nhà phố, biệt thự và condotel. Danh sách cập nhật hàng ngày từ các đại lý địa phương.`,
     rentH2: 'Cho Thuê Đầy Đủ Nội Thất tại Đà Nẵng, Việt Nam | Nhà & Căn Hộ',
     rentH2b: 'Khám Phá Bất Động Sản Cho Thuê tại Đà Nẵng & Hội An',

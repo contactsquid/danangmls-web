@@ -3,7 +3,6 @@ import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
 import PageHero from '@/components/PageHero';
-import PageFaq from '@/components/PageFaq';
 import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
@@ -14,7 +13,7 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Houses & Apartments for Rent in Da Nang, Vietnam | Furnished Rentals',
+  title: 'Houses for Rent in Da Nang, Vietnam — Furnished Rentals',
   description: 'Find houses, apartments, and villas for rent in Da Nang and Hoi An, Vietnam. Browse hundreds of rental listings updated daily from local agents.',
   alternates: {
     canonical: 'https://danangmls.com/for-rent',
@@ -46,7 +45,6 @@ export default async function ForRentPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <ListingsGrid listings={toGridListings(listings)} types={types} districts={districts} />
       </main>
-      <PageFaq />
       <SiteFooter />
     </div>
   );
