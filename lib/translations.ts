@@ -8,6 +8,9 @@ export interface Translations {
   rentH2: string;
   rentH2b: string;
   rentIntro: string[];
+  rentBullets: string[];
+  rentFaqHeading: string;
+  rentFaq: { q: string; a: string }[];
   saleH1: string;
   saleSubtitle: (n: number) => string;
   saleH2: string;
@@ -50,13 +53,39 @@ export const translations: Record<Lang, Translations> = {
   en: {
     forRent: 'For Rent',
     forSale: 'For Sale',
-    rentH1: 'Apartments & Houses for Rent in Da Nang, Vietnam',
-    rentSubtitle: (n) => `Browse ${n} rental properties in Da Nang and Hoi An — apartments, houses, villas, and condos. Listings updated daily from local agents and property managers.`,
-    rentH2: 'Furnished Rentals in Da Nang, Vietnam | House & Apartment Listings',
-    rentH2b: 'Explore Rental Properties in Da Nang & Hoi An',
+    rentH1: 'Houses & Apartments for Rent in Da Nang, Vietnam',
+    rentSubtitle: (n) => `Browse ${n} rental properties in Da Nang and Hoi An — houses, apartments, villas, and condos. Listings updated daily from local agents and property managers.`,
+    rentH2: 'Furnished Houses & Apartments for Rent in Da Nang, Vietnam',
+    rentH2b: 'Explore Rental Properties by District Across Da Nang & Hoi An',
     rentIntro: [
-      `Da Nang is one of Vietnam's most popular destinations for expats, digital nomads, and long-term visitors, and the rental market here has something for every budget. Whether you're after a modern apartment near My Khe Beach, a spacious family house in Hai Chau, or a furnished villa with a private pool in Ngu Hanh Son, you'll find current listings updated daily below. Most properties come fully furnished with a kitchen, wifi, air conditioning, and everything you need to move in right away.`,
-      `Monthly rentals are the norm in Da Nang, with flexible rental durations to suit both short stays and year-long leases. Prices range from budget studios to premium beachfront apartments, and many homes offer two- and three-bedroom layouts ideal for families or shared living. Browse the listings below to compare bedrooms, bathrooms, districts, and pricing in USD, then reach out about any property that catches your eye.`,
+      `Looking for **houses for rent in Da Nang**? You're in the right place. **Da Nang** is one of **Vietnam's** most popular **cities** for expats, digital nomads, and long-term visitors, and the **rental** market here has a **house** or **apartment** to **rent** for every budget. Whether you want a modern **apartment** near My Khe Beach, a spacious family **house** in the Hai Chau **area**, or a furnished **villa** with a private pool in Ngu Hanh Son, you'll find current listings updated daily below. Most **rentals** come fully furnished with a **kitchen**, wifi, and air conditioning — ready to move into right away.`,
+      `**Monthly rentals** are the norm across the **city**, with flexible **rental** durations for both short stays and long-term, year-long leases. **Rent** ranges from *cheap* budget studios to premium beachfront **houses for rent**, and many **homes** offer two- and three-**bedroom** layouts — including *3-bedroom houses for rent in Da Nang* that are ideal for families or shared living. Compared with buying **real estate**, renting lets you settle into an **area** and get to know each neighborhood before you commit.`,
+      `Browse the **houses**, **apartments**, and **villas for rent** below to compare **bedrooms**, bathrooms, districts, and pricing in USD across **Da Nang** and Hoi An. New **rental** listings are added daily from trusted local **agents** and **property** managers, so check back often for the latest **houses for rent in Da Nang**.`,
+    ],
+    rentBullets: [
+      `**Furnished houses and apartments** for **rent** in every district — Hai Chau, Son Tra, Ngu Hanh Son, and more`,
+      `**Monthly** and **long-term rentals**, from *cheap* studios to beachfront **houses** and **villas**`,
+      `Two- and three-**bedroom** layouts for families, couples, and remote workers`,
+      `New **rental** listings added daily from trusted local **agents** and **property** managers`,
+    ],
+    rentFaqHeading: 'Frequently Asked Questions About Renting in Da Nang',
+    rentFaq: [
+      {
+        q: 'What is the average rent for a house in Da Nang?',
+        a: `Average **rent** in **Da Nang** depends on the **area** and size. A furnished studio or one-**bedroom apartment** often starts around $300–$500 a **month**, while two- and three-**bedroom houses for rent** typically range from $500 to $1,200. Beachfront **villas** and premium **properties** near My Khe run higher. Because prices move with **area** and season, browse the current **rental** listings above for live pricing.`,
+      },
+      {
+        q: 'Can foreigners rent houses in Vietnam?',
+        a: `Yes. Foreigners can freely **rent** a **house** or **apartment** in **Da Nang** and across **Vietnam**. There's no ownership restriction on renting — you simply sign a lease with the landlord or their **agent**. Your host registers your temporary residence with the local police, which is standard for every **rental** in the **city**.`,
+      },
+      {
+        q: 'How much does it cost to rent a house in Da Nang each month?',
+        a: `**Monthly rent** for a **house** in **Da Nang** is affordable compared with most Western **cities**. Budget-friendly **rentals** start well under $500 a **month**, mid-range family **houses** sit around $600–$1,000, and larger or beachfront **homes** cost more. Utilities like electricity and water are usually billed on top of the base **rent**.`,
+      },
+      {
+        q: 'Is it expensive to live in Da Nang?',
+        a: `**Da Nang** is one of the more affordable **cities** in **Vietnam** for expats. Between **cheap** long-term **rentals**, low-cost food, and inexpensive transport, many residents live comfortably on a modest budget. Your **rent** will be the biggest monthly expense, which is why comparing **houses and apartments for rent** across each **area** pays off.`,
+      },
     ],
     saleH1: 'Houses for Sale in Da Nang, Vietnam | Real Estate & Properties',
     saleSubtitle: (n) => `Browse ${n} properties for sale in Da Nang and Hoi An — houses, apartments, villas, and land. Listings sourced daily from local agents and property managers.`,
@@ -107,8 +136,34 @@ export const translations: Record<Lang, Translations> = {
     rentH2: 'Cho Thuê Đầy Đủ Nội Thất tại Đà Nẵng, Việt Nam | Nhà & Căn Hộ',
     rentH2b: 'Khám Phá Bất Động Sản Cho Thuê tại Đà Nẵng & Hội An',
     rentIntro: [
-      `Đà Nẵng là một trong những điểm đến được yêu thích nhất Việt Nam đối với người nước ngoài, dân du mục kỹ thuật số và khách lưu trú dài hạn, và thị trường cho thuê tại đây có lựa chọn phù hợp với mọi ngân sách. Dù bạn đang tìm một căn hộ hiện đại gần biển Mỹ Khê, một ngôi nhà rộng rãi cho gia đình ở Hải Châu, hay một biệt thự đầy đủ nội thất có hồ bơi riêng ở Ngũ Hành Sơn, bạn sẽ tìm thấy các tin đăng được cập nhật hàng ngày bên dưới. Hầu hết bất động sản đều có sẵn nội thất đầy đủ với bếp, wifi, điều hòa và mọi tiện nghi để dọn vào ở ngay.`,
-      `Cho thuê theo tháng là hình thức phổ biến tại Đà Nẵng, với thời hạn thuê linh hoạt phù hợp cho cả lưu trú ngắn ngày lẫn hợp đồng cả năm. Giá dao động từ studio tiết kiệm đến căn hộ cao cấp view biển, và nhiều căn có thiết kế hai đến ba phòng ngủ lý tưởng cho gia đình hoặc ở ghép. Hãy xem các tin đăng bên dưới để so sánh phòng ngủ, phòng tắm, quận và mức giá theo USD, sau đó liên hệ về bất kỳ bất động sản nào bạn quan tâm.`,
+      `Đang tìm **nhà cho thuê tại Đà Nẵng**? Bạn đã đến đúng nơi. **Đà Nẵng** là một trong những **thành phố** được yêu thích nhất **Việt Nam** đối với người nước ngoài, dân du mục kỹ thuật số và khách lưu trú dài hạn, và thị trường **cho thuê** tại đây có **nhà** hoặc **căn hộ** phù hợp với mọi ngân sách. Dù bạn đang tìm một **căn hộ** hiện đại gần biển Mỹ Khê, một **nhà** rộng rãi cho gia đình ở **khu vực** Hải Châu, hay một **biệt thự** đầy đủ nội thất có hồ bơi riêng ở Ngũ Hành Sơn, bạn sẽ tìm thấy các tin đăng cập nhật hàng ngày bên dưới. Hầu hết **nhà cho thuê** đều có sẵn nội thất với **bếp**, wifi và điều hòa — sẵn sàng dọn vào ở ngay.`,
+      `**Cho thuê theo tháng** là hình thức phổ biến khắp **thành phố**, với thời hạn **thuê** linh hoạt cho cả lưu trú ngắn ngày lẫn hợp đồng dài hạn cả năm. **Giá thuê** dao động từ studio *giá rẻ* đến **nhà cho thuê** cao cấp view biển, và nhiều căn có thiết kế hai đến ba **phòng ngủ** — bao gồm cả *nhà 3 phòng ngủ cho thuê tại Đà Nẵng* lý tưởng cho gia đình hoặc ở ghép. So với mua **bất động sản**, thuê nhà giúp bạn làm quen với **khu vực** trước khi quyết định.`,
+      `Xem các **nhà**, **căn hộ** và **biệt thự cho thuê** bên dưới để so sánh **phòng ngủ**, phòng tắm, quận và mức giá theo USD trên khắp **Đà Nẵng** và Hội An. Tin đăng **cho thuê** mới được thêm hàng ngày từ các **đại lý** và nhà quản lý **bất động sản** uy tín, vậy nên hãy ghé lại thường xuyên để xem **nhà cho thuê tại Đà Nẵng** mới nhất.`,
+    ],
+    rentBullets: [
+      `**Nhà và căn hộ** đầy đủ nội thất **cho thuê** ở mọi quận — Hải Châu, Sơn Trà, Ngũ Hành Sơn và hơn thế nữa`,
+      `**Cho thuê theo tháng** và **dài hạn**, từ studio *giá rẻ* đến **nhà** và **biệt thự** view biển`,
+      `Thiết kế hai và ba **phòng ngủ** cho gia đình, cặp đôi và người làm việc từ xa`,
+      `Tin đăng **cho thuê** mới mỗi ngày từ các **đại lý** và nhà quản lý **bất động sản** uy tín`,
+    ],
+    rentFaqHeading: 'Câu Hỏi Thường Gặp Về Thuê Nhà tại Đà Nẵng',
+    rentFaq: [
+      {
+        q: 'Giá thuê nhà trung bình tại Đà Nẵng là bao nhiêu?',
+        a: `**Giá thuê** tại **Đà Nẵng** tùy thuộc vào **khu vực** và diện tích. Một **căn hộ** studio hoặc một **phòng ngủ** đầy đủ nội thất thường bắt đầu khoảng 300–500 USD mỗi **tháng**, trong khi **nhà cho thuê** hai đến ba **phòng ngủ** dao động từ 500 đến 1.200 USD. **Biệt thự** view biển và **bất động sản** cao cấp gần Mỹ Khê có giá cao hơn. Hãy xem các tin đăng **cho thuê** phía trên để biết giá cập nhật.`,
+      },
+      {
+        q: 'Người nước ngoài có thể thuê nhà tại Việt Nam không?',
+        a: `Có. Người nước ngoài được tự do **thuê nhà** hoặc **căn hộ** tại **Đà Nẵng** và khắp **Việt Nam**. Không có hạn chế nào đối với việc thuê — bạn chỉ cần ký hợp đồng với chủ nhà hoặc **đại lý**. Chủ nhà sẽ đăng ký tạm trú cho bạn với công an địa phương, đây là thủ tục tiêu chuẩn cho mọi **nhà cho thuê** trong **thành phố**.`,
+      },
+      {
+        q: 'Chi phí thuê nhà tại Đà Nẵng mỗi tháng là bao nhiêu?',
+        a: `**Giá thuê nhà theo tháng** tại **Đà Nẵng** khá phải chăng so với hầu hết **thành phố** phương Tây. **Nhà cho thuê** giá tốt bắt đầu dưới 500 USD mỗi **tháng**, **nhà** cho gia đình tầm trung khoảng 600–1.000 USD, và **nhà** lớn hơn hoặc view biển có giá cao hơn. Điện, nước thường được tính thêm ngoài **giá thuê** cơ bản.`,
+      },
+      {
+        q: 'Sống tại Đà Nẵng có đắt đỏ không?',
+        a: `**Đà Nẵng** là một trong những **thành phố** dễ chịu về chi phí nhất **Việt Nam** cho người nước ngoài. Với **nhà cho thuê** dài hạn *giá rẻ*, thực phẩm và di chuyển chi phí thấp, nhiều cư dân sống thoải mái với ngân sách vừa phải. **Giá thuê** sẽ là khoản chi lớn nhất hàng tháng, vì vậy việc so sánh **nhà và căn hộ cho thuê** theo từng **khu vực** rất đáng giá.`,
+      },
     ],
     saleH1: 'Nhà Bán tại Đà Nẵng, Việt Nam | Bất Động Sản & Căn Hộ',
     saleSubtitle: (n) => `Xem ${n} bất động sản bán tại Đà Nẵng và Hội An — nhà phố, căn hộ, biệt thự và đất nền. Danh sách cập nhật hàng ngày từ các đại lý địa phương.`,
