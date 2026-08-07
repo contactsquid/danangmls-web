@@ -1,5 +1,6 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
+import { facetsWithInventory, facetUrl } from '@/lib/facets';
 
 // Sheet-backed; keep dynamic (force-cache fetch would otherwise try to prerender).
 export const dynamic = 'force-dynamic';
@@ -23,15 +24,30 @@ export default async function sitemap() {
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
   const now = new Date();
 
+  // Facet pages (type / district / bedrooms) that currently have inventory,
+  // both languages, for rent and sale.
+  const facetEntries = [
+    ...facetsWithInventory(rentals).flatMap(f => [
+      { url: `${BASE}${facetUrl('rent', 'en', f)}`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
+      { url: `${BASE}${facetUrl('rent', 'vi', f)}`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
+    ]),
+    ...facetsWithInventory(forSale).flatMap(f => [
+      { url: `${BASE}${facetUrl('sale', 'en', f)}`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
+      { url: `${BASE}${facetUrl('sale', 'vi', f)}`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
+    ]),
+  ];
+
   return [
     // English
-    { url: BASE,                lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
-    { url: `${BASE}/for-rent`,  lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
-    { url: `${BASE}/for-sale`,  lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: BASE,                        lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
+    { url: `${BASE}/for-rent`,          lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${BASE}/for-sale`,          lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     // Vietnamese
-    { url: `${BASE}/vi`,         lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
-    { url: `${BASE}/vi/thue`,    lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
-    { url: `${BASE}/vi/mua-ban`, lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${BASE}/vi`,              lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
+    { url: `${BASE}/vi/thue`,         lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${BASE}/vi/mua-ban`,      lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    // Facet pages
+    ...facetEntries,
     // Trust / info pages
     { url: `${BASE}/about`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
     { url: `${BASE}/contact`,        lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },

@@ -1,30 +1,37 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
 import { localizeType, localizeDistrict } from '@/lib/price';
 
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 48;
 
 interface Props {
   listings: Listing[];
   types: string[];
   districts: string[];
   mode?: 'rent' | 'sale';
+  // Facet landing pages (e.g. /for-rent/house, /for-rent/son-tra) pre-select one
+  // filter. The dropdowns stay fully visible/changeable; the seeded value just
+  // wins over any stale persisted filter for that dimension on load.
+  initialType?: string;
+  initialDistrict?: string;
+  initialBeds?: string;
+  initialForeign?: boolean;
 }
 
-export default function ListingsGrid({ listings, types, districts, mode = 'rent' }: Props) {
+export default function ListingsGrid({ listings, types, districts, mode = 'rent', initialType = '', initialDistrict = '', initialBeds = '', initialForeign = false }: Props) {
   const { lang, t } = useLanguage();
   const [search, setSearch]         = useState('');
-  const [typeFilter, setType]       = useState('');
-  const [distFilter, setDist]       = useState('');
+  const [typeFilter, setType]       = useState(initialType);
+  const [distFilter, setDist]       = useState(initialDistrict);
   const [hoodFilter, setHood]       = useState('');
-  const [bedsFilter, setBeds]       = useState('');
+  const [bedsFilter, setBeds]       = useState(initialBeds);
   const [priceFilter, setPrice]     = useState('');
-  const [foreignOnly, setForeignOnly] = useState(false);
+  const [foreignOnly, setForeignOnly] = useState(initialForeign);
 
   // Persist filters in sessionStorage so they survive navigation to a listing
   // detail page and back. Keyed by mode so rent/sale don't bleed into each other.
@@ -36,14 +43,22 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
       const raw = window.sessionStorage.getItem(FILTER_STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        if (typeof saved.search      === 'string')  setSearch(saved.search);
-        if (typeof saved.typeFilter  === 'string')  setType(saved.typeFilter);
-        if (typeof saved.distFilter  === 'string')  setDist(saved.distFilter);
+        // NOTE: free-text `search` is intentionally NOT restored. It's seeded from
+        // the ?q building-card links; persisting it made a building click stick and
+        // silently filter every later visit. Only the dropdown filters persist.
+        if (!initialType     && typeof saved.typeFilter === 'string') setType(saved.typeFilter);
+        if (!initialDistrict && typeof saved.distFilter === 'string') setDist(saved.distFilter);
         if (typeof saved.hoodFilter  === 'string')  setHood(saved.hoodFilter);
-        if (typeof saved.bedsFilter  === 'string')  setBeds(saved.bedsFilter);
+        if (!initialBeds     && typeof saved.bedsFilter === 'string') setBeds(saved.bedsFilter);
         if (typeof saved.priceFilter === 'string')  setPrice(saved.priceFilter);
-        if (typeof saved.foreignOnly === 'boolean') setForeignOnly(saved.foreignOnly);
+        if (!initialForeign && typeof saved.foreignOnly === 'boolean') setForeignOnly(saved.foreignOnly);
       }
+    } catch {}
+    // ?q= (from the "popular building" cards) pre-fills the search and wins over
+    // any persisted value.
+    try {
+      const q = new URLSearchParams(window.location.search).get('q');
+      if (q) setSearch(q);
     } catch {}
     setFiltersHydrated(true);
   }, [FILTER_STORAGE_KEY]);
@@ -51,10 +66,10 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
     if (!filtersHydrated || typeof window === 'undefined') return;
     try {
       window.sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
-        search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly,
+        typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly,
       }));
     } catch {}
-  }, [FILTER_STORAGE_KEY, filtersHydrated, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
+  }, [FILTER_STORAGE_KEY, filtersHydrated, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
 
   // Neighborhoods available for selected district
   const neighborhoods = distFilter ? (NEIGHBORHOODS[distFilter] || []) : [];
@@ -110,32 +125,17 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
     }
   };
 
-  // Infinite scroll
+  // Paginated "View More" — show 48 at a time.
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
   // Reset display count when filters change
   useEffect(() => { setDisplayCount(PAGE_SIZE); }, [search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
 
-  const loadMore = useCallback(() => {
-    setDisplayCount(c => Math.min(c + PAGE_SIZE, filtered.length));
-  }, [filtered.length]);
-
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => { if (entries[0].isIntersecting) loadMore(); },
-      { rootMargin: '300px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [loadMore]);
-
   const visible = filtered.slice(0, displayCount);
+  const remaining = filtered.length - visible.length;
+  const nextBatch = Math.min(PAGE_SIZE, remaining);
 
   return (
-    <div>
+    <div id="listings" className="scroll-mt-20">
       {/* Search + Filters */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
         {/* Search */}
@@ -239,9 +239,19 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {visible.map((l, i) => <ListingCard key={i} listing={l} />)}
           </div>
-          {displayCount < filtered.length && (
-            <div ref={sentinelRef} className="flex justify-center py-8">
-              <div className="w-6 h-6 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin" />
+          {remaining > 0 && (
+            <div className="flex flex-col items-center gap-2 pt-10">
+              <button
+                onClick={() => setDisplayCount(c => c + PAGE_SIZE)}
+                className="px-8 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+              >
+                {lang === 'vi' ? 'Xem thêm' : 'View more'} (+{nextBatch})
+              </button>
+              <p className="text-xs text-slate-400">
+                {lang === 'vi'
+                  ? `Đang hiển thị ${visible.length} trong ${filtered.length}`
+                  : `Showing ${visible.length} of ${filtered.length}`}
+              </p>
             </div>
           )}
         </>

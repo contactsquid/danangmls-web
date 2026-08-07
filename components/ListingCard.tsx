@@ -1,14 +1,25 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import Carousel from './Carousel';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
 import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
+import { listingFieldHref, facetUrl, FOREIGN_FACET } from '@/lib/facets';
 
 interface Props {
   listing: Listing;
+}
+
+// A meta chip that becomes a facet link when the field maps to a facet page;
+// linked chips are blue (clickable), non-linkable ones stay plain slate.
+function MetaChip({ href, title, children }: { href: string | null; title?: string; children: ReactNode }) {
+  const base = 'inline-flex items-center gap-1 text-xs rounded-full px-2.5 py-1 transition-colors';
+  return href
+    ? <Link href={href} title={title} className={`${base} text-blue-700 bg-blue-50 hover:bg-blue-100 hover:underline`}>{children}</Link>
+    : <span className={`${base} text-slate-500 bg-slate-50`}>{children}</span>;
 }
 
 // Vietnamese fallback title for listings without vi_title (most rentals,
@@ -27,6 +38,7 @@ function viFallbackTitle(listing: Listing): string {
 
 export default function ListingCard({ listing }: Props) {
   const { lang, t } = useLanguage();
+  const mode = listing.forSale ? 'sale' : 'rent';
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
     : listing.title;
@@ -52,7 +64,8 @@ export default function ListingCard({ listing }: Props) {
         {/* Foreign-eligible badge (above the price for visibility) */}
         {listing.foreignEligible && (
           <div className="mb-2">
-            <ForeignEligibleBadge buildingName={listing.foreignEligibleBuilding} size="sm" />
+            <ForeignEligibleBadge buildingName={listing.foreignEligibleBuilding} size="sm"
+              href={listing.forSale ? facetUrl('sale', lang, FOREIGN_FACET) : undefined} />
           </div>
         )}
         {/* Price */}
@@ -65,22 +78,25 @@ export default function ListingCard({ listing }: Props) {
           {displayTitle}
         </Link>
 
-        {/* Meta */}
+        {/* Meta — each chip links to its facet page when one exists */}
         <div className="flex flex-wrap gap-2 mt-auto">
           {listing.bedrooms && (
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
+            <MetaChip href={listingFieldHref('bedrooms', String(listing.bedrooms), mode, lang)}
+              title={lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ` : `Browse ${listing.bedrooms}-bedroom ${mode === 'rent' ? 'rentals' : 'homes'}`}>
               🛏 {listing.bedrooms} {t.br}
-            </span>
+            </MetaChip>
           )}
           {listing.type && (
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
+            <MetaChip href={listingFieldHref('type', listing.type, mode, lang)}
+              title={lang === 'vi' ? `Xem tất cả ${localizeType(listing.type, lang)}` : `Browse all ${localizeType(listing.type, lang)} ${mode === 'rent' ? 'rentals' : 'for sale'}`}>
               {localizeType(listing.type, lang)}
-            </span>
+            </MetaChip>
           )}
           {listing.district && (
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500 bg-slate-50 rounded-full px-2.5 py-1">
+            <MetaChip href={listingFieldHref('district', listing.district, mode, lang)}
+              title={lang === 'vi' ? `Xem BĐS tại ${localizeDistrict(listing.district, lang)}` : `Browse ${mode === 'rent' ? 'rentals' : 'listings'} in ${localizeDistrict(listing.district, lang)}`}>
               📍 {localizeDistrict(listing.district, lang)}
-            </span>
+            </MetaChip>
           )}
         </div>
 

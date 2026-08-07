@@ -5,18 +5,23 @@ import { usePathname, useRouter } from 'next/navigation';
 import Logo from './Logo';
 import { useLanguage } from './LanguageProvider';
 import type { Lang } from '@/lib/translations';
+import { resolveFacet, facetUrl } from '@/lib/facets';
 
 function getLangUrl(pathname: string, targetLang: Lang): string {
   if (targetLang === 'vi') {
     if (pathname === '/') return '/vi';
     if (pathname === '/for-rent') return '/vi/thue';
     if (pathname === '/for-sale') return '/vi/mua-ban';
+    if (pathname.startsWith('/for-rent/')) { const f = resolveFacet(pathname.slice('/for-rent/'.length)); return f ? facetUrl('rent', 'vi', f) : '/vi/thue'; }
+    if (pathname.startsWith('/for-sale/')) { const f = resolveFacet(pathname.slice('/for-sale/'.length)); return f ? facetUrl('sale', 'vi', f) : '/vi/mua-ban'; }
     if (pathname.startsWith('/listing/')) return '/vi' + pathname;
     return '/vi';
   } else {
     if (pathname === '/vi') return '/';
     if (pathname === '/vi/thue') return '/for-rent';
     if (pathname === '/vi/mua-ban') return '/for-sale';
+    if (pathname.startsWith('/vi/thue/')) { const f = resolveFacet(pathname.slice('/vi/thue/'.length)); return f ? facetUrl('rent', 'en', f) : '/for-rent'; }
+    if (pathname.startsWith('/vi/mua-ban/')) { const f = resolveFacet(pathname.slice('/vi/mua-ban/'.length)); return f ? facetUrl('sale', 'en', f) : '/for-sale'; }
     if (pathname.startsWith('/vi/listing/')) return pathname.replace('/vi', '');
     return '/';
   }
@@ -27,8 +32,8 @@ export default function SiteHeader() {
   const router = useRouter();
   const { lang, t } = useLanguage();
   const isVi = lang === 'vi';
-  const isForSale = pathname === '/for-sale' || pathname === '/vi/mua-ban';
-  const isForRent = pathname === '/for-rent' || pathname === '/vi/thue';
+  const isForSale = pathname === '/for-sale' || pathname === '/vi/mua-ban' || pathname.startsWith('/for-sale/') || pathname.startsWith('/vi/mua-ban/');
+  const isForRent = pathname === '/for-rent' || pathname === '/vi/thue' || pathname.startsWith('/for-rent/') || pathname.startsWith('/vi/thue/');
 
   const rentHref = isVi ? '/vi/thue' : '/for-rent';
   const saleHref = isVi ? '/vi/mua-ban' : '/for-sale';

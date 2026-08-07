@@ -9,6 +9,7 @@ import type { Listing } from '@/lib/types';
 import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
+import { listingFieldHref, facetUrl, FOREIGN_FACET } from '@/lib/facets';
 
 interface Props {
   listing: Listing;
@@ -45,6 +46,14 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
     : listing.title;
   const sourceText   = (lang === 'vi' && listing.vi_text)  ? listing.vi_text  : listing.text;
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
+
+  // Type / bedrooms / district each link to their facet page (rent or sale) when
+  // one exists; listingFieldHref returns null otherwise (e.g. unknown district).
+  const detailMode = listing.forSale ? 'sale' : 'rent';
+  const typeHref = listing.type     ? listingFieldHref('type', listing.type, detailMode, lang) : null;
+  const bedsHref = listing.bedrooms ? listingFieldHref('bedrooms', String(listing.bedrooms), detailMode, lang) : null;
+  const distHref = listing.district ? listingFieldHref('district', listing.district, detailMode, lang) : null;
+  const browseVerb = listing.forSale ? (lang === 'vi' ? 'rao bán' : 'for sale') : (lang === 'vi' ? 'cho thuê' : 'rentals');
   const districtInfo = getDistrict(listing.district);
 
   const altPrefix = localizedAltPrefix(
@@ -86,21 +95,42 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             </p>
             <div className="flex flex-wrap gap-2">
               {listing.type && (
-                <span className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
-                  {localizeType(listing.type, lang)}
-                </span>
+                typeHref ? (
+                  <Link
+                    href={typeHref}
+                    title={lang === 'vi' ? `Xem tất cả ${localizeType(listing.type, lang)} ${browseVerb}` : `Browse all ${localizeType(listing.type, lang)} ${browseVerb}`}
+                    className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full hover:bg-blue-100 hover:underline transition-colors"
+                  >
+                    {localizeType(listing.type, lang)}
+                  </Link>
+                ) : (
+                  <span className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                    {localizeType(listing.type, lang)}
+                  </span>
+                )
               )}
               {listing.bedrooms && (
-                <span className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full">
-                  🛏 {listing.bedrooms} {t.br}
-                </span>
+                bedsHref ? (
+                  <Link
+                    href={bedsHref}
+                    title={lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ ${browseVerb}` : `Browse ${listing.bedrooms}-bedroom ${browseVerb}`}
+                    className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full hover:bg-slate-200 hover:underline transition-colors"
+                  >
+                    🛏 {listing.bedrooms} {t.br}
+                  </Link>
+                ) : (
+                  <span className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full">
+                    🛏 {listing.bedrooms} {t.br}
+                  </span>
+                )
               )}
             </div>
           </div>
 
           {listing.foreignEligible && (
             <div className="mb-3">
-              <ForeignEligibleBadge buildingName={listing.foreignEligibleBuilding} size="md" />
+              <ForeignEligibleBadge buildingName={listing.foreignEligibleBuilding} size="md"
+                href={listing.forSale ? facetUrl('sale', lang, FOREIGN_FACET) : undefined} />
             </div>
           )}
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">{displayTitle}</h1>
@@ -119,7 +149,11 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             {listing.district && (
               <div>
                 <p className="text-xs text-slate-400 mb-1">{t.district}</p>
-                <p className="font-semibold text-slate-800">📍 {localizeDistrict(listing.district, lang)}</p>
+                {distHref ? (
+                  <Link href={distHref} className="font-semibold text-blue-700 hover:underline">📍 {localizeDistrict(listing.district, lang)}</Link>
+                ) : (
+                  <p className="font-semibold text-slate-800">📍 {localizeDistrict(listing.district, lang)}</p>
+                )}
               </div>
             )}
             {listing.bedrooms && (

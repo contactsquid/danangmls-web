@@ -3,7 +3,12 @@ import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
 import PageHero from '@/components/PageHero';
+import PageSeoSection from '@/components/PageSeoSection';
+import PageFaq from '@/components/PageFaq';
+import PopularBuildings from '@/components/PopularBuildings';
 import SiteFooter from '@/components/SiteFooter';
+import { districtImageMap, firstAnyImage } from '@/lib/pageImages';
+import { popularBuildings } from '@/lib/buildings';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
@@ -42,6 +47,9 @@ export default async function ViForSalePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <ListingsGrid listings={toGridListings(listings)} types={types} districts={districts} mode="sale" />
       </main>
+      <PopularBuildings buildings={popularBuildings(listings, 'sale', 'vi')} lang="vi" />
+      <PageSeoSection mode="sale" districtImages={districtImageMap(listings)} />
+      <PageFaq mode="sale" image={firstAnyImage(listings)} />
       <SiteFooter />
     </div>
   );

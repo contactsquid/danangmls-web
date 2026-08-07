@@ -3,7 +3,14 @@ import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
 import SiteHeader from '@/components/SiteHeader';
 import PageHero from '@/components/PageHero';
+import PageSeoSection from '@/components/PageSeoSection';
+import PageFaq from '@/components/PageFaq';
+import PopularBuildings from '@/components/PopularBuildings';
+import RentalGuide from '@/components/RentalGuide';
+import RentalOverview from '@/components/RentalOverview';
 import SiteFooter from '@/components/SiteFooter';
+import { districtImageMap, firstAnyImage } from '@/lib/pageImages';
+import { popularBuildings } from '@/lib/buildings';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
@@ -42,6 +49,11 @@ export default async function ViRentPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <ListingsGrid listings={toGridListings(listings)} types={types} districts={districts} />
       </main>
+      <PopularBuildings buildings={popularBuildings(listings, 'rent', 'vi')} lang="vi" />
+      <RentalGuide />
+      <RentalOverview />
+      <PageSeoSection mode="rent" districtImages={districtImageMap(listings)} />
+      <PageFaq mode="rent" image={firstAnyImage(listings)} />
       <SiteFooter />
     </div>
   );

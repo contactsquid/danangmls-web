@@ -19,23 +19,26 @@ export interface ForeignApprovedBuilding {
   developer?: string;
   district?: string;
   pattern: RegExp;
+  // Plain substring the listings grid can match on (the grid uses includes(),
+  // not the regex). Defaults to `name` when omitted.
+  search?: string;
 }
 
 export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
-  { name: 'Cora Tower',         developer: 'Sun Group',  district: 'Cam Le',        pattern: /cora tower/i },
-  { name: 'The Soleil Da Nang', developer: 'PPC An Thinh', district: 'Ngu Hanh Son', pattern: /(the\s+)?soleil/i },
-  { name: 'Muong Thanh',                                  district: 'Ngu Hanh Son', pattern: /m[ưu][ờo]ng\s+thanh/i },
-  { name: 'Panoma',                                       district: 'Ngu Hanh Son', pattern: /panoma/i },
-  { name: 'Hiyori Tower',                                 district: 'Son Tra',      pattern: /hiyori/i },
-  { name: 'F.Home / FPT Plaza', developer: 'FPT',         district: 'Ngu Hanh Son', pattern: /(f\.?home|fpt\s+plaza|FPT\s+Plaza)/i },
-  { name: 'One River',                                    district: 'Ngu Hanh Son', pattern: /one\s+river/i },
-  { name: 'The Point Villas',                             district: 'Ngu Hanh Son', pattern: /the\s+point/i },
-  { name: 'Risemount',                                    district: 'Hai Chau',     pattern: /risemount/i },
-  { name: 'Alphanam Luxury Apartment',                    district: 'Ngu Hanh Son', pattern: /alphanam/i },
-  { name: 'Sun Cosmo',          developer: 'Sun Group',   district: 'Ngu Hanh Son', pattern: /sun\s+cosmo/i },
-  { name: 'Monarchy',                                     district: 'Son Tra',      pattern: /monarchy/i },
-  { name: 'Wyndham Soleil',                               district: 'Ngu Hanh Son', pattern: /wyndham/i },
-  { name: 'Times Square FUTA Residence',                  district: 'Son Tra',      pattern: /times\s*square|futa\s*residence/i },
+  { name: 'Cora Tower',         developer: 'Sun Group',  district: 'Cam Le',        pattern: /cora tower/i, search: 'Cora' },
+  { name: 'The Soleil Da Nang', developer: 'PPC An Thinh', district: 'Ngu Hanh Son', pattern: /(the\s+)?soleil/i, search: 'Soleil' },
+  { name: 'Muong Thanh',                                  district: 'Ngu Hanh Son', pattern: /m[ưu][ờo]ng\s+thanh/i, search: 'Muong Thanh' },
+  { name: 'Panoma',                                       district: 'Ngu Hanh Son', pattern: /panoma/i, search: 'Panoma' },
+  { name: 'Hiyori Tower',                                 district: 'Son Tra',      pattern: /hiyori/i, search: 'Hiyori' },
+  { name: 'F.Home / FPT Plaza', developer: 'FPT',         district: 'Ngu Hanh Son', pattern: /(f\.?home|fpt\s+plaza|FPT\s+Plaza)/i, search: 'FPT' },
+  { name: 'One River',                                    district: 'Ngu Hanh Son', pattern: /one\s+river/i, search: 'One River' },
+  { name: 'The Point Villas',                             district: 'Ngu Hanh Son', pattern: /the\s+point/i, search: 'The Point' },
+  { name: 'Risemount',                                    district: 'Hai Chau',     pattern: /risemount/i, search: 'Risemount' },
+  { name: 'Alphanam Luxury Apartment',                    district: 'Ngu Hanh Son', pattern: /alphanam/i, search: 'Alphanam' },
+  { name: 'Sun Cosmo',          developer: 'Sun Group',   district: 'Ngu Hanh Son', pattern: /sun\s+cosmo/i, search: 'Sun Cosmo' },
+  { name: 'Monarchy',                                     district: 'Son Tra',      pattern: /monarchy/i, search: 'Monarchy' },
+  { name: 'Wyndham Soleil',                               district: 'Ngu Hanh Son', pattern: /wyndham/i, search: 'Wyndham' },
+  { name: 'Times Square FUTA Residence',                  district: 'Son Tra',      pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA' },
 ];
 
 /**
