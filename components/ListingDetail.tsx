@@ -10,6 +10,7 @@ import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, 
 import { getDistrict } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
 import { listingFieldHref, facetUrl, FOREIGN_FACET } from '@/lib/facets';
+import { relativeTime } from '@/lib/relativeTime';
 
 interface Props {
   listing: Listing;
@@ -33,14 +34,10 @@ function viFallbackTitle(listing: Listing): string {
 export default function ListingDetail({ listing, similarListings = [] }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
-  // "Listed" date for the detail page (not on thumbnails). Shown in the ACTIVE
+  // "Listed" date for the detail page (not on thumbnails), shown as relative
+  // time ("3 days ago") instead of an absolute date. Shown in the ACTIVE
   // language only (English on EN view, Vietnamese on /vi).
-  const listedDate = (() => {
-    if (!listing.date) return null;
-    const d = new Date(listing.date);
-    if (isNaN(d.getTime())) return null;
-    return d.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  })();
+  const listedDate = relativeTime(listing.date, lang);
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
     : listing.title;
