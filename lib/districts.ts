@@ -87,6 +87,17 @@ export const DISTRICTS: Record<string, DistrictInfo> = {
     lat:  15.8801,
     lng:  108.3380,
   },
+  'Hoa Vang': {
+    name:   'Hoa Vang',
+    viName: 'Hòa Vang',
+    description:
+      `Hoa Vang is Da Nang's largest district by area — a rural, mountainous stretch to the west of the city, home to Ba Na Hills, the Nui Than Tai hot springs, and wide expanses of farmland. It appeals to buyers hunting for larger land plots, weekend retreats, and resort-style properties away from the coastal crowds, while staying a scenic 30–45 minute drive from central Da Nang.`,
+    viDescription:
+      `Hòa Vang là huyện có diện tích lớn nhất Đà Nẵng — một vùng nông thôn, đồi núi ở phía tây thành phố, nơi có Bà Nà Hills, suối khoáng nóng Núi Thần Tài và những cánh đồng rộng lớn. Khu vực này thu hút người mua tìm kiếm lô đất rộng, nhà nghỉ dưỡng cuối tuần và bất động sản phong cách resort tránh xa sự đông đúc ven biển, trong khi vẫn chỉ cách trung tâm Đà Nẵng khoảng 30–45 phút lái xe.`,
+    bbox: [107.8185, 15.9180, 108.2249, 16.2154],
+    lat:  16.0667,
+    lng:  107.9738,
+  },
 };
 
 export function getDistrict(name: string): DistrictInfo | null {

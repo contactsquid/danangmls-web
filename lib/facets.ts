@@ -26,7 +26,7 @@ const VI_SLUG_TO_TYPE: Record<string, string> = Object.fromEntries(Object.entrie
 const DISTRICT_SLUGS: Record<string, string> = {
   'hai-chau': 'Hai Chau', 'thanh-khe': 'Thanh Khe', 'son-tra': 'Son Tra',
   'ngu-hanh-son': 'Ngu Hanh Son', 'lien-chieu': 'Lien Chieu', 'cam-le': 'Cam Le',
-  'hoi-an': 'Hoi An',
+  'hoi-an': 'Hoi An', 'hoa-vang': 'Hoa Vang',
 };
 
 const FOREIGN_SLUG = { en: 'foreign-buyer-eligible', vi: 'so-huu-nuoc-ngoai' };

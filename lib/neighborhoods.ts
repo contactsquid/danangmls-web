@@ -31,6 +31,10 @@ export const NEIGHBORHOODS: Record<string, string[]> = {
     'Cam Pho', 'Cam Thanh', 'Cua Dai', 'Minh An',
     'Son Phong', 'Tan An', 'Thanh Ha',
   ],
+  'Hoa Vang': [
+    'Hoa Bac', 'Hoa Lien', 'Hoa Ninh', 'Hoa Son', 'Hoa Nhon',
+    'Hoa Phu', 'Hoa Phong', 'Hoa Chau', 'Hoa Tien', 'Hoa Khuong', 'Hoa Phuoc',
+  ],
 };
 
 // Detect neighborhood from listing text/title/district

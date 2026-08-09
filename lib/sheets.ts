@@ -101,7 +101,7 @@ const FS = {
 // ─── Valid reference data ──────────────────────────────────────────────────────
 export const VALID_DISTRICTS = new Set([
   'Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son',
-  'Lien Chieu', 'Cam Le', 'Hoi An', 'Da Nang',
+  'Lien Chieu', 'Cam Le', 'Hoi An', 'Hoa Vang', 'Da Nang',
 ]);
 
 export const VALID_TYPES = new Set([
@@ -110,7 +110,7 @@ export const VALID_TYPES = new Set([
 ]);
 
 // ─── District normalisation ───────────────────────────────────────────────────
-const DISTRICT_LIST = ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son', 'Lien Chieu', 'Cam Le', 'Hoi An'] as const;
+const DISTRICT_LIST = ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son', 'Lien Chieu', 'Cam Le', 'Hoi An', 'Hoa Vang'] as const;
 
 // Vietnamese-accented → English equivalents
 const DISTRICT_VN: Record<string, string> = {
@@ -121,11 +121,15 @@ const DISTRICT_VN: Record<string, string> = {
   'Liên Chiểu': 'Lien Chieu',
   'Cẩm Lệ': 'Cam Le',
   'Hội An': 'Hoi An',
+  'Hòa Vang': 'Hoa Vang',
 };
 
 // Known sub-districts → parent district
+// NOTE 2026-08-09: 'Hoa Vang' used to be aliased to 'Cam Le' here — that was wrong.
+// Hoa Vang is Da Nang's own large rural district (west of the city, Ba Na Hills/hot
+// springs area), not a ward of Cam Le. It's now a first-class entry in DISTRICT_LIST
+// above instead. Don't re-add it here.
 const SUB_DISTRICTS: Record<string, string> = {
-  'Hoa Vang': 'Cam Le',
   'Hoa Xuan': 'Cam Le',
   'Hoa Minh': 'Lien Chieu',
   'Hoa Khanh': 'Lien Chieu',

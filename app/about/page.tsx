@@ -34,8 +34,8 @@ export default function AboutPage() {
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">What we cover</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
           Rentals and sales across every district of Da Nang — Hai Chau, Thanh Khe, Son Tra, Ngu Hanh Son,
-          Cam Le, and Lien Chieu — as well as nearby Hoi An. From beachfront apartments near My Khe and An Thuong
-          to family houses, townhouses, villas, and land plots.
+          Cam Le, Lien Chieu, and rural Hoa Vang — as well as nearby Hoi An. From beachfront apartments near
+          My Khe and An Thuong to family houses, townhouses, villas, and land plots.
         </p>
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Get in touch</h2>
         <p className="text-slate-600 leading-relaxed">
