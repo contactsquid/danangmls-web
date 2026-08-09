@@ -1,7 +1,7 @@
 import type { Listing } from './types';
 
 // Canonical districts used in the bottom "explore by district" photo grid.
-export const SEO_DISTRICTS = ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son', 'Lien Chieu', 'Cam Le', 'Hoi An'];
+export const SEO_DISTRICTS = ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son', 'Lien Chieu', 'Cam Le', 'Hoi An', 'Hoa Vang'];
 
 // Hand-curated hero photo per district (permanent R2 keys). Preferred over the
 // dynamic "first listing photo" so the grid always shows an attractive shot.
@@ -13,6 +13,7 @@ export const DISTRICT_HERO: Record<string, string> = {
   'Lien Chieu':   'https://images.danang.homes/curated/district-lien-chieu.jpg',
   'Cam Le':       'https://images.danang.homes/curated/district-cam-le.jpg',
   'Hoi An':       'https://images.danang.homes/curated/district-hoi-an.jpg',
+  'Hoa Vang':     'https://images.danang.homes/curated/district-hoa-vang.jpg',
 };
 
 // Only permanent, rehosted R2 photos (fbcdn/proxy URLs are transient / login-walled).

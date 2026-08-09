@@ -17,6 +17,7 @@ export const VI_DISTRICTS: Record<string, string> = {
   'Lien Chieu':   'Liên Chiểu',
   'Cam Le':       'Cẩm Lệ',
   'Hoi An':       'Hội An',
+  'Hoa Vang':     'Hòa Vang',
 };
 
 export function localizeType(type: string, lang: string): string {
