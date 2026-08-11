@@ -4,8 +4,14 @@ import { extractPriceFromText } from './price';
 import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
-const CSV_RENTALS   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
-const CSV_FORSALE   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=For%20Sale`;
+// Using the plain /export CSV endpoint (keyed by gid), NOT /gviz/tq?tqx=out:csv.
+// 2026-08-11: found gviz serves a STALE cached snapshot for this spreadsheet —
+// confirmed via direct Sheets API vs both endpoints that /export is always live
+// while gviz can sit stuck on an old snapshot (missing/blank Date column for
+// newly-added listings for a long, unpredictable stretch). See
+// danang-listing-relative-time.md for the full diagnosis.
+const CSV_RENTALS   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;          // Sheet1
+const CSV_FORSALE   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=1177098199`; // For Sale
 
 // Module-level cache: CSVs are fetched once per Node.js process (i.e. once per build).
 // Both sheets exceed Next.js's 2MB fetch-cache limit so without this every statically
