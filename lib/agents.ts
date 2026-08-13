@@ -110,6 +110,33 @@ export async function getAgentListingCounts(
   return counts;
 }
 
+/** Sheet "Listing Agent" name → profile slug, for VERIFIED profiles only.
+ *
+ *  The view already serves `listing_agent_name` as NULL until an admin approves
+ *  the claim, so an unverified claim can never turn into a link — the same rule
+ *  that keeps listings off an unverified profile.
+ *
+ *  Cached per request: a listing page calls this once, and the underlying
+ *  `getAgentProfiles()` is itself cached, so rendering N listings costs one
+ *  Supabase round-trip rather than N. */
+export const getVerifiedAgentSlugs = cache(async (): Promise<Map<string, string>> => {
+  const profiles = await getAgentProfiles();
+  const byName = new Map<string, string>();
+  for (const p of profiles) {
+    const name = normalizeAgentName(p.listing_agent_name);
+    if (name) byName.set(name, p.slug);
+  }
+  return byName;
+});
+
+/** The profile slug to link a listing's agent name to, or null when that agent
+ *  has no verified profile (the common case — most sheet agents never sign up). */
+export async function getAgentSlugForName(agent: string | null | undefined): Promise<string | null> {
+  const name = normalizeAgentName(agent);
+  if (!name) return null;
+  return (await getVerifiedAgentSlugs()).get(name) ?? null;
+}
+
 // ─── Signed-in user ───────────────────────────────────────────────────────────
 
 /** The current user's own profile, or null when signed out.

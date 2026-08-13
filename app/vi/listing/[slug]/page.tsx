@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
+import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
@@ -130,6 +131,8 @@ export default async function ViListingPage({ params }: Props) {
     ],
   };
 
+  const agentSlug = await getAgentSlugForName(listing.agent);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <SiteHeader />
@@ -141,7 +144,7 @@ export default async function ViListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} />
+      <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
       <SiteFooter />
     </div>

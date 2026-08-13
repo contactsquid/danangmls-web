@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
+import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import type { Metadata } from 'next';
 
@@ -132,6 +133,9 @@ export default async function ListingPage({ params }: Props) {
   };
 
   const similarListings = getSimilarListings(listing, listings);
+  // Links "Listed by" through to the agent profile when they have a verified
+  // one. Resolves to null (plain text) for the vast majority of sheet agents.
+  const agentSlug = await getAgentSlugForName(listing.agent);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -144,7 +148,7 @@ export default async function ListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} similarListings={similarListings} />
+      <ListingDetail listing={listing} similarListings={similarListings} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
       <SiteFooter />
     </div>

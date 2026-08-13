@@ -15,6 +15,9 @@ import { relativeTime } from '@/lib/relativeTime';
 interface Props {
   listing: Listing;
   similarListings?: Listing[];
+  /** Slug of the agent's verified profile, resolved server-side. Undefined when
+   *  the agent has no profile, which is the normal case. */
+  agentSlug?: string | null;
 }
 
 // Vietnamese fallback title for listings without vi_title — keeps the H1
@@ -31,7 +34,7 @@ function viFallbackTitle(listing: Listing): string {
   return `${verb} ${type}${beds} tại ${place}`;
 }
 
-export default function ListingDetail({ listing, similarListings = [] }: Props) {
+export default function ListingDetail({ listing, similarListings = [], agentSlug = null }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
   // "Listed" date for the detail page (not on thumbnails), shown as relative
@@ -162,7 +165,16 @@ export default function ListingDetail({ listing, similarListings = [] }: Props) 
             {listing.agent && (
               <div>
                 <p className="text-xs text-slate-400 mb-1">{t.agent}</p>
-                <p className="font-semibold text-slate-800">{listing.agent}</p>
+                {/* Links to the agent's profile only when they have a verified
+                    one. Most sheet agents never signed up, so this stays plain
+                    text for the majority of listings. */}
+                {agentSlug ? (
+                  <Link href={`/agent/${agentSlug}`} className="font-semibold text-blue-700 hover:underline">
+                    {listing.agent}
+                  </Link>
+                ) : (
+                  <p className="font-semibold text-slate-800">{listing.agent}</p>
+                )}
               </div>
             )}
             {listedDate && (
