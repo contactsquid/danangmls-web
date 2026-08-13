@@ -101,7 +101,7 @@ export default function AgentProfileView({ profile, listings, lang }: Props) {
             ? t.propertiesBy(profile.display_name)
             : t.noListingsFrom(profile.display_name)}
         </h2>
-        <AgentListings listings={listings} agentName={profile.display_name} />
+        <AgentListings listings={listings} agentName={profile.display_name} lang={lang} />
       </section>
     </main>
   );

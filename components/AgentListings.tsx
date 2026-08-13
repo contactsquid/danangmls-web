@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import ListingCard from './ListingCard';
+import { AGENT_COPY } from '@/lib/agentCopy';
+import type { Lang } from '@/lib/translations';
 import type { Listing } from '@/lib/types';
 
 /** An agent's inventory, split rentals-first then sales — the two have different
@@ -9,20 +11,24 @@ import type { Listing } from '@/lib/types';
 export default function AgentListings({
   listings,
   agentName,
+  lang = 'en',
 }: {
   listings: Listing[];
   agentName: string;
+  lang?: Lang;
 }) {
+  const t = AGENT_COPY[lang];
+  const rentHref = lang === 'vi' ? '/vi/thue' : '/for-rent';
+  const saleHref = lang === 'vi' ? '/vi/mua-ban' : '/for-sale';
+
   if (listings.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
-        <p className="text-slate-600">
-          {agentName} has no active listings on DanangMLS right now.
-        </p>
+        <p className="text-slate-600">{t.noneRightNow(agentName)}</p>
         <div className="mt-4 flex flex-wrap gap-3 justify-center">
-          <Link href="/for-rent" className="text-blue-600 hover:underline">Browse properties for rent</Link>
+          <Link href={rentHref} className="text-blue-600 hover:underline">{t.browseForRent}</Link>
           <span className="text-slate-300">·</span>
-          <Link href="/for-sale" className="text-blue-600 hover:underline">Browse properties for sale</Link>
+          <Link href={saleHref} className="text-blue-600 hover:underline">{t.browseForSale}</Link>
         </div>
       </div>
     );
@@ -37,7 +43,7 @@ export default function AgentListings({
         <section>
           {sales.length > 0 && (
             <h3 className="text-base font-semibold text-slate-800 mb-3">
-              For rent ({rentals.length})
+              {t.forRentHeading(rentals.length)}
             </h3>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -50,7 +56,7 @@ export default function AgentListings({
         <section>
           {rentals.length > 0 && (
             <h3 className="text-base font-semibold text-slate-800 mb-3">
-              For sale ({sales.length})
+              {t.forSaleHeading(sales.length)}
             </h3>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

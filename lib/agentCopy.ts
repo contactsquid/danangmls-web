@@ -38,6 +38,12 @@ export interface AgentCopy {
   listingCount: (n: number) => string;
   propertiesBy: (name: string) => string;
   noListingsFrom: (name: string) => string;
+  // Inventory block
+  forRentHeading: (n: number) => string;
+  forSaleHeading: (n: number) => string;
+  noneRightNow: (name: string) => string;
+  browseForRent: string;
+  browseForSale: string;
 }
 
 export const AGENT_COPY: Record<Lang, AgentCopy> = {
@@ -64,6 +70,11 @@ export const AGENT_COPY: Record<Lang, AgentCopy> = {
     listingCount: n => (n > 0 ? `${n} active ${n === 1 ? 'listing' : 'listings'}` : 'No active listings'),
     propertiesBy: name => `Properties listed by ${name}`,
     noListingsFrom: name => `Listings from ${name}`,
+    forRentHeading: n => `For rent (${n})`,
+    forSaleHeading: n => `For sale (${n})`,
+    noneRightNow: name => `${name} has no active listings on DanangMLS right now.`,
+    browseForRent: 'Browse properties for rent',
+    browseForSale: 'Browse properties for sale',
   },
   vi: {
     directoryTitle: 'Môi Giới Bất Động Sản tại Đà Nẵng',
@@ -88,6 +99,11 @@ export const AGENT_COPY: Record<Lang, AgentCopy> = {
     listingCount: n => (n > 0 ? `${n} tin đăng đang hoạt động` : 'Chưa có tin đăng'),
     propertiesBy: name => `Bất động sản đăng bởi ${name}`,
     noListingsFrom: name => `Tin đăng của ${name}`,
+    forRentHeading: n => `Cho thuê (${n})`,
+    forSaleHeading: n => `Bán (${n})`,
+    noneRightNow: name => `${name} hiện chưa có tin đăng nào trên DanangMLS.`,
+    browseForRent: 'Xem nhà cho thuê',
+    browseForSale: 'Xem nhà bán',
   },
 };
 
