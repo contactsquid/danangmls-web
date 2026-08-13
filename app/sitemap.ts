@@ -30,14 +30,26 @@ export default async function sitemap() {
   // filter here mirrors the isThin() rule in app/agent/[slug]/page.tsx exactly.
   const agents = await getAgentProfiles();
   const agentCounts = await getAgentListingCounts(agents);
+  // Both languages, since a profile is published at /agent/<slug> AND
+  // /vi/moi-gioi/<slug> with hreflang pairing them. The filter mirrors
+  // isThinProfile(): a sitemap listing URLs the page itself marks noindex sends
+  // a contradictory signal.
   const agentEntries = agents
     .filter(a => (agentCounts.get(a.slug) ?? 0) > 0 || a.bio.trim().length >= 40)
-    .map(a => ({
-      url: `${BASE}/agent/${a.slug}`,
-      lastModified: now,
-      changeFrequency: 'weekly' as const,
-      priority: 0.5,
-    }));
+    .flatMap(a => [
+      {
+        url: `${BASE}/agent/${a.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.5,
+      },
+      {
+        url: `${BASE}/vi/moi-gioi/${a.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.5,
+      },
+    ]);
 
   // Facet pages (type / district / bedrooms) that currently have inventory,
   // both languages, for rent and sale.
@@ -65,6 +77,7 @@ export default async function sitemap() {
     ...facetEntries,
     // Agent directory + profiles
     { url: `${BASE}/agents`,         lastModified: now, changeFrequency: 'daily'   as const, priority: 0.6 },
+    { url: `${BASE}/vi/moi-gioi`,    lastModified: now, changeFrequency: 'daily'   as const, priority: 0.6 },
     ...agentEntries,
     // Trust / info pages
     { url: `${BASE}/about`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },

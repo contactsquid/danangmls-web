@@ -9,15 +9,13 @@ export default function SiteFooter() {
   const links = vi
     ? [
         { href: '/vi/gioi-thieu',         label: 'Giới thiệu' },
+        { href: '/vi/moi-gioi',           label: 'Môi giới' },
         { href: '/vi/lien-he',            label: 'Liên hệ' },
         { href: '/vi/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },
         { href: '/vi/dieu-khoan',         label: 'Điều khoản' },
       ]
     : [
         { href: '/about',          label: 'About' },
-        // English only for now — the agent directory has no Vietnamese
-        // counterpart yet, and linking VI readers to an EN-only page would
-        // break the language parity the rest of the footer keeps.
         { href: '/agents',         label: 'Agents' },
         { href: '/contact',        label: 'Contact' },
         { href: '/privacy-policy', label: 'Privacy Policy' },
