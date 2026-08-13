@@ -16,8 +16,12 @@ const CSV_FORSALE   = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/
 // Module-level cache: CSVs are fetched once per Node.js process (i.e. once per build).
 // Both sheets exceed Next.js's 2MB fetch-cache limit so without this every statically
 // generated page re-fetches the full CSV, overwhelming Google Sheets and dropping connections.
-// TTL: 10 minutes — prevents warm functions from serving stale data indefinitely.
-const CACHE_TTL_MS = 10 * 60 * 1000;
+// TTL: 2 minutes (was 10 — lowered 2026-08-13). A brand-new listing wasn't visible to a
+// warm instance until its stale CSV snapshot expired; combined with the listing page's
+// 1hr ISR revalidate, a first-visit hitting a stale instance got a notFound() cached for
+// up to an hour ("new listing 404s" bug, see danang-listing-404-cache-race.md). Shrinking
+// this window doesn't eliminate the race but cuts it 5x.
+const CACHE_TTL_MS = 2 * 60 * 1000;
 const rentalsCache: { value: string | null; at: number } = { value: null, at: 0 };
 const forSaleCache: { value: string | null; at: number } = { value: null, at: 0 };
 

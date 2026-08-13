@@ -93,7 +93,9 @@ export async function generateStaticParams() {
 // the 2026-07-01 OOM revert's two root causes (per-render re-parse + N× parse
 // under regeneration bursts) are now fixed in lib/sheets.ts (parsed-listings
 // cache + in-flight de-dup), so caching these pages is safe.
-export const revalidate = 3600;
+// Lowered 3600 -> 300 (2026-08-13): see app/listing/[slug]/page.tsx — caps how
+// long a wrongly-cached notFound() on a brand-new listing can persist.
+export const revalidate = 300;
 
 export default async function ViListingPage({ params }: Props) {
   const { slug } = await params;

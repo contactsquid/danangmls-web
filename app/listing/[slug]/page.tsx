@@ -77,7 +77,11 @@ export async function generateStaticParams() {
 // (regeneration = cache hit, no re-parse) and concurrent cold parses share one
 // in-flight promise (no N× memory). Listing pages are small (~1MB) and their
 // content is stable, so caching them is the biggest cost/cold-start win.
-export const revalidate = 3600;
+// Lowered 3600 -> 300 (2026-08-13): a notFound() render (e.g. a brand-new listing
+// first visited by a stale instance) gets ISR-cached same as a hit, silently
+// 404ing new listings for up to the full revalidate window. 5 min caps the damage
+// instead of 1hr. See danang-listing-404-cache-race.md.
+export const revalidate = 300;
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
