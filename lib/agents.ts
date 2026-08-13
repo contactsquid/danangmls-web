@@ -137,6 +137,18 @@ export async function getAgentSlugForName(agent: string | null | undefined): Pro
   return (await getVerifiedAgentSlugs()).get(name) ?? null;
 }
 
+/** Profiles are self-serve, so the site will accumulate near-empty ones. An
+ *  indexable page with no bio and no inventory is textbook thin content, and at
+ *  scale it drags the whole domain down — so those get noindex,follow until the
+ *  agent fills the profile in. "follow" keeps any links on it live.
+ *
+ *  Lives here rather than in the page so BOTH language routes and the sitemap
+ *  apply the identical rule. A sitemap listing a URL the page marks noindex is a
+ *  contradictory signal, and two pages disagreeing about it is worse. */
+export function isThinProfile(profile: AgentProfile, listings: Listing[]): boolean {
+  return listings.length === 0 && profile.bio.trim().length < 40;
+}
+
 // ─── Signed-in user ───────────────────────────────────────────────────────────
 
 /** The current user's own profile, or null when signed out.

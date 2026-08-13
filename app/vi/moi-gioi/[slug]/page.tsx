@@ -7,56 +7,53 @@ import { getAgentProfile, getAgentListings, isThinProfile, type AgentProfile } f
 import { agentProfileLd } from '@/lib/schema';
 import { agentAlternates } from '@/lib/agentCopy';
 
-// Sheet-backed (the listings half of this page), so the same rule as every other
-// listing surface applies: keep it dynamic. See danangmls-cold-cache-fix notes —
-// the CSV is far too large for Next's fetch cache, and force-cache without this
-// makes the route try to prerender at build time.
 export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
+/** Vietnamese meta description. The agent's own bio is used verbatim when they
+ *  wrote one — most Da Nang agents write in Vietnamese, so translating it would
+ *  be worse than leaving it. Only the generated fallback is localised. */
 function metaDescription(profile: AgentProfile, listingCount: number): string {
   if (profile.bio.trim()) return profile.bio.trim().slice(0, 155);
   const where = profile.workplace && profile.workplace.toLowerCase() !== 'independent'
-    ? ` at ${profile.workplace}`
+    ? ` tại ${profile.workplace}`
     : '';
-  const inventory = listingCount > 0
-    ? ` with ${listingCount} current ${listingCount === 1 ? 'listing' : 'listings'}`
-    : '';
-  return `${profile.display_name}, real estate agent${where} in Da Nang, Vietnam${inventory}. Browse their properties for rent and for sale on DanangMLS.`;
+  const inventory = listingCount > 0 ? ` với ${listingCount} tin đăng hiện có` : '';
+  return `${profile.display_name}, môi giới bất động sản${where} ở Đà Nẵng, Việt Nam${inventory}. Xem các bất động sản cho thuê và bán của họ trên DanangMLS.`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const profile = await getAgentProfile(slug);
-  if (!profile) return { title: 'Agent not found' };
+  if (!profile) return { title: 'Không tìm thấy môi giới' };
 
   const listings = await getAgentListings(profile);
-  const canonical = `https://danangmls.com/agent/${profile.slug}`;
+  const canonical = `https://danangmls.com/vi/moi-gioi/${profile.slug}`;
 
   return {
-    title: `${profile.display_name} — Real Estate Agent in Da Nang`,
+    title: `${profile.display_name} — Môi Giới Bất Động Sản tại Đà Nẵng`,
     description: metaDescription(profile, listings.length),
     alternates: { canonical, ...agentAlternates('profile', profile.slug) },
+    // Same thin-content rule as the English page — a bare profile should not be
+    // indexed twice over.
     robots: isThinProfile(profile, listings) ? { index: false, follow: true } : undefined,
     openGraph: {
       type: 'profile',
       url: canonical,
-      title: `${profile.display_name} — Real Estate Agent in Da Nang`,
+      title: `${profile.display_name} — Môi Giới Bất Động Sản tại Đà Nẵng`,
       description: metaDescription(profile, listings.length),
-      // A profile with no photo still needs an og:image or the share card renders
-      // blank; fall back to the site mark.
       images: [{
         url: profile.photo_url || 'https://danangmls.com/icon.svg',
-        alt: `${profile.display_name} — real estate agent, DanangMLS`,
+        alt: `${profile.display_name} — môi giới bất động sản, DanangMLS`,
       }],
     },
   };
 }
 
-export default async function AgentProfilePage({ params }: Props) {
+export default async function ViAgentProfilePage({ params }: Props) {
   const { slug } = await params;
   const profile = await getAgentProfile(slug);
   if (!profile) notFound();
@@ -70,7 +67,7 @@ export default async function AgentProfilePage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(agentProfileLd(profile, listings.length)) }}
       />
-      <AgentProfileView profile={profile} listings={listings} lang="en" />
+      <AgentProfileView profile={profile} listings={listings} lang="vi" />
       <SiteFooter />
     </div>
   );
