@@ -64,6 +64,7 @@ From **Project Settings → API**, copy the values into Vercel
 | `NEXT_PUBLIC_SUPABASE_URL` | Project URL | yes |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | anon / publishable key | yes |
 | `SUPABASE_SERVICE_ROLE_KEY` | service_role / secret key | **no — never** |
+| `AGENT_SIGNUP_NOTIFY_URL` | moderation webhook (see below) | no |
 
 The service-role key is only used to delete a spam account. Everything else works
 without it; the admin screen's "Hide profile" action is the fallback.
@@ -82,6 +83,32 @@ where id = (select id from auth.users where email = 'you@example.com');
 ```
 
 `/admin/agents` is now reachable, and a link to it appears on your profile page.
+
+## Step 6 — wire up the moderation ping
+
+Moderation is **post-hoc**: agents confirm their email and are live immediately,
+with no approval queue to wait in. That model only works if someone is told when
+something happens, so set `AGENT_SIGNUP_NOTIFY_URL` to a webhook that reaches you.
+
+An n8n webhook is the natural fit here — it can fan out to email or Telegram, both
+of which already exist in this stack. The site POSTs JSON:
+
+```jsonc
+// on a new signup
+{ "type": "agent_signup", "display_name": "…", "email": "…",
+  "site": "danangmls.com", "admin_url": "https://danangmls.com/admin/agents",
+  "at": "2026-08-13T12:00:00.000Z" }
+
+// when an agent claims a name in the listings sheet
+{ "type": "listing_claim", "display_name": "…", "claimed_name": "…",
+  "matching_listings": 87, "profile_url": "…", "admin_url": "…", "at": "…" }
+```
+
+`matching_listings` is the number to watch: a brand-new account claiming a name
+that matches 87 listings is exactly the case worth a second look.
+
+Leave the variable unset and notifications are skipped silently — signups keep
+working, they just go unwatched.
 
 ## How moderation works
 

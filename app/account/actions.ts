@@ -2,8 +2,12 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SITE_URL, isSupabaseConfigured } from '@/lib/supabase/config';
+import { notifyAdmins } from '@/lib/notify';
+import { getListings, getForSaleListings } from '@/lib/sheets';
+import { normalizeAgentName } from '@/lib/agents';
 
 export interface ActionState {
   error?: string;
@@ -58,6 +62,12 @@ export async function signUpAction(
   });
 
   if (error) return { error: error.message };
+
+  // Moderation is post-hoc, so this ping is the review trigger. after() runs it
+  // once the response is out — a slow webhook must not make signup feel broken.
+  after(async () => {
+    await notifyAdmins({ type: 'agent_signup', display_name: displayName, email });
+  });
 
   // Supabase returns success for an already-registered address too (it will not
   // confirm or deny that an account exists — that is deliberate, and we keep the
@@ -192,6 +202,14 @@ export async function updateProfileAction(
     photoUrl = `${pub.publicUrl}?v=${Date.now()}`;
   }
 
+  // Read the current claim first, so we can tell a *new* claim (which needs a
+  // human to look at it) from an unrelated bio edit.
+  const { data: before } = await supabase
+    .from('agent_profiles')
+    .select('slug, listing_agent_name')
+    .eq('id', user.id)
+    .maybeSingle();
+
   const { error } = await supabase
     .from('agent_profiles')
     .update({
@@ -211,13 +229,30 @@ export async function updateProfileAction(
 
   revalidatePath('/account/profile');
   revalidatePath('/agents');
+  if (before?.slug) revalidatePath(`/agent/${before.slug}`);
 
-  const { data: profile } = await supabase
-    .from('agent_profiles')
-    .select('slug')
-    .eq('id', user.id)
-    .maybeSingle();
-  if (profile?.slug) revalidatePath(`/agent/${profile.slug}`);
+  // A newly claimed listing name is the one edit that needs a human decision,
+  // so it gets its own ping — with the number of listings it would attach,
+  // which is what makes an implausible claim obvious at a glance.
+  const claimChanged =
+    listingName && normalizeAgentName(listingName) !== normalizeAgentName(before?.listing_agent_name);
+
+  if (claimChanged) {
+    after(async () => {
+      const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
+      const target = normalizeAgentName(listingName);
+      const matching = [...rentals, ...forSale]
+        .filter(l => normalizeAgentName(l.agent) === target).length;
+
+      await notifyAdmins({
+        type: 'listing_claim',
+        display_name: displayName,
+        profile_url: `${SITE_URL}/agent/${before?.slug ?? ''}`,
+        claimed_name: listingName,
+        matching_listings: matching,
+      });
+    });
+  }
 
   return { notice: 'Profile saved.' };
 }
