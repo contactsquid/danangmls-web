@@ -42,30 +42,42 @@ Both use the site's actual brand colors (`slate-900` #0f172a wordmark, `blue-600
 images (avoids Gmail image-blocking making the email look broken), one button,
 one link fallback.
 
+**Both are bilingual, Vietnamese first.** Blake's requirement (2026-08-13): near
+enough all Da Nang agents are Vietnamese with very little English, so an
+English-only flow is a real barrier to adoption. Supabase sends ONE template per
+event — there is no per-recipient language switch — so the language cannot be
+chosen at send time. Bilingual in one email is the only option that reaches
+everyone, with Vietnamese given visual priority (full size, first) and English
+below in muted secondary text.
+
 ### Confirm signup
 
-**Subject:** `Confirm your DanangMLS agent profile`
+**Subject:** `Xác nhận hồ sơ môi giới DanangMLS · Confirm your DanangMLS agent profile`
 
 ```html
 <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#0f172a;">
   <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:24px;">
     Danang<span style="color:#2563eb;">MLS</span>
   </div>
-  <p style="font-size:16px;line-height:1.5;margin:0 0 16px;">
+  <p style="font-size:16px;line-height:1.5;margin:0 0 8px;">
+    Xác nhận email của bạn để kích hoạt hồ sơ môi giới trên DanangMLS.
+  </p>
+  <p style="font-size:14px;line-height:1.5;color:#64748b;margin:0 0 16px;">
     Confirm your email to activate your agent profile on DanangMLS.
   </p>
   <p style="margin:24px 0;">
     <a href="{{ .ConfirmationURL }}"
        style="background:#2563eb;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;display:inline-block;">
-      Confirm email
+      Xác nhận email · Confirm email
     </a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
-    Or paste this link into your browser:<br>
+    Hoặc dán liên kết này vào trình duyệt của bạn / Or paste this link into your browser:<br>
     <a href="{{ .ConfirmationURL }}" style="color:#2563eb;word-break:break-all;">{{ .ConfirmationURL }}</a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
-    Didn't request this? You can safely ignore this email.
+    Bạn không yêu cầu email này? Bạn có thể bỏ qua email này.<br>
+    <span style="color:#94a3b8;">Didn't request this? You can safely ignore this email.</span>
   </p>
   <hr style="border:none;border-top:1px solid #e2e8f0;margin:32px 0 16px;">
   <p style="font-size:12px;color:#94a3b8;margin:0;">DanangMLS · danangmls.com</p>
@@ -74,28 +86,32 @@ one link fallback.
 
 ### Reset password
 
-**Subject:** `Reset your DanangMLS password`
+**Subject:** `Đặt lại mật khẩu DanangMLS · Reset your DanangMLS password`
 
 ```html
 <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#0f172a;">
   <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:24px;">
     Danang<span style="color:#2563eb;">MLS</span>
   </div>
-  <p style="font-size:16px;line-height:1.5;margin:0 0 16px;">
+  <p style="font-size:16px;line-height:1.5;margin:0 0 8px;">
+    Đặt lại mật khẩu cho tài khoản môi giới DanangMLS của bạn.
+  </p>
+  <p style="font-size:14px;line-height:1.5;color:#64748b;margin:0 0 16px;">
     Reset the password for your DanangMLS agent account.
   </p>
   <p style="margin:24px 0;">
     <a href="{{ .ConfirmationURL }}"
        style="background:#2563eb;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;display:inline-block;">
-      Reset password
+      Đặt lại mật khẩu · Reset password
     </a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
-    Or paste this link into your browser:<br>
+    Hoặc dán liên kết này vào trình duyệt của bạn / Or paste this link into your browser:<br>
     <a href="{{ .ConfirmationURL }}" style="color:#2563eb;word-break:break-all;">{{ .ConfirmationURL }}</a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
-    Didn't request this? You can safely ignore this email — your password won't change.
+    Bạn không yêu cầu? Bỏ qua email này — mật khẩu của bạn sẽ không thay đổi.<br>
+    <span style="color:#94a3b8;">Didn't request this? Ignore this email — your password won't change.</span>
   </p>
   <hr style="border:none;border-top:1px solid #e2e8f0;margin:32px 0 16px;">
   <p style="font-size:12px;color:#94a3b8;margin:0;">DanangMLS · danangmls.com</p>
