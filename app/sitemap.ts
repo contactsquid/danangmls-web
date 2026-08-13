@@ -1,6 +1,7 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { facetsWithInventory, facetUrl } from '@/lib/facets';
+import { getAgentProfiles, getAgentListingCounts } from '@/lib/agents';
 
 // Sheet-backed; keep dynamic (force-cache fetch would otherwise try to prerender).
 export const dynamic = 'force-dynamic';
@@ -23,6 +24,20 @@ function permanentImages(l: Listing): string[] {
 export default async function sitemap() {
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
   const now = new Date();
+
+  // Agent profiles. Only the ones that are worth crawling: a sitemap listing
+  // URLs that the page itself marks noindex sends a contradictory signal, so the
+  // filter here mirrors the isThin() rule in app/agent/[slug]/page.tsx exactly.
+  const agents = await getAgentProfiles();
+  const agentCounts = await getAgentListingCounts(agents);
+  const agentEntries = agents
+    .filter(a => (agentCounts.get(a.slug) ?? 0) > 0 || a.bio.trim().length >= 40)
+    .map(a => ({
+      url: `${BASE}/agent/${a.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    }));
 
   // Facet pages (type / district / bedrooms) that currently have inventory,
   // both languages, for rent and sale.
@@ -48,6 +63,9 @@ export default async function sitemap() {
     { url: `${BASE}/vi/mua-ban`,      lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     // Facet pages
     ...facetEntries,
+    // Agent directory + profiles
+    { url: `${BASE}/agents`,         lastModified: now, changeFrequency: 'daily'   as const, priority: 0.6 },
+    ...agentEntries,
     // Trust / info pages
     { url: `${BASE}/about`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
     { url: `${BASE}/contact`,        lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },

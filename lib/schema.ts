@@ -28,6 +28,52 @@ export const SITE_LD = {
   inLanguage: ['en', 'vi'],
 };
 
+/** RealEstateAgent for an /agent/<slug> profile page.
+ *  worksFor is omitted for independent agents rather than emitting an
+ *  Organization literally named "Independent". */
+export function agentProfileLd(agent: {
+  slug: string;
+  display_name: string;
+  bio: string;
+  photo_url: string | null;
+  workplace: string;
+}, listingCount: number) {
+  const independent = !agent.workplace || agent.workplace.toLowerCase() === 'independent';
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateAgent',
+    name: agent.display_name,
+    url: `${BASE}/agent/${agent.slug}`,
+    ...(agent.photo_url ? { image: agent.photo_url } : {}),
+    ...(agent.bio ? { description: agent.bio } : {}),
+    ...(independent ? {} : { worksFor: { '@type': 'Organization', name: agent.workplace } }),
+    areaServed: [
+      { '@type': 'City', name: 'Da Nang' },
+      { '@type': 'City', name: 'Hoi An' },
+    ],
+    parentOrganization: { '@type': 'Organization', name: 'DanangMLS', url: BASE },
+    ...(listingCount > 0
+      ? { makesOffer: { '@type': 'Offer', itemOffered: { '@type': 'Residence' }, eligibleRegion: 'Da Nang, Vietnam' } }
+      : {}),
+  };
+}
+
+/** ItemList for the /agents directory. */
+export function agentsItemListLd(agents: { slug: string; display_name: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Real Estate Agents in Da Nang, Vietnam',
+    numberOfItems: agents.length,
+    itemListElement: agents.slice(0, 50).map((a, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${BASE}/agent/${a.slug}`,
+      name: a.display_name,
+    })),
+  };
+}
+
 /** ItemList for a listings grid page (for-rent / for-sale, EN or VI). */
 export function listingsItemListLd(
   listings: Listing[],

@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // Agent profile photos are submitted through a Server Action, and the
+      // default cap is 1MB — smaller than a phone photo. The action itself
+      // rejects anything over 5MB with a readable error; the extra megabyte of
+      // headroom here is for multipart overhead.
+      bodySizeLimit: '6mb',
+    },
+  },
   images: {
     remotePatterns: [
       {
