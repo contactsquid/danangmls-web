@@ -39,6 +39,7 @@ export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   { name: 'Monarchy',                                     district: 'Son Tra',      pattern: /monarchy/i, search: 'Monarchy' },
   { name: 'Wyndham Soleil',                               district: 'Ngu Hanh Son', pattern: /wyndham/i, search: 'Wyndham' },
   { name: 'Times Square FUTA Residence',                  district: 'Son Tra',      pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA' },
+  { name: 'Newtown Diamond',                              district: 'Ngu Hanh Son', pattern: /new\s*town\s*diamond/i, search: 'Newtown Diamond' },
 ];
 
 /**

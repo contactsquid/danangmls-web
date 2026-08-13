@@ -32,6 +32,7 @@ const POPULAR_BUILDINGS: BuildingDef[] = [
   { name: 'Indochina Riverside',        pattern: /indochina/i,                        search: 'Indochina' },
   { name: 'The Song',                   pattern: /the\s+song\b/i,                     search: 'The Song' },
   { name: 'Ariyana',                    pattern: /ariyana/i,                          search: 'Ariyana' },
+  { name: 'Newtown Diamond',            pattern: /new\s*town\s*diamond/i,             search: 'Newtown Diamond' },
 ];
 
 // Popular apartment buildings that currently have listings in this mode — each
