@@ -85,11 +85,25 @@ export function formatPrice(amount: number, currency: 'USD' | 'VND', forSale: bo
   return `$${rounded.toLocaleString('en-US')}${forSale ? '' : '/month'}`;
 }
 
-/** M/D/YYYY, matching what the sheet already holds. Written with
- *  valueInputOption=USER_ENTERED so Sheets stores a real date, not text. */
-function todayForSheet(): string {
-  const now = new Date();
-  return `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+/** A full ISO timestamp in Indochina time, byte-identical in shape to what the
+ *  n8n pipeline stamps (e.g. 2026-08-14T17:13:55.571+07:00).
+ *
+ *  It must NOT be date-only. The site renders "Listed" as relative time, so a
+ *  day-only value parses as local midnight and a listing posted at 5pm announces
+ *  itself as "17 hours ago" — which is exactly what the first real submission
+ *  did. The pipeline moved to real timestamps on 2026-08-11 for this reason;
+ *  this brings portal rows in line.
+ *
+ *  Fixed +07:00 rather than a timezone library: Vietnam has no daylight saving,
+ *  and the server itself runs in UTC. */
+function nowForSheet(): string {
+  const local = new Date(Date.now() + 7 * 60 * 60 * 1000);
+  const pad = (n: number, width = 2) => String(n).padStart(width, '0');
+  return (
+    `${local.getUTCFullYear()}-${pad(local.getUTCMonth() + 1)}-${pad(local.getUTCDate())}` +
+    `T${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}:${pad(local.getUTCSeconds())}` +
+    `.${pad(local.getUTCMilliseconds(), 3)}+07:00`
+  );
 }
 
 /** A listing that came through the portal has no Facebook post behind it, but
@@ -154,7 +168,7 @@ export function buildRow(s: ListingSubmission): BuiltRow {
   const slug = slugify(title, postUrl);
   const url = `${SITE}/listing/${slug}`;
   const price = formatPrice(s.priceAmount, s.priceCurrency, s.forSale);
-  const date = todayForSheet();
+  const date = nowForSheet();
 
   // Details the sheet has no dedicated column for are appended to the body text,
   // which is what the scraped rows do too — the site renders and searches it.
