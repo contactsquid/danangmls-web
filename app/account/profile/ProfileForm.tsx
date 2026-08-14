@@ -4,12 +4,21 @@ import { useActionState, useState } from 'react';
 import { updateProfileAction, type ActionState } from '../actions';
 import AgentAvatar from '@/components/AgentAvatar';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
+import { ACCOUNT_COPY } from '@/lib/accountCopy';
+import type { Lang } from '@/lib/translations';
 import type { OwnAgentProfile } from '@/lib/agents';
 
 const initial: ActionState = {};
 
-export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
+export default function ProfileForm({
+  profile,
+  lang = 'en',
+}: {
+  profile: OwnAgentProfile;
+  lang?: Lang;
+}) {
   const [state, formAction, pending] = useActionState(updateProfileAction, initial);
+  const t = ACCOUNT_COPY[lang];
 
   const startsIndependent =
     !profile.workplace || profile.workplace.toLowerCase() === 'independent';
@@ -21,10 +30,11 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
   return (
     <form action={formAction} className="space-y-5">
       <FormMessage error={state.error} notice={state.notice} />
+      <input type="hidden" name="lang" value={lang} />
 
       {/* Photo */}
       <div>
-        <span className={labelClass}>Profile photo</span>
+        <span className={labelClass}>{t.profilePhoto}</span>
         <div className="flex items-center gap-4">
           <AgentAvatar
             src={preview ?? profile.photo_url}
@@ -43,12 +53,12 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
             className="text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
           />
         </div>
-        <p className={hintClass}>JPEG, PNG, or WebP. Up to 5 MB.</p>
+        <p className={hintClass}>{t.photoHint}</p>
       </div>
 
       {/* Name */}
       <div>
-        <label htmlFor="display_name" className={labelClass}>Full name</label>
+        <label htmlFor="display_name" className={labelClass}>{t.fullName}</label>
         <input
           id="display_name"
           name="display_name"
@@ -58,15 +68,12 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
           defaultValue={profile.display_name}
           className={inputClass}
         />
-        <p className={hintClass}>
-          Your profile lives at <code className="text-slate-600">/agent/{profile.slug}</code>.
-          Changing your name here does not change that address.
-        </p>
+        <p className={hintClass}>{t.slugHint(profile.slug)}</p>
       </div>
 
       {/* Workplace */}
       <fieldset>
-        <legend className={labelClass}>Where you work</legend>
+        <legend className={labelClass}>{t.workplace}</legend>
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input
@@ -76,7 +83,7 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
               onChange={() => setIndependent(true)}
               className="text-blue-600"
             />
-            Independent agent
+            {t.independentRadio}
           </label>
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input
@@ -86,7 +93,7 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
               onChange={() => setIndependent(false)}
               className="text-blue-600"
             />
-            Agency or company
+            {t.agencyRadio}
           </label>
         </div>
         {!independent && (
@@ -95,8 +102,8 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
             value={agency}
             onChange={e => setAgency(e.target.value)}
             maxLength={120}
-            placeholder="Agency name"
-            aria-label="Agency name"
+            placeholder={t.agencyName}
+            aria-label={t.agencyName}
             className={`${inputClass} mt-2`}
           />
         )}
@@ -110,25 +117,22 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
 
       {/* Bio */}
       <div>
-        <label htmlFor="bio" className={labelClass}>About you</label>
+        <label htmlFor="bio" className={labelClass}>{t.bio}</label>
         <textarea
           id="bio"
           name="bio"
           rows={5}
           maxLength={2000}
           defaultValue={profile.bio}
-          placeholder="Areas you cover, languages you speak, the kind of property you specialise in…"
+          placeholder={t.bioPlaceholder}
           className={inputClass}
         />
-        <p className={hintClass}>
-          Shown on your public profile. Profiles with a real bio and active listings rank
-          far better in search than empty ones.
-        </p>
+        <p className={hintClass}>{t.bioHint}</p>
       </div>
 
       {/* Phone — stored, deliberately not published */}
       <div>
-        <label htmlFor="phone" className={labelClass}>Phone / Zalo</label>
+        <label htmlFor="phone" className={labelClass}>{t.phone}</label>
         <input
           id="phone"
           name="phone"
@@ -137,40 +141,30 @@ export default function ProfileForm({ profile }: { profile: OwnAgentProfile }) {
           placeholder="+84 …"
           className={inputClass}
         />
-        <p className={hintClass}>
-          For DanangMLS to reach you only — this is <strong>not</strong> shown on your public
-          profile. Enquiries come through DanangMLS.
-        </p>
+        <p className={hintClass}>{t.phoneHint}</p>
       </div>
 
       {/* Listing name claim */}
       <div>
-        <label htmlFor="listing_agent_name" className={labelClass}>
-          Name your listings are posted under
-        </label>
+        <label htmlFor="listing_agent_name" className={labelClass}>{t.listingName}</label>
         <input
           id="listing_agent_name"
           name="listing_agent_name"
           type="text"
           maxLength={120}
           defaultValue={profile.listing_agent_name ?? ''}
-          placeholder="Exactly as it appears on your listings"
+          placeholder={t.listingNamePlaceholder}
           className={inputClass}
         />
         {profile.listing_agent_name_verified ? (
-          <p className="mt-1.5 text-xs text-emerald-700">
-            ✓ Verified — your listings appear on your public profile.
-          </p>
+          <p className="mt-1.5 text-xs text-emerald-700">{t.listingClaimVerified}</p>
         ) : (
-          <p className={hintClass}>
-            DanangMLS checks this before your listings appear on your profile, so nobody can
-            claim someone else’s properties. Usually within a day.
-          </p>
+          <p className={hintClass}>{t.listingNameHint}</p>
         )}
       </div>
 
       <button type="submit" disabled={pending} className={buttonClass}>
-        {pending ? 'Saving…' : 'Save profile'}
+        {pending ? t.savingProfile : t.saveProfile}
       </button>
     </form>
   );

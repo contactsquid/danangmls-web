@@ -3,11 +3,14 @@
 import { useActionState } from 'react';
 import { signUpAction, type ActionState } from '../actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
+import { ACCOUNT_COPY } from '@/lib/accountCopy';
+import type { Lang } from '@/lib/translations';
 
 const initial: ActionState = {};
 
-export default function SignupForm() {
+export default function SignupForm({ lang = 'en' }: { lang?: Lang }) {
   const [state, formAction, pending] = useActionState(signUpAction, initial);
+  const t = ACCOUNT_COPY[lang];
 
   // On success the form is replaced by the "check your inbox" notice — leaving
   // the fields on screen invites a confused second submission.
@@ -18,9 +21,10 @@ export default function SignupForm() {
   return (
     <form action={formAction} className="space-y-4">
       <FormMessage error={state.error} />
+      <input type="hidden" name="lang" value={lang} />
 
       <div>
-        <label htmlFor="display_name" className={labelClass}>Full name</label>
+        <label htmlFor="display_name" className={labelClass}>{t.fullName}</label>
         <input
           id="display_name"
           name="display_name"
@@ -28,14 +32,14 @@ export default function SignupForm() {
           required
           maxLength={80}
           autoComplete="name"
-          placeholder="Nguyen Van A"
+          placeholder={t.namePlaceholder}
           className={inputClass}
         />
-        <p className={hintClass}>This is the name shown on your public profile.</p>
+        <p className={hintClass}>{t.fullNameHint}</p>
       </div>
 
       <div>
-        <label htmlFor="email" className={labelClass}>Email</label>
+        <label htmlFor="email" className={labelClass}>{t.email}</label>
         <input
           id="email"
           name="email"
@@ -48,7 +52,7 @@ export default function SignupForm() {
       </div>
 
       <div>
-        <label htmlFor="password" className={labelClass}>Password</label>
+        <label htmlFor="password" className={labelClass}>{t.password}</label>
         <input
           id="password"
           name="password"
@@ -58,11 +62,11 @@ export default function SignupForm() {
           autoComplete="new-password"
           className={inputClass}
         />
-        <p className={hintClass}>At least 8 characters.</p>
+        <p className={hintClass}>{t.passwordHint}</p>
       </div>
 
       <button type="submit" disabled={pending} className={buttonClass}>
-        {pending ? 'Creating account…' : 'Create account'}
+        {pending ? t.creatingAccount : t.createAccount}
       </button>
     </form>
   );

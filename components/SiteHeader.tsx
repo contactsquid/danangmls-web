@@ -6,6 +6,7 @@ import Logo from './Logo';
 import { useLanguage } from './LanguageProvider';
 import type { Lang } from '@/lib/translations';
 import { resolveFacet, facetUrl } from '@/lib/facets';
+import { accountPaths, ACCOUNT_COPY } from '@/lib/accountCopy';
 
 function getLangUrl(pathname: string, targetLang: Lang): string {
   if (targetLang === 'vi') {
@@ -30,13 +31,21 @@ function getLangUrl(pathname: string, targetLang: Lang): string {
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const isVi = lang === 'vi';
   const isForSale = pathname === '/for-sale' || pathname === '/vi/mua-ban' || pathname.startsWith('/for-sale/') || pathname.startsWith('/vi/mua-ban/');
   const isForRent = pathname === '/for-rent' || pathname === '/vi/thue' || pathname.startsWith('/for-rent/') || pathname.startsWith('/vi/thue/');
 
   const rentHref = isVi ? '/vi/thue' : '/for-rent';
   const saleHref = isVi ? '/vi/mua-ban' : '/for-sale';
+
+  // Points straight at the add-listing form. No auth check is needed here — the
+  // form page itself redirects a signed-out visitor to sign-in with ?next set,
+  // so they land back on the form once they are in. Doing it that way keeps the
+  // header a static component: checking the session here would make every page
+  // on the site wait on an auth round-trip.
+  const addListingHref = accountPaths[isVi ? 'vi' : 'en'].newListing;
+  const addListingLabel = ACCOUNT_COPY[isVi ? 'vi' : 'en'].addPropertyNav;
 
   const handleLangChange = (target: Lang) => {
     router.push(getLangUrl(pathname, target));
@@ -51,10 +60,22 @@ export default function SiteHeader() {
 
           <div className="hidden sm:flex items-center gap-3">
             <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} />
+            <Link
+              href={addListingHref}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white whitespace-nowrap hover:bg-blue-700 transition-colors"
+            >
+              {addListingLabel}
+            </Link>
             <LangDropdown lang={lang} onChange={handleLangChange} />
           </div>
 
-          <div className="flex sm:hidden items-center">
+          <div className="flex sm:hidden items-center gap-2">
+            <Link
+              href={addListingHref}
+              className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white whitespace-nowrap hover:bg-blue-700 transition-colors"
+            >
+              {addListingLabel}
+            </Link>
             <LangDropdown lang={lang} onChange={handleLangChange} />
           </div>
         </div>

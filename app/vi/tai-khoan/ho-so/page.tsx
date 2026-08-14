@@ -3,28 +3,26 @@ import { redirect } from 'next/navigation';
 import { AccountShell } from '@/components/account/ui';
 import ProfilePageBody, { ProfileSubtitle } from '@/components/account/ProfilePageBody';
 import { getOwnProfile } from '@/lib/agents';
-import { ACCOUNT_COPY } from '@/lib/accountCopy';
+import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Your Agent Profile',
+  title: 'Hồ Sơ Môi Giới Của Bạn | DanangMLS',
   robots: { index: false, follow: false },
 };
 
-export default async function ProfilePage() {
-  // Authorization happens here, next to the data — proxy.ts only refreshes the
-  // session, it does not gate access.
+export default async function ViProfilePage() {
   const profile = await getOwnProfile();
-  if (!profile) redirect('/account/login');
+  if (!profile) redirect(accountPaths.vi.login);
 
   return (
     <AccountShell
-      title={ACCOUNT_COPY.en.profileTitle}
-      subtitle={<ProfileSubtitle slug={profile.slug} lang="en" />}
+      title={ACCOUNT_COPY.vi.profileTitle}
+      subtitle={<ProfileSubtitle slug={profile.slug} lang="vi" />}
       wide
     >
-      <ProfilePageBody profile={profile} lang="en" />
+      <ProfilePageBody profile={profile} lang="vi" />
     </AccountShell>
   );
 }

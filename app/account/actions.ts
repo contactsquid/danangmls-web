@@ -8,15 +8,19 @@ import { SITE_URL, isSupabaseConfigured } from '@/lib/supabase/config';
 import { notifyAdmins } from '@/lib/notify';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { normalizeAgentName } from '@/lib/agents';
+import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
+import type { Lang } from '@/lib/translations';
 
 export interface ActionState {
   error?: string;
   notice?: string;
 }
 
-const NOT_CONFIGURED: ActionState = {
-  error: 'Agent accounts are not enabled on this site yet. Please try again later.',
-};
+/** Every action reads the language from a hidden field the form renders, so the
+ *  Vietnamese pages get Vietnamese errors without a second copy of each action. */
+function langOf(form: FormData): Lang {
+  return form.get('lang') === 'vi' ? 'vi' : 'en';
+}
 
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -31,24 +35,18 @@ export async function signUpAction(
   _prev: ActionState,
   form: FormData,
 ): Promise<ActionState> {
-  if (!isSupabaseConfigured) return NOT_CONFIGURED;
+  const lang = langOf(form);
+  const t = ACCOUNT_COPY[lang];
+  if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const email       = str(form, 'email').toLowerCase();
   const password    = str(form, 'password');
   const displayName = str(form, 'display_name');
 
-  if (!displayName || displayName.length < 2) {
-    return { error: 'Please enter your full name.' };
-  }
-  if (displayName.length > 80) {
-    return { error: 'That name is too long (80 characters max).' };
-  }
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    return { error: 'Please enter a valid email address.' };
-  }
-  if (password.length < 8) {
-    return { error: 'Password must be at least 8 characters.' };
-  }
+  if (!displayName || displayName.length < 2) return { error: t.errors.nameRequired };
+  if (displayName.length > 80) return { error: t.errors.nameTooLong };
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { error: t.errors.emailInvalid };
+  if (password.length < 8) return { error: t.errors.passwordShort };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
@@ -57,11 +55,16 @@ export async function signUpAction(
     options: {
       // Read by the handle_new_user() trigger to name the profile and mint its slug.
       data: { display_name: displayName },
-      emailRedirectTo: `${SITE_URL}/auth/callback?next=/account/profile`,
+      emailRedirectTo: `${SITE_URL}/auth/callback?next=${accountPaths[lang].profile}`,
     },
   });
 
-  if (error) return { error: error.message };
+  // Supabase's own message is English-only, so it is logged rather than shown —
+  // a Vietnamese agent should not hit a wall of English at the last step.
+  if (error) {
+    console.error('[account] signup failed:', error.message);
+    return { error: t.errors.signupFailed };
+  }
 
   // Moderation is post-hoc, so this ping is the review trigger. after() runs it
   // once the response is out — a slow webhook must not make signup feel broken.
@@ -72,10 +75,7 @@ export async function signUpAction(
   // Supabase returns success for an already-registered address too (it will not
   // confirm or deny that an account exists — that is deliberate, and we keep the
   // same wording rather than leaking which emails are registered).
-  return {
-    notice:
-      'Check your email to confirm your address. The link will bring you back here to finish your profile.',
-  };
+  return { notice: t.checkInbox };
 }
 
 // ─── Sign in ──────────────────────────────────────────────────────────────────
@@ -83,12 +83,14 @@ export async function signInAction(
   _prev: ActionState,
   form: FormData,
 ): Promise<ActionState> {
-  if (!isSupabaseConfigured) return NOT_CONFIGURED;
+  const lang = langOf(form);
+  const t = ACCOUNT_COPY[lang];
+  if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const email    = str(form, 'email').toLowerCase();
   const password = str(form, 'password');
 
-  if (!email || !password) return { error: 'Enter your email and password.' };
+  if (!email || !password) return { error: t.errors.credentialsRequired };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -97,22 +99,23 @@ export async function signInAction(
     // Supabase distinguishes an unconfirmed address; everything else stays a
     // generic message so this form cannot be used to enumerate accounts.
     return {
-      error: /confirm/i.test(error.message)
-        ? 'Please confirm your email address first — check your inbox for the link.'
-        : 'Incorrect email or password.',
+      error: /confirm/i.test(error.message) ? t.errors.unconfirmed : t.errors.credentialsWrong,
     };
   }
 
-  redirect('/account/profile');
+  // Return the agent to whatever sent them here — the "Add property" button in
+  // the header points at the listing form, and bouncing them to their profile
+  // instead loses the thing they were trying to do.
+  redirect(safeNext(str(form, 'next') || undefined, accountPaths[lang].profile));
 }
 
 // ─── Sign out ─────────────────────────────────────────────────────────────────
-export async function signOutAction() {
+export async function signOutAction(form: FormData) {
   if (isSupabaseConfigured) {
     const supabase = await createClient();
     await supabase.auth.signOut();
   }
-  redirect('/');
+  redirect(langOf(form) === 'vi' ? '/vi' : '/');
 }
 
 // ─── Password reset ───────────────────────────────────────────────────────────
@@ -120,37 +123,44 @@ export async function resetPasswordAction(
   _prev: ActionState,
   form: FormData,
 ): Promise<ActionState> {
-  if (!isSupabaseConfigured) return NOT_CONFIGURED;
+  const lang = langOf(form);
+  const t = ACCOUNT_COPY[lang];
+  if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const email = str(form, 'email').toLowerCase();
-  if (!email) return { error: 'Enter your email address.' };
+  if (!email) return { error: t.errors.emailRequired };
 
   const supabase = await createClient();
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${SITE_URL}/auth/callback?next=/account/password`,
+    redirectTo: `${SITE_URL}/auth/callback?next=${accountPaths[lang].password}`,
   });
 
   // Always the same response, whether or not the address exists.
-  return { notice: 'If that address has an account, a reset link is on its way.' };
+  return { notice: t.resetSent };
 }
 
 export async function setPasswordAction(
   _prev: ActionState,
   form: FormData,
 ): Promise<ActionState> {
-  if (!isSupabaseConfigured) return NOT_CONFIGURED;
+  const lang = langOf(form);
+  const t = ACCOUNT_COPY[lang];
+  if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const password = str(form, 'password');
-  if (password.length < 8) return { error: 'Password must be at least 8 characters.' };
+  if (password.length < 8) return { error: t.errors.passwordShort };
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'Your reset link has expired. Request a new one.' };
+  if (!user) return { error: t.errors.resetExpired };
 
   const { error } = await supabase.auth.updateUser({ password });
-  if (error) return { error: error.message };
+  if (error) {
+    console.error('[account] password update failed:', error.message);
+    return { error: t.errors.saveFailed };
+  }
 
-  redirect('/account/profile');
+  redirect(accountPaths[lang].profile);
 }
 
 // ─── Update profile ───────────────────────────────────────────────────────────
@@ -158,11 +168,13 @@ export async function updateProfileAction(
   _prev: ActionState,
   form: FormData,
 ): Promise<ActionState> {
-  if (!isSupabaseConfigured) return NOT_CONFIGURED;
+  const lang = langOf(form);
+  const t = ACCOUNT_COPY[lang];
+  if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/account/login');
+  if (!user) redirect(accountPaths[lang].login);
 
   const displayName = str(form, 'display_name');
   const bio         = str(form, 'bio');
@@ -170,20 +182,20 @@ export async function updateProfileAction(
   const phone       = str(form, 'phone');
   const listingName = str(form, 'listing_agent_name');
 
-  if (!displayName || displayName.length < 2) return { error: 'Please enter your full name.' };
-  if (displayName.length > 80) return { error: 'That name is too long (80 characters max).' };
-  if (bio.length > 2000)       return { error: 'Your bio is too long (2,000 characters max).' };
-  if (workplace.length > 120)  return { error: 'That workplace name is too long.' };
+  if (!displayName || displayName.length < 2) return { error: t.errors.nameRequired };
+  if (displayName.length > 80) return { error: t.errors.nameTooLong };
+  if (bio.length > 2000)       return { error: t.errors.bioTooLong };
+  if (workplace.length > 120)  return { error: t.errors.workplaceTooLong };
 
   // Photo is optional on every save — only replace it when a new file arrives.
   let photoUrl: string | undefined;
   const file = form.get('photo');
   if (file instanceof File && file.size > 0) {
     if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
-      return { error: 'Profile photo must be a JPEG, PNG, or WebP image.' };
+      return { error: t.errors.photoType };
     }
     if (file.size > MAX_PHOTO_BYTES) {
-      return { error: 'Profile photo must be under 5 MB.' };
+      return { error: t.errors.photoSize };
     }
 
     const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg';
@@ -195,7 +207,10 @@ export async function updateProfileAction(
       .from('agent-photos')
       .upload(path, file, { upsert: true, contentType: file.type });
 
-    if (uploadError) return { error: `Could not upload photo: ${uploadError.message}` };
+    if (uploadError) {
+      console.error('[account] avatar upload failed:', uploadError.message);
+      return { error: t.errors.photoUpload };
+    }
 
     const { data: pub } = supabase.storage.from('agent-photos').getPublicUrl(path);
     // Cache-bust so a replaced avatar shows up immediately behind the CDN.
@@ -225,11 +240,19 @@ export async function updateProfileAction(
     })
     .eq('id', user.id);
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error('[account] profile save failed:', error.message);
+    return { error: t.errors.saveFailed };
+  }
 
   revalidatePath('/account/profile');
+  revalidatePath('/vi/tai-khoan/ho-so');
   revalidatePath('/agents');
-  if (before?.slug) revalidatePath(`/agent/${before.slug}`);
+  revalidatePath('/vi/moi-gioi');
+  if (before?.slug) {
+    revalidatePath(`/agent/${before.slug}`);
+    revalidatePath(`/vi/moi-gioi/${before.slug}`);
+  }
 
   // A newly claimed listing name is the one edit that needs a human decision,
   // so it gets its own ping — with the number of listings it would attach,
@@ -254,5 +277,5 @@ export async function updateProfileAction(
     });
   }
 
-  return { notice: 'Profile saved.' };
+  return { notice: t.notices.profileSaved };
 }

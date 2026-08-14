@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import LoginForm from './LoginForm';
 import { AccountShell } from '@/components/account/ui';
 import { getOwnProfile } from '@/lib/agents';
+import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
   title: 'Agent Sign In',
   robots: { index: false, follow: true },
 };
+
+const t = ACCOUNT_COPY.en;
 
 const ERRORS: Record<string, string> = {
   verification: 'That confirmation link was invalid or has expired. Try signing in, or request a new link.',
@@ -20,22 +23,26 @@ const ERRORS: Record<string, string> = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; next?: string }>;
 }) {
-  if (await getOwnProfile()) redirect('/account/profile');
+  const { error, next } = await searchParams;
+  // Where to land after signing in. Pages that require auth send agents here
+  // with ?next=… (the "Add property" button being the common one), so they
+  // resume what they were doing instead of landing on their profile.
+  const target = safeNext(next, accountPaths.en.profile);
 
-  const { error } = await searchParams;
+  if (await getOwnProfile()) redirect(target);
 
   return (
-    <AccountShell title="Agent sign in">
-      <LoginForm initialError={error ? ERRORS[error] : undefined} />
+    <AccountShell title="Agent sign in" subtitle={t.loginSubtitle}>
+      <LoginForm lang="en" next={target} initialError={error ? ERRORS[error] : undefined} />
       <div className="mt-6 space-y-2 text-sm text-slate-600">
         <p>
-          <Link href="/account/reset" className="text-blue-600 hover:underline">Forgot your password?</Link>
+          <Link href={accountPaths.en.reset} className="text-blue-600 hover:underline">{t.forgotPassword}</Link>
         </p>
         <p>
-          No account yet?{' '}
-          <Link href="/account/signup" className="text-blue-600 hover:underline">Create one</Link>
+          {t.noAccount}{' '}
+          <Link href={accountPaths.en.signup} className="text-blue-600 hover:underline">{t.signUpLink}</Link>
         </p>
       </div>
     </AccountShell>
