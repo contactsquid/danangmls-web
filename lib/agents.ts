@@ -34,9 +34,23 @@ const PUBLIC_COLUMNS =
 
 /** Agent names in the sheet arrive with inconsistent spacing and casing
  *  (they originate from scraped Facebook posts), so every comparison against
- *  them goes through this. */
+ *  them goes through this.
+ *
+ *  Emoji are stripped too. Facebook agents routinely decorate their display
+ *  names — "Vy Tran🏡✨", "A. Nhật🌟" — and 1,078 distinct names across the sheet
+ *  carry them. Exact matching missed every one: Vy Tran alone had 23 listings
+ *  split off from her own 235 by nothing but a house and a sparkle.
+ *
+ *  Only pictographs and their joiners go; letters, punctuation and diacritics
+ *  are untouched, so "Ms. Vy" and "Phan Vy" stay the distinct people they are. */
+const PICTOGRAPHS = /[\p{Extended_Pictographic}‍️⃣]/gu;
+
 export function normalizeAgentName(name: string | null | undefined): string {
-  return (name ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+  return (name ?? '')
+    .replace(PICTOGRAPHS, '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
 }
 
 /** All publicly visible profiles, newest first. */
