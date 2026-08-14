@@ -39,6 +39,23 @@ export default async function ProfilePage() {
         </p>
       )}
 
+      {/* Primary action for an agent who is already set up: the profile exists to
+          carry listings, so posting one should not be buried. */}
+      <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
+        <p className="text-sm text-slate-700 flex-1 min-w-0">
+          Ready to post a property?
+        </p>
+        <Link
+          href="/account/listings/new"
+          className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+        >
+          Add a listing
+        </Link>
+        <Link href="/vi/tai-khoan/dang-tin" className="text-sm text-blue-700 hover:underline">
+          Tiếng Việt
+        </Link>
+      </div>
+
       <ProfileForm profile={profile} />
 
       <div className="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between">

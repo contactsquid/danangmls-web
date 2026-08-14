@@ -16,7 +16,10 @@ interface Props {
 export default function AgentsDirectoryView({ profiles, counts, lang }: Props) {
   const t = AGENT_COPY[lang];
   const paths = agentPaths[lang];
-  const signupHref = lang === 'vi' ? '/vi/tai-khoan/dang-ky' : '/account/signup';
+  // Signup is English-only for now, so both languages point at it. Pointing the
+  // Vietnamese CTA at a /vi/tai-khoan/… route before that route exists shipped a
+  // 404 to production once already — don't reintroduce it ahead of the pages.
+  const signupHref = '/account/signup';
 
   // Agents with inventory first — the directory should lead with the profiles
   // that are actually useful to a buyer, and it concentrates internal link
