@@ -149,17 +149,26 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
       <div>
         <label className={labelClass} htmlFor="price">{t.price}</label>
+        {/* The currency select must NOT reuse inputClass: that carries w-full,
+            which beats a narrower w-* utility in the generated stylesheet, so
+            the dropdown stretched and squeezed the price box to half the row.
+            The amount gets the space; the three-letter unit needs almost none. */}
         <div className="flex gap-2">
           <input
             id="price"
             name="price"
             type="text"
-            inputMode="numeric"
+            inputMode="decimal"
             required
-            className={inputClass}
-            placeholder={forSale ? '250000' : '500'}
+            className={`${inputClass} flex-1 min-w-0 text-lg py-3 font-medium`}
+            placeholder={forSale ? '250,000' : '500'}
           />
-          <select name="currency" defaultValue="USD" className={`${inputClass} w-28 shrink-0`}>
+          <select
+            name="currency"
+            defaultValue="USD"
+            aria-label="Currency"
+            className="w-24 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-3 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          >
             <option value="USD">USD</option>
             <option value="VND">VND</option>
           </select>
