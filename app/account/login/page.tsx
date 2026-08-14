@@ -16,7 +16,12 @@ export const metadata: Metadata = {
 const t = ACCOUNT_COPY.en;
 
 const ERRORS: Record<string, string> = {
-  verification: 'That confirmation link was invalid or has expired. Try signing in, or request a new link.',
+  // Reached when the code exchange fails — most often because the email was
+  // opened in a different browser from the one that started the signup, so the
+  // PKCE verifier cookie is absent. The address itself is confirmed by Supabase
+  // before the redirect, so telling people the link was "invalid" is both scary
+  // and usually wrong. Signing in is the correct next step either way.
+  verification: 'Your email is confirmed — please sign in below. (If you have not confirmed yet, request a new link.)',
   unavailable: 'Agent accounts are not enabled on this site yet.',
 };
 

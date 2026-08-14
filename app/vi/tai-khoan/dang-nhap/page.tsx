@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const t = ACCOUNT_COPY.vi;
 
 const ERRORS: Record<string, string> = {
-  verification: 'Liên kết xác nhận không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập hoặc yêu cầu liên kết mới.',
+  verification: 'Email của bạn đã được xác nhận — vui lòng đăng nhập bên dưới. (Nếu bạn chưa xác nhận, hãy yêu cầu liên kết mới.)',
   unavailable: 'Tài khoản môi giới chưa được bật trên trang này.',
 };
 

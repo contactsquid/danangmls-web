@@ -35,7 +35,8 @@ Save.
 **Authentication → Email Templates.** Only these two matter for the agent portal
 (Magic Link / Invite / Change Email aren't used by this flow — leave them
 default). Subject line first, then the HTML body to paste into the template
-editor. Supabase's `{{ .ConfirmationURL }}` variable is preserved as-is.
+editor. The links use `{{ .TokenHash }}` rather than `{{ .ConfirmationURL }}` —
+see the note under Confirm signup for why that matters.
 
 Both use the site's actual brand colors (`slate-900` #0f172a wordmark, `blue-600`
 #2563eb accent — same as `components/Logo.tsx`) and keep it plain: no external
@@ -52,6 +53,14 @@ below in muted secondary text.
 
 ### Confirm signup
 
+> **Use `{{ .TokenHash }}`, not `{{ .ConfirmationURL }}`.** The default
+> ConfirmationURL sends the agent through Supabase's verify endpoint, which then
+> hands our site a one-time PKCE code. Exchanging that code needs a cookie from
+> **the browser that started the signup** — so if the agent signs up on a laptop
+> and opens the email on their phone (the normal case), the exchange fails and
+> they see an error, even though the address was confirmed. The token-hash link
+> below is verified by our own `/auth/callback` route and works on any device.
+
 **Subject:** `Xác nhận hồ sơ môi giới DanangMLS · Confirm your DanangMLS agent profile`
 
 ```html
@@ -66,14 +75,14 @@ below in muted secondary text.
     Confirm your email to activate your agent profile on DanangMLS.
   </p>
   <p style="margin:24px 0;">
-    <a href="{{ .ConfirmationURL }}"
+    <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup&next=/account/profile"
        style="background:#2563eb;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;display:inline-block;">
       Xác nhận email · Confirm email
     </a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
     Hoặc dán liên kết này vào trình duyệt của bạn / Or paste this link into your browser:<br>
-    <a href="{{ .ConfirmationURL }}" style="color:#2563eb;word-break:break-all;">{{ .ConfirmationURL }}</a>
+    <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup&next=/account/profile" style="color:#2563eb;word-break:break-all;">{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup&next=/account/profile</a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
     Bạn không yêu cầu email này? Bạn có thể bỏ qua email này.<br>
@@ -100,14 +109,14 @@ below in muted secondary text.
     Reset the password for your DanangMLS agent account.
   </p>
   <p style="margin:24px 0;">
-    <a href="{{ .ConfirmationURL }}"
+    <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/account/password"
        style="background:#2563eb;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;display:inline-block;">
       Đặt lại mật khẩu · Reset password
     </a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
     Hoặc dán liên kết này vào trình duyệt của bạn / Or paste this link into your browser:<br>
-    <a href="{{ .ConfirmationURL }}" style="color:#2563eb;word-break:break-all;">{{ .ConfirmationURL }}</a>
+    <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/account/password" style="color:#2563eb;word-break:break-all;">{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/account/password</a>
   </p>
   <p style="font-size:13px;line-height:1.5;color:#64748b;margin:24px 0 0;">
     Bạn không yêu cầu? Bỏ qua email này — mật khẩu của bạn sẽ không thay đổi.<br>
