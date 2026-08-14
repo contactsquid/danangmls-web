@@ -4,6 +4,7 @@ import { AccountShell } from '@/components/account/ui';
 import ListingForm from '@/components/account/ListingForm';
 import { getOwnProfile } from '@/lib/agents';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
+import { accountPaths } from '@/lib/accountCopy';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,13 +14,11 @@ export const metadata: Metadata = {
 };
 
 /** Vietnamese add-listing form. Same component as the English route with a
- *  different `lang` — the two cannot drift apart.
- *
- *  Sign-in itself is still English-only, so an unauthenticated visitor is sent
- *  to /account/login; the Vietnamese account flow is the next piece of work. */
+ *  different `lang` — the two cannot drift apart. A signed-out visitor goes to
+ *  the Vietnamese sign-in and is returned here afterwards. */
 export default async function ViNewListingPage() {
   const profile = await getOwnProfile();
-  if (!profile) redirect('/account/login?next=/vi/tai-khoan/dang-tin');
+  if (!profile) redirect(`${accountPaths.vi.login}?next=${accountPaths.vi.newListing}`);
 
   const t = LISTING_FORM_COPY.vi;
 
