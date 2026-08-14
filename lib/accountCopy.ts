@@ -68,6 +68,9 @@ export interface AccountCopy {
   /** Header CTA. Deliberately shorter than addListingButton — it sits in a tight
    *  nav bar next to the rent/sale toggle. */
   addPropertyNav: string;
+  viewProfile: string;
+  editProfile: string;
+  accountMenuLabel: string;
   slugHint: (slug: string) => string;
   independentRadio: string;
   agencyRadio: string;
@@ -155,6 +158,9 @@ export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
     addListingPrompt: 'Ready to post a property?',
     addListingButton: 'Add a listing',
     addPropertyNav: 'Add property',
+    viewProfile: 'View profile',
+    editProfile: 'Edit profile',
+    accountMenuLabel: 'Your account',
     slugHint: slug => `Your profile lives at /agent/${slug}. Changing your name here does not change that address.`,
     independentRadio: 'Independent agent',
     agencyRadio: 'Agency or company',
@@ -237,6 +243,9 @@ export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
     addListingPrompt: 'Bạn muốn đăng một bất động sản?',
     addListingButton: 'Đăng tin',
     addPropertyNav: 'Đăng tin',
+    viewProfile: 'Xem hồ sơ',
+    editProfile: 'Chỉnh sửa hồ sơ',
+    accountMenuLabel: 'Tài khoản của bạn',
     slugHint: slug => `Hồ sơ của bạn ở địa chỉ /vi/moi-gioi/${slug}. Việc đổi tên ở đây không làm thay đổi địa chỉ đó.`,
     independentRadio: 'Môi giới độc lập',
     agencyRadio: 'Công ty / sàn giao dịch',

@@ -7,6 +7,7 @@ import { useLanguage } from './LanguageProvider';
 import type { Lang } from '@/lib/translations';
 import { resolveFacet, facetUrl } from '@/lib/facets';
 import { accountPaths, ACCOUNT_COPY } from '@/lib/accountCopy';
+import AccountMenu from './account/AccountMenu';
 
 function getLangUrl(pathname: string, targetLang: Lang): string {
   if (targetLang === 'vi') {
@@ -67,6 +68,7 @@ export default function SiteHeader() {
               {addListingLabel}
             </Link>
             <LangDropdown lang={lang} onChange={handleLangChange} />
+            <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
 
           <div className="flex sm:hidden items-center gap-2">
@@ -77,6 +79,7 @@ export default function SiteHeader() {
               {addListingLabel}
             </Link>
             <LangDropdown lang={lang} onChange={handleLangChange} />
+            <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
         </div>
 
