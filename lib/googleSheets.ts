@@ -104,11 +104,17 @@ async function getAccessToken(): Promise<string> {
  */
 export async function appendRow(tabName: string, row: string[]): Promise<void> {
   const token = await getAccessToken();
-  const range = encodeURIComponent(`${tabName}!A:Z`);
+
+  // Anchor the append at A1, NOT a broad "A:Z". Given a wide range, Sheets runs
+  // its own table detection to decide which column the table starts in — and on
+  // this sheet it decided column O, writing an entire listing 14 columns to the
+  // right (title into Post URL, price into Telegram, and a 404 for the agent).
+  // An A1 anchor pins the table's left edge to column A.
+  const range = encodeURIComponent(`${tabName}!A1`);
 
   const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append` +
-      `?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+      `?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&includeValuesInResponse=false`,
     {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -120,4 +126,55 @@ export async function appendRow(tabName: string, row: string[]): Promise<void> {
   if (!res.ok) {
     throw new Error(`Sheet append failed (${res.status}): ${(await res.text()).slice(0, 300)}`);
   }
+
+  // Belt and braces: confirm where it actually landed. Table detection is
+  // Google's, not ours, so rather than trust the anchor we check the reported
+  // range and repair the row if it started anywhere but column A. A silently
+  // misaligned row corrupts the sheet AND 404s the listing, so it is worth the
+  // one extra call in the failure case.
+  const data = (await res.json()) as { updates?: { updatedRange?: string } };
+  const updatedRange = data.updates?.updatedRange ?? '';
+  const cell = updatedRange.split('!')[1] ?? '';
+  const startColumn = cell.match(/^([A-Z]+)/)?.[1];
+  const startRow = cell.match(/^[A-Z]+(\d+)/)?.[1];
+
+  if (startColumn && startColumn !== 'A' && startRow) {
+    console.error(
+      `[sheets-write] append landed at column ${startColumn} (${updatedRange}) — repairing row ${startRow}`,
+    );
+    await repairRow(token, tabName, Number(startRow), row);
+  }
+}
+
+/** Rewrites a misaligned row into columns A… and clears whatever the bad append
+ *  scattered to the right of it. */
+async function repairRow(token: string, tabName: string, rowNumber: number, row: string[]): Promise<void> {
+  const lastColumn = String.fromCharCode('A'.charCodeAt(0) + row.length - 1); // 23 cols → 'W'
+  const target = encodeURIComponent(`${tabName}!A${rowNumber}:${lastColumn}${rowNumber}`);
+
+  const put = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${target}` +
+      `?valueInputOption=USER_ENTERED`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values: [row] }),
+      signal: AbortSignal.timeout(20_000),
+    },
+  );
+  if (!put.ok) {
+    throw new Error(`Sheet repair failed (${put.status}): ${(await put.text()).slice(0, 300)}`);
+  }
+
+  const clearFrom = String.fromCharCode(lastColumn.charCodeAt(0) + 1); // 'X'
+  await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/` +
+      `${encodeURIComponent(`${tabName}!${clearFrom}${rowNumber}:AZ${rowNumber}`)}:clear`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(20_000),
+    },
+  );
 }
