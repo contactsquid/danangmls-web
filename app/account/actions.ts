@@ -9,6 +9,7 @@ import { notifyAdmins } from '@/lib/notify';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { normalizeAgentName } from '@/lib/agents';
 import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
+import { searchAgentNames, type NameCandidate } from '@/lib/agentNameSearch';
 import type { Lang } from '@/lib/translations';
 
 export interface ActionState {
@@ -277,5 +278,24 @@ export async function updateProfileAction(
     });
   }
 
-  return { notice: t.notices.profileSaved };
+  // Saying "Profile saved" after a claim hides the thing the agent most wants to
+  // know: that a human now has to look at it, and roughly when.
+  return { notice: claimChanged ? t.claimSubmitted : t.notices.profileSaved };
+}
+
+// ─── Claim helper ─────────────────────────────────────────────────────────────
+
+/** Looks up which names an agent's listings are posted under, so the claim step
+ *  can show them their own properties before they commit to a name.
+ *
+ *  Signed-in agents only. The data is public either way (it is on the listing
+ *  pages), but there is no reason to expose a name-enumeration endpoint to
+ *  anonymous traffic. */
+export async function searchClaimNamesAction(query: string): Promise<NameCandidate[]> {
+  if (!isSupabaseConfigured) return [];
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  return searchAgentNames(query);
 }

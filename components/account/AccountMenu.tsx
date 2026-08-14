@@ -15,6 +15,7 @@ interface MenuProfile {
   slug: string;
   display_name: string;
   photo_url: string | null;
+  is_admin: boolean;
 }
 
 /**
@@ -51,7 +52,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
 
       const { data } = await supabase
         .from('agent_profiles')
-        .select('slug, display_name, photo_url')
+        .select('slug, display_name, photo_url, is_admin')
         .eq('id', session.user.id)
         .maybeSingle();
 
@@ -128,6 +129,21 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
           <Link href={paths.newListing} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
             {t.addPropertyNav}
           </Link>
+
+          {/* Admins moderate often enough that the link belongs here rather than
+              at the foot of the profile page. Note this only decides what to
+              SHOW — /admin/agents re-checks is_admin on the server, and the RLS
+              policies would refuse the queries regardless. */}
+          {profile.is_admin && (
+            <Link
+              href="/admin/agents"
+              role="menuitem"
+              className={`${itemClass} border-t border-slate-100 mt-1 pt-2 text-blue-700`}
+              onClick={() => setOpen(false)}
+            >
+              {t.adminLink}
+            </Link>
+          )}
 
           {/* Sign-out goes through the server action so the httpOnly auth cookies
               are cleared server-side; clearing only the browser copy would leave

@@ -77,6 +77,16 @@ export interface AccountCopy {
   bioPlaceholder: string;
   listingNamePlaceholder: string;
   listingClaimVerified: string;
+  claimSearchHint: string;
+  claimSearchPlaceholder: string;
+  claimSearch: string;
+  claimSearching: string;
+  claimNoResults: string;
+  claimConfirm: string;
+  claimChange: string;
+  claimCount: (n: number) => string;
+  claimPending: (name: string) => string;
+  claimSubmitted: string;
   // Action results
   errors: {
     notConfigured: string;
@@ -167,6 +177,16 @@ export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
     bioPlaceholder: 'Areas you cover, languages you speak, the kind of property you specialise in…',
     listingNamePlaceholder: 'Exactly as it appears on your listings',
     listingClaimVerified: '✓ Verified — your listings appear on your public profile.',
+    claimSearchHint: 'Already posting on Facebook? Search for your name to find listings we have already collected, and check they are yours.',
+    claimSearchPlaceholder: 'Search your name…',
+    claimSearch: 'Search',
+    claimSearching: 'Searching…',
+    claimNoResults: 'No listings found under that name. Try a shorter search, or just start posting — listings you add here are linked to you automatically.',
+    claimConfirm: 'Yes, these are my listings',
+    claimChange: 'Choose a different name',
+    claimCount: n => `${n} listing${n === 1 ? '' : 's'} under this name`,
+    claimPending: name => `Waiting for DanangMLS to review your claim to "${name}". Your listings appear on your profile once it is approved — usually within a day.`,
+    claimSubmitted: 'Your claim has been sent to DanangMLS for review.',
     errors: {
       notConfigured: 'Agent accounts are not enabled on this site yet. Please try again later.',
       nameRequired: 'Please enter your full name.',
@@ -252,6 +272,16 @@ export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
     bioPlaceholder: 'Khu vực bạn phụ trách, ngôn ngữ bạn sử dụng, loại bất động sản bạn chuyên…',
     listingNamePlaceholder: 'Chính xác như tên hiển thị trên tin đăng của bạn',
     listingClaimVerified: '✓ Đã xác minh — tin đăng của bạn hiển thị trên hồ sơ công khai.',
+    claimSearchHint: 'Bạn đã đăng tin trên Facebook? Tìm tên của bạn để xem các tin đăng chúng tôi đã thu thập và xác nhận đó là của bạn.',
+    claimSearchPlaceholder: 'Tìm tên của bạn…',
+    claimSearch: 'Tìm kiếm',
+    claimSearching: 'Đang tìm…',
+    claimNoResults: 'Không tìm thấy tin đăng nào với tên này. Hãy thử tìm ngắn hơn, hoặc bắt đầu đăng tin — tin bạn đăng tại đây sẽ tự động liên kết với bạn.',
+    claimConfirm: 'Đúng, đây là tin đăng của tôi',
+    claimChange: 'Chọn tên khác',
+    claimCount: n => `${n} tin đăng với tên này`,
+    claimPending: name => `Đang chờ DanangMLS duyệt yêu cầu của bạn cho tên "${name}". Tin đăng sẽ hiển thị trên hồ sơ sau khi được duyệt — thường trong vòng một ngày.`,
+    claimSubmitted: 'Yêu cầu của bạn đã được gửi đến DanangMLS để xét duyệt.',
     errors: {
       notConfigured: 'Tài khoản môi giới chưa được bật trên trang này. Vui lòng thử lại sau.',
       nameRequired: 'Vui lòng nhập họ và tên của bạn.',

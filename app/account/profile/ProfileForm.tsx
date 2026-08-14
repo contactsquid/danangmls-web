@@ -5,6 +5,7 @@ import { updateProfileAction, type ActionState } from '../actions';
 import AgentAvatar from '@/components/AgentAvatar';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import { ACCOUNT_COPY } from '@/lib/accountCopy';
+import ClaimListingsField from '@/components/account/ClaimListingsField';
 import type { Lang } from '@/lib/translations';
 import type { OwnAgentProfile } from '@/lib/agents';
 
@@ -144,24 +145,12 @@ export default function ProfileForm({
         <p className={hintClass}>{t.phoneHint}</p>
       </div>
 
-      {/* Listing name claim */}
-      <div>
-        <label htmlFor="listing_agent_name" className={labelClass}>{t.listingName}</label>
-        <input
-          id="listing_agent_name"
-          name="listing_agent_name"
-          type="text"
-          maxLength={120}
-          defaultValue={profile.listing_agent_name ?? ''}
-          placeholder={t.listingNamePlaceholder}
-          className={inputClass}
-        />
-        {profile.listing_agent_name_verified ? (
-          <p className="mt-1.5 text-xs text-emerald-700">{t.listingClaimVerified}</p>
-        ) : (
-          <p className={hintClass}>{t.listingNameHint}</p>
-        )}
-      </div>
+      {/* Listing name claim — search, preview, confirm. */}
+      <ClaimListingsField
+        lang={lang}
+        currentName={profile.listing_agent_name ?? ''}
+        verified={profile.listing_agent_name_verified}
+      />
 
       <button type="submit" disabled={pending} className={buttonClass}>
         {pending ? t.savingProfile : t.saveProfile}
