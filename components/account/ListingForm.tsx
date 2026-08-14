@@ -134,15 +134,21 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div>
-          <label className={labelClass} htmlFor="bedrooms">{t.bedrooms}</label>
+          <label className={labelClass} htmlFor="bedrooms">
+            {t.bedrooms} <span className="text-slate-400 font-normal">({t.optional})</span>
+          </label>
           <input id="bedrooms" name="bedrooms" type="number" min="0" max="20" className={inputClass} />
         </div>
         <div>
-          <label className={labelClass} htmlFor="bathrooms">{t.bathrooms}</label>
+          <label className={labelClass} htmlFor="bathrooms">
+            {t.bathrooms} <span className="text-slate-400 font-normal">({t.optional})</span>
+          </label>
           <input id="bathrooms" name="bathrooms" type="number" min="0" max="20" className={inputClass} />
         </div>
         <div>
-          <label className={labelClass} htmlFor="area_sqm">{t.area}</label>
+          <label className={labelClass} htmlFor="area_sqm">
+            {t.area} <span className="text-slate-400 font-normal">({t.optional})</span>
+          </label>
           <input id="area_sqm" name="area_sqm" type="number" min="0" placeholder="m²" className={inputClass} />
         </div>
       </div>
