@@ -206,3 +206,47 @@ export function buildRow(s: ListingSubmission): BuiltRow {
 
   return { tab: s.forSale ? SALE_TAB : RENTAL_TAB, row, slug, url };
 }
+
+/** Where each editable field lives, per tab, plus the column letter that holds
+ *  Post URL (the key an edit uses to find its row again).
+ *
+ *  The two tabs genuinely disagree — Sheet1 splits its images across 7-11 and
+ *  18-22 with Contact/Post URL/Date in between, while For Sale keeps all ten
+ *  contiguous at 7-16 — so this is the one place that difference is written
+ *  down for writers. */
+export interface SheetShape {
+  tab: string;
+  postUrlColumn: string;
+  indices: {
+    TITLE: number;
+    TEXT: number;
+    PRICE: number;
+    DISTRICT: number;
+    BEDROOMS: number;
+    TYPE: number;
+    IMAGE_COLUMNS: number[];
+  };
+}
+
+export function sheetShape(forSale: boolean): SheetShape {
+  if (forSale) {
+    return {
+      tab: SALE_TAB,
+      postUrlColumn: 'T', // index 19
+      indices: {
+        TITLE: S_IDX.TITLE, TEXT: S_IDX.TEXT, PRICE: S_IDX.PRICE,
+        DISTRICT: S_IDX.DISTRICT, BEDROOMS: S_IDX.BEDROOMS, TYPE: S_IDX.TYPE,
+        IMAGE_COLUMNS: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+      },
+    };
+  }
+  return {
+    tab: RENTAL_TAB,
+    postUrlColumn: 'O', // index 14
+    indices: {
+      TITLE: R_IDX.TITLE, TEXT: R_IDX.TEXT, PRICE: R_IDX.PRICE,
+      DISTRICT: R_IDX.DISTRICT, BEDROOMS: R_IDX.BEDROOMS, TYPE: R_IDX.TYPE,
+      IMAGE_COLUMNS: [7, 8, 9, 10, 11, 18, 19, 20, 21, 22],
+    },
+  };
+}

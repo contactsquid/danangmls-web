@@ -3,6 +3,7 @@ import ProfileForm from '@/app/account/profile/ProfileForm';
 import { signOutAction } from '@/app/account/actions';
 import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 import { agentPaths } from '@/lib/agentCopy';
+import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
 import type { Lang } from '@/lib/translations';
 import type { OwnAgentProfile } from '@/lib/agents';
 
@@ -30,6 +31,12 @@ export default function ProfilePageBody({
           carry listings, so posting one should not be buried. */}
       <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
         <p className="text-sm text-slate-700 flex-1 min-w-0">{t.addListingPrompt}</p>
+        <Link
+          href={lang === 'vi' ? '/vi/tai-khoan/tin-dang' : '/account/listings'}
+          className="text-sm text-blue-700 hover:underline whitespace-nowrap"
+        >
+          {LISTING_FORM_COPY[lang].myListings}
+        </Link>
         <Link
           href={paths.newListing}
           className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"

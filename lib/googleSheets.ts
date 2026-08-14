@@ -146,10 +146,65 @@ export async function appendRow(tabName: string, row: string[]): Promise<void> {
   }
 }
 
-/** Rewrites a misaligned row into columns A… and clears whatever the bad append
- *  scattered to the right of it. */
-async function repairRow(token: string, tabName: string, rowNumber: number, row: string[]): Promise<void> {
-  const lastColumn = String.fromCharCode('A'.charCodeAt(0) + row.length - 1); // 23 cols → 'W'
+/** Finds the 1-based sheet row whose cell in `column` equals `value`.
+ *  Returns null when there is no match.
+ *
+ *  Used to locate a listing for editing. Post URL is the key: it is unique per
+ *  listing and, unlike the slug or title, an agent cannot change it. */
+export async function findRowByColumn(
+  tabName: string,
+  column: string,
+  value: string,
+): Promise<number | null> {
+  const token = await getAccessToken();
+  const range = encodeURIComponent(`${tabName}!${column}:${column}`);
+
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`,
+    { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20_000) },
+  );
+  if (!res.ok) {
+    throw new Error(`Sheet read failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  }
+
+  const data = (await res.json()) as { values?: string[][] };
+  const rows = data.values ?? [];
+  for (let i = 0; i < rows.length; i++) {
+    if ((rows[i]?.[0] ?? '').trim() === value) return i + 1; // values are 1-based rows
+  }
+  return null;
+}
+
+/** Reads one row's cells, A onward. Editing patches the cells it owns and writes
+ *  the rest back untouched, so columns this app knows nothing about (the alt-text
+ *  columns, the Vietnamese title/text on For Sale) survive an edit. */
+export async function readRow(tabName: string, rowNumber: number, width = 23): Promise<string[]> {
+  const token = await getAccessToken();
+  const range = encodeURIComponent(`${tabName}!A${rowNumber}:${columnName(width)}${rowNumber}`);
+
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`,
+    { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20_000) },
+  );
+  if (!res.ok) {
+    throw new Error(`Sheet read failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  }
+
+  const data = (await res.json()) as { values?: string[][] };
+  const row = data.values?.[0] ?? [];
+  // Sheets truncates trailing empties; pad so positional writes stay aligned.
+  return Array.from({ length: width }, (_, i) => row[i] ?? '');
+}
+
+/** Overwrites one row, columns A onward. Explicit range, so unlike append there
+ *  is no table detection to misplace it. */
+export async function updateRow(tabName: string, rowNumber: number, row: string[]): Promise<void> {
+  const token = await getAccessToken();
+  await writeRow(token, tabName, rowNumber, row);
+}
+
+async function writeRow(token: string, tabName: string, rowNumber: number, row: string[]): Promise<void> {
+  const lastColumn = columnName(row.length);
   const target = encodeURIComponent(`${tabName}!A${rowNumber}:${lastColumn}${rowNumber}`);
 
   const put = await fetch(
@@ -163,10 +218,29 @@ async function repairRow(token: string, tabName: string, rowNumber: number, row:
     },
   );
   if (!put.ok) {
-    throw new Error(`Sheet repair failed (${put.status}): ${(await put.text()).slice(0, 300)}`);
+    throw new Error(`Sheet write failed (${put.status}): ${(await put.text()).slice(0, 300)}`);
   }
+}
 
-  const clearFrom = String.fromCharCode(lastColumn.charCodeAt(0) + 1); // 'X'
+/** 1 → 'A', 23 → 'W'. Only ever called with our fixed 23-column rows, but the
+ *  two-letter case is handled so a wider row cannot silently truncate. */
+function columnName(count: number): string {
+  let n = count, name = '';
+  while (n > 0) {
+    const rem = (n - 1) % 26;
+    name = String.fromCharCode(65 + rem) + name;
+    n = Math.floor((n - 1) / 26);
+  }
+  return name;
+}
+
+/** Rewrites a misaligned row into columns A… and clears whatever the bad append
+ *  scattered to the right of it. */
+async function repairRow(token: string, tabName: string, rowNumber: number, row: string[]): Promise<void> {
+  await writeRow(token, tabName, rowNumber, row);
+
+  const lastColumn = columnName(row.length);
+  const clearFrom = String.fromCharCode(lastColumn.charCodeAt(lastColumn.length - 1) + 1); // 'W' → 'X'
   await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/` +
       `${encodeURIComponent(`${tabName}!${clearFrom}${rowNumber}:AZ${rowNumber}`)}:clear`,

@@ -50,6 +50,21 @@ export interface ListingFormCopy {
   notConfigured: string;
   uploadFailed: string;
   sheetFailed: string;
+  notYours: string;
+  editTitle: string;
+  editSubtitle: string;
+  saveChanges: string;
+  saving: string;
+  savedTitle: string;
+  myListings: string;
+  noListingsYet: string;
+  editThis: string;
+  photosCurrent: string;
+  heroLabel: string;
+  heroHint: string;
+  removePhoto: string;
+  addMorePhotos: string;
+  backToListings: string;
   errors: Record<ValidationCode, string>;
 }
 
@@ -92,6 +107,21 @@ export const LISTING_FORM_COPY: Record<Lang, ListingFormCopy> = {
     notConfigured: 'Listing submission is not enabled on this site yet.',
     uploadFailed: 'Your photos could not be uploaded. Please try again.',
     sheetFailed: 'Your listing could not be saved. Please try again in a moment.',
+    notYours: 'That listing is not one of yours.',
+    editTitle: 'Edit listing',
+    editSubtitle: 'Changes appear on the site within a few minutes.',
+    saveChanges: 'Save changes',
+    saving: 'Saving…',
+    savedTitle: 'Your changes are saved',
+    myListings: 'Your listings',
+    noListingsYet: 'You have not posted any listings yet.',
+    editThis: 'Edit',
+    photosCurrent: 'Current photos',
+    heroLabel: 'Main photo',
+    heroHint: 'The main photo is the one shown first, and the one used on search and listing cards.',
+    removePhoto: 'Remove',
+    addMorePhotos: 'Add more photos',
+    backToListings: 'Back to your listings',
     errors: {
       type: 'Please choose a property type.',
       district: 'Please choose a district.',
@@ -141,6 +171,21 @@ export const LISTING_FORM_COPY: Record<Lang, ListingFormCopy> = {
     notConfigured: 'Chức năng đăng tin chưa được bật trên trang này.',
     uploadFailed: 'Không tải được hình ảnh lên. Vui lòng thử lại.',
     sheetFailed: 'Không lưu được tin đăng. Vui lòng thử lại sau giây lát.',
+    notYours: 'Tin đăng này không thuộc về bạn.',
+    editTitle: 'Chỉnh sửa tin đăng',
+    editSubtitle: 'Thay đổi sẽ hiển thị trên trang web trong vài phút.',
+    saveChanges: 'Lưu thay đổi',
+    saving: 'Đang lưu…',
+    savedTitle: 'Đã lưu thay đổi của bạn',
+    myListings: 'Tin đăng của bạn',
+    noListingsYet: 'Bạn chưa đăng tin nào.',
+    editThis: 'Chỉnh sửa',
+    photosCurrent: 'Hình hiện tại',
+    heroLabel: 'Hình chính',
+    heroHint: 'Hình chính là hình hiển thị đầu tiên và được dùng trên thẻ tin đăng và kết quả tìm kiếm.',
+    removePhoto: 'Xóa',
+    addMorePhotos: 'Thêm hình',
+    backToListings: 'Quay lại tin đăng của bạn',
     errors: {
       type: 'Vui lòng chọn loại hình bất động sản.',
       district: 'Vui lòng chọn quận/huyện.',
