@@ -38,6 +38,9 @@ export default function ClaimListingsField({
     startTransition(async () => setResults(await searchClaimNamesAction(q)));
   };
 
+  const exactResults = results?.filter(r => r.matchType === 'exact') ?? [];
+  const similarResults = results?.filter(r => r.matchType === 'similar') ?? [];
+
   // Already settled: the claim is approved and the listings are on the profile.
   if (claimed && verified) {
     return (
@@ -101,43 +104,88 @@ export default function ClaimListingsField({
         <p className="mt-3 text-sm text-slate-600">{t.claimNoResults}</p>
       )}
 
-      {results !== null && results.length > 0 && (
+      {exactResults.length > 0 && (
         <div className="mt-4 space-y-4">
-          {results.map(candidate => (
-            <div key={candidate.name} className="rounded-xl border border-slate-200 p-4">
-              <p className="font-medium text-slate-900">{candidate.name}</p>
-              <p className="text-sm text-slate-500 mb-3">{t.claimCount(candidate.count)}</p>
-
-              <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {candidate.samples.map(s => (
-                  <li key={s.slug} className="rounded-lg border border-slate-100 overflow-hidden">
-                    {s.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element -- matches the plain <img> used across this codebase
-                      <img src={s.image} alt="" className="w-full h-24 object-cover bg-slate-100" />
-                    ) : (
-                      <div className="w-full h-24 bg-slate-100" />
-                    )}
-                    <div className="p-2">
-                      <p className="text-xs font-medium text-slate-800 line-clamp-2">{s.title}</p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {s.price}{s.district ? ` · ${s.district}` : ''}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                type="button"
-                onClick={() => setClaimed(candidate.name)}
-                className="mt-3 w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              >
-                {t.claimConfirm}
-              </button>
-            </div>
+          {exactResults.map(candidate => (
+            <CandidateCard
+              key={candidate.name}
+              candidate={candidate}
+              countLabel={t.claimCount(candidate.count)}
+              confirmLabel={t.claimConfirm}
+              onConfirm={() => setClaimed(candidate.name)}
+            />
           ))}
         </div>
       )}
+
+      {similarResults.length > 0 && (
+        <div className="mt-4 space-y-4">
+          <p className="text-sm text-slate-600">{t.claimSimilarHeading}</p>
+          {similarResults.map(candidate => (
+            <CandidateCard
+              key={candidate.name}
+              candidate={candidate}
+              countLabel={t.claimCount(candidate.count)}
+              confirmLabel={t.claimSimilarConfirm}
+              onConfirm={() => setClaimed(candidate.name)}
+              muted
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** One name's card: label, sample listings, confirm button. `muted` styles it
+ *  a shade lighter (amber border/button) for "similar, not exact" results so
+ *  the agent can tell the two tiers apart at a glance without reading text. */
+function CandidateCard({
+  candidate,
+  countLabel,
+  confirmLabel,
+  onConfirm,
+  muted = false,
+}: {
+  candidate: NameCandidate;
+  countLabel: string;
+  confirmLabel: string;
+  onConfirm: () => void;
+  muted?: boolean;
+}) {
+  return (
+    <div className={`rounded-xl border p-4 ${muted ? 'border-amber-200 bg-amber-50/40' : 'border-slate-200'}`}>
+      <p className="font-medium text-slate-900">{candidate.name}</p>
+      <p className="text-sm text-slate-500 mb-3">{countLabel}</p>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {candidate.samples.map(s => (
+          <li key={s.slug} className="rounded-lg border border-slate-100 overflow-hidden">
+            {s.image ? (
+              // eslint-disable-next-line @next/next/no-img-element -- matches the plain <img> used across this codebase
+              <img src={s.image} alt="" className="w-full h-24 object-cover bg-slate-100" />
+            ) : (
+              <div className="w-full h-24 bg-slate-100" />
+            )}
+            <div className="p-2">
+              <p className="text-xs font-medium text-slate-800 line-clamp-2">{s.title}</p>
+              <p className="text-xs text-slate-500 mt-1">
+                {s.price}{s.district ? ` · ${s.district}` : ''}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <button
+        type="button"
+        onClick={onConfirm}
+        className={`mt-3 w-full rounded-lg px-4 py-2 text-sm font-medium text-white ${
+          muted ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+      >
+        {confirmLabel}
+      </button>
     </div>
   );
 }

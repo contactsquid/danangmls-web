@@ -87,6 +87,8 @@ export interface AccountCopy {
   claimCount: (n: number) => string;
   claimPending: (name: string) => string;
   claimSubmitted: string;
+  claimSimilarHeading: string;
+  claimSimilarConfirm: string;
   // Action results
   errors: {
     notConfigured: string;
@@ -187,6 +189,8 @@ export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
     claimCount: n => `${n} listing${n === 1 ? '' : 's'} under this name`,
     claimPending: name => `Waiting for DanangMLS to review your claim to "${name}". Your listings appear on your profile once it is approved — usually within a day.`,
     claimSubmitted: 'Your claim has been sent to DanangMLS for review.',
+    claimSimilarHeading: "Didn't match exactly, but close — is one of these you? (e.g. name order swapped, or Vietnamese vs. English spelling)",
+    claimSimilarConfirm: 'Yes, this is me too',
     errors: {
       notConfigured: 'Agent accounts are not enabled on this site yet. Please try again later.',
       nameRequired: 'Please enter your full name.',
@@ -282,6 +286,8 @@ export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
     claimCount: n => `${n} tin đăng với tên này`,
     claimPending: name => `Đang chờ DanangMLS duyệt yêu cầu của bạn cho tên "${name}". Tin đăng sẽ hiển thị trên hồ sơ sau khi được duyệt — thường trong vòng một ngày.`,
     claimSubmitted: 'Yêu cầu của bạn đã được gửi đến DanangMLS để xét duyệt.',
+    claimSimilarHeading: 'Không khớp chính xác, nhưng gần giống — có phải một trong số này là bạn không? (ví dụ: đổi thứ tự tên, hoặc tên tiếng Việt so với tiếng Anh)',
+    claimSimilarConfirm: 'Đúng, đây cũng là tôi',
     errors: {
       notConfigured: 'Tài khoản môi giới chưa được bật trên trang này. Vui lòng thử lại sau.',
       nameRequired: 'Vui lòng nhập họ và tên của bạn.',
