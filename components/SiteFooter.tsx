@@ -17,6 +17,7 @@ export default function SiteFooter() {
     : [
         { href: '/about',          label: 'About' },
         { href: '/agents',         label: 'Agents' },
+        { href: '/knowledge',      label: 'FAQ' },
         { href: '/contact',        label: 'Contact' },
         { href: '/privacy-policy', label: 'Privacy Policy' },
         { href: '/terms',          label: 'Terms' },

@@ -1,0 +1,27 @@
+# DanangMLS
+
+> DanangMLS (danangmls.com) is a multiple listing service for real estate in Da Nang and Hoi An, Vietnam — houses, apartments, villas, and land for rent and for sale, aggregated from local agents and property owners and refreshed daily. Content is bilingual (English/Vietnamese), and agents can create free profiles and list properties directly through a self-serve portal.
+
+## Listings
+
+- [For Rent](https://danangmls.com/for-rent): Long-term rental apartments, houses, and villas in Da Nang and Hoi An.
+- [For Sale](https://danangmls.com/for-sale): Condos, apartments, houses, villas, and land for sale in Da Nang and Hoi An.
+
+## Agents
+
+- [Agent Directory](https://danangmls.com/agents): Real estate agents active in Da Nang and Hoi An, with their current listings.
+- Agents can sign up for a free profile and post listings directly at [danangmls.com/account/signup](https://danangmls.com/account/signup).
+
+## Knowledge
+
+- [Facts & FAQ](https://danangmls.com/knowledge): Structured facts and frequently asked questions about DanangMLS, renting and buying property in Da Nang, and the agent portal.
+
+## Contact
+
+- [Contact](https://danangmls.com/contact): Reach the DanangMLS team by Zalo, WhatsApp, or email (hello@danang.homes).
+- [About](https://danangmls.com/about): Who runs DanangMLS and what it covers.
+
+## Optional
+
+- [Vietnamese site](https://danangmls.com/vi): Vietnamese-language listings and pages.
+- [Sitemap](https://danangmls.com/sitemap.xml): Full list of indexed pages, including every listing and agent profile.

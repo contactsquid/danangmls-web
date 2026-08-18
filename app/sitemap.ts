@@ -81,6 +81,7 @@ export default async function sitemap() {
     ...agentEntries,
     // Trust / info pages
     { url: `${BASE}/about`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
+    { url: `${BASE}/knowledge`,      lastModified: now, changeFrequency: 'weekly'  as const, priority: 0.4 },
     { url: `${BASE}/contact`,        lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.3 },
     { url: `${BASE}/privacy-policy`, lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.2 },
     { url: `${BASE}/terms`,          lastModified: now, changeFrequency: 'yearly'  as const, priority: 0.2 },
