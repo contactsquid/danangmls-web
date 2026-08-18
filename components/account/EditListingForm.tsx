@@ -15,6 +15,12 @@ import type { Listing } from '@/lib/types';
 
 const initial: ListingActionState = {};
 
+// Mirrors MAX_PHOTO_BYTES in app/account/listings/actions.ts + the extension
+// allowlist backing extensionFor() in lib/r2.ts — see ListingForm.tsx for why
+// this also needs a client-side check, not just the server action's.
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+
 /** Pulls the numeric part out of a stored price string ("$1,521/month" → 1521).
  *  Sheet prices are always USD, so the currency selector starts on USD; an agent
  *  who switches to VND is entering a fresh amount, not converting this one. */
@@ -34,6 +40,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
   // the sheet stores them (Image URL 1 first).
   const [images, setImages] = useState<string[]>(listing.images);
   const [addCount, setAddCount] = useState(0);
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const neighborhoods = district ? (NEIGHBORHOODS[district] ?? []) : [];
   const listingsHref = lang === 'vi' ? '/vi/tai-khoan/tin-dang' : '/account/listings';
@@ -55,7 +62,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
 
   return (
     <form action={formAction} className="space-y-6">
-      <FormMessage error={state.error} />
+      <FormMessage error={photoError ?? state.error} />
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="slug" value={listing.slug} />
 
@@ -177,7 +184,21 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
           <label className={labelClass} htmlFor="photos">{t.addMorePhotos}</label>
           <input
             id="photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple
-            onChange={e => setAddCount(e.target.files?.length ?? 0)}
+            onChange={e => {
+              const picked = Array.from(e.target.files ?? []);
+              const valid = picked.filter(
+                f => ALLOWED_PHOTO_TYPES.includes(f.type) && f.size <= MAX_PHOTO_BYTES,
+              );
+              if (valid.length < picked.length) {
+                const dt = new DataTransfer();
+                valid.forEach(f => dt.items.add(f));
+                e.target.files = dt.files;
+                setPhotoError(t.uploadFailed);
+              } else {
+                setPhotoError(null);
+              }
+              setAddCount(valid.length);
+            }}
             className="w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
           />
           <p className={hintClass}>

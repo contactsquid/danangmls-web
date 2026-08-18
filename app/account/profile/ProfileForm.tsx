@@ -11,6 +11,14 @@ import type { OwnAgentProfile } from '@/lib/agents';
 
 const initial: ActionState = {};
 
+// Mirrors ALLOWED_PHOTO_TYPES / MAX_PHOTO_BYTES in app/account/actions.ts.
+// Checked here too so a bad file never reaches the server action — the
+// action's own check is a safety net, not the primary UX (a large-enough
+// file can blow past next.config.ts's serverActions.bodySizeLimit before the
+// action code even runs, which surfaces as a raw crash, not our nice error).
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+
 export default function ProfileForm({
   profile,
   lang = 'en',
@@ -27,10 +35,11 @@ export default function ProfileForm({
   const [independent, setIndependent] = useState(startsIndependent);
   const [agency, setAgency] = useState(startsIndependent ? '' : profile.workplace);
   const [preview, setPreview] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   return (
     <form action={formAction} className="space-y-5">
-      <FormMessage error={state.error} notice={state.notice} />
+      <FormMessage error={photoError ?? state.error} notice={state.notice} />
       <input type="hidden" name="lang" value={lang} />
 
       {/* Photo */}
@@ -49,7 +58,21 @@ export default function ProfileForm({
             accept="image/jpeg,image/png,image/webp"
             onChange={e => {
               const file = e.target.files?.[0];
-              setPreview(file ? URL.createObjectURL(file) : null);
+              if (!file) { setPhotoError(null); setPreview(null); return; }
+              if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+                setPhotoError(t.errors.photoType);
+                e.target.value = '';
+                setPreview(null);
+                return;
+              }
+              if (file.size > MAX_PHOTO_BYTES) {
+                setPhotoError(t.errors.photoSize);
+                e.target.value = '';
+                setPreview(null);
+                return;
+              }
+              setPhotoError(null);
+              setPreview(URL.createObjectURL(file));
             }}
             className="text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
           />

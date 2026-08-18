@@ -13,6 +13,15 @@ import type { Lang } from '@/lib/translations';
 
 const initial: ListingActionState = {};
 
+// Mirrors MAX_PHOTO_BYTES in app/account/listings/actions.ts + the extension
+// allowlist backing extensionFor() in lib/r2.ts. Checked here too so bad
+// files never reach the server action — with up to 10 photos in one
+// multipart body, it's easy to trip next.config.ts's serverActions
+// bodySizeLimit ('6mb') before the action's own per-file checks ever run,
+// which surfaces as a raw crash instead of our nice inline error.
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+
 export default function ListingForm({ lang, profileSlug }: { lang: Lang; profileSlug: string }) {
   const t = LISTING_FORM_COPY[lang];
   const [state, formAction, pending] = useActionState(submitListingAction, initial);
@@ -20,6 +29,7 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
   const [forSale, setForSale] = useState(false);
   const [district, setDistrict] = useState('');
   const [photoCount, setPhotoCount] = useState(0);
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   // Neighbourhood options follow the district, exactly like the listing search
   // filters do (components/ListingsGrid.tsx) — same source of truth.
@@ -55,7 +65,7 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
   return (
     <form action={formAction} className="space-y-6">
-      <FormMessage error={state.error} />
+      <FormMessage error={photoError ?? state.error} />
       <input type="hidden" name="lang" value={lang} />
 
       {/* Rent vs sale — drives price semantics, and which sheet tab the row
@@ -205,7 +215,24 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
           accept="image/jpeg,image/png,image/webp"
           multiple
           required
-          onChange={e => setPhotoCount(e.target.files?.length ?? 0)}
+          onChange={e => {
+            const picked = Array.from(e.target.files ?? []);
+            const valid = picked.filter(
+              f => ALLOWED_PHOTO_TYPES.includes(f.type) && f.size <= MAX_PHOTO_BYTES,
+            );
+            if (valid.length < picked.length) {
+              // Rebuild the input's FileList with only the valid files, so a
+              // rejected file (wrong type, or over 5 MB) can't be submitted —
+              // the invalid ones are silently dropped, not just flagged.
+              const dt = new DataTransfer();
+              valid.forEach(f => dt.items.add(f));
+              e.target.files = dt.files;
+              setPhotoError(t.uploadFailed);
+            } else {
+              setPhotoError(null);
+            }
+            setPhotoCount(valid.length);
+          }}
           className="w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
         />
         <p className={hintClass}>
