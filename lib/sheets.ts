@@ -79,6 +79,9 @@ const R = {
   POST_URL: 14,
   DATE:     15,
   MLS_URL:  17,
+  AGENT_CONTACT: 24, // written by n8n from the RAW post text; NOT rendered on the site
+  VI_TITLE: 25,
+  VI_TEXT:  26,
 } as const;
 
 // ─── Column indices for the For Sale tab ──────────────────────────────────────
@@ -267,8 +270,8 @@ function parseRows(rows: string[][]): Listing[] {
         mlsUrl:       col(r, R.MLS_URL) || col(r, R.POST_URL),
         slug:         mlsUrlToSlug(col(r, R.MLS_URL)) || slugify(title, col(r, R.POST_URL)),
         neighborhood: detectNeighborhood(text, title, district),
-        vi_title:     '',
-        vi_text:      '',
+        vi_title:     col(r, R.VI_TITLE),
+        vi_text:      col(r, R.VI_TEXT),
         forSale:      false,
       };
       warnIfBadData(listing, 'Sheet1/Rentals');
