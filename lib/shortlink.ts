@@ -4,7 +4,7 @@ import { getListings, getForSaleListings } from '@/lib/sheets';
 /** Resolve a short listing id (the trailing token of a pinned slug) to its canonical URL.
  *  Shared by /l/<id> and its /1/<id> alias — in most sans-serif fonts a lowercase "l"
  *  and a "1" are indistinguishable, and people retype these by hand off a phone screen. */
-export async function resolveShortLink(rawId: string, requestUrl: string) {
+export async function resolveShortLink(rawId: string, requestUrl: string, lang: 'en' | 'vi' = 'en') {
   const key = (rawId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   // Redirect within whatever host served this request. The site answers on www but
   // declares an apex canonical, so hardcoding either one adds a needless extra hop.
@@ -24,7 +24,11 @@ export async function resolveShortLink(rawId: string, requestUrl: string) {
 
   // Unknown id lands on the homepage rather than a 404 — a dead link inside a
   // WhatsApp post is worse than a soft landing.
+  // /vn/<id> lands Vietnamese readers on the Vietnamese page. The agent feed posts to
+  // a Vietnamese-speaking audience, so dropping them on the English listing loses them.
+  const path = lang === 'vi' ? `/vi/listing/${hit?.slug}` : `/listing/${hit?.slug}`;
+  const home = lang === 'vi' ? `${origin}/vi` : origin;
   return hit
-    ? NextResponse.redirect(`${origin}/listing/${hit.slug}`, 301)
-    : NextResponse.redirect(origin, 302);
+    ? NextResponse.redirect(`${origin}${path}`, 301)
+    : NextResponse.redirect(home, 302);
 }
