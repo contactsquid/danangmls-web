@@ -8,6 +8,7 @@ import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
 import { fetchBlogPool } from '@/lib/featuredBlogs';
 import type { Metadata } from 'next';
+import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 
 // Grid pages render ALL listings in one page (too large to ISR-prerender:
 // FALLBACK_BODY_TOO_LARGE). Keep them dynamic. force-dynamic also forces the
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
+    images: OG_DEFAULT_IMAGES,
     locale: 'vi_VN',
     title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
     description: 'Danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày.',

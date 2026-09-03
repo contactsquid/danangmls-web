@@ -13,6 +13,7 @@ import { districtImageMap, firstAnyImage } from '@/lib/pageImages';
 import { popularBuildings } from '@/lib/buildings';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
+import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 
 // Grid pages render ALL listings in one page (too large to ISR-prerender:
 // FALLBACK_BODY_TOO_LARGE). Keep them dynamic. force-dynamic also forces the
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
+    images: OG_DEFAULT_IMAGES,
     locale: 'vi_VN',
   },
 };
