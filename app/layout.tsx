@@ -24,9 +24,19 @@ export const metadata: Metadata = {
     siteName: 'DanangMLS',
     locale: 'en_US',
     type: 'website',
+    // Site-wide default. Listing pages override this with the property photo;
+    // without it every non-listing share rendered an empty large-image card,
+    // because twitter.card below promises one.
+    images: [{
+      url: '/og-default.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'DanangMLS — houses and apartments for rent and sale in Da Nang, Vietnam',
+    }],
   },
   twitter: {
     card: 'summary_large_image',
+    images: ['/og-default.jpg'],
   },
 };
 
