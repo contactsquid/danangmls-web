@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import type { ListingVideo } from '@/lib/listingVideos';
+import { withinGrace, GRACE_MS, type ListingVideo } from '@/lib/listingVideos';
 import { togglePosted } from './actions';
 
 function Pill({
@@ -33,8 +33,20 @@ export default function VideoQueue({
   const [copied, setCopied] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const todo = rows.filter((r) => !(r.tiktok && r.facebook));
-  const list = onlyTodo ? todo : rows;
+  // A finished video lingers for 24h so a mistaken tick can be undone — it would
+  // otherwise vanish the instant the second platform was ticked.
+  const isOutstanding = (r: ListingVideo) => !(r.tiktok && r.facebook);
+  const stillShown = (r: ListingVideo) => isOutstanding(r) || withinGrace(r.completed_at);
+  const outstanding = rows.filter(isOutstanding);
+  const list = onlyTodo ? rows.filter(stillShown) : rows;
+
+  function dropsOffIn(completedAt: string | null): string | null {
+    if (!completedAt) return null;
+    const left = Date.parse(completedAt) + GRACE_MS - Date.now();
+    if (!Number.isFinite(left) || left <= 0) return null;
+    const h = Math.floor(left / 3600000);
+    return h >= 1 ? `${h}h` : `${Math.max(1, Math.round(left / 60000))}m`;
+  }
 
   function toggle(slug: string, platform: 'tiktok' | 'facebook', next: boolean) {
     // optimistic — the server action revalidates and corrects on failure
@@ -44,7 +56,10 @@ export default function VideoQueue({
       if (res.error) {
         setRows((rs) => rs.map((r) => (r.slug === slug ? { ...r, [platform]: !next } : r)));
         alert(`Could not save: ${res.error}`);
+        return;
       }
+      // take completed_at from the trigger rather than computing it here
+      setRows((rs) => rs.map((r) => (r.slug === slug ? { ...r, completed_at: res.completedAt ?? null } : r)));
     });
   }
 
@@ -68,7 +83,7 @@ export default function VideoQueue({
             onlyTodo ? 'bg-blue-600 text-white font-medium' : 'bg-white text-slate-600 border border-slate-200'
           }`}
         >
-          Needs posting ({todo.length})
+          Needs posting ({outstanding.length})
         </button>
         <button
           type="button"
@@ -89,7 +104,7 @@ export default function VideoQueue({
           <p className="mt-1 text-sm text-slate-500">
             {rows.length === 0
               ? 'A new video is added each morning and announced in the Telegram group.'
-              : 'Every video has been posted to TikTok and Facebook.'}
+              : 'Everything has been posted. Finished videos stay here for 24 hours, then move to All.'}
           </p>
         </div>
       ) : (
@@ -122,6 +137,12 @@ export default function VideoQueue({
                       <div className="text-xs text-slate-400 tabular-nums">{v.video_date}</div>
                     </div>
                   </div>
+
+                  {done && dropsOffIn(v.completed_at) && (
+                    <p className="text-xs text-green-700">
+                      Posted everywhere — staying here for another {dropsOffIn(v.completed_at)} in case it was a mistake.
+                    </p>
+                  )}
 
                   <div className="flex flex-wrap gap-2">
                     <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1.5 text-sm font-medium text-blue-700">

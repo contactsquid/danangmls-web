@@ -10,7 +10,7 @@ export async function togglePosted(
   slug: string,
   platform: 'tiktok' | 'facebook',
   value: boolean,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; completedAt?: string | null }> {
   if (!dashboardIdMatches(dashboardId)) return { error: 'Not found.' };
   const result = await setPosted(slug, platform, value);
   if (!result.error) revalidatePath(`/dashboard/${dashboardId}`);

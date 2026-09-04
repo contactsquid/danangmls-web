@@ -21,6 +21,19 @@ export interface ListingVideo {
   thumb_url: string | null;
   tiktok: boolean;
   facebook: boolean;
+  /** Set by a database trigger the moment BOTH platforms are ticked, and cleared
+   *  if either is un-ticked. Drives the 24h grace period so an accidental tick
+   *  doesn't make the row vanish. */
+  completed_at: string | null;
+}
+
+/** How long a finished video stays in the "needs posting" view. */
+export const GRACE_MS = 24 * 60 * 60 * 1000;
+
+export function withinGrace(completedAt: string | null): boolean {
+  if (!completedAt) return false;
+  const t = Date.parse(completedAt);
+  return Number.isFinite(t) && Date.now() - t < GRACE_MS;
 }
 
 /** The dashboard is unlisted rather than logged in — the id in the URL is the
@@ -59,13 +72,18 @@ export async function setPosted(
   slug: string,
   platform: 'tiktok' | 'facebook',
   value: boolean,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; completedAt?: string | null }> {
   if (!isSupabaseConfigured) return { error: 'Supabase is not configured.' };
   const supabase = createAdminClient();
   if (!supabase) return { error: 'Service key is not configured.' };
-  const { error } = await supabase
+  // Return the row so the caller gets completed_at as the trigger just set it,
+  // rather than guessing at it client-side.
+  const { data, error } = await supabase
     .from('listing_videos')
     .update({ [platform]: value })
-    .eq('slug', slug);
-  return error ? { error: error.message } : {};
+    .eq('slug', slug)
+    .select('completed_at')
+    .single();
+  if (error) return { error: error.message };
+  return { completedAt: (data?.completed_at as string | null) ?? null };
 }
