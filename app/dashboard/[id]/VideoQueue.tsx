@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { withinGrace, GRACE_MS, type ListingVideo } from '@/lib/listingVideos';
+import { withinGrace, GRACE_MS, type ListingVideo } from '@/lib/videoGrace';
 import { togglePosted } from './actions';
 
 function Pill({
