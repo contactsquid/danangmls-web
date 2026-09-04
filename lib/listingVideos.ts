@@ -41,8 +41,12 @@ export async function getListingVideos(): Promise<ListingVideo[]> {
   const { data, error } = await supabase
     .from('listing_videos')
     .select('*')
-    .order('video_date', { ascending: false })
+    // Newest first. created_at leads because two videos can share a video_date;
+    // slug is a deterministic tiebreaker so equal timestamps can't shuffle the
+    // list between renders (which is exactly what happened on the first seed).
     .order('created_at', { ascending: false })
+    .order('video_date', { ascending: false })
+    .order('slug', { ascending: true })
     .limit(120);
   if (error) {
     console.error('[listing_videos] read failed:', error.message);
