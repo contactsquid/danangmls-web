@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://danangmls.com'),
+  // Google Search Console ownership (URL-prefix property, added 2026-09-05).
+  // Domain-property verification needs a DNS record and danangmls.com's DNS is at
+  // GoDaddy, so the site verifies itself via this tag instead. Do not remove.
+  verification: { google: 'pxDSbluZtT6JUuwXNPyEcvrQOuoqv7qDI5GnUEh6Y0w' },
   title: {
     default: 'DanangMLS — Houses for Rent & Sale in Da Nang, Vietnam',
     template: '%s — DanangMLS',
