@@ -8,6 +8,7 @@ import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
+import { socialImages } from '@/lib/ogImage';
 
 // Vietnamese fallback title for listings that don't have vi_title populated
 // (currently most rentals — Sheet1 lacks a VI_TITLE column). Generates a
@@ -77,9 +78,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: displayTitle,
       description,
       url: `https://danangmls.com/vi/listing/${slug}`,
-      images: ogImage ? [{ url: ogImage, alt: `${displayTitle} — DanangMLS` }] : [],
+      images: socialImages(ogImage, `${displayTitle} — DanangMLS`),
       type: 'website',
       locale: 'vi_VN',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: socialImages(ogImage, `${displayTitle} — DanangMLS`),
     },
   };
 }

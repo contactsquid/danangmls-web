@@ -6,6 +6,7 @@ import AgentProfileView from '@/components/AgentProfileView';
 import { getAgentProfile, getAgentListings, isThinProfile, type AgentProfile } from '@/lib/agents';
 import { agentProfileLd } from '@/lib/schema';
 import { agentAlternates } from '@/lib/agentCopy';
+import { socialImages } from '@/lib/ogImage';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,10 +46,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: canonical,
       title: `${profile.display_name} — Môi Giới Bất Động Sản tại Đà Nẵng`,
       description: metaDescription(profile, listings.length),
-      images: [{
-        url: profile.photo_url || 'https://danangmls.com/icon.svg',
-        alt: `${profile.display_name} — môi giới bất động sản, DanangMLS`,
-      }],
+      images: socialImages(profile.photo_url, `${profile.display_name} — môi giới bất động sản, DanangMLS`),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: socialImages(profile.photo_url, `${profile.display_name} — môi giới bất động sản, DanangMLS`),
     },
   };
 }

@@ -18,3 +18,19 @@ export const OG_DEFAULT_IMAGE = {
 } as const;
 
 export const OG_DEFAULT_IMAGES = [OG_DEFAULT_IMAGE];
+
+/**
+ * Twitter card images are NOT picked up from a sibling `openGraph` block — the root
+ * layout's `twitter.images` default wins instead. So a page that ships a real photo
+ * must set BOTH, or it silently shares the site logo.
+ *
+ * That is exactly what happened: the 2026-09-04 OG pass added a `twitter.images`
+ * default in app/layout.tsx, and from then on every shared listing and agent link
+ * previewed as the generic logo even though `og:image` was correct (Blake, 2026-09-05).
+ *
+ * Also falls back to the site default rather than an empty array — an empty
+ * `images: []` ships no og:image at all while `twitter:card` promises one.
+ */
+export function socialImages(url: string | undefined | null, alt: string) {
+  return url ? [{ url, alt }] : OG_DEFAULT_IMAGES;
+}

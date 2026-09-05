@@ -7,6 +7,7 @@ import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import type { Metadata } from 'next';
+import { socialImages } from '@/lib/ogImage';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -60,8 +61,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: listing.title,
       description,
       url: `https://danangmls.com/listing/${listing.slug}`,
-      images: ogImage ? [{ url: ogImage, alt: `${listing.title} — DanangMLS` }] : [],
+      images: socialImages(ogImage, `${listing.title} — DanangMLS`),
       type: 'website',
+    },
+    // must mirror openGraph.images — see socialImages()
+    twitter: {
+      card: 'summary_large_image',
+      images: socialImages(ogImage, `${listing.title} — DanangMLS`),
     },
   };
 }
