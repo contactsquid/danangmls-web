@@ -3,7 +3,16 @@ import type { Listing } from './types';
 /** Well-known Da Nang buildings. Shared by lib/facets.ts (which turns them into
  *  /for-rent/<slug> pages) and lib/buildings.ts (the "Popular Apartment Building"
  *  cards). Kept in its own module so those two can both import it without a cycle. */
-export interface BuildingDef { name: string; pattern: RegExp; search: string }
+export interface BuildingDef {
+  name: string; pattern: RegExp; search: string;
+  /** Photo of the building itself, for the facet page and its share card.
+   *  Colour-graded, not AI-restyled — generative editing can silently alter a
+   *  facade on a property we advertise. Optional: most buildings have none yet
+   *  and fall back to a listing photo / the site default. */
+  image?: string;
+  /** 1200x630 crop of the same photo for og:image. */
+  ogImage?: string;
+}
 
 /** URL slug for a building page: "Sam Towers" -> "sam-towers". */
 export function buildingSlug(name: string): string {
@@ -35,7 +44,9 @@ export const POPULAR_BUILDINGS: BuildingDef[] = [
   { name: 'Cora Tower',                 pattern: /cora\s+tower/i,                     search: 'Cora' },
   { name: 'Blooming Tower',             pattern: /blooming/i,                         search: 'Blooming' },
   { name: 'The Filmore',                pattern: /filmore/i,                          search: 'Filmore' },
-  { name: 'Sam Towers',                 pattern: /sam\s+tower/i,                      search: 'Sam Tower' },
+  { name: 'Sam Towers',                 pattern: /sam\s+tower/i,                      search: 'Sam Tower',
+    image:   'https://images.danang.homes/buildings/sam-towers.jpg',
+    ogImage: 'https://images.danang.homes/buildings/sam-towers-og.jpg' },
   { name: 'Hyatt Regency',             pattern: /hyatt/i,                            search: 'Hyatt' },
   { name: 'Azura',                      pattern: /\bazura\b/i,                        search: 'Azura' },
   { name: 'Indochina Riverside',        pattern: /indochina/i,                        search: 'Indochina' },

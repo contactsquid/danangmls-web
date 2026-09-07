@@ -79,6 +79,13 @@ export function facetMatches(l: Listing, f: Facet): boolean {
   return false;
 }
 
+/** Building photo for a facet, when we have one. */
+export function facetImage(f: Facet): { image?: string; ogImage?: string } {
+  if (f.kind !== 'building') return {};
+  const b = POPULAR_BUILDINGS.find(x => x.name === f.value);
+  return { image: b?.image, ogImage: b?.ogImage };
+}
+
 export function facetBase(mode: Mode, lang: 'en' | 'vi'): string {
   if (lang === 'vi') return mode === 'rent' ? '/vi/thue' : '/vi/mua-ban';
   return mode === 'rent' ? '/for-rent' : '/for-sale';

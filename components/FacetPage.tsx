@@ -9,7 +9,8 @@ import PopularBuildings from '@/components/PopularBuildings';
 import DistrictMap from '@/components/DistrictMap';
 import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
-import { resolveFacet, facetMatches, facetContent, facetInitialFilters, facetUrl, facetSlug, type Mode } from '@/lib/facets';
+import { socialImages } from '@/lib/ogImage';
+import { resolveFacet, facetMatches, facetContent, facetInitialFilters, facetUrl, facetSlug, facetImage, type Mode } from '@/lib/facets';
 import { districtImageMap, firstAnyImage } from '@/lib/pageImages';
 import { facetSeoBody } from '@/lib/facetSeo';
 import { popularBuildings } from '@/lib/buildings';
@@ -36,7 +37,16 @@ export async function facetMetadata(mode: Mode, lang: 'en' | 'vi', filterSlug: s
     title: c.title,
     description: c.description,
     alternates: { canonical: self, languages: { en: enUrl, vi: viUrl, 'x-default': enUrl } },
-    openGraph: { title: c.title, description: c.description, url: self, type: 'website', ...(lang === 'vi' ? { locale: 'vi_VN' } : {}) },
+    // Facet pages previously declared no images at all, so every one of them
+    // shared as the site logo. Use the building's own photo where we have one;
+    // socialImages falls back to the site default and, critically, feeds BOTH
+    // openGraph and twitter — twitter does not inherit from openGraph.
+    openGraph: {
+      title: c.title, description: c.description, url: self, type: 'website',
+      images: socialImages(facetImage(facet).ogImage, c.title),
+      ...(lang === 'vi' ? { locale: 'vi_VN' } : {}),
+    },
+    twitter: { card: 'summary_large_image', images: socialImages(facetImage(facet).ogImage, c.title) },
     // Don't index a facet page while it has no inventory (still crawlable).
     ...(filtered.length === 0 ? { robots: { index: false, follow: true } } : {}),
   };
@@ -86,7 +96,7 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
       {/* Image from the FACET's listings, not the whole set — a Sam Towers page
           should illustrate Sam Towers. Falls back to the full set when the facet
           has no servable photo. */}
-      <PageFaq mode={mode} image={firstAnyImage(filtered) || firstAnyImage(all)}
+      <PageFaq mode={mode} image={facetImage(facet).image || firstAnyImage(filtered) || firstAnyImage(all)}
         faqOverride={body ? { heading: body.faqHeading, faq: body.faq } : undefined} />
       <SiteFooter />
     </div>
