@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { submitListingAction, type ListingActionState } from '@/app/account/listings/actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
@@ -28,8 +28,42 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
   const [forSale, setForSale] = useState(false);
   const [district, setDistrict] = useState('');
-  const [photoCount, setPhotoCount] = useState(0);
+  // The order of this array IS the order photos are submitted in (and so the
+  // order they land in the sheet's Image URL columns) — same "order is
+  // meaning, first is the hero" model as EditListingForm.tsx. The <input>
+  // itself stays uncontrolled (the server action reads its FormData
+  // directly), so every reorder/remove rebuilds its FileList to match.
+  const [photos, setPhotos] = useState<File[]>([]);
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const previews = useMemo(() => photos.map(f => URL.createObjectURL(f)), [photos]);
+  useEffect(() => () => previews.forEach(url => URL.revokeObjectURL(url)), [previews]);
+
+  function syncFileInput(files: File[]) {
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+    if (fileInputRef.current) fileInputRef.current.files = dt.files;
+  }
+
+  function movePhoto(index: number, dir: -1 | 1) {
+    setPhotos(prev => {
+      const target = index + dir;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      syncFileInput(next);
+      return next;
+    });
+  }
+
+  function removePhoto(index: number) {
+    setPhotos(prev => {
+      const next = prev.filter((_, i) => i !== index);
+      syncFileInput(next);
+      return next;
+    });
+  }
 
   // Neighbourhood options follow the district, exactly like the listing search
   // filters do (components/ListingsGrid.tsx) — same source of truth.
@@ -209,35 +243,80 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
       <div>
         <label className={labelClass} htmlFor="photos">{t.photos}</label>
         <input
+          ref={fileInputRef}
           id="photos"
           name="photos"
           type="file"
           accept="image/jpeg,image/png,image/webp"
           multiple
-          required
+          required={photos.length === 0}
           onChange={e => {
             const picked = Array.from(e.target.files ?? []);
             const valid = picked.filter(
               f => ALLOWED_PHOTO_TYPES.includes(f.type) && f.size <= MAX_PHOTO_BYTES,
             );
-            if (valid.length < picked.length) {
-              // Rebuild the input's FileList with only the valid files, so a
-              // rejected file (wrong type, or over 5 MB) can't be submitted —
-              // the invalid ones are silently dropped, not just flagged.
-              const dt = new DataTransfer();
-              valid.forEach(f => dt.items.add(f));
-              e.target.files = dt.files;
-              setPhotoError(t.uploadFailed);
-            } else {
-              setPhotoError(null);
-            }
-            setPhotoCount(valid.length);
+            // Selecting again replaces the whole set (native <input type=file>
+            // behaviour) — rebuild the input's FileList with only the valid
+            // files, so a rejected file (wrong type, or over 5 MB) can't be
+            // submitted, and reset order to selection order.
+            syncFileInput(valid);
+            setPhotoError(valid.length < picked.length ? t.uploadFailed : null);
+            setPhotos(valid);
           }}
           className="w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
         />
         <p className={hintClass}>
-          {photoCount > 0 ? `${photoCount} / 10` : t.photosHint}
+          {photos.length > 0 ? `${photos.length} / 10` : t.photosHint}
         </p>
+
+        {/* Reorder + remove — order here IS the order photos are submitted
+            in, so the first thumbnail becomes the listing's main photo. */}
+        {photos.length > 0 && (
+          <>
+            <p className={`${hintClass} mt-3`}>{t.photoOrderHint}</p>
+            <ul className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {photos.map((file, i) => (
+                <li
+                  key={`${file.name}-${file.lastModified}-${i}`}
+                  className={`rounded-lg border p-2 ${i === 0 ? 'border-blue-500 bg-blue-50' : 'border-slate-200'}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- local object URL, not a remote/optimizable image */}
+                  <img src={previews[i]} alt="" className="w-full h-24 object-cover rounded" />
+                  {i === 0 && (
+                    <p className="mt-2 text-xs font-medium text-blue-700 text-center">★ {t.heroLabel}</p>
+                  )}
+                  <div className="mt-2 flex items-center justify-between gap-1">
+                    <button
+                      type="button"
+                      onClick={() => movePhoto(i, -1)}
+                      disabled={i === 0}
+                      aria-label={t.moveEarlier}
+                      className="flex-1 rounded border border-slate-300 bg-white py-1 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-white"
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => movePhoto(i, 1)}
+                      disabled={i === photos.length - 1}
+                      aria-label={t.moveLater}
+                      className="flex-1 rounded border border-slate-300 bg-white py-1 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-white"
+                    >
+                      →
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(i)}
+                    className="mt-1 w-full text-xs text-slate-400 hover:text-red-600"
+                  >
+                    {t.removePhoto}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
 
       <button type="submit" disabled={pending} className={buttonClass}>

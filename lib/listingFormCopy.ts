@@ -60,9 +60,12 @@ export interface ListingFormCopy {
   noListingsYet: string;
   editThis: string;
   photosCurrent: string;
+  photoOrderHint: string;
   heroLabel: string;
   heroHint: string;
   removePhoto: string;
+  moveEarlier: string;
+  moveLater: string;
   addMorePhotos: string;
   backToListings: string;
   errors: Record<ValidationCode, string>;
@@ -117,9 +120,12 @@ export const LISTING_FORM_COPY: Record<Lang, ListingFormCopy> = {
     noListingsYet: 'You have not posted any listings yet.',
     editThis: 'Edit',
     photosCurrent: 'Current photos',
+    photoOrderHint: 'Use the arrows to reorder your photos. The first photo is used on search and listing cards.',
     heroLabel: 'Main photo',
     heroHint: 'The main photo is the one shown first, and the one used on search and listing cards.',
     removePhoto: 'Remove',
+    moveEarlier: 'Move earlier',
+    moveLater: 'Move later',
     addMorePhotos: 'Add more photos',
     backToListings: 'Back to your listings',
     errors: {
@@ -181,9 +187,12 @@ export const LISTING_FORM_COPY: Record<Lang, ListingFormCopy> = {
     noListingsYet: 'Bạn chưa đăng tin nào.',
     editThis: 'Chỉnh sửa',
     photosCurrent: 'Hình hiện tại',
+    photoOrderHint: 'Dùng mũi tên để sắp xếp lại thứ tự hình ảnh. Hình đầu tiên sẽ được dùng trên thẻ tin đăng và kết quả tìm kiếm.',
     heroLabel: 'Hình chính',
     heroHint: 'Hình chính là hình hiển thị đầu tiên và được dùng trên thẻ tin đăng và kết quả tìm kiếm.',
     removePhoto: 'Xóa',
+    moveEarlier: 'Chuyển lên trước',
+    moveLater: 'Chuyển ra sau',
     addMorePhotos: 'Thêm hình',
     backToListings: 'Quay lại tin đăng của bạn',
     errors: {
