@@ -6,6 +6,7 @@ import PageHero from '@/components/PageHero';
 import PageSeoSection from '@/components/PageSeoSection';
 import PageFaq from '@/components/PageFaq';
 import PopularBuildings from '@/components/PopularBuildings';
+import DistrictMap from '@/components/DistrictMap';
 import SiteFooter from '@/components/SiteFooter';
 import { listingsItemListLd } from '@/lib/schema';
 import { resolveFacet, facetMatches, facetContent, facetInitialFilters, facetUrl, facetSlug, type Mode } from '@/lib/facets';
@@ -77,6 +78,7 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
           initialForeign={init.foreign}
         />
       </main>
+      {facet.kind === 'district' && <DistrictMap district={facet.value} lang={lang} />}
       <PopularBuildings buildings={popularBuildings(all, mode, lang)} lang={lang} />
       <PageSeoSection mode={mode} districtImages={districtImageMap(all)}
         seoOverride={body ? { h2: body.h2, intro: body.intro } : undefined} />
