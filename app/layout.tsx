@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ORG_LD, SITE_LD } from "@/lib/schema";
@@ -58,6 +59,9 @@ export default function RootLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_LD) }} />
         {children}
+        {/* Cookieless, first-party — no consent banner needed, not ad-blocked.
+            GA4 deferred until a consent banner exists. */}
+        <Analytics />
       </body>
     </html>
   );
