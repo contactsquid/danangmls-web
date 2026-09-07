@@ -104,11 +104,17 @@ export function listingFieldHref(kind: 'type' | 'district' | 'bedrooms', raw: st
 }
 
 /** Which grid dropdown/checkbox the facet pre-selects. */
-export function facetInitialFilters(f: Facet): { type?: string; district?: string; beds?: string; foreign?: boolean } {
+export function facetInitialFilters(f: Facet): { type?: string; district?: string; beds?: string; foreign?: boolean; search?: string } {
   if (f.kind === 'type') return { type: f.value };
   if (f.kind === 'district') return { district: f.value };
   if (f.kind === 'bedrooms') return { beds: f.value };
   if (f.kind === 'foreign') return { foreign: true };
+  // Buildings are matched by name text, so they seed the grid's search box. Passing
+  // it as an initial value (not a post-hydration effect) lets the server render the
+  // filtered grid instead of all listings.
+  if (f.kind === 'building') {
+    return { search: POPULAR_BUILDINGS.find(b => b.name === f.value)?.search };
+  }
   return {};
 }
 

@@ -76,13 +76,17 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
           initialDistrict={init.district}
           initialBeds={init.beds}
           initialForeign={init.foreign}
+          initialSearch={init.search}
         />
       </main>
       {facet.kind === 'district' && <DistrictMap district={facet.value} lang={lang} />}
       <PopularBuildings buildings={popularBuildings(all, mode, lang)} lang={lang} />
       <PageSeoSection mode={mode} districtImages={districtImageMap(all)}
         seoOverride={body ? { h2: body.h2, intro: body.intro } : undefined} />
-      <PageFaq mode={mode} image={firstAnyImage(all)}
+      {/* Image from the FACET's listings, not the whole set — a Sam Towers page
+          should illustrate Sam Towers. Falls back to the full set when the facet
+          has no servable photo. */}
+      <PageFaq mode={mode} image={firstAnyImage(filtered) || firstAnyImage(all)}
         faqOverride={body ? { heading: body.faqHeading, faq: body.faq } : undefined} />
       <SiteFooter />
     </div>

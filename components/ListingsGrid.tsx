@@ -23,11 +23,13 @@ interface Props {
   initialDistrict?: string;
   initialBeds?: string;
   initialForeign?: boolean;
+  /** Seeds the search box server-side (building facet pages). */
+  initialSearch?: string;
 }
 
-export default function ListingsGrid({ listings, types, districts, mode = 'rent', initialType = '', initialDistrict = '', initialBeds = '', initialForeign = false }: Props) {
+export default function ListingsGrid({ listings, types, districts, mode = 'rent', initialType = '', initialDistrict = '', initialBeds = '', initialForeign = false, initialSearch = '' }: Props) {
   const { lang, t } = useLanguage();
-  const [search, setSearch]         = useState('');
+  const [search, setSearch]         = useState(initialSearch);
   const [typeFilter, setType]       = useState(initialType);
   const [distFilter, setDist]       = useState(initialDistrict);
   const [hoodFilter, setHood]       = useState('');
@@ -52,6 +54,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
       // Building facet pages (/for-rent/sam-towers) seed the same search box. The
       // server already filtered for the count and JSON-LD; without this the grid
       // would render every listing under a hero that says 42.
+      if (!qParam && initialSearch) qParam = initialSearch;
       if (!qParam) {
         const seg = window.location.pathname.split('/').filter(Boolean).pop() || '';
         const f = resolveFacet(seg);
