@@ -249,7 +249,7 @@ function buildingVi(name: string, mode: Mode): FacetSeoBody {
     h2: `Căn hộ ${thueBan} tại ${name}, Đà Nẵng`,
     intro: b ? [
       `${name} là tòa căn hộ ven sông tại quận ${b.district}, Đà Nẵng, gần sông Hàn và cầu Rồng. Tất cả tin đăng tại đây đều là căn hộ, phù hợp khi cần một tòa nhà có thang máy, an ninh và chỗ để xe thay vì nhà riêng.`,
-      `Phần lớn căn hộ ${thueBan} tại ${name} là loại 2 phòng ngủ, bên cạnh các căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện dao động khoảng $684 – $2.280 mỗi tháng, phổ biến quanh mức $950.`,
+      `Phần lớn căn hộ ${thueBan} tại ${name} là loại 2 phòng ngủ, bên cạnh các căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện dao động khoảng 684–2.280 USD mỗi tháng, phổ biến quanh mức 950 USD.`,
       `Tiện ích chung gồm hồ bơi và phòng gym, cùng ban công và view sông Hàn ở các tầng cao. Đa số căn hộ được bàn giao đầy đủ nội thất, có bếp, máy lạnh, máy giặt và wifi.`,
       `So sánh các căn hộ đang có bên dưới theo số phòng ngủ, diện tích và giá thuê theo tháng. Danh sách được cập nhật hằng ngày từ môi giới địa phương.`,
     ] : [
@@ -257,7 +257,7 @@ function buildingVi(name: string, mode: Mode): FacetSeoBody {
     ],
     faqHeading: `${name} — Câu hỏi thường gặp`,
     faq: b ? [
-      { q: `Giá thuê căn hộ tại ${name} khoảng bao nhiêu?`, a: `Các tin đăng hiện tại dao động khoảng **$684 – $2.280** mỗi tháng, phổ biến quanh **$950** tùy diện tích và hướng nhìn.` },
+      { q: `Giá thuê căn hộ tại ${name} khoảng bao nhiêu?`, a: `Các tin đăng hiện tại dao động khoảng **684–2.280 USD** mỗi tháng, phổ biến quanh **950 USD** tùy diện tích và hướng nhìn.` },
       { q: `Căn hộ tại ${name} có mấy phòng ngủ?`, a: `Chủ yếu là **2 phòng ngủ**. Căn 1 phòng ngủ thường xuyên có, và thỉnh thoảng có căn 3 phòng ngủ.` },
       { q: `${name} nằm ở đâu?`, a: `Tại quận **${b.district}**, gần **sông Hàn** và cầu Rồng, thuận tiện đi làm ở trung tâm và cách bãi biển Mỹ Khê một quãng ngắn.` },
       { q: `${name} có hồ bơi và phòng gym không?`, a: `Có — **hồ bơi** và **phòng gym** được nhắc đến trong phần lớn tin đăng, cùng thang máy, an ninh và chỗ để xe.` },
