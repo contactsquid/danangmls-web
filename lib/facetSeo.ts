@@ -15,6 +15,7 @@ const EN_TYPE_PLURAL: Record<string, string> = {
 export function facetSeoBody(f: Facet, mode: Mode, lang: 'en' | 'vi'): FacetSeoBody | null {
   if (f.kind === 'type') return lang === 'vi' ? typeVi(f.value, mode) : typeEn(f.value, mode);
   if (f.kind === 'foreign') return lang === 'vi' ? foreignVi() : foreignEn();
+  if (f.kind === 'building') return lang === 'vi' ? buildingVi(f.value, mode) : buildingEn(f.value, mode);
   return null; // district / bedrooms → default mode copy
 }
 
@@ -179,5 +180,87 @@ function foreignVi(): FacetSeoBody {
       { q: 'Người nước ngoài không được mua gì tại Việt Nam?', a: `Người nước ngoài thường không được sở hữu **đất** hoặc **nhà** gắn liền với đất — những loại này cần quốc tịch Việt Nam. Sở hữu nước ngoài giới hạn ở **căn hộ** đủ điều kiện.` },
       { q: 'Người nước ngoài có được bán lại hoặc cho thuê căn hộ tại Đà Nẵng không?', a: `Có. Chủ sở hữu nước ngoài được **cho thuê** căn hộ để tạo thu nhập và bán lại, theo điều khoản của giấy chứng nhận sở hữu. Nhiều người mua **căn hộ** đủ điều kiện để cho thuê và tăng giá.` },
     ],
+  };
+}
+
+// ─── Buildings ──────────────────────────────────────────────────────────────
+// Per-building copy. Facts here are taken from the live listing set, not
+// invented: Sam Towers' numbers were measured across its 42 rentals on
+// 2026-09-07 (all apartments, 22 of 23 with a district in Hai Chau, 31 two-bed
+// and 9 one-bed, $684-$2,280/mo with a $950 median, a pool named in 29 listings,
+// a gym in 24 and a Han River view in 14).
+//
+// PENDING: to be tuned against a PageOptimizer Pro report for
+// "apartment for rent at sam towers". Per the POP playbook the score comes from
+// each SECTION's term range and over-optimizing is penalised, so do not pad
+// keyword counts by hand — wait for the report.
+interface BuildingSeo { district: string; blurb: string[]; faq: { q: string; a: string }[] }
+
+const BUILDING_SEO: Record<string, BuildingSeo> = {
+  'Sam Towers': {
+    district: 'Hai Chau',
+    blurb: [
+      `Sam Towers is a riverside apartment complex in Hai Chau, Da Nang's central district, a short walk from the Han River and the Dragon Bridge. Every listing here is an apartment for rent at Sam Towers rather than a house or villa, which makes it a straightforward choice if you want a serviced building with a lift, security and on-site parking instead of a standalone property.`,
+      `Most apartments for rent at Sam Towers are two-bedroom layouts, with a steady supply of one-bedroom units and the occasional three-bedroom. Rents currently run from around $684 to $2,280 a month, with the typical unit near $950 — higher than an equivalent apartment in Cam Le or Lien Chieu, and priced for the central location and the river views many of the upper floors have.`,
+      `The building's shared facilities are the draw: a swimming pool and a gym appear in most listings, alongside balconies and Han River outlooks. Apartments are generally rented fully furnished, with kitchen appliances, air conditioning, a washing machine and wifi already in place, so a Sam Towers apartment is usually ready to move into rather than something you fit out.`,
+      `Compare the current Sam Towers apartments below by bedrooms, size and monthly price. Listings are updated daily from local agents and property managers, and because a single building turns over a limited number of units, it is worth checking back rather than waiting for a long shortlist to build up.`,
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Sam Towers?', a: 'Current listings run from about **$684** to **$2,280** per month, with the typical unit around **$950**. One-bedroom apartments sit at the lower end and larger two- and three-bedroom units with river views at the top.' },
+      { q: 'How many bedrooms do Sam Towers apartments have?', a: 'Mostly **two bedrooms**. One-bedroom units are regularly available and three-bedroom layouts appear occasionally. Every unit listed at Sam Towers is an apartment — there are no houses or villas in the building.' },
+      { q: 'Where is Sam Towers in Da Nang?', a: 'In **Hai Chau**, the central district, close to the **Han River** and Dragon Bridge. It is walking distance to central offices, cafes and restaurants, and a short drive from My Khe Beach.' },
+      { q: 'Does Sam Towers have a pool and gym?', a: 'Yes — a **swimming pool** and **gym** are named in most current listings, along with a lift, security and parking. Confirm which facilities are included in your rent with the agent before signing.' },
+      { q: 'Are Sam Towers apartments furnished?', a: 'Generally yes. Most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. A small number are let unfurnished at a lower rent — the listing states which.' },
+    ],
+  },
+};
+
+function buildingEn(name: string, mode: Mode): FacetSeoBody {
+  const rentSale = mode === 'rent' ? 'for rent' : 'for sale';
+  const b = BUILDING_SEO[name];
+  if (!b) {
+    // Generic fallback for buildings without bespoke copy yet.
+    return {
+      h2: `Apartments ${rentSale} at ${name}, Da Nang`,
+      intro: [
+        `${name} is one of Da Nang's better-known apartment buildings. The listings below are the units currently available ${rentSale} there, updated daily from local agents and property managers.`,
+        `Compare them by bedrooms, size and monthly price. Because a single building turns over a limited number of units, it is worth checking back rather than waiting for a long shortlist to build up.`,
+      ],
+      faqHeading: `${name} — Frequently Asked Questions`,
+      faq: [
+        { q: `How many apartments are ${rentSale} at ${name}?`, a: `The count above reflects what is currently listed. It changes daily as agents add and remove units.` },
+      ],
+    };
+  }
+  return {
+    h2: mode === 'rent'
+      ? `Apartment for Rent at ${name} — ${b.district}, Da Nang`
+      : `Apartments for Sale at ${name} — ${b.district}, Da Nang`,
+    intro: b.blurb,
+    faqHeading: `${name} — Frequently Asked Questions`,
+    faq: b.faq,
+  };
+}
+
+function buildingVi(name: string, mode: Mode): FacetSeoBody {
+  const thueBan = mode === 'rent' ? 'cho thuê' : 'bán';
+  const b = BUILDING_SEO[name];
+  return {
+    h2: `Căn hộ ${thueBan} tại ${name}, Đà Nẵng`,
+    intro: b ? [
+      `${name} là toà căn hộ ven sông tại quận ${b.district}, Đà Nẵng, gần sông Hàn và cầu Rồng. Tất cả tin đăng tại đây đều là căn hộ, phù hợp khi cần một toà nhà có thang máy, an ninh và chỗ để xe thay vì nhà riêng.`,
+      `Phần lớn căn hộ ${thueBan} tại ${name} là loại 2 phòng ngủ, bên cạnh các căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện dao động khoảng $684 – $2.280 mỗi tháng, phổ biến quanh mức $950.`,
+      `Tiện ích chung gồm hồ bơi và phòng gym, cùng ban công và view sông Hàn ở các tầng cao. Đa số căn hộ được bàn giao đầy đủ nội thất, có bếp, máy lạnh, máy giặt và wifi.`,
+      `So sánh các căn hộ đang có bên dưới theo số phòng ngủ, diện tích và giá thuê theo tháng. Danh sách được cập nhật hằng ngày từ môi giới địa phương.`,
+    ] : [
+      `${name} là một trong những toà căn hộ được biết đến tại Đà Nẵng. Danh sách bên dưới là các căn hiện đang ${thueBan}, cập nhật hằng ngày từ môi giới địa phương.`,
+    ],
+    faqHeading: `${name} — Câu hỏi thường gặp`,
+    faq: b ? [
+      { q: `Giá thuê căn hộ tại ${name} khoảng bao nhiêu?`, a: `Các tin đăng hiện tại dao động khoảng **$684 – $2.280** mỗi tháng, phổ biến quanh **$950** tuỳ diện tích và hướng nhìn.` },
+      { q: `Căn hộ tại ${name} có mấy phòng ngủ?`, a: `Chủ yếu là **2 phòng ngủ**. Căn 1 phòng ngủ thường xuyên có, và thỉnh thoảng có căn 3 phòng ngủ.` },
+      { q: `${name} nằm ở đâu?`, a: `Tại quận **${b.district}**, gần **sông Hàn** và cầu Rồng, thuận tiện đi làm ở trung tâm và cách bãi biển Mỹ Khê một quãng ngắn.` },
+      { q: `${name} có hồ bơi và phòng gym không?`, a: `Có — **hồ bơi** và **phòng gym** được nhắc đến trong phần lớn tin đăng, cùng thang máy, an ninh và chỗ để xe.` },
+    ] : [],
   };
 }
