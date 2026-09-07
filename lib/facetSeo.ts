@@ -195,8 +195,326 @@ function foreignVi(): FacetSeoBody {
 // each SECTION's term range and over-optimizing is penalised, so do not pad
 // keyword counts by hand — wait for the report.
 interface BuildingSeo { district: string; blurb: string[]; faq: { q: string; a: string }[] }
+interface BuildingSeoVi { blurb: string[]; faq: { q: string; a: string }[] }
+
+// Vietnamese written natively for a Vietnamese renter — NOT a translation of the
+// English above. Uses the phrasing real agents use: "full nội thất", "view sông
+// Hàn", "tòa căn hộ", "vào ở được ngay". Kiểu cũ tone marks and "USD" spelled
+// out after the figure, matching the rest of the site.
+const BUILDING_SEO_VI: Record<string, BuildingSeoVi> = {
+  'Sam Towers': {
+    blurb: [
+      'Sam Towers là tòa căn hộ ven sông tại quận Hải Châu, Đà Nẵng, gần sông Hàn và cầu Rồng. Tất cả tin đăng tại đây đều là căn hộ, phù hợp khi cần một tòa nhà có thang máy, an ninh và chỗ để xe thay vì nhà riêng.',
+      'Phần lớn là căn 2 phòng ngủ, bên cạnh các căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện dao động khoảng 684–2.280 USD mỗi tháng, phổ biến quanh mức 950 USD.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông Hàn ở các tầng cao. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Sam Towers khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **684–2.280 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Sam Towers nằm ở đâu?', a: 'Tại **quận Hải Châu**, gần **sông Hàn** và cầu Rồng, thuận tiện đi làm ở trung tâm và cách bãi biển Mỹ Khê một quãng ngắn.' },
+      { q: 'Căn hộ tại Sam Towers có mấy phòng ngủ?', a: 'Chủ yếu là **2 phòng ngủ**. Căn 1 phòng ngủ thường xuyên có, và thỉnh thoảng có căn 3 phòng ngủ.' },
+      { q: 'Sam Towers có hồ bơi và phòng gym không?', a: 'Có — **hồ bơi** và **phòng gym** được nhắc tới trong phần lớn tin đăng, cùng thang máy, an ninh và chỗ để xe.' },
+    ],
+  },
+  'Panoma': {
+    blurb: [
+      'Panoma nằm bên bờ sông Hàn phía Ngũ Hành Sơn, hiện là tòa có nhiều tin đăng nhất trên DanangMLS — dễ chọn vì cùng một địa chỉ mà có nhiều loại căn.',
+      'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio. Giá thuê hiện dao động khoảng 532–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Panoma khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **532–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Panoma nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Panoma có mấy phòng ngủ?', a: 'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio.' },
+      { q: 'Căn hộ tại Panoma có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Sun Cosmo': {
+    blurb: [
+      'Sun Cosmo là tòa căn hộ ven sông tại Ngũ Hành Sơn, chạy xe vài phút là tới biển Mỹ Khê và khu An Thượng.',
+      'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 551–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym, ban công và view sông. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Sun Cosmo khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **551–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Sun Cosmo nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Sun Cosmo có mấy phòng ngủ?', a: 'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ.' },
+      { q: 'Căn hộ tại Sun Cosmo có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'The Filmore': {
+    blurb: [
+      'The Filmore là tòa căn hộ cao cấp ven sông Hàn tại Hải Châu. Mặt bằng giá ở đây cao hơn mặt bằng chung của thành phố.',
+      'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ. Giá thuê hiện dao động khoảng 1.064–4.940 USD mỗi tháng, phổ biến quanh mức 1.520 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông Hàn. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại The Filmore khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **1.064–4.940 USD** mỗi tháng, phổ biến quanh **1.520 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'The Filmore nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại The Filmore có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ.' },
+      { q: 'Căn hộ tại The Filmore có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Hiyori Garden Tower': {
+    blurb: [
+      'Hiyori Garden Tower do chủ đầu tư Nhật phát triển, nằm tại Sơn Trà, đi bộ ra biển và được khách Nhật, Hàn ưa chuộng.',
+      'Gần như toàn bộ là căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 646–1.064 USD mỗi tháng, phổ biến quanh mức 874 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym, ban công và gần biển. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Hiyori Garden Tower khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **646–1.064 USD** mỗi tháng, phổ biến quanh **874 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Hiyori Garden Tower nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Hiyori Garden Tower có mấy phòng ngủ?', a: 'Gần như toàn bộ là căn 2 phòng ngủ.' },
+      { q: 'Căn hộ tại Hiyori Garden Tower có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'FPT Plaza / F.Home': {
+    blurb: [
+      'FPT Plaza và F.Home nằm cạnh khu FPT tại Ngũ Hành Sơn, thuận tiện cho nhân viên công nghệ và sinh viên. Đây cũng là mức giá mềm nhất trong nhóm các tòa căn hộ trên trang.',
+      'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ. Giá thuê hiện dao động khoảng 201–1.900 USD mỗi tháng, phổ biến quanh mức 532 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và ban công. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại FPT Plaza / F.Home khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **201–1.900 USD** mỗi tháng, phổ biến quanh **532 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'FPT Plaza / F.Home nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại FPT Plaza / F.Home có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ.' },
+      { q: 'Căn hộ tại FPT Plaza / F.Home có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Monarchy': {
+    blurb: [
+      'Monarchy là tòa căn hộ ven sông tại Hải Châu, gần cầu Rồng và khu trung tâm.',
+      'Chủ yếu là căn 2 phòng ngủ, thỉnh thoảng có studio hoặc căn 3 phòng ngủ. Giá thuê hiện dao động khoảng 589–1.900 USD mỗi tháng, phổ biến quanh mức 798 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi và view sông Hàn. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Monarchy khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **589–1.900 USD** mỗi tháng, phổ biến quanh **798 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Monarchy nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Monarchy có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ, thỉnh thoảng có studio hoặc căn 3 phòng ngủ.' },
+      { q: 'Căn hộ tại Monarchy có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Times Square FUTA Residence': {
+    blurb: [
+      'Times Square FUTA Residence nằm ngay mặt biển tại Ngũ Hành Sơn. Giá thuê ở đây thuộc nhóm cao, đổi lại là view biển trực diện.',
+      'Số căn 1 phòng ngủ và 2 phòng ngủ khá cân bằng. Giá thuê hiện dao động khoảng 1.125–3.800 USD mỗi tháng, phổ biến quanh mức 2.470 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym, view biển và gần biển. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Times Square FUTA Residence khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **1.125–3.800 USD** mỗi tháng, phổ biến quanh **2.470 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Times Square FUTA Residence nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Times Square FUTA Residence có mấy phòng ngủ?', a: 'Số căn 1 phòng ngủ và 2 phòng ngủ khá cân bằng.' },
+      { q: 'Căn hộ tại Times Square FUTA Residence có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Blooming Tower': {
+    blurb: [
+      'Blooming Tower nằm ven sông phía Hải Châu, thiên về các căn diện tích lớn hơn mặt bằng chung.',
+      'Chủ yếu là căn 2 và 3 phòng ngủ, phù hợp cho gia đình. Giá thuê hiện dao động khoảng 920–1.900 USD mỗi tháng, phổ biến quanh mức 920 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi và ban công. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Blooming Tower khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **920–1.900 USD** mỗi tháng, phổ biến quanh **920 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Blooming Tower nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Blooming Tower có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 và 3 phòng ngủ, phù hợp cho gia đình.' },
+      { q: 'Căn hộ tại Blooming Tower có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Muong Thanh': {
+    blurb: [
+      'Mường Thanh là tổ hợp khách sạn và căn hộ tại Ngũ Hành Sơn, đi bộ ra biển Mỹ Khê, mức giá dễ chịu so với các tòa sát biển khác.',
+      'Gần như toàn bộ là căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 570–1.140 USD mỗi tháng, phổ biến quanh mức 722 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm gần biển và ban công. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Muong Thanh khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **570–1.140 USD** mỗi tháng, phổ biến quanh **722 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Muong Thanh nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Muong Thanh có mấy phòng ngủ?', a: 'Gần như toàn bộ là căn 2 phòng ngủ.' },
+      { q: 'Căn hộ tại Muong Thanh có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Wyndham Soleil': {
+    blurb: [
+      'Wyndham Soleil nằm mặt biển Sơn Trà, là tòa tháp cao tầng dễ nhận ra trên trục ven biển; các căn ở tầng cao có view biển rộng.',
+      'Gồm căn 1 phòng ngủ và 2 phòng ngủ. Giá thuê hiện dao động khoảng 1.064–2.090 USD mỗi tháng, phổ biến quanh mức 1.064 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm gần biển và view biển. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Wyndham Soleil khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **1.064–2.090 USD** mỗi tháng, phổ biến quanh **1.064 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Wyndham Soleil nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Wyndham Soleil có mấy phòng ngủ?', a: 'Gồm căn 1 phòng ngủ và 2 phòng ngủ.' },
+      { q: 'Căn hộ tại Wyndham Soleil có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+  'Azura': {
+    blurb: [
+      'Azura là tòa căn hộ ven sông Hàn phía Sơn Trà, dễ nhận ra nhờ mặt kính cong đặc trưng.',
+      'Chủ yếu là căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 418–1.600 USD mỗi tháng, phổ biến quanh mức 1.216 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+    ],
+    faq: [
+      { q: 'Giá thuê căn hộ tại Azura khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **418–1.600 USD** mỗi tháng, phổ biến quanh **1.216 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Azura nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Căn hộ tại Azura có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ.' },
+      { q: 'Căn hộ tại Azura có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+    ],
+  },
+};
 
 const BUILDING_SEO: Record<string, BuildingSeo> = {
+  'Panoma': {
+    district: 'Ngu Hanh Son',
+    blurb: [
+      'Panoma sits on the Ngu Hanh Son side of the Han River, and it is the busiest building on this site — usually the widest choice of units in one address.',
+      'Current listings are one- and two-bedroom units, with a good supply of studios. Rents run from around $532 to $2,090 a month, with the typical unit near $950 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym and river outlooks, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Panoma?', a: 'Current listings run from about **$532** to **$2,090** per month, with the typical unit around **$950**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Panoma in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Panoma apartments have?', a: 'Listings are one- and two-bedroom units, with a good supply of studios. Every unit listed at Panoma is an apartment.' },
+      { q: 'Are Panoma apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Sun Cosmo': {
+    district: 'Ngu Hanh Son',
+    blurb: [
+      'Sun Cosmo is a riverside development in Ngu Hanh Son, a short ride from My Khe Beach and the An Thuong expat pocket.',
+      'Current listings are mostly one-bedroom apartments, with studios and two-bedroom units alongside. Rents run from around $551 to $2,090 a month, with the typical unit near $950 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym, balconies and river views, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Sun Cosmo?', a: 'Current listings run from about **$551** to **$2,090** per month, with the typical unit around **$950**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Sun Cosmo in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Sun Cosmo apartments have?', a: 'Listings are mostly one-bedroom apartments, with studios and two-bedroom units alongside. Every unit listed at Sun Cosmo is an apartment.' },
+      { q: 'Are Sun Cosmo apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'The Filmore': {
+    district: 'Hai Chau',
+    blurb: [
+      'The Filmore is one of the more premium riverfront towers in Hai Chau, and its rents sit well above the city average — this is the top of the Da Nang apartment market rather than the middle.',
+      'Current listings are two-bedroom apartments, with one- and three-bedroom options. Rents run from around $1,064 to $4,940 a month, with the typical unit near $1,520 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym and Han River views, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at The Filmore?', a: 'Current listings run from about **$1,064** to **$4,940** per month, with the typical unit around **$1,520**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is The Filmore in Da Nang?', a: 'In **Hai Chau**. See the Hai Chau page for everything currently available across that district.' },
+      { q: 'How many bedrooms do The Filmore apartments have?', a: 'Listings are two-bedroom apartments, with one- and three-bedroom options. Every unit listed at The Filmore is an apartment.' },
+      { q: 'Are The Filmore apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Hiyori Garden Tower': {
+    district: 'Son Tra',
+    blurb: [
+      'Hiyori Garden Tower is a Japanese-developed tower in Son Tra, walkable to the beach and popular with Japanese and Korean tenants.',
+      'Current listings are almost entirely two-bedroom apartments. Rents run from around $646 to $1,064 a month, with the typical unit near $874 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym, balconies and beach access, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Hiyori Garden Tower?', a: 'Current listings run from about **$646** to **$1,064** per month, with the typical unit around **$874**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Hiyori Garden Tower in Da Nang?', a: 'In **Son Tra**. See the Son Tra page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Hiyori Garden Tower apartments have?', a: 'Listings are almost entirely two-bedroom apartments. Every unit listed at Hiyori Garden Tower is an apartment.' },
+      { q: 'Are Hiyori Garden Tower apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'FPT Plaza / F.Home': {
+    district: 'Ngu Hanh Son',
+    blurb: [
+      'FPT Plaza and F.Home sit beside the FPT campus in Ngu Hanh Son, which makes them the default choice for tech staff and students — and the cheapest entry point of any building here.',
+      'Current listings are two-bedroom apartments, with one- and three-bedroom units. Rents run from around $201 to $1,900 a month, with the typical unit near $532 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym and balconies, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at FPT Plaza / F.Home?', a: 'Current listings run from about **$201** to **$1,900** per month, with the typical unit around **$532**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is FPT Plaza / F.Home in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
+      { q: 'How many bedrooms do FPT Plaza / F.Home apartments have?', a: 'Listings are two-bedroom apartments, with one- and three-bedroom units. Every unit listed at FPT Plaza / F.Home is an apartment.' },
+      { q: 'Are FPT Plaza / F.Home apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Monarchy': {
+    district: 'Hai Chau',
+    blurb: [
+      'Monarchy is a riverfront block in Hai Chau, close to the Dragon Bridge and the central business area.',
+      'Current listings are two-bedroom apartments, with the occasional studio or three-bedroom. Rents run from around $589 to $1,900 a month, with the typical unit near $798 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool and Han River views, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Monarchy?', a: 'Current listings run from about **$589** to **$1,900** per month, with the typical unit around **$798**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Monarchy in Da Nang?', a: 'In **Hai Chau**. See the Hai Chau page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Monarchy apartments have?', a: 'Listings are two-bedroom apartments, with the occasional studio or three-bedroom. Every unit listed at Monarchy is an apartment.' },
+      { q: 'Are Monarchy apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Times Square FUTA Residence': {
+    district: 'Ngu Hanh Son',
+    blurb: [
+      'Times Square FUTA Residence sits directly on the beachfront in Ngu Hanh Son. It is the most expensive building on this site by median rent, and the sea views are the reason.',
+      'Current listings are an even split of one- and two-bedroom apartments. Rents run from around $1,125 to $3,800 a month, with the typical unit near $2,470 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym, sea views and beach access, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Times Square FUTA Residence?', a: 'Current listings run from about **$1,125** to **$3,800** per month, with the typical unit around **$2,470**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Times Square FUTA Residence in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Times Square FUTA Residence apartments have?', a: 'Listings are an even split of one- and two-bedroom apartments. Every unit listed at Times Square FUTA Residence is an apartment.' },
+      { q: 'Are Times Square FUTA Residence apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Blooming Tower': {
+    district: 'Hai Chau',
+    blurb: [
+      'Blooming Tower is a riverside building on the Hai Chau bank, and it skews to family-sized units rather than studios.',
+      'Current listings are two- and three-bedroom apartments — larger layouts than most towers here. Rents run from around $920 to $1,900 a month, with the typical unit near $920 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool and balconies, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Blooming Tower?', a: 'Current listings run from about **$920** to **$1,900** per month, with the typical unit around **$920**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Blooming Tower in Da Nang?', a: 'In **Hai Chau**. See the Hai Chau page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Blooming Tower apartments have?', a: 'Listings are two- and three-bedroom apartments — larger layouts than most towers here. Every unit listed at Blooming Tower is an apartment.' },
+      { q: 'Are Blooming Tower apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Muong Thanh': {
+    district: 'Ngu Hanh Son',
+    blurb: [
+      'Muong Thanh is a large hotel-and-apartment complex in Ngu Hanh Son, a short walk from My Khe Beach, and one of the more affordable beachside addresses.',
+      'Current listings are almost all two-bedroom apartments. Rents run from around $570 to $1,140 a month, with the typical unit near $722 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention beach access and balconies, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Muong Thanh?', a: 'Current listings run from about **$570** to **$1,140** per month, with the typical unit around **$722**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Muong Thanh in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Muong Thanh apartments have?', a: 'Listings are almost all two-bedroom apartments. Every unit listed at Muong Thanh is an apartment.' },
+      { q: 'Are Muong Thanh apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Wyndham Soleil': {
+    district: 'Son Tra',
+    blurb: [
+      'Wyndham Soleil is a high-rise landmark on the Son Tra beachfront, and the upper floors come with the wide sea views that implies.',
+      'Current listings are one- and two-bedroom apartments. Rents run from around $1,064 to $2,090 a month, with the typical unit near $1,064 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention beach access and sea views, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Wyndham Soleil?', a: 'Current listings run from about **$1,064** to **$2,090** per month, with the typical unit around **$1,064**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Wyndham Soleil in Da Nang?', a: 'In **Son Tra**. See the Son Tra page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Wyndham Soleil apartments have?', a: 'Listings are one- and two-bedroom apartments. Every unit listed at Wyndham Soleil is an apartment.' },
+      { q: 'Are Wyndham Soleil apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
+  'Azura': {
+    district: 'Son Tra',
+    blurb: [
+      'Azura is a landmark riverfront tower on the Son Tra bank of the Han River, recognisable by its curved glass facade.',
+      'Current listings are mostly two-bedroom apartments. Rents run from around $418 to $1,600 a month, with the typical unit near $1,216 — every unit listed here is an apartment rather than a house or villa.',
+      'Listings mention a pool, a gym and river views, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
+    ],
+    faq: [
+      { q: 'How much is an apartment for rent at Azura?', a: 'Current listings run from about **$418** to **$1,600** per month, with the typical unit around **$1,216**. Smaller layouts sit at the lower end.' },
+      { q: 'Where is Azura in Da Nang?', a: 'In **Son Tra**. See the Son Tra page for everything currently available across that district.' },
+      { q: 'How many bedrooms do Azura apartments have?', a: 'Listings are mostly two-bedroom apartments. Every unit listed at Azura is an apartment.' },
+      { q: 'Are Azura apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
+    ],
+  },
   'Sam Towers': {
     district: 'Hai Chau',
     blurb: [
@@ -217,7 +535,9 @@ const BUILDING_SEO: Record<string, BuildingSeo> = {
 
 function buildingEn(name: string, mode: Mode): FacetSeoBody {
   const rentSale = mode === 'rent' ? 'for rent' : 'for sale';
-  const b = BUILDING_SEO[name];
+  // Sale-mode matches are mostly listings that mention the building as a nearby
+  // landmark (a 'House' in Son Tra matching /monarchy/), so bespoke copy is rent-only.
+  const b = mode === 'rent' ? BUILDING_SEO[name] : undefined;
   if (!b) {
     // Generic fallback for buildings without bespoke copy yet.
     return {
@@ -244,23 +564,13 @@ function buildingEn(name: string, mode: Mode): FacetSeoBody {
 
 function buildingVi(name: string, mode: Mode): FacetSeoBody {
   const thueBan = mode === 'rent' ? 'cho thuê' : 'bán';
-  const b = BUILDING_SEO[name];
+  const v = mode === 'rent' ? BUILDING_SEO_VI[name] : undefined;
   return {
     h2: `Căn hộ ${thueBan} tại ${name}, Đà Nẵng`,
-    intro: b ? [
-      `${name} là tòa căn hộ ven sông tại quận ${b.district}, Đà Nẵng, gần sông Hàn và cầu Rồng. Tất cả tin đăng tại đây đều là căn hộ, phù hợp khi cần một tòa nhà có thang máy, an ninh và chỗ để xe thay vì nhà riêng.`,
-      `Phần lớn căn hộ ${thueBan} tại ${name} là loại 2 phòng ngủ, bên cạnh các căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện dao động khoảng 684–2.280 USD mỗi tháng, phổ biến quanh mức 950 USD.`,
-      `Tiện ích chung gồm hồ bơi và phòng gym, cùng ban công và view sông Hàn ở các tầng cao. Đa số căn hộ được bàn giao đầy đủ nội thất, có bếp, máy lạnh, máy giặt và wifi.`,
-      `So sánh các căn hộ đang có bên dưới theo số phòng ngủ, diện tích và giá thuê theo tháng. Danh sách được cập nhật hằng ngày từ môi giới địa phương.`,
-    ] : [
+    intro: v ? v.blurb : [
       `${name} là một trong những tòa căn hộ được biết đến tại Đà Nẵng. Danh sách bên dưới là các căn hiện đang ${thueBan}, cập nhật hằng ngày từ môi giới địa phương.`,
     ],
     faqHeading: `${name} — Câu hỏi thường gặp`,
-    faq: b ? [
-      { q: `Giá thuê căn hộ tại ${name} khoảng bao nhiêu?`, a: `Các tin đăng hiện tại dao động khoảng **684–2.280 USD** mỗi tháng, phổ biến quanh **950 USD** tùy diện tích và hướng nhìn.` },
-      { q: `Căn hộ tại ${name} có mấy phòng ngủ?`, a: `Chủ yếu là **2 phòng ngủ**. Căn 1 phòng ngủ thường xuyên có, và thỉnh thoảng có căn 3 phòng ngủ.` },
-      { q: `${name} nằm ở đâu?`, a: `Tại quận **${b.district}**, gần **sông Hàn** và cầu Rồng, thuận tiện đi làm ở trung tâm và cách bãi biển Mỹ Khê một quãng ngắn.` },
-      { q: `${name} có hồ bơi và phòng gym không?`, a: `Có — **hồ bơi** và **phòng gym** được nhắc đến trong phần lớn tin đăng, cùng thang máy, an ninh và chỗ để xe.` },
-    ] : [],
+    faq: v ? v.faq : [],
   };
 }
