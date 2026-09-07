@@ -67,8 +67,22 @@ export function resolveFacet(slug: string, _lang?: 'en' | 'vi'): Facet | null {
 }
 
 /** Does a listing belong on this facet page? Mirrors ListingsGrid's client filter logic. */
+/** A villa is a house with 'villa' in its title or description. */
+export function isVilla(l: Listing): boolean {
+  if ((l.type || '').toLowerCase() === 'villa') return true;
+  return /\bvillas?\b/i.test(`${l.title || ''} ${l.text || ''}`);
+}
+
 export function facetMatches(l: Listing, f: Facet): boolean {
-  if (f.kind === 'type') return (l.type || '').toLowerCase() === f.value.toLowerCase();
+  if (f.kind === 'type') {
+    // Villa is a SUBSET of House, not a sibling. The enrichment types nearly every
+    // villa as 'House' — rentals carry exactly 1 row typed 'Villa' while 378 houses
+    // say "villa" in the title — so an exact type match returned almost nothing.
+    // Match the word as well as the type, and leave those rows typed House so they
+    // still appear under /house too.
+    if (f.value.toLowerCase() === 'villa') return isVilla(l);
+    return (l.type || '').toLowerCase() === f.value.toLowerCase();
+  }
   if (f.kind === 'district') return (l.district || '').toLowerCase().includes(f.value.toLowerCase());
   if (f.kind === 'bedrooms') return String(l.bedrooms || '') === f.value;
   if (f.kind === 'foreign') return !!l.foreignEligible;

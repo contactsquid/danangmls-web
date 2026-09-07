@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
-import { resolveFacet } from '@/lib/facets';
+import { resolveFacet, isVilla } from '@/lib/facets';
 import { POPULAR_BUILDINGS } from '@/lib/buildingDefs';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
@@ -109,7 +109,14 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           !l.text.toLowerCase().includes(q)
         ) return false;
       }
-      if (typeFilter && l.type.toLowerCase() !== typeFilter.toLowerCase()) return false;
+      if (typeFilter) {
+        // Villa is a subset of House — see isVilla(). Exact type matching returned
+        // 1 rental because the enrichment types villas as 'House'.
+        const ok = typeFilter.toLowerCase() === 'villa'
+          ? isVilla(l as unknown as Listing)
+          : l.type.toLowerCase() === typeFilter.toLowerCase();
+        if (!ok) return false;
+      }
       if (distFilter && !l.district.toLowerCase().includes(distFilter.toLowerCase())) return false;
       if (hoodFilter) {
         const haystack = (l.title + ' ' + l.text).toLowerCase();
