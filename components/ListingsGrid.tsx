@@ -39,8 +39,15 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   const [filtersHydrated, setFiltersHydrated] = useState(false);
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    // A ?q= arrival (the "popular building" cards) is a fresh, self-contained search.
+    // Read it FIRST: persisted dropdown filters must not be restored on top of it, or
+    // they silently narrow the result to nothing. A stale beds=5 plus ?q=Sam Tower
+    // rendered 0 listings while the search box still read "Sam Tower", so the card
+    // promising 42 led to an empty page (reported 2026-09-07).
+    let qParam: string | null = null;
+    try { qParam = new URLSearchParams(window.location.search).get('q'); } catch {}
     try {
-      const raw = window.sessionStorage.getItem(FILTER_STORAGE_KEY);
+      const raw = qParam ? null : window.sessionStorage.getItem(FILTER_STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
         // NOTE: free-text `search` is intentionally NOT restored. It's seeded from
@@ -54,12 +61,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
         if (!initialForeign && typeof saved.foreignOnly === 'boolean') setForeignOnly(saved.foreignOnly);
       }
     } catch {}
-    // ?q= (from the "popular building" cards) pre-fills the search and wins over
-    // any persisted value.
-    try {
-      const q = new URLSearchParams(window.location.search).get('q');
-      if (q) setSearch(q);
-    } catch {}
+    if (qParam) setSearch(qParam);
     setFiltersHydrated(true);
   }, [FILTER_STORAGE_KEY]);
   useEffect(() => {
