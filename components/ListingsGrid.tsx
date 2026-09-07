@@ -3,6 +3,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
+import { resolveFacet } from '@/lib/facets';
+import { POPULAR_BUILDINGS } from '@/lib/buildingDefs';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
 import { localizeType, localizeDistrict } from '@/lib/price';
@@ -45,7 +47,19 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
     // rendered 0 listings while the search box still read "Sam Tower", so the card
     // promising 42 led to an empty page (reported 2026-09-07).
     let qParam: string | null = null;
-    try { qParam = new URLSearchParams(window.location.search).get('q'); } catch {}
+    try {
+      qParam = new URLSearchParams(window.location.search).get('q');
+      // Building facet pages (/for-rent/sam-towers) seed the same search box. The
+      // server already filtered for the count and JSON-LD; without this the grid
+      // would render every listing under a hero that says 42.
+      if (!qParam) {
+        const seg = window.location.pathname.split('/').filter(Boolean).pop() || '';
+        const f = resolveFacet(seg);
+        if (f && f.kind === 'building') {
+          qParam = POPULAR_BUILDINGS.find(b => b.name === f.value)?.search ?? null;
+        }
+      }
+    } catch {}
     try {
       const raw = qParam ? null : window.sessionStorage.getItem(FILTER_STORAGE_KEY);
       if (raw) {

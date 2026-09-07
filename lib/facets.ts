@@ -1,4 +1,5 @@
 import type { Listing } from './types';
+import { POPULAR_BUILDINGS, buildingSlug, buildingMatches, BUILDING_PAGE_MIN_LISTINGS } from './buildingDefs';
 import { localizeType, localizeDistrict } from './price';
 
 // Single-facet filter pages: /for-rent/<slug>, /for-sale/<slug> (+ VI
@@ -8,7 +9,7 @@ import { localizeType, localizeDistrict } from './price';
 // /vi/thue/3-phong-ngu); district slugs are the ASCII form shared by both langs.
 
 export type Mode = 'rent' | 'sale';
-export type FacetKind = 'type' | 'district' | 'bedrooms' | 'foreign';
+export type FacetKind = 'type' | 'district' | 'bedrooms' | 'foreign' | 'building';
 export interface Facet { kind: FacetKind; value: string }
 
 export const FOREIGN_FACET: Facet = { kind: 'foreign', value: 'foreign' };
@@ -43,6 +44,8 @@ export function districtSlug(d: string): string { return d.toLowerCase().trim().
 export function facetSlug(f: Facet, lang: 'en' | 'vi'): string {
   if (f.kind === 'type') return lang === 'vi' ? (TYPE_VI_SLUG[f.value] ?? f.value.toLowerCase()) : f.value.toLowerCase();
   if (f.kind === 'district') return districtSlug(f.value);
+  // Building names are proper nouns — same slug in both languages.
+  if (f.kind === 'building') return buildingSlug(f.value);
   if (f.kind === 'bedrooms') return lang === 'vi' ? `${f.value}-phong-ngu` : `${f.value}-bedroom${f.value === '1' ? '' : 's'}`;
   return lang === 'vi' ? FOREIGN_SLUG.vi : FOREIGN_SLUG.en; // foreign
 }
@@ -56,6 +59,10 @@ export function resolveFacet(slug: string, _lang?: 'en' | 'vi'): Facet | null {
   const m = s.match(/^(\d+)-(?:bedrooms?|phong-ngu)$/);
   if (m && +m[1] >= 1 && +m[1] <= 9) return { kind: 'bedrooms', value: m[1] };
   if (s === FOREIGN_SLUG.en || s === FOREIGN_SLUG.vi) return { ...FOREIGN_FACET };
+  // Buildings resolve LAST so a building name can never shadow a type, district
+  // or bedroom slug.
+  const b = POPULAR_BUILDINGS.find(x => buildingSlug(x.name) === s);
+  if (b) return { kind: 'building', value: b.name };
   return null;
 }
 
@@ -65,6 +72,10 @@ export function facetMatches(l: Listing, f: Facet): boolean {
   if (f.kind === 'district') return (l.district || '').toLowerCase().includes(f.value.toLowerCase());
   if (f.kind === 'bedrooms') return String(l.bedrooms || '') === f.value;
   if (f.kind === 'foreign') return !!l.foreignEligible;
+  if (f.kind === 'building') {
+    const def = POPULAR_BUILDINGS.find(x => x.name === f.value);
+    return !!def && buildingMatches(def, l);
+  }
   return false;
 }
 
@@ -140,6 +151,12 @@ function facetContentEn(f: Facet, mode: Mode, count: number): FacetContent {
       subtitle: `Browse ${count} homes in Da Nang that foreigners can legally buy — condos and apartments in ownership-approved buildings, updated daily.`,
       description: `Da Nang homes foreigners can legally own — apartments and condos in foreign-ownership-approved buildings. ${count} listings updated daily on DanangMLS.` };
   }
+  if (f.kind === 'building') {
+    const h1b = `${f.value} — ${mode === 'rent' ? 'Apartments for Rent' : 'Apartments for Sale'} in Da Nang`;
+    return { h1: h1b, title: h1b,
+      subtitle: `Browse ${count} ${mode === 'rent' ? 'apartments for rent' : 'apartments for sale'} at ${f.value}, Da Nang — updated daily from local agents.`,
+      description: `${f.value} Da Nang: ${count} ${mode === 'rent' ? 'apartments available for rent' : 'apartments for sale'}, with photos, size, bedrooms and price. Updated daily on DanangMLS.` };
+  }
   const noun = mode === 'rent' ? 'Rentals' : 'Homes for Sale';
   const lcNoun = mode === 'rent' ? 'rentals' : 'homes for sale';
   const h1 = `${f.value}-Bedroom ${noun} in Da Nang, Vietnam`;
@@ -171,6 +188,14 @@ function facetContentVi(f: Facet, mode: Mode, count: number): FacetContent {
       subtitle: `Xem ${count} căn hộ tại Đà Nẵng mà người nước ngoài được phép sở hữu hợp pháp — trong các tòa nhà đã được duyệt, cập nhật hàng ngày.`,
       description: `Căn hộ tại Đà Nẵng người nước ngoài được phép sở hữu, trong các tòa nhà đã được duyệt. ${count} tin đăng cập nhật hàng ngày trên DanangMLS.` };
   }
+  if (f.kind === 'building') {
+    const h1b = mode === 'rent'
+      ? `Cho Thuê Căn Hộ ${f.value} tại Đà Nẵng`
+      : `Bán Căn Hộ ${f.value} tại Đà Nẵng`;
+    return { h1: h1b, title: h1b,
+      subtitle: `Xem ${count} căn hộ ${thueBanLc} tại ${f.value}, Đà Nẵng — cập nhật hàng ngày từ môi giới địa phương.`,
+      description: `${f.value} Đà Nẵng: ${count} căn hộ ${thueBanLc}, kèm hình ảnh, diện tích, số phòng ngủ và giá. Cập nhật hàng ngày trên DanangMLS.` };
+  }
   const h1 = mode === 'rent'
     ? `Cho Thuê ${f.value} Phòng Ngủ tại Đà Nẵng, Việt Nam`
     : `Bán Nhà ${f.value} Phòng Ngủ tại Đà Nẵng, Việt Nam`;
@@ -190,6 +215,13 @@ export function facetsWithInventory(listings: Listing[]): Facet[] {
     const b = String(l.bedrooms || '').trim();
     if (/^\d+$/.test(b) && +b >= 1 && +b <= 9) add({ kind: 'bedrooms', value: b });
     if (l.foreignEligible) add({ ...FOREIGN_FACET });
+  }
+  // Buildings earn a page only above the inventory floor — a one-listing page
+  // reads as thin and gets treated as a soft 404.
+  for (const b of POPULAR_BUILDINGS) {
+    if (listings.filter(l => buildingMatches(b, l)).length >= BUILDING_PAGE_MIN_LISTINGS) {
+      add({ kind: 'building', value: b.name });
+    }
   }
   return out;
 }
