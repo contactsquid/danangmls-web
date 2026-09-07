@@ -42,6 +42,19 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
   const [addCount, setAddCount] = useState(0);
   const [photoError, setPhotoError] = useState<string | null>(null);
 
+  // Mirrors movePhoto in ListingForm.tsx — same "order is meaning" model, but
+  // no FileList to keep in sync since existing photos are plain URLs, not
+  // File objects: the hidden keep_images inputs below just follow array order.
+  function movePhoto(index: number, dir: -1 | 1) {
+    setImages(prev => {
+      const target = index + dir;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  }
+
   const neighborhoods = district ? (NEIGHBORHOODS[district] ?? []) : [];
   const listingsHref = lang === 'vi' ? '/vi/tai-khoan/tin-dang' : '/account/listings';
 
@@ -146,7 +159,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
       {/* Photos: order is meaning. The first is the hero. */}
       <div>
         <span className={labelClass}>{t.photosCurrent}</span>
-        <p className={`${hintClass} mb-3`}>{t.heroHint}</p>
+        <p className={`${hintClass} mb-3`}>{t.photoOrderHint}</p>
 
         <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {images.map((url, i) => (
@@ -154,17 +167,29 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
               <input type="hidden" name="keep_images" value={url} />
               {/* eslint-disable-next-line @next/next/no-img-element -- matches the plain <img> used across this codebase */}
               <img src={url} alt="" className="w-full h-24 object-cover rounded" />
-              {i === 0 ? (
+              {i === 0 && (
                 <p className="mt-2 text-xs font-medium text-blue-700 text-center">★ {t.heroLabel}</p>
-              ) : (
+              )}
+              <div className="mt-2 flex items-center justify-between gap-1">
                 <button
                   type="button"
-                  onClick={() => setImages(prev => [url, ...prev.filter(u => u !== url)])}
-                  className="mt-2 w-full text-xs text-blue-600 hover:underline"
+                  onClick={() => movePhoto(i, -1)}
+                  disabled={i === 0}
+                  aria-label={t.moveEarlier}
+                  className="flex-1 rounded border border-slate-300 bg-white py-1 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-white"
                 >
-                  {t.heroLabel}
+                  ←
                 </button>
-              )}
+                <button
+                  type="button"
+                  onClick={() => movePhoto(i, 1)}
+                  disabled={i === images.length - 1}
+                  aria-label={t.moveLater}
+                  className="flex-1 rounded border border-slate-300 bg-white py-1 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-white"
+                >
+                  →
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={() => setImages(prev => prev.filter(u => u !== url))}
