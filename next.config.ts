@@ -2,6 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
+    // Next defaults the client-side Router Cache for DYNAMIC segments to 0, so
+    // every navigation refetches the whole segment. Measured on production:
+    // going /for-rent -> /for-sale -> /for-rent -> /for-sale re-downloaded
+    // 1.38MB (brotli) and took 3.1s, 3.5s, 3.4s — the repeat visits cost exactly
+    // as much as the first. These grids are big and change on the order of
+    // hours, and the server already caches sheet data for 10 minutes, so holding
+    // a fetched segment for 5 minutes within a session is well inside the
+    // staleness the site already has. A reload still bypasses it entirely.
+    staleTimes: {
+      dynamic: 300,
+      static: 300,
+    },
     serverActions: {
       // Agent profile photos are submitted through a Server Action, and the
       // default cap is 1MB — smaller than a phone photo. The action itself
