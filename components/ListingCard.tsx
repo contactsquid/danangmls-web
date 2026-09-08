@@ -11,6 +11,10 @@ import { listingFieldHref, facetUrl, FOREIGN_FACET } from '@/lib/facets';
 
 interface Props {
   listing: Listing;
+  // Set on the handful of cards that render above the fold. Everything else
+  // stays fully lazy, so a long grid does not queue dozens of image requests
+  // ahead of the JavaScript it needs to become interactive.
+  priority?: boolean;
 }
 
 // A meta chip that becomes a facet link when the field maps to a facet page;
@@ -36,7 +40,7 @@ function viFallbackTitle(listing: Listing): string {
   return `${verb} ${type}${beds} tại ${place}`;
 }
 
-export default function ListingCard({ listing }: Props) {
+export default function ListingCard({ listing, priority = false }: Props) {
   const { lang, t } = useLanguage();
   const mode = listing.forSale ? 'sale' : 'rent';
   const displayTitle = lang === 'vi'
@@ -56,7 +60,7 @@ export default function ListingCard({ listing }: Props) {
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
       <Link href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`} className="block">
-        <Carousel images={listing.images} title={listing.title} altPrefix={altPrefix} firstAltPrefix={firstAltPrefix} compact />
+        <Carousel images={listing.images} title={listing.title} altPrefix={altPrefix} firstAltPrefix={firstAltPrefix} compact eagerFirst={priority} />
       </Link>
 
       {/* Details */}

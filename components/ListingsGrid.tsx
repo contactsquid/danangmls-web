@@ -10,6 +10,9 @@ import { useLanguage } from './LanguageProvider';
 import { localizeType, localizeDistrict } from '@/lib/price';
 
 const PAGE_SIZE = 48;
+// Roughly two rows on a desktop grid. These load eagerly so the top of the page
+// paints immediately; every card past this point waits until it is scrolled to.
+const EAGER_CARDS = 6;
 
 interface Props {
   listings: Listing[];
@@ -263,7 +266,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {visible.map((l, i) => <ListingCard key={i} listing={l} />)}
+            {visible.map((l, i) => <ListingCard key={i} listing={l} priority={i < EAGER_CARDS} />)}
           </div>
           {remaining > 0 && (
             <div className="flex flex-col items-center gap-2 pt-10">

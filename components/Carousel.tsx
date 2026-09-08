@@ -9,6 +9,11 @@ interface Props {
   altPrefix?: string; // Rich alt text prefix for SEO (e.g. "3-bedroom house for rent in Son Tra, Da Nang")
   firstAltPrefix?: string; // Keyphrase-led alt prefix applied to the FIRST photo only (VI image-search targeting)
   compact?: boolean; // true = card thumbnail mode
+  // Whether the FIRST photo may load eagerly. Defaults to true, which is right
+  // for a single hero carousel (the listing detail page). Grids pass false for
+  // every card below the fold — otherwise each card exempts one image from lazy
+  // loading and a 48-card page fires 48 immediate requests.
+  eagerFirst?: boolean;
 }
 
 // Facebook-CDN images can't be hot-linked, so they're proxied. We route them
@@ -23,7 +28,7 @@ function proxyImg(url: string): string {
   return url;
 }
 
-export default function Carousel({ images, title, altPrefix, firstAltPrefix, compact = false }: Props) {
+export default function Carousel({ images, title, altPrefix, firstAltPrefix, compact = false, eagerFirst = true }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [current, setCurrent] = useState(0);
 
@@ -71,7 +76,7 @@ export default function Carousel({ images, title, altPrefix, firstAltPrefix, com
                 src={proxyImg(img)}
                 alt={`${(i === 0 && firstAltPrefix ? firstAltPrefix : (altPrefix || title))} — photo ${i + 1}`}
                 className="w-full h-full object-cover"
-                loading={i === 0 ? 'eager' : 'lazy'}
+                loading={i === 0 && eagerFirst ? 'eager' : 'lazy'}
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}

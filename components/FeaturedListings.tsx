@@ -38,7 +38,7 @@ export default function FeaturedListings({ listings, mode }: Props) {
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {featured.map(listing => (
-          <ListingCard key={listing.slug} listing={listing} />
+          <ListingCard key={listing.slug} listing={listing} priority />
         ))}
       </div>
     </section>
