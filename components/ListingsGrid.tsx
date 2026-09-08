@@ -28,9 +28,36 @@ interface Props {
   initialForeign?: boolean;
   /** Seeds the search box server-side (building facet pages). */
   initialSearch?: string;
+  // When set, `listings` is only the first batch that renders. The full set is
+  // pulled from /api/grid-listings once the page has painted, so a visitor is
+  // not made to wait on ~4,200 or ~8,000 listings to see 48. Filters operate on
+  // whatever has arrived and re-run automatically when the rest lands.
+  deferred?: { mode: 'rent' | 'sale'; total: number };
 }
 
-export default function ListingsGrid({ listings, types, districts, mode = 'rent', initialType = '', initialDistrict = '', initialBeds = '', initialForeign = false, initialSearch = '' }: Props) {
+export default function ListingsGrid({ listings, types, districts, mode = 'rent', initialType = '', initialDistrict = '', initialBeds = '', initialForeign = false, initialSearch = '', deferred }: Props) {
+  // Seeded with the server's first batch; replaced by the full set when it lands.
+  const [pool, setPool] = useState<Listing[]>(listings);
+  const [poolComplete, setPoolComplete] = useState(!deferred);
+
+  // Depend on the primitive, not the object: `deferred` is a fresh literal from
+  // the server component, so keying the effect on it would refetch every render.
+  const deferredMode = deferred?.mode;
+  useEffect(() => {
+    if (!deferredMode) return;
+    const ac = new AbortController();
+    fetch(`/api/grid-listings?mode=${deferredMode}`, { signal: ac.signal })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: Listing[] | null) => {
+        if (Array.isArray(data) && data.length) {
+          setPool(data);
+          setPoolComplete(true);
+        }
+      })
+      .catch(() => { /* keep the initial batch; the grid still works */ });
+    return () => ac.abort();
+  }, [deferredMode]);
+
   const { lang, t } = useLanguage();
   const [search, setSearch]         = useState(initialSearch);
   const [typeFilter, setType]       = useState(initialType);
@@ -103,7 +130,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   };
 
   const filtered = useMemo(() => {
-    return listings.filter(l => {
+    return pool.filter(l => {
       if (search) {
         const q = search.toLowerCase();
         if (
@@ -144,7 +171,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
       if (foreignOnly && !l.foreignEligible) return false;
       return true;
     });
-  }, [listings, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
+  }, [pool, search, typeFilter, distFilter, hoodFilter, bedsFilter, priceFilter, foreignOnly]);
 
   const hasFilters = search || typeFilter || distFilter || hoodFilter || bedsFilter || priceFilter || foreignOnly;
   const clearAll = () => {
@@ -249,7 +276,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           )}
 
           <span className="ml-auto text-sm text-slate-400">
-            {t.listingCount(filtered.length)}
+            {t.listingCount(!poolComplete && !hasFilters && deferred ? deferred.total : filtered.length)}
           </span>
         </div>
       </div>

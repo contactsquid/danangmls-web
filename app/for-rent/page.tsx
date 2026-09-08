@@ -1,5 +1,8 @@
 import { getListings, getUniqueValues } from '@/lib/sheets';
 import { toGridListings } from '@/lib/gridListing';
+
+const INITIAL_GRID_LISTINGS = 48; // matches ListingsGrid PAGE_SIZE — the rest arrives from /api/grid-listings
+
 import ListingsGrid from '@/components/ListingsGrid';
 import PageHero from '@/components/PageHero';
 import PageSeoSection from '@/components/PageSeoSection';
@@ -49,7 +52,7 @@ export default async function ForRentPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <PageHero mode="rent" count={listings.length} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-        <ListingsGrid listings={toGridListings(listings)} types={types} districts={districts} />
+        <ListingsGrid listings={toGridListings(listings).slice(0, INITIAL_GRID_LISTINGS)} types={types} districts={districts} deferred={{ mode: 'rent', total: listings.length }} />
       </main>
       <PopularBuildings buildings={popularBuildings(listings, 'rent', 'en')} lang="en" />
       <RentalGuide />

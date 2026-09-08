@@ -1,6 +1,8 @@
 import { getListings, getForSaleListings, getUniqueValues } from '@/lib/sheets';
 import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
+
+const INITIAL_GRID_LISTINGS = 48; // matches ListingsGrid PAGE_SIZE
 import PageHero from '@/components/PageHero';
 import PageSeoSection from '@/components/PageSeoSection';
 import PageFaq from '@/components/PageFaq';
@@ -73,9 +75,14 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <PageHero mode={mode} count={filtered.length} h1Override={c.h1} subtitleOverride={c.subtitle} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-        {/* Full listing set so every filter still works; seeded with this facet. */}
+        {/* Only the first screenful renders server-side — /for-rent/sam-towers was
+            shipping all 4,219 listings to display 42. The grid pulls the full set
+            from /api/grid-listings after paint, and the seeded filters below
+            re-derive exactly this facet from it (which is how this page already
+            worked — the facet has always been applied client-side). */}
         <ListingsGrid
-          listings={toGridListings(all)}
+          listings={toGridListings(filtered).slice(0, INITIAL_GRID_LISTINGS)}
+          deferred={{ mode, total: filtered.length }}
           types={types}
           districts={districts}
           mode={mode}
