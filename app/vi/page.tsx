@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { getLatestVideoByLang } from '@/lib/youtube';
 import SiteHeader from '@/components/SiteHeader';
@@ -36,11 +37,20 @@ export const metadata: Metadata = {
   },
 };
 
+// The featured video depends on YouTube, which we do not control and which
+// throttles datacenter IPs. Rendering it inside a Suspense boundary means the
+// page streams without waiting on it: a slow YouTube can no longer add to TTFB,
+// it just fills in a moment later. LatestVideo renders nothing when the lookup
+// comes back empty, so `null` is the honest fallback.
+async function LatestVideoSlot() {
+  const video = await getLatestVideoByLang('vi');
+  return <LatestVideo video={video} />;
+}
+
 export default async function ViHomePage() {
-  const [rentals, forSale, video, blogPool] = await Promise.all([
+  const [rentals, forSale, blogPool] = await Promise.all([
     getListings(),
     getForSaleListings(),
-    getLatestVideoByLang('vi'),
     fetchBlogPool(),
   ]);
 
@@ -48,7 +58,9 @@ export default async function ViHomePage() {
     <div className="min-h-screen bg-slate-50">
       <SiteHeader />
       <HomeHero />
-      <LatestVideo video={video} />
+      <Suspense fallback={null}>
+        <LatestVideoSlot />
+      </Suspense>
       {/* Slice on the server — FeaturedListings only shows 3 (avoids serializing thousands). */}
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
       <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />

@@ -111,16 +111,34 @@ export async function getLatestVideos(): Promise<YouTubeVideo[]> {
   }
 }
 
+// Every external call below gets a hard ceiling. Without one, a slow or
+// throttled YouTube response stalls the whole page render behind it.
+const YT_TIMEOUT_MS = 2500;
+function ytFetch(url: string, init: RequestInit = {}) {
+  return fetch(url, { ...init, signal: AbortSignal.timeout(YT_TIMEOUT_MS) });
+}
+
+// Whether a given video is a Short, and whether it allows embedding, are fixed
+// the moment it is published — so they are cached for the life of the instance.
+// They used to be re-fetched from YouTube on EVERY homepage render (isShort was
+// explicitly `cache: 'no-store'`), which is what put ~9s into the homepage TTFB.
+// Failures are deliberately not memoized, so a blip does not stick.
+const _shortMemo = new Map<string, boolean>();
+const _embedMemo = new Map<string, boolean>();
+
 // Some uploads (e.g. API-uploaded test/draft videos) end up with embedding
 // disabled on YouTube's side, which silently blanks the homepage <iframe>.
 // oEmbed 401s for those — checking it needs no API key/auth, so we can filter
 // them out before picking what to feature.
 async function isEmbeddable(videoId: string): Promise<boolean> {
+  const memo = _embedMemo.get(videoId);
+  if (memo !== undefined) return memo;
   try {
-    const res = await fetch(
+    const res = await ytFetch(
       `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}&format=json`,
       { next: { revalidate: 3600 } }
     );
+    _embedMemo.set(videoId, res.ok);
     return res.ok;
   } catch {
     return true; // don't hide a video just because the embeddability check itself failed
@@ -131,15 +149,18 @@ async function isEmbeddable(videoId: string): Promise<boolean> {
 // 3xx-redirects to /watch. Shorts are vertical (9:16) and look bad letterboxed
 // in the homepage's 16:9 embed, so we keep them out of the featured rotation.
 async function isShort(videoId: string): Promise<boolean> {
+  const memo = _shortMemo.get(videoId);
+  if (memo !== undefined) return memo;
   try {
     // Plain fetch (no Next cache) — `next:{revalidate}` + `redirect:'manual'` don't
     // compose and can throw, defeating the check. Secondary net; YT_Queue is primary.
-    const res = await fetch(`https://www.youtube.com/shorts/${videoId}`, {
+    const res = await ytFetch(`https://www.youtube.com/shorts/${videoId}`, {
       method: 'HEAD',
       redirect: 'manual',
       headers: { 'User-Agent': 'Mozilla/5.0' },
       cache: 'no-store',
     });
+    _shortMemo.set(videoId, res.status === 200);
     return res.status === 200;
   } catch {
     return false; // if the check itself fails, don't wrongly hide a video
@@ -147,26 +168,52 @@ async function isShort(videoId: string): Promise<boolean> {
 }
 
 // Eligible to feature = landscape (not a Short) AND embeddable.
+// The channel publishes a Short most days, so the newest landscape video can sit
+// well down the feed. Walking the list one await at a time meant paying a full
+// YouTube round-trip per Short before reaching it. Check the candidates
+// concurrently instead and then pick the first that passes, in feed order — same
+// answer, one round-trip of wall time instead of N.
+const ELIGIBILITY_SCAN_CAP = 12;
 async function firstEligible(candidates: YouTubeVideo[]): Promise<YouTubeVideo | null> {
-  for (const v of candidates) {
-    if (await isShort(v.videoId)) continue;
-    if (await isEmbeddable(v.videoId)) return v;
-  }
-  return null;
+  const scan = candidates.slice(0, ELIGIBILITY_SCAN_CAP);
+  if (scan.length === 0) return null;
+  const checked = await Promise.all(
+    scan.map(async (v) => {
+      const [short, embeddable] = await Promise.all([isShort(v.videoId), isEmbeddable(v.videoId)]);
+      return { v, ok: !short && embeddable };
+    })
+  );
+  return checked.find((c) => c.ok)?.v ?? null;
+}
+
+// A missing video hides one homepage section; a slow one used to hold up the
+// entire page. Cap the whole lookup so it can never do the latter again.
+const VIDEO_BUDGET_MS = 3000;
+function withBudget<T>(work: Promise<T>): Promise<T | null> {
+  let timer: ReturnType<typeof setTimeout>;
+  const bail = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), VIDEO_BUDGET_MS);
+    (timer as unknown as { unref?: () => void }).unref?.();
+  });
+  return Promise.race([work.catch(() => null), bail]).finally(() => clearTimeout(timer));
 }
 
 // Newest video in the requested language, falling back to the newest overall
 // video when the channel has no video in that language yet. Skips any video
 // that has embedding disabled.
 export async function getLatestVideoByLang(lang: VideoLang): Promise<YouTubeVideo | null> {
-  const videos = await getLatestVideos();
-  if (videos.length === 0) return null;
-  const langMatches = videos.filter((v) => v.lang === lang);
-  return (await firstEligible(langMatches)) ?? (await firstEligible(videos));
+  return withBudget((async () => {
+    const videos = await getLatestVideos();
+    if (videos.length === 0) return null;
+    const langMatches = videos.filter((v) => v.lang === lang);
+    return (await firstEligible(langMatches)) ?? (await firstEligible(videos));
+  })());
 }
 
 // Newest video overall, regardless of language. Kept for any non-localized caller.
 export async function getLatestVideo(): Promise<YouTubeVideo | null> {
-  const videos = await getLatestVideos();
-  return (await firstEligible(videos)) ?? videos[0] ?? null;
+  return withBudget((async () => {
+    const videos = await getLatestVideos();
+    return (await firstEligible(videos)) ?? videos[0] ?? null;
+  })());
 }
