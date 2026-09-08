@@ -13,7 +13,12 @@ import { Listing } from './types';
 // Filters use: title, district, text (search + neighborhood), type, bedrooms,
 //              price, neighborhood, foreignEligible
 const GRID_IMAGE_CAP = 5;      // cards rarely need more; big payload cut
-const SEARCH_TEXT_CAP = 800;   // enough for search relevance on typical descriptions
+// Measured 2026-09-08: at 800 this field alone was 4.25MB of the 11.0MB /for-sale
+// payload (38.8%) — the single largest thing on the wire. 300 keeps the opening of
+// each description, which is where the searchable specifics live, and takes roughly
+// 2MB off every grid load. The trade is that a term buried deep in a long listing
+// description is no longer matched by the client-side filter.
+const SEARCH_TEXT_CAP = 300;
 
 export function toGridListing(l: Listing): Listing {
   return {

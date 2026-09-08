@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import NavProgress from '@/components/NavProgress';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { Analytics } from "@vercel/analytics/next";
@@ -63,6 +64,7 @@ export default function RootLayout({
         {/* Header and footer live here, not in each page, so moving between
             routes swaps only the middle of the screen — the chrome never
             unmounts, never repaints, and never flashes. */}
+        <NavProgress />
         <SiteHeader />
         {children}
         <SiteFooter />
