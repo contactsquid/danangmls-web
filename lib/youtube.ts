@@ -173,7 +173,10 @@ async function isShort(videoId: string): Promise<boolean> {
 // YouTube round-trip per Short before reaching it. Check the candidates
 // concurrently instead and then pick the first that passes, in feed order — same
 // answer, one round-trip of wall time instead of N.
-const ELIGIBILITY_SCAN_CAP = 12;
+// Sized above the ~15 entries YouTube's RSS feed returns, so this is a runaway
+// guard rather than a behavior change: the old sequential loop scanned the whole
+// feed, and capping below it could have dropped a video that sat near the end.
+const ELIGIBILITY_SCAN_CAP = 25;
 async function firstEligible(candidates: YouTubeVideo[]): Promise<YouTubeVideo | null> {
   const scan = candidates.slice(0, ELIGIBILITY_SCAN_CAP);
   if (scan.length === 0) return null;
