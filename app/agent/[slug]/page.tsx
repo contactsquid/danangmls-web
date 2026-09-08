@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import AgentProfileView from '@/components/AgentProfileView';
 import { getAgentProfile, getAgentListings, isThinProfile, type AgentProfile } from '@/lib/agents';
 import { agentProfileLd } from '@/lib/schema';
@@ -67,14 +65,12 @@ export default async function AgentProfilePage({ params }: Props) {
   const listings = await getAgentListings(profile);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(agentProfileLd(profile, listings.length)) }}
       />
       <AgentProfileView profile={profile} listings={listings} lang="en" />
-      <SiteFooter />
     </div>
   );
 }

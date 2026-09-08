@@ -1,8 +1,6 @@
 import { Suspense } from 'react';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { getLatestVideoByLang } from '@/lib/youtube';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import HomeHero from '@/components/HomeHero';
 import LatestVideo from '@/components/LatestVideo';
 import FeaturedListings from '@/components/FeaturedListings';
@@ -55,8 +53,7 @@ export default async function ViHomePage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <SiteHeader />
+    <div className="bg-slate-50">
       <HomeHero />
       <Suspense fallback={null}>
         <LatestVideoSlot />
@@ -65,7 +62,6 @@ export default async function ViHomePage() {
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
       <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />
       <FeaturedBlogs posts={blogPool} />
-      <SiteFooter />
     </div>
   );
 }

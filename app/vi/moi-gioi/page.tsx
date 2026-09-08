@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import AgentsDirectoryView from '@/components/AgentsDirectoryView';
 import { getAgentProfiles, getAgentListingCounts } from '@/lib/agents';
 import { agentsItemListLd } from '@/lib/schema';
@@ -20,14 +18,12 @@ export default async function ViAgentsDirectoryPage() {
   const counts = await getAgentListingCounts(profiles);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(agentsItemListLd(profiles)) }}
       />
       <AgentsDirectoryView profiles={profiles} counts={counts} lang="vi" />
-      <SiteFooter />
     </div>
   );
 }

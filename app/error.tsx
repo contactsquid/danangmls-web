@@ -3,8 +3,6 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 
 // Catches any unhandled error thrown while rendering a page or running a
 // server action, so agents/visitors get an on-brand message instead of
@@ -55,8 +53,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <main className="max-w-md w-full mx-auto px-4 sm:px-6 py-16 flex-1 text-center">
         <div className="bg-white rounded-xl border border-slate-200 p-8">
           <h1 className="text-xl font-bold text-slate-900 mb-2">
@@ -82,7 +79,6 @@ export default function Error({
           </div>
         </div>
       </main>
-      <SiteFooter />
     </div>
   );
 }

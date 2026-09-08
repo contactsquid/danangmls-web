@@ -1,6 +1,4 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import NotFoundContent from '@/components/NotFoundContent';
 import type { Metadata } from 'next';
 
@@ -26,10 +24,8 @@ export default async function NotFound() {
   const forSale = forSaleRes.status === 'fulfilled' ? forSaleRes.value.slice(0, NOT_FOUND_SAMPLE) : [];
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <SiteHeader />
+    <div className="bg-slate-50">
       <NotFoundContent rentals={rentals} forSale={forSale} />
-      <SiteFooter />
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { notFound, redirect } from 'next/navigation';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
@@ -144,8 +142,7 @@ export default async function ListingPage({ params }: Props) {
   const agentSlug = await getAgentSlugForName(listing.agent);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <SiteHeader />
+    <div className="bg-slate-50">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -156,7 +153,6 @@ export default async function ListingPage({ params }: Props) {
       />
       <ListingDetail listing={listing} similarListings={similarListings} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
-      <SiteFooter />
     </div>
   );
 }

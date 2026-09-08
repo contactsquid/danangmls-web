@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -58,7 +60,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_LD) }} />
+        {/* Header and footer live here, not in each page, so moving between
+            routes swaps only the middle of the screen — the chrome never
+            unmounts, never repaints, and never flashes. */}
+        <SiteHeader />
         {children}
+        <SiteFooter />
         {/* Cookieless, first-party — no consent banner needed, not ad-blocked.
             GA4 deferred until a consent banner exists. */}
         <Analytics />

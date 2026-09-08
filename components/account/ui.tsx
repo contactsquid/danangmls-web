@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 
 // Shared form styling for the account area, so the sign-up, sign-in, reset and
 // profile screens stay visually identical without repeating class strings.
@@ -28,14 +26,12 @@ export function AccountShell({
   wide?: boolean;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <main className={`${wide ? 'max-w-2xl' : 'max-w-md'} w-full mx-auto px-4 sm:px-6 py-12 flex-1`}>
         <h1 className="text-2xl font-bold text-slate-900 mb-1">{title}</h1>
         {subtitle && <p className="text-slate-600 text-sm mb-6">{subtitle}</p>}
         <div className="bg-white rounded-xl border border-slate-200 p-6 mt-4">{children}</div>
       </main>
-      <SiteFooter />
     </div>
   );
 }

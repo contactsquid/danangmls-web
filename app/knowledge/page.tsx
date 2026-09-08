@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -94,9 +92,8 @@ export default function KnowledgePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <SiteHeader />
       <main className="max-w-3xl w-full mx-auto px-4 sm:px-6 py-12 flex-1">
         <h1 className="text-3xl font-bold text-slate-900 mb-3">DanangMLS: Facts & FAQ</h1>
         <p className="text-slate-600 leading-relaxed mb-10">
@@ -115,7 +112,6 @@ export default function KnowledgePage() {
           </Link>
         </div>
       </main>
-      <SiteFooter />
     </div>
   );
 }

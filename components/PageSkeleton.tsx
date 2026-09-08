@@ -2,31 +2,11 @@
 // prefetched by Next for dynamic routes — so a click paints something straight
 // away instead of leaving the old page on screen while the server works.
 //
-// SiteHeader lives in each page rather than the root layout, so the skeleton
-// draws a header-shaped bar of its own; without it the whole screen would blank
-// out on every navigation, which reads as worse than no feedback at all.
+// SiteHeader and SiteFooter now live in the root layout, so they stay on screen
+// through the transition and the skeleton only stands in for the content area.
 
 function Bar({ className = '' }: { className?: string }) {
   return <div className={`rounded bg-slate-200 ${className}`} />;
-}
-
-function HeaderBar() {
-  return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-14 sm:h-16">
-          <Bar className="h-7 w-36" />
-          <div className="hidden sm:flex items-center gap-3">
-            <Bar className="h-4 w-16" />
-            <Bar className="h-4 w-16" />
-            <Bar className="h-4 w-20" />
-            <Bar className="h-8 w-24 bg-blue-200" />
-          </div>
-          <Bar className="h-8 w-8 sm:hidden" />
-        </div>
-      </div>
-    </header>
-  );
 }
 
 function CardSkeleton() {
@@ -48,9 +28,8 @@ function CardSkeleton() {
 
 export default function PageSkeleton({ variant = 'grid' }: { variant?: 'grid' | 'detail' }) {
   return (
-    <div className="min-h-screen bg-slate-50 animate-pulse" aria-busy="true" aria-live="polite">
+    <div className="flex-1 bg-slate-50 animate-pulse" aria-busy="true" aria-live="polite">
       <span className="sr-only">Loading…</span>
-      <HeaderBar />
 
       {variant === 'grid' ? (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">

@@ -1,5 +1,3 @@
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -18,8 +16,7 @@ export const metadata: Metadata = {
 
 export default function ViPrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <main className="max-w-3xl w-full mx-auto px-4 sm:px-6 py-12 flex-1">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Chính sách bảo mật</h1>
         <p className="text-slate-400 text-sm mb-6">Cập nhật lần cuối: Tháng 6, 2026</p>
@@ -63,7 +60,6 @@ export default function ViPrivacyPage() {
           <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>.
         </p>
       </main>
-      <SiteFooter />
     </div>
   );
 }

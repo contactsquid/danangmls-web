@@ -1,5 +1,3 @@
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -18,8 +16,7 @@ export const metadata: Metadata = {
 
 export default function ViAboutPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <main className="max-w-3xl w-full mx-auto px-4 sm:px-6 py-12 flex-1">
         <h1 className="text-3xl font-bold text-slate-900 mb-6">Giới thiệu về DanangMLS</h1>
         <p className="text-slate-600 leading-relaxed mb-4">
@@ -48,7 +45,6 @@ export default function ViAboutPage() {
           <a href="https://danang.homes/vi" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes/vi</a>.
         </p>
       </main>
-      <SiteFooter />
     </div>
   );
 }

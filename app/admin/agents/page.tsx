@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import SiteHeader from '@/components/SiteHeader';
-import SiteFooter from '@/components/SiteFooter';
 import AdminAgentRow, { type AdminAgent } from './AdminAgentRow';
 import { createClient } from '@/lib/supabase/server';
 import { getOwnProfile, normalizeAgentName } from '@/lib/agents';
@@ -31,12 +29,10 @@ export default async function AdminAgentsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <SiteHeader />
+      <div className="flex-1 bg-slate-50 flex flex-col">
         <main className="max-w-4xl w-full mx-auto px-4 py-12 flex-1">
           <p className="text-red-700">Could not load agents: {error.message}</p>
         </main>
-        <SiteFooter />
       </div>
     );
   }
@@ -71,8 +67,7 @@ export default async function AdminAgentsPage() {
   const pending = agents.filter(a => a.listing_agent_name && !a.listing_agent_name_verified);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <SiteHeader />
+    <div className="flex-1 bg-slate-50 flex flex-col">
       <main className="max-w-4xl w-full mx-auto px-4 sm:px-6 py-12 flex-1">
         <div className="flex items-baseline justify-between gap-4 flex-wrap mb-2">
           <h1 className="text-2xl font-bold text-slate-900">Manage agents</h1>
@@ -104,7 +99,6 @@ export default async function AdminAgentsPage() {
           <strong> Delete</strong> removes the account permanently.
         </p>
       </main>
-      <SiteFooter />
     </div>
   );
 }
