@@ -6,6 +6,7 @@ import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import { resolveFacet, isVilla } from '@/lib/facets';
 import { POPULAR_BUILDINGS } from '@/lib/buildingDefs';
 import ListingCard from './ListingCard';
+import LanguagePicker from './LanguagePicker';
 import { useLanguage } from './LanguageProvider';
 import { localizeType, localizeDistrict } from '@/lib/price';
 
@@ -194,8 +195,11 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
     <div id="listings" className="scroll-mt-20">
       {/* Search + Filters */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
-        {/* Search */}
-        <div className="relative mb-3">
+        {/* Search + language. The field no longer runs the full width — it does not
+            need to, and the space to its right is the most useful place on the page
+            to show that the site speaks more than one language. */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+        <div className="relative flex-1 sm:max-w-md">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -206,6 +210,8 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+        </div>
+          <div className="sm:ml-auto"><LanguagePicker /></div>
         </div>
 
         {/* Filter row */}

@@ -1,37 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import { useLanguage } from './LanguageProvider';
-import type { Lang } from '@/lib/translations';
-import { resolveFacet, facetUrl } from '@/lib/facets';
+import LanguagePicker from './LanguagePicker';
 import { accountPaths, ACCOUNT_COPY } from '@/lib/accountCopy';
 import AccountMenu from './account/AccountMenu';
 
-function getLangUrl(pathname: string, targetLang: Lang): string {
-  if (targetLang === 'vi') {
-    if (pathname === '/') return '/vi';
-    if (pathname === '/for-rent') return '/vi/thue';
-    if (pathname === '/for-sale') return '/vi/mua-ban';
-    if (pathname.startsWith('/for-rent/')) { const f = resolveFacet(pathname.slice('/for-rent/'.length)); return f ? facetUrl('rent', 'vi', f) : '/vi/thue'; }
-    if (pathname.startsWith('/for-sale/')) { const f = resolveFacet(pathname.slice('/for-sale/'.length)); return f ? facetUrl('sale', 'vi', f) : '/vi/mua-ban'; }
-    if (pathname.startsWith('/listing/')) return '/vi' + pathname;
-    return '/vi';
-  } else {
-    if (pathname === '/vi') return '/';
-    if (pathname === '/vi/thue') return '/for-rent';
-    if (pathname === '/vi/mua-ban') return '/for-sale';
-    if (pathname.startsWith('/vi/thue/')) { const f = resolveFacet(pathname.slice('/vi/thue/'.length)); return f ? facetUrl('rent', 'en', f) : '/for-rent'; }
-    if (pathname.startsWith('/vi/mua-ban/')) { const f = resolveFacet(pathname.slice('/vi/mua-ban/'.length)); return f ? facetUrl('sale', 'en', f) : '/for-sale'; }
-    if (pathname.startsWith('/vi/listing/')) return pathname.replace('/vi', '');
-    return '/';
-  }
-}
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const router = useRouter();
   const { lang } = useLanguage();
   const isVi = lang === 'vi';
   const isForSale = pathname === '/for-sale' || pathname === '/vi/mua-ban' || pathname.startsWith('/for-sale/') || pathname.startsWith('/vi/mua-ban/');
@@ -48,10 +27,6 @@ export default function SiteHeader() {
   const addListingHref = accountPaths[isVi ? 'vi' : 'en'].newListing;
   const addListingLabel = ACCOUNT_COPY[isVi ? 'vi' : 'en'].addPropertyNav;
 
-  const handleLangChange = (target: Lang) => {
-    router.push(getLangUrl(pathname, target));
-  };
-
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -67,7 +42,7 @@ export default function SiteHeader() {
             >
               {addListingLabel}
             </Link>
-            <LangDropdown lang={lang} onChange={handleLangChange} />
+            <LanguagePicker variant="menu" />
             <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
 
@@ -78,7 +53,7 @@ export default function SiteHeader() {
             >
               {addListingLabel}
             </Link>
-            <LangDropdown lang={lang} onChange={handleLangChange} />
+            <LanguagePicker variant="menu" />
             <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
         </div>
@@ -122,15 +97,3 @@ function NavToggle({ isForSale, isForRent, rentHref, saleHref, fullWidth }: {
   );
 }
 
-function LangDropdown({ lang, onChange }: { lang: Lang; onChange: (l: Lang) => void }) {
-  return (
-    <select
-      value={lang}
-      onChange={e => onChange(e.target.value as Lang)}
-      className="text-sm border border-slate-200 rounded-lg px-2 py-1.5 text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-    >
-      <option value="en">EN</option>
-      <option value="vi">VI</option>
-    </select>
-  );
-}
