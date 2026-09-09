@@ -46,6 +46,11 @@ export default function SiteHeader() {
             <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
 
+          {/* Phone: only the logo and the primary action share the top row. Measured
+              at 390px the three items came to 383px of content in a 406px row — about
+              7px of slack, which is why it read as squished. The language control moves
+              down to the row that already exists, where it keeps its full label instead
+              of being cut back to a flag. */}
           <div className="flex sm:hidden items-center gap-2">
             <Link
               href={addListingHref}
@@ -53,13 +58,15 @@ export default function SiteHeader() {
             >
               {addListingLabel}
             </Link>
-            <LanguagePicker variant="menu" />
             <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
         </div>
 
-        <div className="flex sm:hidden pb-3">
-          <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} fullWidth />
+        <div className="flex sm:hidden items-center gap-2 pb-3">
+          <div className="flex-1 min-w-0">
+            <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} fullWidth />
+          </div>
+          <LanguagePicker variant="menu" />
         </div>
 
       </div>
