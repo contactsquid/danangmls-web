@@ -28,7 +28,7 @@ export default function ViContactPage() {
             <a href="tel:+84973747373" className="text-blue-600 hover:underline">+84 973 747 373</a>
           </p>
           <p>📧 <strong>Email:</strong>{' '}
-            <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>
+            <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>
           </p>
           <p>🌐 <strong>Website:</strong>{' '}
             <a href="https://danang.homes/vi" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">danang.homes/vi</a>

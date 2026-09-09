@@ -50,7 +50,7 @@ export default function ViTermsPage() {
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Liên hệ</h2>
         <p className="text-slate-600 leading-relaxed">
           Có câu hỏi về các điều khoản này? Gửi email tới{' '}
-          <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>.
+          <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>.
         </p>
       </main>
     </div>

@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import AgentAvatar from '@/components/AgentAvatar';
@@ -37,7 +39,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -82,7 +84,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
   // "Add property" button, which sends visitors through sign-in anyway.
   if (!profile) return null;
 
-  const paths = accountPaths[lang];
+  const paths = forLang(accountPaths, lang);
   const itemClass =
     'block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors';
 
@@ -112,7 +114,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
             {profile.display_name}
           </p>
 
-          <Link href={agentPaths[lang].profile(profile.slug)} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
+          <Link href={forLang(agentPaths, lang).profile(profile.slug)} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
             {t.viewProfile}
           </Link>
           <Link href={paths.profile} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
@@ -124,7 +126,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
             className={itemClass}
             onClick={() => setOpen(false)}
           >
-            {LISTING_FORM_COPY[lang].myListings}
+            {forLang(LISTING_FORM_COPY, lang).myListings}
           </Link>
           <Link href={paths.newListing} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
             {t.addPropertyNav}

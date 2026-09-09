@@ -1,3 +1,4 @@
+import { type Lang, viOrEn } from './translations';
 import type { Listing } from './types';
 import { POPULAR_BUILDINGS, buildingSlug, buildingMatches, BUILDING_PAGE_MIN_LISTINGS } from './buildingDefs';
 import { localizeType, localizeDistrict } from './price';
@@ -41,7 +42,8 @@ const EN_TYPE_PLURAL: Record<string, string> = {
 export function districtSlug(d: string): string { return d.toLowerCase().trim().replace(/\s+/g, '-'); }
 
 /** Canonical URL slug for a facet in a given language. */
-export function facetSlug(f: Facet, lang: 'en' | 'vi'): string {
+export function facetSlug(f: Facet, langIn: Lang): string {
+  const lang = viOrEn(langIn);
   if (f.kind === 'type') return lang === 'vi' ? (TYPE_VI_SLUG[f.value] ?? f.value.toLowerCase()) : f.value.toLowerCase();
   if (f.kind === 'district') return districtSlug(f.value);
   // Building names are proper nouns — same slug in both languages.
@@ -100,16 +102,19 @@ export function facetImage(f: Facet): { image?: string; ogImage?: string } {
   return { image: b?.image, ogImage: b?.ogImage };
 }
 
-export function facetBase(mode: Mode, lang: 'en' | 'vi'): string {
+export function facetBase(mode: Mode, langIn: Lang): string {
+  const lang = viOrEn(langIn);
   if (lang === 'vi') return mode === 'rent' ? '/vi/thue' : '/vi/mua-ban';
   return mode === 'rent' ? '/for-rent' : '/for-sale';
 }
-export function facetUrl(mode: Mode, lang: 'en' | 'vi', f: Facet): string {
+export function facetUrl(mode: Mode, langIn: Lang, f: Facet): string {
+  const lang = viOrEn(langIn);
   return `${facetBase(mode, lang)}/${facetSlug(f, lang)}`;
 }
 
 /** Build a facet URL from a raw listing field value; null when not a linkable facet. */
-export function listingFieldHref(kind: 'type' | 'district' | 'bedrooms', raw: string, mode: Mode, lang: 'en' | 'vi'): string | null {
+export function listingFieldHref(kind: 'type' | 'district' | 'bedrooms', raw: string, mode: Mode, langIn: Lang): string | null {
+  const lang = viOrEn(langIn);
   if (!raw) return null;
   if (kind === 'type') {
     const canon = TYPE_VALUES.find(t => t.toLowerCase() === raw.toLowerCase());
@@ -141,7 +146,8 @@ export function facetInitialFilters(f: Facet): { type?: string; district?: strin
 
 export interface FacetContent { h1: string; subtitle: string; title: string; description: string }
 
-export function facetContent(f: Facet, mode: Mode, lang: 'en' | 'vi', count: number): FacetContent {
+export function facetContent(f: Facet, mode: Mode, langIn: Lang, count: number): FacetContent {
+  const lang = viOrEn(langIn);
   return lang === 'vi' ? facetContentVi(f, mode, count) : facetContentEn(f, mode, count);
 }
 

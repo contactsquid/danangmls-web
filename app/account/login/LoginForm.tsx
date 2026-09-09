@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState } from 'react';
 import { signInAction, type ActionState } from '../actions';
 import { inputClass, labelClass, buttonClass, FormMessage } from '@/components/account/ui';
@@ -21,7 +23,7 @@ export default function LoginForm({
   next?: string;
 }) {
   const [state, formAction, pending] = useActionState(signInAction, initial);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   return (
     <form action={formAction} className="space-y-4">

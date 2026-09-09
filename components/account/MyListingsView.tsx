@@ -1,3 +1,4 @@
+import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
 import { accountPaths } from '@/lib/accountCopy';
@@ -6,7 +7,7 @@ import type { Listing } from '@/lib/types';
 
 /** The agent's own listings, with an edit link each. Shared by both languages. */
 export default function MyListingsView({ listings, lang }: { listings: Listing[]; lang: Lang }) {
-  const t = LISTING_FORM_COPY[lang];
+  const t = forLang(LISTING_FORM_COPY, lang);
   const base = lang === 'vi' ? '/vi/tai-khoan/tin-dang' : '/account/listings';
   const publicBase = lang === 'vi' ? '/vi/listing' : '/listing';
 
@@ -14,7 +15,7 @@ export default function MyListingsView({ listings, lang }: { listings: Listing[]
     return (
       <div className="text-center py-6">
         <p className="text-slate-600 mb-4">{t.noListingsYet}</p>
-        <Link href={accountPaths[lang].newListing} className="text-blue-600 hover:underline">
+        <Link href={forLang(accountPaths, lang).newListing} className="text-blue-600 hover:underline">
           {t.pageTitle}
         </Link>
       </div>

@@ -1,3 +1,4 @@
+import { type Lang, viOrEn } from './translations';
 import type { Listing } from './types';
 import { firstServableImage } from './pageImages';
 import { facetUrl, type Mode } from './facets';
@@ -8,7 +9,8 @@ export interface BuildingCard { name: string; image: string; count: number; href
 // Popular apartment buildings that currently have listings in this mode — each
 // with a real thumbnail, linking to that building's own facet page. Max 8,
 // busiest first. Empty when no known building has a listing here.
-export function popularBuildings(listings: Listing[], mode: Mode, lang: 'en' | 'vi'): BuildingCard[] {
+export function popularBuildings(listings: Listing[], mode: Mode, langIn: Lang): BuildingCard[] {
+  const lang = viOrEn(langIn);
   const cards: BuildingCard[] = [];
   for (const b of POPULAR_BUILDINGS) {
     const matches = listings.filter(l => buildingMatches(b, l));

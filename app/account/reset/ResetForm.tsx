@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState } from 'react';
 import { resetPasswordAction, type ActionState } from '../actions';
 import { inputClass, labelClass, buttonClass, FormMessage } from '@/components/account/ui';
@@ -10,7 +12,7 @@ const initial: ActionState = {};
 
 export default function ResetForm({ lang = 'en' }: { lang?: Lang }) {
   const [state, formAction, pending] = useActionState(resetPasswordAction, initial);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   if (state.notice) return <FormMessage notice={state.notice} />;
 

@@ -46,7 +46,9 @@ export interface AgentCopy {
   browseForSale: string;
 }
 
-export const AGENT_COPY: Record<Lang, AgentCopy> = {
+// Only en/vi today — Korean and Russian read through forLang() and fall back to
+// English until this copy is translated.
+export const AGENT_COPY: Record<'en' | 'vi', AgentCopy> = {
   en: {
     directoryTitle: 'Real Estate Agents in Da Nang',
     directoryIntro:

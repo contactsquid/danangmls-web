@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { updateListingAction, type ListingActionState } from '@/app/account/listings/actions';
@@ -30,7 +32,7 @@ function priceAmount(price: string): string {
 }
 
 export default function EditListingForm({ listing, lang }: { listing: Listing; lang: Lang }) {
-  const t = LISTING_FORM_COPY[lang];
+  const t = forLang(LISTING_FORM_COPY, lang);
   const [state, formAction, pending] = useActionState(updateListingAction, initial);
 
   const [district, setDistrict] = useState(listing.district);
@@ -84,7 +86,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
           <label className={labelClass} htmlFor="property_type">{t.propertyType}</label>
           <select id="property_type" name="property_type" required defaultValue={listing.type} className={inputClass}>
             {SUBMITTABLE_TYPES.map(v => (
-              <option key={v} value={v}>{TYPE_LABELS[lang][v] ?? v}</option>
+              <option key={v} value={v}>{forLang(TYPE_LABELS, lang)[v] ?? v}</option>
             ))}
           </select>
         </div>

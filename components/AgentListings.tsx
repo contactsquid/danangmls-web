@@ -1,3 +1,4 @@
+import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import ListingCard from './ListingCard';
 import { AGENT_COPY } from '@/lib/agentCopy';
@@ -17,7 +18,7 @@ export default function AgentListings({
   agentName: string;
   lang?: Lang;
 }) {
-  const t = AGENT_COPY[lang];
+  const t = forLang(AGENT_COPY, lang);
   const rentHref = lang === 'vi' ? '/vi/thue' : '/for-rent';
   const saleHref = lang === 'vi' ? '/vi/mua-ban' : '/for-sale';
 

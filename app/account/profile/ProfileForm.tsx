@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState, useState } from 'react';
 import { updateProfileAction, type ActionState } from '../actions';
 import AgentAvatar from '@/components/AgentAvatar';
@@ -27,7 +29,7 @@ export default function ProfileForm({
   lang?: Lang;
 }) {
   const [state, formAction, pending] = useActionState(updateProfileAction, initial);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   const startsIndependent =
     !profile.workplace || profile.workplace.toLowerCase() === 'independent';

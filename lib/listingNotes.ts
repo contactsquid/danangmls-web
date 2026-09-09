@@ -1,3 +1,4 @@
+import { type Lang, viOrEn } from './translations';
 // Per-listing extra notes. Surfaced as a highlighted callout on the listing
 // detail page, above the main description. Keyed by listing slug.
 //
@@ -17,7 +18,8 @@ export const LISTING_NOTES: Record<string, ListingNote> = {
   },
 };
 
-export function getListingNote(slug: string, lang: 'en' | 'vi'): string | null {
+export function getListingNote(slug: string, langIn: Lang): string | null {
+  const lang = viOrEn(langIn);
   const note = LISTING_NOTES[slug];
   if (!note) return null;
   return lang === 'vi' ? note.vi : note.en;

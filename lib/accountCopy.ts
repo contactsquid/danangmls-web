@@ -114,7 +114,9 @@ export interface AccountCopy {
   };
 }
 
-export const ACCOUNT_COPY: Record<Lang, AccountCopy> = {
+// Only en/vi today — Korean and Russian read through forLang() and fall back to
+// English until this copy is translated.
+export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
   en: {
     signupTitle: 'Create your agent profile',
     signupSubtitle: 'Free. Your listings appear on DanangMLS under your own profile.',

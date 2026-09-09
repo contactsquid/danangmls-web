@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useState, useTransition } from 'react';
 import { searchClaimNamesAction } from '@/app/account/actions';
 import { inputClass, labelClass, hintClass } from '@/components/account/ui';
@@ -25,7 +27,7 @@ export default function ClaimListingsField({
   currentName: string;
   verified: boolean;
 }) {
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   const [claimed, setClaimed] = useState(currentName);
   const [query, setQuery] = useState('');

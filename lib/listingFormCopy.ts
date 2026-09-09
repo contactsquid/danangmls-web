@@ -71,7 +71,9 @@ export interface ListingFormCopy {
   errors: Record<ValidationCode, string>;
 }
 
-export const LISTING_FORM_COPY: Record<Lang, ListingFormCopy> = {
+// Only en/vi today — Korean and Russian read through forLang() and fall back to
+// English until this copy is translated.
+export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
   en: {
     pageTitle: 'Add a listing',
     pageSubtitle: 'Your listing goes live on DanangMLS under your agent profile.',
@@ -210,7 +212,9 @@ export const LISTING_FORM_COPY: Record<Lang, ListingFormCopy> = {
 
 /** Property types, shown with Vietnamese labels but submitted with the English
  *  value the sheet stores (VALID_TYPES in lib/sheets.ts). */
-export const TYPE_LABELS: Record<Lang, Record<string, string>> = {
+// Only en/vi today — Korean and Russian read through forLang() and fall back to
+// English until this copy is translated.
+export const TYPE_LABELS: Record<'en' | 'vi', Record<string, string>> = {
   en: {
     House: 'House', Apartment: 'Apartment', Villa: 'Villa', Land: 'Land',
     Office: 'Office', Retail: 'Retail', Townhouse: 'Townhouse',

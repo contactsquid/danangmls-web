@@ -1,3 +1,4 @@
+import { type Lang, viOrEn } from './translations';
 // Renders a listing's "Listed" date as relative time ("30 mins ago", "3 hours
 // ago", "4 days ago", ...) instead of an absolute date, per Blake's 2026-08-09
 // request.
@@ -14,7 +15,8 @@
 //   - under 1 hour: minutes, rounded to the nearest 15 (15 / 30 / 45 mins ago)
 //   - 1+ hour (under a day): solid hours, rounded to the nearest hour
 //   - 1+ day: unchanged (days / weeks / months / years, floored)
-export function relativeTime(dateStr: string | undefined | null, lang: 'en' | 'vi'): string | null {
+export function relativeTime(dateStr: string | undefined | null, langIn: Lang): string | null {
+  const lang = viOrEn(langIn);
   if (!dateStr) return null;
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return null;

@@ -1,3 +1,4 @@
+import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import ProfileForm from '@/app/account/profile/ProfileForm';
 import { signOutAction } from '@/app/account/actions';
@@ -16,8 +17,8 @@ export default function ProfilePageBody({
   profile: OwnAgentProfile;
   lang: Lang;
 }) {
-  const t = ACCOUNT_COPY[lang];
-  const paths = accountPaths[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
+  const paths = forLang(accountPaths, lang);
 
   return (
     <>
@@ -35,7 +36,7 @@ export default function ProfilePageBody({
           href={lang === 'vi' ? '/vi/tai-khoan/tin-dang' : '/account/listings'}
           className="text-sm text-blue-700 hover:underline whitespace-nowrap"
         >
-          {LISTING_FORM_COPY[lang].myListings}
+          {forLang(LISTING_FORM_COPY, lang).myListings}
         </Link>
         <Link
           href={paths.newListing}
@@ -66,8 +67,8 @@ export default function ProfilePageBody({
 
 /** The "Public at …" subtitle, in the reader's language. */
 export function ProfileSubtitle({ slug, lang }: { slug: string; lang: Lang }) {
-  const t = ACCOUNT_COPY[lang];
-  const href = agentPaths[lang].profile(slug);
+  const t = forLang(ACCOUNT_COPY, lang);
+  const href = forLang(agentPaths, lang).profile(slug);
   return (
     <>
       {t.publicAt}{' '}

@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState } from 'react';
 import { signUpAction, type ActionState } from '../actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
@@ -10,7 +12,7 @@ const initial: ActionState = {};
 
 export default function SignupForm({ lang = 'en' }: { lang?: Lang }) {
   const [state, formAction, pending] = useActionState(signUpAction, initial);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   // On success the form is replaced by the "check your inbox" notice — leaving
   // the fields on screen invites a confused second submission.

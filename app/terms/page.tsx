@@ -48,7 +48,7 @@ export default function TermsPage() {
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Contact</h2>
         <p className="text-slate-600 leading-relaxed">
           Questions about these terms? Email{' '}
-          <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>.
+          <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>.
         </p>
       </main>
     </div>

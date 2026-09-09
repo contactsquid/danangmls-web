@@ -1,3 +1,4 @@
+import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import AgentAvatar from './AgentAvatar';
 import AgentListings from './AgentListings';
@@ -15,8 +16,8 @@ interface Props {
 /** Shared body of an agent profile, rendered by both /agent/<slug> and
  *  /vi/moi-gioi/<slug>. */
 export default function AgentProfileView({ profile, listings, lang }: Props) {
-  const t = AGENT_COPY[lang];
-  const paths = agentPaths[lang];
+  const t = forLang(AGENT_COPY, lang);
+  const paths = forLang(agentPaths, lang);
   const independent = !profile.workplace || profile.workplace.toLowerCase() === 'independent';
 
   // Vietnamese renders dates as "tháng 8 năm 2026" with this locale; en-US keeps

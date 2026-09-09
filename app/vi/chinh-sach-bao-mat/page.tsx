@@ -50,14 +50,14 @@ export default function ViPrivacyPage() {
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Lựa chọn của bạn</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
           Nếu bạn đã liên hệ với chúng tôi và muốn chúng tôi xóa dữ liệu tin nhắn bạn đã gửi, hãy gửi email tới{' '}
-          <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>{' '}
+          <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>{' '}
           và chúng tôi sẽ xóa.
         </p>
 
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Liên hệ</h2>
         <p className="text-slate-600 leading-relaxed">
           Có câu hỏi về chính sách này? Gửi email tới{' '}
-          <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>.
+          <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>.
         </p>
       </main>
     </div>

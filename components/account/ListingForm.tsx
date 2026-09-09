@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { submitListingAction, type ListingActionState } from '@/app/account/listings/actions';
@@ -23,7 +25,7 @@ const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 export default function ListingForm({ lang, profileSlug }: { lang: Lang; profileSlug: string }) {
-  const t = LISTING_FORM_COPY[lang];
+  const t = forLang(LISTING_FORM_COPY, lang);
   const [state, formAction, pending] = useActionState(submitListingAction, initial);
 
   const [forSale, setForSale] = useState(false);
@@ -139,7 +141,7 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
           <select id="property_type" name="property_type" required defaultValue="" className={inputClass}>
             <option value="" disabled>{t.choose}</option>
             {SUBMITTABLE_TYPES.map(v => (
-              <option key={v} value={v}>{TYPE_LABELS[lang][v] ?? v}</option>
+              <option key={v} value={v}>{forLang(TYPE_LABELS, lang)[v] ?? v}</option>
             ))}
           </select>
         </div>

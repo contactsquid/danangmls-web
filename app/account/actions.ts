@@ -1,5 +1,7 @@
 'use server';
 
+import { forLang } from '@/lib/translations';
+
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { after } from 'next/server';
@@ -37,7 +39,7 @@ export async function signUpAction(
   form: FormData,
 ): Promise<ActionState> {
   const lang = langOf(form);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
   if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const email       = str(form, 'email').toLowerCase();
@@ -56,7 +58,7 @@ export async function signUpAction(
     options: {
       // Read by the handle_new_user() trigger to name the profile and mint its slug.
       data: { display_name: displayName },
-      emailRedirectTo: `${SITE_URL}/auth/callback?next=${accountPaths[lang].profile}`,
+      emailRedirectTo: `${SITE_URL}/auth/callback?next=${forLang(accountPaths, lang).profile}`,
     },
   });
 
@@ -85,7 +87,7 @@ export async function signInAction(
   form: FormData,
 ): Promise<ActionState> {
   const lang = langOf(form);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
   if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const email    = str(form, 'email').toLowerCase();
@@ -107,7 +109,7 @@ export async function signInAction(
   // Return the agent to whatever sent them here — the "Add property" button in
   // the header points at the listing form, and bouncing them to their profile
   // instead loses the thing they were trying to do.
-  redirect(safeNext(str(form, 'next') || undefined, accountPaths[lang].profile));
+  redirect(safeNext(str(form, 'next') || undefined, forLang(accountPaths, lang).profile));
 }
 
 // ─── Sign out ─────────────────────────────────────────────────────────────────
@@ -125,7 +127,7 @@ export async function resetPasswordAction(
   form: FormData,
 ): Promise<ActionState> {
   const lang = langOf(form);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
   if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const email = str(form, 'email').toLowerCase();
@@ -133,7 +135,7 @@ export async function resetPasswordAction(
 
   const supabase = await createClient();
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${SITE_URL}/auth/callback?next=${accountPaths[lang].password}`,
+    redirectTo: `${SITE_URL}/auth/callback?next=${forLang(accountPaths, lang).password}`,
   });
 
   // Always the same response, whether or not the address exists.
@@ -145,7 +147,7 @@ export async function setPasswordAction(
   form: FormData,
 ): Promise<ActionState> {
   const lang = langOf(form);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
   if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const password = str(form, 'password');
@@ -161,7 +163,7 @@ export async function setPasswordAction(
     return { error: t.errors.saveFailed };
   }
 
-  redirect(accountPaths[lang].profile);
+  redirect(forLang(accountPaths, lang).profile);
 }
 
 // ─── Update profile ───────────────────────────────────────────────────────────
@@ -170,12 +172,12 @@ export async function updateProfileAction(
   form: FormData,
 ): Promise<ActionState> {
   const lang = langOf(form);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
   if (!isSupabaseConfigured) return { error: t.errors.notConfigured };
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect(accountPaths[lang].login);
+  if (!user) redirect(forLang(accountPaths, lang).login);
 
   const displayName = str(form, 'display_name');
   const bio         = str(form, 'bio');

@@ -1,3 +1,4 @@
+import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import AgentAvatar from './AgentAvatar';
 import { AGENT_COPY, agentPaths } from '@/lib/agentCopy';
@@ -15,9 +16,9 @@ interface Props {
  *  thin wrappers around this so the markup can never drift between languages —
  *  same arrangement as ListingDetail across /listing and /vi/listing. */
 export default function AgentsDirectoryView({ profiles, counts, lang }: Props) {
-  const t = AGENT_COPY[lang];
-  const paths = agentPaths[lang];
-  const signupHref = accountPaths[lang].signup;
+  const t = forLang(AGENT_COPY, lang);
+  const paths = forLang(agentPaths, lang);
+  const signupHref = forLang(accountPaths, lang).signup;
 
   // Agents with inventory first — the directory should lead with the profiles
   // that are actually useful to a buyer, and it concentrates internal link

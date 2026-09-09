@@ -1,5 +1,7 @@
 'use client';
 
+import { forLang } from '@/lib/translations';
+
 import { useActionState } from 'react';
 import { setPasswordAction, type ActionState } from '../actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
@@ -10,7 +12,7 @@ const initial: ActionState = {};
 
 export default function PasswordForm({ lang = 'en' }: { lang?: Lang }) {
   const [state, formAction, pending] = useActionState(setPasswordAction, initial);
-  const t = ACCOUNT_COPY[lang];
+  const t = forLang(ACCOUNT_COPY, lang);
 
   return (
     <form action={formAction} className="space-y-4">

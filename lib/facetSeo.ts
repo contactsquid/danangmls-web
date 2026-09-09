@@ -1,3 +1,4 @@
+import { type Lang, viOrEn } from './translations';
 import type { Facet, Mode } from './facets';
 
 // Facet-aware bottom-section copy (SEO prose + FAQ). Returns null to fall back
@@ -12,7 +13,8 @@ const EN_TYPE_PLURAL: Record<string, string> = {
   Shophouse: 'Shophouses', Commercial: 'Commercial Properties',
 };
 
-export function facetSeoBody(f: Facet, mode: Mode, lang: 'en' | 'vi'): FacetSeoBody | null {
+export function facetSeoBody(f: Facet, mode: Mode, langIn: Lang): FacetSeoBody | null {
+  const lang = viOrEn(langIn);
   if (f.kind === 'type') return lang === 'vi' ? typeVi(f.value, mode) : typeEn(f.value, mode);
   if (f.kind === 'foreign') return lang === 'vi' ? foreignVi() : foreignEn();
   if (f.kind === 'building') return lang === 'vi' ? buildingVi(f.value, mode) : buildingEn(f.value, mode);

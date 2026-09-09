@@ -1,6 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useLanguage } from './LanguageProvider';
+import { facetUrl } from '@/lib/facets';
 
 // Designed long-form "renting in Da Nang" guide for the bottom of /for-rent.
 // Built to be scannable and attractive (cards, price table, steps, checklists),
@@ -8,7 +10,7 @@ import { useLanguage } from './LanguageProvider';
 
 interface Guide {
   heading: string; intro: string;
-  hoodsTitle: string; hoods: { icon: string; name: string; best: string; price: string }[];
+  hoodsTitle: string; hoods: { icon: string; name: string; best: string; price: string; district: string }[];
   priceTitle: string; priceHead: [string, string]; priceRows: [string, string][]; priceNote: string;
   stepsTitle: string; steps: { t: string; d: string }[];
   includedTitle: string; included: string[];
@@ -21,12 +23,12 @@ const EN: Guide = {
   intro: 'New to the city? Here’s how the Da Nang rental market works — where to live, what you’ll pay, and how it goes from browsing to moving in.',
   hoodsTitle: 'Where to live',
   hoods: [
-    { icon: '🏙️', name: 'Hai Chau', best: 'Walkable city centre — cafés, restaurants, offices', price: 'Mid-range' },
-    { icon: '🏖️', name: 'Son Tra', best: 'Beachside living around My Khe & An Thuong', price: 'Mid–high' },
-    { icon: '⛰️', name: 'Ngu Hanh Son', best: 'Modern beachfront condos by the Marble Mountains', price: 'Mid–high' },
-    { icon: '🏡', name: 'Thanh Khe', best: 'Local feel and good value for families', price: 'Budget–mid' },
-    { icon: '🌿', name: 'Cam Le / Hoa Xuan', best: 'New suburban houses with room to spread out', price: 'Value' },
-    { icon: '🏮', name: 'Hoi An', best: 'Garden houses and old-town charm, 30 min south', price: 'Varies' },
+    { icon: '🏙️', name: 'Hai Chau', best: 'Walkable city centre — cafés, restaurants, offices', price: 'Mid-range', district: 'Hai Chau' },
+    { icon: '🏖️', name: 'Son Tra', best: 'Beachside living around My Khe & An Thuong', price: 'Mid–high', district: 'Son Tra' },
+    { icon: '⛰️', name: 'Ngu Hanh Son', best: 'Modern beachfront condos by the Marble Mountains', price: 'Mid–high', district: 'Ngu Hanh Son' },
+    { icon: '🏡', name: 'Thanh Khe', best: 'Local feel and good value for families', price: 'Budget–mid', district: 'Thanh Khe' },
+    { icon: '🌿', name: 'Cam Le / Hoa Xuan', best: 'New suburban houses with room to spread out', price: 'Value', district: 'Cam Le' },
+    { icon: '🏮', name: 'Hoi An', best: 'Garden houses and old-town charm, 30 min south', price: 'Varies', district: 'Hoi An' },
   ],
   priceTitle: 'Typical monthly rent',
   priceHead: ['Home type', 'Monthly rent (USD)'],
@@ -41,8 +43,8 @@ const EN: Guide = {
   stepsTitle: 'How renting works',
   steps: [
     { t: 'Browse & shortlist', d: 'Filter by district, price, and bedrooms, then save the homes you like.' },
-    { t: 'View in person', d: 'We arrange viewings — you can usually see two or three homes in a day.' },
-    { t: 'Agree the terms', d: 'Settle the rent, deposit (1–2 months), lease length, and what’s included.' },
+    { t: 'View in person', d: 'We arrange viewings — you can usually see three or four homes in a day.' },
+    { t: 'Agree to the terms', d: 'Settle the rent, deposit (1–2 months), lease length, and what’s included.' },
     { t: 'Sign & move in', d: 'Sign the lease, pay the deposit and first month, and your host registers your stay.' },
   ],
   includedTitle: 'What’s usually included',
@@ -57,12 +59,12 @@ const VI: Guide = {
   intro: 'Mới đến thành phố? Đây là cách thị trường thuê nhà Đà Nẵng vận hành — nên ở đâu, chi phí bao nhiêu, và quy trình từ lúc tìm đến khi dọn vào.',
   hoodsTitle: 'Nên ở khu vực nào',
   hoods: [
-    { icon: '🏙️', name: 'Hải Châu', best: 'Trung tâm, đi bộ tiện — quán cà phê, nhà hàng, văn phòng', price: 'Tầm trung' },
-    { icon: '🏖️', name: 'Sơn Trà', best: 'Sống ven biển quanh Mỹ Khê & An Thượng', price: 'Trung–cao' },
-    { icon: '⛰️', name: 'Ngũ Hành Sơn', best: 'Căn hộ ven biển hiện đại cạnh Ngũ Hành Sơn', price: 'Trung–cao' },
-    { icon: '🏡', name: 'Thanh Khê', best: 'Không khí địa phương, giá tốt cho gia đình', price: 'Rẻ–trung' },
-    { icon: '🌿', name: 'Cẩm Lệ / Hòa Xuân', best: 'Nhà mới ngoại ô, không gian rộng rãi', price: 'Giá tốt' },
-    { icon: '🏮', name: 'Hội An', best: 'Nhà vườn và nét cổ kính, cách 30 phút', price: 'Đa dạng' },
+    { icon: '🏙️', name: 'Hải Châu', best: 'Trung tâm, đi bộ tiện — quán cà phê, nhà hàng, văn phòng', price: 'Tầm trung', district: 'Hai Chau' },
+    { icon: '🏖️', name: 'Sơn Trà', best: 'Sống ven biển quanh Mỹ Khê & An Thượng', price: 'Trung–cao', district: 'Son Tra' },
+    { icon: '⛰️', name: 'Ngũ Hành Sơn', best: 'Căn hộ ven biển hiện đại cạnh Ngũ Hành Sơn', price: 'Trung–cao', district: 'Ngu Hanh Son' },
+    { icon: '🏡', name: 'Thanh Khê', best: 'Không khí địa phương, giá tốt cho gia đình', price: 'Rẻ–trung', district: 'Thanh Khe' },
+    { icon: '🌿', name: 'Cẩm Lệ / Hòa Xuân', best: 'Nhà mới ngoại ô, không gian rộng rãi', price: 'Giá tốt', district: 'Cam Le' },
+    { icon: '🏮', name: 'Hội An', best: 'Nhà vườn và nét cổ kính, cách 30 phút', price: 'Đa dạng', district: 'Hoi An' },
   ],
   priceTitle: 'Giá thuê theo tháng tham khảo',
   priceHead: ['Loại nhà', 'Giá thuê/tháng (USD)'],
@@ -108,16 +110,17 @@ export default function RentalGuide() {
         <h3 className="mt-8 mb-3 text-xs font-semibold uppercase tracking-wide text-blue-600">{g.hoodsTitle}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {g.hoods.map(h => (
-            <div key={h.name} className="rounded-xl border border-slate-200 p-4 hover:shadow-sm transition-shadow">
+            <Link key={h.name} href={facetUrl('rent', lang, { kind: 'district', value: h.district })}
+              className="group block rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className="text-xl leading-none">{h.icon}</span>
-                  <span className="font-semibold text-slate-800">{h.name}</span>
+                  <span className="font-semibold text-slate-800 group-hover:text-blue-700 group-hover:underline">{h.name}</span>
                 </div>
                 <span className="shrink-0 text-[11px] font-medium text-slate-500 bg-slate-100 rounded-full px-2 py-0.5">{h.price}</span>
               </div>
               <p className="mt-2 text-sm text-slate-500 leading-snug">{h.best}</p>
-            </div>
+            </Link>
           ))}
         </div>
 

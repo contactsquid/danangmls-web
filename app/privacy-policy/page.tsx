@@ -49,14 +49,14 @@ export default function PrivacyPolicyPage() {
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Your choices</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
           If you have contacted us and would like us to delete the message data you sent, email{' '}
-          <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>{' '}
+          <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>{' '}
           and we will remove it.
         </p>
 
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Contact</h2>
         <p className="text-slate-600 leading-relaxed">
           Questions about this policy? Email{' '}
-          <a href="mailto:danang4homes@gmail.com" className="text-blue-600 hover:underline">danang4homes@gmail.com</a>.
+          <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>.
         </p>
       </main>
     </div>
