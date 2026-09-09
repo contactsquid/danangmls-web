@@ -7,10 +7,10 @@ import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import RunningCosts from './RunningCosts';
 import type { Listing } from '@/lib/types';
-import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
+import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
-import { listingFieldHref, facetUrl, FOREIGN_FACET } from '@/lib/facets';
+import { listingFieldHref, facetUrl, FOREIGN_FACET, facetBase } from '@/lib/facets';
 import { relativeTime } from '@/lib/relativeTime';
 
 interface Props {
@@ -44,8 +44,9 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
   const listedDate = relativeTime(listing.date, lang);
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
-    : listing.title;
-  const sourceText   = (lang === 'vi' && listing.vi_text)  ? listing.vi_text  : listing.text;
+    : localizedTitle(listing, lang);
+  // localizedText is vi-identical (vi_text || text) and adds ko/ru.
+  const sourceText   = localizedText(listing, lang);
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
 
   // Type / bedrooms / district each link to their facet page (rent or sale) when
@@ -78,7 +79,7 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      <Link href={listing.forSale ? (lang === 'vi' ? '/vi/mua-ban' : '/for-sale') : (lang === 'vi' ? '/vi/thue' : '/for-rent')} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
+      <Link href={facetBase(listing.forSale ? 'sale' : 'rent', lang)} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
@@ -267,7 +268,7 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
           {/* Hub link */}
           <div className="mt-6 pt-6 border-t border-slate-100 text-center">
             <Link
-              href={listing.forSale ? (lang === 'vi' ? '/vi/mua-ban' : '/for-sale') : (lang === 'vi' ? '/vi/thue' : '/for-rent')}
+              href={facetBase(listing.forSale ? 'sale' : 'rent', lang)}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

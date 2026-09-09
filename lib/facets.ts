@@ -112,6 +112,14 @@ export function facetBase(mode: Mode, langIn: Lang): string {
   const prefix = langIn === 'ko' ? '/ko' : langIn === 'ru' ? '/ru' : '';
   return `${prefix}${mode === 'rent' ? '/for-rent' : '/for-sale'}`;
 }
+/** A listing detail URL in the active language. English at the root, every other
+ *  locale under its own prefix (/vi/listing/…, /ko/listing/…) — matching the
+ *  route tree and getLangUrl. Cards used to hardcode a vi-only ternary, which
+ *  sent Korean and Russian visitors to the English page on the first click. */
+export function listingHref(slug: string, langIn: Lang): string {
+  return langIn === 'en' ? `/listing/${slug}` : `/${langIn}/listing/${slug}`;
+}
+
 export function facetUrl(mode: Mode, langIn: Lang, f: Facet): string {
   // Facet slugs themselves are only translated for Vietnamese; ko/ru reuse English.
   return `${facetBase(mode, langIn)}/${facetSlug(f, viOrEn(langIn))}`;

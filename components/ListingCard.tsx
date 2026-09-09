@@ -6,8 +6,8 @@ import Carousel from './Carousel';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
-import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
-import { listingFieldHref, facetUrl, FOREIGN_FACET } from '@/lib/facets';
+import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle } from '@/lib/price';
+import { listingFieldHref, facetUrl, FOREIGN_FACET, listingHref } from '@/lib/facets';
 
 interface Props {
   listing: Listing;
@@ -43,9 +43,11 @@ function viFallbackTitle(listing: Listing): string {
 export default function ListingCard({ listing, priority = false }: Props) {
   const { lang, t } = useLanguage();
   const mode = listing.forSale ? 'sale' : 'rent';
+  // vi keeps its generated fallback title; ko/ru fall back to English per-field
+  // inside localizedTitle. Before this, ko/ru silently rendered the English title.
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
-    : listing.title;
+    : localizedTitle(listing, lang);
   const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
   const altPrefix = localizedAltPrefix(
     { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
@@ -59,7 +61,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
       {/* Carousel */}
-      <Link href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`} className="block">
+      <Link href={listingHref(listing.slug, lang)} className="block">
         <Carousel images={listing.images} title={listing.title} altPrefix={altPrefix} firstAltPrefix={firstAltPrefix} compact eagerFirst={priority} />
       </Link>
 
@@ -78,7 +80,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
         </p>
 
         {/* Title */}
-        <Link href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`} className="text-sm text-slate-700 leading-snug line-clamp-2 mb-3 hover:text-blue-600 transition-colors">
+        <Link href={listingHref(listing.slug, lang)} className="text-sm text-slate-700 leading-snug line-clamp-2 mb-3 hover:text-blue-600 transition-colors">
           {displayTitle}
         </Link>
 
@@ -106,7 +108,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
 
         {/* View Listing */}
         <Link
-          href={`/${lang === 'vi' ? 'vi/listing' : 'listing'}/${listing.slug}`}
+          href={listingHref(listing.slug, lang)}
           className="mt-3 text-center text-sm font-medium bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors"
         >
           {t.viewListing}

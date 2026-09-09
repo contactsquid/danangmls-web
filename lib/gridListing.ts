@@ -9,7 +9,8 @@ import { Listing } from './types';
 // nothing is lost there.
 //
 // Card uses:   title, price, district, type, bedrooms, slug, forSale,
-//              foreignEligible, foreignEligibleBuilding, images, vi_title
+//              foreignEligible, foreignEligibleBuilding, images,
+//              vi_title / ko_title / ru_title
 // Filters use: title, district, text (search + neighborhood), type, bedrooms,
 //              price, neighborhood, foreignEligible
 const GRID_IMAGE_CAP = 5;      // cards rarely need more; big payload cut
@@ -26,7 +27,12 @@ export function toGridListing(l: Listing): Listing {
     images: l.images.slice(0, GRID_IMAGE_CAP),
     text: l.text.length > SEARCH_TEXT_CAP ? l.text.slice(0, SEARCH_TEXT_CAP) : l.text,
     // Fields not read by any card or filter — drop from the client payload.
+    // ko_text/ru_text joined vi_text here when ko/ru shipped: a card renders a
+    // TITLE only, so three full descriptions per listing were riding the wire
+    // for nothing.
     vi_text: '',
+    ko_text: '',
+    ru_text: '',
     agent: '',
     contact: '',
     postUrl: '',

@@ -6,6 +6,7 @@ import Logo from './Logo';
 import { useLanguage } from './LanguageProvider';
 import LanguagePicker from './LanguagePicker';
 import { accountPaths, ACCOUNT_COPY } from '@/lib/accountCopy';
+import { facetBase } from '@/lib/facets';
 import AccountMenu from './account/AccountMenu';
 
 
@@ -13,11 +14,13 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const { lang } = useLanguage();
   const isVi = lang === 'vi';
-  const isForSale = pathname === '/for-sale' || pathname === '/vi/mua-ban' || pathname.startsWith('/for-sale/') || pathname.startsWith('/vi/mua-ban/');
-  const isForRent = pathname === '/for-rent' || pathname === '/vi/thue' || pathname.startsWith('/for-rent/') || pathname.startsWith('/vi/thue/');
-
-  const rentHref = isVi ? '/vi/thue' : '/for-rent';
-  const saleHref = isVi ? '/vi/mua-ban' : '/for-sale';
+  // facetBase already knows every locale's grid path, so nav and active-state
+  // derive from it. The old vi-only literals pointed Korean and Russian visitors
+  // at the English grid from inside their own pages.
+  const rentHref = facetBase('rent', lang);
+  const saleHref = facetBase('sale', lang);
+  const isForRent = pathname === rentHref || pathname.startsWith(rentHref + '/');
+  const isForSale = pathname === saleHref || pathname.startsWith(saleHref + '/');
 
   // Points straight at the add-listing form. No auth check is needed here — the
   // form page itself redirects a signed-out visitor to sign-in with ?next set,
@@ -32,7 +35,7 @@ export default function SiteHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         <div className="flex items-center justify-between h-14 sm:h-16">
-          <Link href={isVi ? '/vi' : '/'}><Logo /></Link>
+          <Link href={lang === 'en' ? '/' : `/${lang}`}><Logo /></Link>
 
           <div className="hidden sm:flex items-center gap-3">
             <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} />
