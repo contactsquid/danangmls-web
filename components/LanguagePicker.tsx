@@ -6,7 +6,11 @@ import { getLangUrl } from '@/lib/langUrl';
 import { LIVE_LOCALES } from '@/lib/locales';
 import { useLanguage } from './LanguageProvider';
 
-// Flag AND the language's own name, side by side. A flag alone is a guessing
+// Flag AND the language's own name, side by side.
+//
+// Only the 'menu' variant is used today (site header). 'inline' rendered beside the
+// listings search box until 2026-09-09, when the header picker made it redundant;
+// kept because it is the shape to reach for if language ever needs to sit in-page again. A flag alone is a guessing
 // game and a two-letter code is worse — someone scanning for their language is
 // looking for "Tiếng Việt", not "VI". Sitting next to the search box because
 // that is the moment a visitor decides what language to type in.
