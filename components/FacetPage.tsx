@@ -1,3 +1,4 @@
+import type { Lang } from '@/lib/translations';
 import { getListings, getForSaleListings, getUniqueValues } from '@/lib/sheets';
 import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
@@ -24,7 +25,7 @@ async function fetchFor(mode: Mode) {
 }
 
 /** Shared generateMetadata for all four facet routes. */
-export async function facetMetadata(mode: Mode, lang: 'en' | 'vi', filterSlug: string): Promise<Metadata> {
+export async function facetMetadata(mode: Mode, lang: Lang, filterSlug: string): Promise<Metadata> {
   const facet = resolveFacet(filterSlug, lang);
   if (!facet) return { title: 'Not Found', robots: { index: false, follow: false } };
   const all = await fetchFor(mode);
@@ -53,7 +54,7 @@ export async function facetMetadata(mode: Mode, lang: 'en' | 'vi', filterSlug: s
 }
 
 /** Shared page body for all four facet routes. */
-export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode; lang: 'en' | 'vi'; filterSlug: string }) {
+export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode; lang: Lang; filterSlug: string }) {
   const facet = resolveFacet(filterSlug, lang);
   if (!facet) notFound();
   // Normalize to the canonical slug for this language (e.g. /vi/thue/house →

@@ -82,6 +82,7 @@ const R = {
   AGENT_CONTACT: 24, // written by n8n from the RAW post text; NOT rendered on the site
   VI_TITLE: 25,
   VI_TEXT:  26,
+  KO_TITLE: 27, KO_TEXT: 28, RU_TITLE: 29, RU_TEXT: 30,
 } as const;
 
 // ─── Column indices for the For Sale tab ──────────────────────────────────────
@@ -109,6 +110,7 @@ const FS = {
   DATE:     20,
   VI_TITLE: 21,
   VI_TEXT:  22,
+  KO_TITLE: 23, KO_TEXT: 24, RU_TITLE: 25, RU_TEXT: 26,
 } as const;
 
 // ─── Valid reference data ──────────────────────────────────────────────────────
@@ -272,6 +274,10 @@ function parseRows(rows: string[][]): Listing[] {
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     col(r, R.VI_TITLE),
         vi_text:      col(r, R.VI_TEXT),
+        ko_title:     col(r, R.KO_TITLE),
+        ko_text:      col(r, R.KO_TEXT),
+        ru_title:     col(r, R.RU_TITLE),
+        ru_text:      col(r, R.RU_TEXT),
         forSale:      false,
       };
       warnIfBadData(listing, 'Sheet1/Rentals');
@@ -356,6 +362,10 @@ async function parseForSale(): Promise<Listing[]> {
         neighborhood: detectNeighborhood(text, title, district),
         vi_title:     col(r, FS.VI_TITLE),
         vi_text:      col(r, FS.VI_TEXT),
+        ko_title:     col(r, FS.KO_TITLE),
+        ko_text:      col(r, FS.KO_TEXT),
+        ru_title:     col(r, FS.RU_TITLE),
+        ru_text:      col(r, FS.RU_TEXT),
         forSale:      true,
         foreignEligible: foreignEligibleFlag,
         foreignEligibleBuilding: foreignBuilding?.name,

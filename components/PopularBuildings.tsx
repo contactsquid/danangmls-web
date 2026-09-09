@@ -1,8 +1,9 @@
+import type { Lang } from '@/lib/translations';
 import type { BuildingCard } from '@/lib/buildings';
 
 // "Search by popular apartment building" — a thumbnail grid (icekem-style). Each
 // card is a full-nav link so the grid remounts and pre-fills its search from ?q.
-export default function PopularBuildings({ buildings, lang }: { buildings: BuildingCard[]; lang: 'en' | 'vi' }) {
+export default function PopularBuildings({ buildings, lang }: { buildings: BuildingCard[]; lang: Lang }) {
   if (!buildings.length) return null;
   const heading = lang === 'vi' ? 'Tìm Theo Tòa Căn Hộ Phổ Biến' : 'Search by Popular Apartment Building';
   const sub = lang === 'vi' ? 'Nhấp vào một tòa nhà để xem các căn đang có.' : 'Tap a building to see its available listings.';

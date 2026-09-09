@@ -53,7 +53,7 @@ export function facetSlug(f: Facet, langIn: Lang): string {
 }
 
 /** slug → Facet. Accepts either language's slug (canonical redirect fixes the URL). */
-export function resolveFacet(slug: string, _lang?: 'en' | 'vi'): Facet | null {
+export function resolveFacet(slug: string, _lang?: Lang): Facet | null {
   const s = (slug || '').toLowerCase();
   if (EN_SLUG_TO_TYPE[s]) return { kind: 'type', value: EN_SLUG_TO_TYPE[s] };
   if (VI_SLUG_TO_TYPE[s]) return { kind: 'type', value: VI_SLUG_TO_TYPE[s] };
@@ -102,31 +102,37 @@ export function facetImage(f: Facet): { image?: string; ogImage?: string } {
   return { image: b?.image, ogImage: b?.ogImage };
 }
 
+// English lives at the root; every other locale is prefixed. Vietnamese keeps its
+// translated path words because those URLs are indexed and must not churn
+// (see listing-slug-stability). Korean and Russian use the English path words under
+// their prefix — /ko/for-rent — which is what properly.vn does for the same reason:
+// Latin-script, stable, and readable in a link.
 export function facetBase(mode: Mode, langIn: Lang): string {
-  const lang = viOrEn(langIn);
-  if (lang === 'vi') return mode === 'rent' ? '/vi/thue' : '/vi/mua-ban';
-  return mode === 'rent' ? '/for-rent' : '/for-sale';
+  if (langIn === 'vi') return mode === 'rent' ? '/vi/thue' : '/vi/mua-ban';
+  const prefix = langIn === 'ko' ? '/ko' : langIn === 'ru' ? '/ru' : '';
+  return `${prefix}${mode === 'rent' ? '/for-rent' : '/for-sale'}`;
 }
 export function facetUrl(mode: Mode, langIn: Lang, f: Facet): string {
-  const lang = viOrEn(langIn);
-  return `${facetBase(mode, lang)}/${facetSlug(f, lang)}`;
+  // Facet slugs themselves are only translated for Vietnamese; ko/ru reuse English.
+  return `${facetBase(mode, langIn)}/${facetSlug(f, viOrEn(langIn))}`;
 }
 
 /** Build a facet URL from a raw listing field value; null when not a linkable facet. */
 export function listingFieldHref(kind: 'type' | 'district' | 'bedrooms', raw: string, mode: Mode, langIn: Lang): string | null {
   const lang = viOrEn(langIn);
+  const linkLang = langIn;
   if (!raw) return null;
   if (kind === 'type') {
     const canon = TYPE_VALUES.find(t => t.toLowerCase() === raw.toLowerCase());
-    return canon ? facetUrl(mode, lang, { kind: 'type', value: canon }) : null;
+    return canon ? facetUrl(mode, linkLang, { kind: 'type', value: canon }) : null;
   }
   if (kind === 'district') {
     const s = districtSlug(raw);
-    return DISTRICT_SLUGS[s] ? facetUrl(mode, lang, { kind: 'district', value: DISTRICT_SLUGS[s] }) : null;
+    return DISTRICT_SLUGS[s] ? facetUrl(mode, linkLang, { kind: 'district', value: DISTRICT_SLUGS[s] }) : null;
   }
   const n = String(raw).trim();
   if (!/^\d+$/.test(n) || +n < 1 || +n > 9) return null;
-  return facetUrl(mode, lang, { kind: 'bedrooms', value: n });
+  return facetUrl(mode, linkLang, { kind: 'bedrooms', value: n });
 }
 
 /** Which grid dropdown/checkbox the facet pre-selects. */

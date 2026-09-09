@@ -220,3 +220,21 @@ export function convertPriceToVND(price: string): string {
 
   return price;
 }
+
+// A listing's title/body in the requested language, falling back to English when
+// that language has not been written yet. Every locale except English degrades
+// gracefully: a Korean visitor gets Korean where we have it and English where we
+// do not, rather than a blank card.
+export function localizedTitle(l: { title: string; vi_title?: string; ko_title?: string; ru_title?: string }, lang: string): string {
+  if (lang === 'vi') return l.vi_title || l.title;
+  if (lang === 'ko') return l.ko_title || l.title;
+  if (lang === 'ru') return l.ru_title || l.title;
+  return l.title;
+}
+
+export function localizedText(l: { text: string; vi_text?: string; ko_text?: string; ru_text?: string }, lang: string): string {
+  if (lang === 'vi') return l.vi_text || l.text;
+  if (lang === 'ko') return l.ko_text || l.text;
+  if (lang === 'ru') return l.ru_text || l.text;
+  return l.text;
+}

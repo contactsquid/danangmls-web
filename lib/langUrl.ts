@@ -1,25 +1,46 @@
 import type { Lang } from './translations';
-import { resolveFacet, facetUrl } from './facets';
+import { resolveFacet, facetUrl, facetBase } from './facets';
 
 // Maps the current path to its equivalent in another language. Lifted out of
-// SiteHeader so the language picker beside the search box uses exactly the same
-// mapping — two copies of this would drift and strand people on the wrong page.
+// SiteHeader so every language control shares one mapping — two copies would
+// drift and strand people on the wrong page.
+//
+// English lives at the root, everything else is prefixed. Vietnamese keeps its
+// translated path words (/vi/thue) because those URLs are indexed; Korean and
+// Russian use the English words under their prefix (/ko/for-rent).
+const SHAPES = [
+  { prefix: '/vi', rent: '/vi/thue',     sale: '/vi/mua-ban' },
+  { prefix: '/ko', rent: '/ko/for-rent', sale: '/ko/for-sale' },
+  { prefix: '/ru', rent: '/ru/for-rent', sale: '/ru/for-sale' },
+  { prefix: '',    rent: '/for-rent',    sale: '/for-sale' },
+] as const;
+
 export function getLangUrl(pathname: string, targetLang: Lang): string {
-  if (targetLang === 'vi') {
-    if (pathname === '/') return '/vi';
-    if (pathname === '/for-rent') return '/vi/thue';
-    if (pathname === '/for-sale') return '/vi/mua-ban';
-    if (pathname.startsWith('/for-rent/')) { const f = resolveFacet(pathname.slice('/for-rent/'.length)); return f ? facetUrl('rent', 'vi', f) : '/vi/thue'; }
-    if (pathname.startsWith('/for-sale/')) { const f = resolveFacet(pathname.slice('/for-sale/'.length)); return f ? facetUrl('sale', 'vi', f) : '/vi/mua-ban'; }
-    if (pathname.startsWith('/listing/')) return '/vi' + pathname;
-    return '/vi';
-  } else {
-    if (pathname === '/vi') return '/';
-    if (pathname === '/vi/thue') return '/for-rent';
-    if (pathname === '/vi/mua-ban') return '/for-sale';
-    if (pathname.startsWith('/vi/thue/')) { const f = resolveFacet(pathname.slice('/vi/thue/'.length)); return f ? facetUrl('rent', 'en', f) : '/for-rent'; }
-    if (pathname.startsWith('/vi/mua-ban/')) { const f = resolveFacet(pathname.slice('/vi/mua-ban/'.length)); return f ? facetUrl('sale', 'en', f) : '/for-sale'; }
-    if (pathname.startsWith('/vi/listing/')) return pathname.replace('/vi', '');
-    return '/';
+  const home = targetLang === 'en' ? '/' : `/${targetLang}`;
+
+  for (const s of SHAPES) {
+    const inScope = s.prefix
+      ? pathname === s.prefix || pathname.startsWith(s.prefix + '/')
+      : true;
+    if (!inScope) continue;
+
+    for (const [base, mode] of [[s.rent, 'rent'], [s.sale, 'sale']] as const) {
+      if (pathname === base) return facetBase(mode, targetLang);
+      if (pathname.startsWith(base + '/')) {
+        const f = resolveFacet(pathname.slice(base.length + 1));
+        return f ? facetUrl(mode, targetLang, f) : facetBase(mode, targetLang);
+      }
+    }
+
+    const listingBase = s.prefix ? `${s.prefix}/listing/` : '/listing/';
+    if (pathname.startsWith(listingBase)) {
+      const slug = pathname.slice(listingBase.length);
+      return targetLang === 'en' ? `/listing/${slug}` : `/${targetLang}/listing/${slug}`;
+    }
+
+    // Anything else (about, contact, account…) has no translated twin in ko/ru,
+    // so send the visitor to that language's home rather than a 404.
+    return home;
   }
+  return home;
 }
