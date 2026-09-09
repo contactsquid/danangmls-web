@@ -46,18 +46,16 @@ export default function SiteHeader() {
             <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
 
-          {/* Phone: only the logo and the primary action share the top row. Measured
-              at 390px the three items came to 383px of content in a 406px row — about
-              7px of slack, which is why it read as squished. The language control moves
-              down to the row that already exists, where it keeps its full label instead
-              of being cut back to a flag. */}
-          <div className="flex sm:hidden items-center gap-2">
-            <Link
-              href={addListingHref}
-              className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white whitespace-nowrap hover:bg-blue-700 transition-colors"
-            >
-              {addListingLabel}
-            </Link>
+          {/* Phone. The second row is the navigation row, so everything you might
+              navigate to lives there: For Rent / For Sale if you are renting, Add
+              Property if you are an agent. The top row keeps identity and settings —
+              logo, language, account. Before this the three widest things shared one
+              line and it needed 399px at a 320px viewport. */}
+          <div className="flex sm:hidden items-center gap-2 min-w-0">
+            {/* The logo is fixed at ~149px and will not compress, so on a 320px
+                phone a signed-in account button would tip this row over. Let the
+                select give ground instead. */}
+            <LanguagePicker variant="menu" className="min-w-0 max-w-[8.5rem]" />
             <AccountMenu lang={isVi ? 'vi' : 'en'} />
           </div>
         </div>
@@ -66,7 +64,12 @@ export default function SiteHeader() {
           <div className="flex-1 min-w-0">
             <NavToggle isForSale={isForSale} isForRent={isForRent} rentHref={rentHref} saleHref={saleHref} fullWidth />
           </div>
-          <LanguagePicker variant="menu" />
+          <Link
+            href={addListingHref}
+            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white whitespace-nowrap hover:bg-blue-700 transition-colors shrink-0"
+          >
+            {addListingLabel}
+          </Link>
         </div>
 
       </div>

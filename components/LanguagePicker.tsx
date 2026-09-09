@@ -10,7 +10,7 @@ import { useLanguage } from './LanguageProvider';
 // game and a two-letter code is worse — someone scanning for their language is
 // looking for "Tiếng Việt", not "VI". Sitting next to the search box because
 // that is the moment a visitor decides what language to type in.
-export default function LanguagePicker({ variant = 'inline' }: { variant?: 'inline' | 'menu' }) {
+export default function LanguagePicker({ variant = 'inline', className = '' }: { variant?: 'inline' | 'menu'; className?: string }) {
   const { lang } = useLanguage();
   const pathname = usePathname();
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function LanguagePicker({ variant = 'inline' }: { variant?: 'inli
         value={lang}
         onChange={(e) => go(e.target.value)}
         aria-label="Language"
-        className="text-sm border border-slate-200 rounded-lg px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+        className={`text-sm border border-slate-200 rounded-lg px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white ${className}`}
       >
         {LIVE_LOCALES.map((l) => (
           <option key={l.code} value={l.code}>{`${l.flag} ${l.native}`}</option>
