@@ -5,6 +5,7 @@ import Carousel from './Carousel';
 import ListingCard from './ListingCard';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
+import RunningCosts from './RunningCosts';
 import type { Listing } from '@/lib/types';
 import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
@@ -213,6 +214,10 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
               <p className="text-slate-700 leading-relaxed whitespace-pre-line">{cleanText}</p>
             </div>
           )}
+
+          {/* Running costs, when the source post stated them. Renders nothing
+              when it did not, which today is most listings — see lib/runningCosts.ts. */}
+          <RunningCosts text={sourceText} />
 
           {/* District section */}
           {districtInfo && (
