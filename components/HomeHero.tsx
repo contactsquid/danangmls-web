@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useLanguage } from './LanguageProvider';
+import { facetBase } from '@/lib/facets';
 
 export default function HomeHero() {
   const { lang } = useLanguage();
@@ -22,13 +23,13 @@ export default function HomeHero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href={isVi ? '/vi/thue' : '/for-rent'}
+            href={facetBase('rent', lang)}
             className="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
           >
             {isVi ? 'Xem nhà cho thuê' : 'Browse Rentals'}
           </Link>
           <Link
-            href={isVi ? '/vi/mua-ban' : '/for-sale'}
+            href={facetBase('sale', lang)}
             className="bg-blue-800 text-white border border-blue-400 px-6 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors"
           >
             {isVi ? 'Xem nhà bán' : 'Browse For Sale'}

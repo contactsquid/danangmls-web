@@ -4,6 +4,7 @@ import Link from 'next/link';
 import ListingCard from './ListingCard';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
+import { facetBase } from '@/lib/facets';
 
 interface Props {
   listings: Listing[];
@@ -19,9 +20,8 @@ export default function FeaturedListings({ listings, mode }: Props) {
   const headingEn = mode === 'rent' ? 'Latest Rentals' : 'Latest For Sale';
   const headingVi = mode === 'rent' ? 'Nhà cho thuê mới nhất' : 'Nhà bán mới nhất';
 
-  const moreHrefEn = mode === 'rent' ? '/for-rent' : '/for-sale';
-  const moreHrefVi = mode === 'rent' ? '/vi/thue' : '/vi/mua-ban';
-  const moreHref = isVi ? moreHrefVi : moreHrefEn;
+  // every locale has its own grid path; facetBase owns that mapping
+  const moreHref = facetBase(mode, lang);
 
   const moreLabelEn = mode === 'rent' ? 'See all rentals →' : 'See all for sale →';
   const moreLabelVi = mode === 'rent' ? 'Xem tất cả nhà cho thuê →' : 'Xem tất cả nhà bán →';
