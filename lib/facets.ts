@@ -2,6 +2,7 @@ import { type Lang, viOrEn } from './translations';
 import type { Listing } from './types';
 import { POPULAR_BUILDINGS, buildingSlug, buildingMatches, BUILDING_PAGE_MIN_LISTINGS } from './buildingDefs';
 import { localizeType, localizeDistrict } from './price';
+import { facetContentKo, facetContentRu } from './facetSeoKoRu';
 
 // Single-facet filter pages: /for-rent/<slug>, /for-sale/<slug> (+ VI
 // /vi/thue/<slug>, /vi/mua-ban/<slug>). A <slug> is ONE of a property type, a
@@ -161,6 +162,9 @@ export function facetInitialFilters(f: Facet): { type?: string; district?: strin
 export interface FacetContent { h1: string; subtitle: string; title: string; description: string }
 
 export function facetContent(f: Facet, mode: Mode, langIn: Lang, count: number): FacetContent {
+  // ko/ru get native headings/titles rather than falling through to English.
+  if (langIn === 'ko') return facetContentKo(f, mode, count, v => localizeType(v, 'ko'), v => localizeDistrict(v, 'ko'));
+  if (langIn === 'ru') return facetContentRu(f, mode, count, v => localizeType(v, 'ru'), v => localizeDistrict(v, 'ru'));
   const lang = viOrEn(langIn);
   return lang === 'vi' ? facetContentVi(f, mode, count) : facetContentEn(f, mode, count);
 }

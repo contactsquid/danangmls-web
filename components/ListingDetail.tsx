@@ -9,7 +9,7 @@ import RunningCosts from './RunningCosts';
 import type { Listing } from '@/lib/types';
 import { forLang } from '@/lib/translations';
 import { convertPrice, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
-import { getDistrict } from '@/lib/districts';
+import { getDistrict, districtCopy } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
 import { listingFieldHref, facetUrl, FOREIGN_FACET, facetBase } from '@/lib/facets';
 import { relativeTime } from '@/lib/relativeTime';
@@ -36,6 +36,15 @@ function viFallbackTitle(listing: Listing): string {
   return `${verb} ${type}${beds} tại ${place}`;
 }
 
+// "About <district>, Da Nang" reads differently in each language, so the whole
+// heading is built per locale rather than concatenated around a translated name.
+function districtHeading(name: string, lang: string): string {
+  if (lang === 'vi') return `Về Quận ${name}, Đà Nẵng`;
+  if (lang === 'ko') return `다낭 ${name} 지역 안내`;
+  if (lang === 'ru') return `О районе ${name}, Дананг`;
+  return `About ${name} District, Da Nang`;
+}
+
 export default function ListingDetail({ listing, similarListings = [], agentSlug = null }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
@@ -56,7 +65,9 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
   const typeHref = listing.type     ? listingFieldHref('type', listing.type, detailMode, lang) : null;
   const bedsHref = listing.bedrooms ? listingFieldHref('bedrooms', String(listing.bedrooms), detailMode, lang) : null;
   const distHref = listing.district ? listingFieldHref('district', listing.district, detailMode, lang) : null;
-  const browseVerb = listing.forSale ? (lang === 'vi' ? 'rao bán' : 'for sale') : (lang === 'vi' ? 'cho thuê' : 'rentals');
+  const browseVerb = listing.forSale
+    ? forLang({ en: 'for sale', vi: 'rao bán', ko: '매매', ru: 'на продажу' }, lang)
+    : forLang({ en: 'rentals', vi: 'cho thuê', ko: '임대', ru: 'в аренду' }, lang);
   const districtInfo = getDistrict(listing.district);
 
   const altPrefix = localizedAltPrefix(
@@ -225,12 +236,10 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
           {districtInfo && (
             <div className="mb-8">
               <h2 className="text-lg font-bold text-slate-800 mb-3">
-                {lang === 'vi'
-                  ? `Về Quận ${districtInfo.viName}, Đà Nẵng`
-                  : `About ${districtInfo.name} District, Da Nang`}
+                {districtHeading(districtCopy(districtInfo, lang).name, lang)}
               </h2>
               <p className="text-slate-600 leading-relaxed mb-4">
-                {lang === 'vi' ? districtInfo.viDescription : districtInfo.description}
+                {districtCopy(districtInfo, lang).description}
               </p>
               <div className="rounded-xl overflow-hidden border border-slate-200 h-64">
                 <iframe
@@ -250,18 +259,21 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
 
           {/* Agent awareness callout */}
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-900">
-            <p className="font-semibold mb-1">⚠️ {lang === 'vi' ? 'Đang tìm kiếm trên Facebook?' : 'Browsing Facebook for listings?'}</p>
+            <p className="font-semibold mb-1">⚠️ {forLang({ en: 'Browsing Facebook for listings?', vi: 'Đang tìm kiếm trên Facebook?', ko: '페이스북에서 매물을 찾고 계신가요?', ru: 'Ищете жильё в Facebook?' }, lang)}</p>
             <p className="leading-relaxed">
-              {lang === 'vi'
-                ? 'Hãy cẩn thận với các môi giới không có giấy phép. '
-                : 'Be aware of the risks of using unverified agents. '}
+              {forLang({
+                en: 'Be aware of the risks of using unverified agents. ',
+                vi: 'Hãy cẩn thận với các môi giới không có giấy phép. ',
+                ko: '검증되지 않은 중개인을 이용할 때의 위험을 알아두세요. ',
+                ru: 'Помните о рисках при работе с непроверенными агентами. ',
+              }, lang)}
               <a
                 href="https://danang.homes/renting-in-da-nang-agents-on-facebook-vs-trusted-professionals/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold underline hover:text-amber-700"
               >
-                {lang === 'vi' ? 'Đọc hướng dẫn của chúng tôi →' : 'Read our guide before you proceed →'}
+                {forLang({ en: 'Read our guide before you proceed →', vi: 'Đọc hướng dẫn của chúng tôi →', ko: '진행하기 전에 안내를 읽어보세요 →', ru: 'Прочитайте наш гид, прежде чем продолжить →' }, lang)}
               </a>
             </p>
           </div>
@@ -276,8 +288,8 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               {listing.forSale
-                ? (lang === 'vi' ? 'Xem tất cả bất động sản bán tại Đà Nẵng' : 'View more properties for sale in Da Nang')
-                : (lang === 'vi' ? 'Xem tất cả bất động sản cho thuê tại Đà Nẵng' : 'View more rentals in Da Nang')}
+                ? forLang({ en: 'View more properties for sale in Da Nang', vi: 'Xem tất cả bất động sản bán tại Đà Nẵng', ko: '다낭 매매 매물 더 보기', ru: 'Смотреть больше объектов на продажу в Дананге' }, lang)
+                : forLang({ en: 'View more rentals in Da Nang', vi: 'Xem tất cả bất động sản cho thuê tại Đà Nẵng', ko: '다낭 임대 매물 더 보기', ru: 'Смотреть больше вариантов аренды в Дананге' }, lang)}
             </Link>
           </div>
         </div>
@@ -287,7 +299,7 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
       {similarListings.length > 0 && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-10 mb-12">
           <h2 className="text-lg font-bold text-slate-800 mb-5">
-            {lang === 'vi' ? 'Bất động sản tương tự' : 'Similar Listings'}
+            {forLang({ en: 'Similar Listings', vi: 'Bất động sản tương tự', ko: '비슷한 매물', ru: 'Похожие объекты' }, lang)}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {similarListings.map(l => (

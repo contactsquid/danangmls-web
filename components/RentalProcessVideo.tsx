@@ -1,6 +1,7 @@
 'use client';
 
 import { useLanguage } from './LanguageProvider';
+import { forLang } from '@/lib/translations';
 
 // Hardcoded educational video about the Da Nang rental process. Rendered at the
 // bottom of every for-rent listing detail page so prospective renters get
@@ -17,12 +18,15 @@ export default function RentalProcessVideo() {
     <section className="bg-slate-100 border-t border-slate-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
         <h2 className="text-2xl font-bold text-slate-900 mb-2">
-          {isVi ? 'Quy trình thuê nhà tại Đà Nẵng' : 'How Renting a House in Da Nang Works'}
+          {forLang({ en: 'How Renting a House in Da Nang Works', vi: 'Quy trình thuê nhà tại Đà Nẵng', ko: '다낭에서 집 빌리는 방법', ru: 'Как арендовать жильё в Дананге' }, lang)}
         </h2>
         <p className="text-slate-600 mb-6">
-          {isVi
-            ? 'Xem hướng dẫn từng bước về quy trình thuê nhà tại Đà Nẵng — từ tham quan đến ký hợp đồng.'
-            : 'A step-by-step walkthrough of the rental process in Da Nang — from viewing to signing the lease.'}
+          {forLang({
+            en: 'A step-by-step walkthrough of the rental process in Da Nang — from viewing to signing the lease.',
+            vi: 'Xem hướng dẫn từng bước về quy trình thuê nhà tại Đà Nẵng — từ tham quan đến ký hợp đồng.',
+            ko: '집을 보러 가는 것부터 계약서에 서명하기까지, 다낭 임대 절차를 단계별로 안내합니다.',
+            ru: 'Пошаговый разбор аренды в Дананге — от просмотра до подписания договора.',
+          }, lang)}
         </p>
         <div className="aspect-video bg-slate-200 rounded-xl overflow-hidden shadow-md">
           <iframe

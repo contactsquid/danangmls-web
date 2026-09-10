@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { FeaturedBlogPost } from '@/lib/featuredBlogs';
 import { useLanguage } from './LanguageProvider';
+import { forLang } from '@/lib/translations';
 
 // Pick `n` random items from a pool without mutating it (Fisher-Yates on a copy).
 function pickRandom<T>(pool: T[], n: number): T[] {
@@ -26,13 +27,16 @@ export default function FeaturedBlogs({ posts }: { posts: FeaturedBlogPost[] }) 
     setShown(pickRandom(posts, 3));
   }, [posts]);
 
+  // Blog posts themselves are English/Vietnamese only (they live on danang.homes),
+  // but the date should still read natively for ko/ru.
+  const dateLocale = forLang({ en: 'en-US', vi: 'vi-VN', ko: 'ko-KR', ru: 'ru-RU' }, lang);
   const blogBase = isVi ? 'https://danang.homes/vi/blog' : 'https://danang.homes/blog';
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="flex items-baseline justify-between mb-6">
         <h2 className="text-2xl font-bold text-slate-900">
-          {isVi ? 'Từ blog' : 'From Our Blog'}
+          {forLang({ en: 'From Our Blog', vi: 'Từ blog', ko: '블로그', ru: 'Наш блог' }, lang)}
         </h2>
         <a
           href={isVi ? 'https://danang.homes/vi/blog' : 'https://danang.homes/blog'}
@@ -40,7 +44,7 @@ export default function FeaturedBlogs({ posts }: { posts: FeaturedBlogPost[] }) 
           rel="noopener noreferrer"
           className="text-sm font-medium text-blue-600 hover:text-blue-800"
         >
-          {isVi ? 'Xem tất cả →' : 'See all →'}
+          {forLang({ en: 'See all →', vi: 'Xem tất cả →', ko: '전체 보기 →', ru: 'Все статьи →' }, lang)}
         </a>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -66,7 +70,7 @@ export default function FeaturedBlogs({ posts }: { posts: FeaturedBlogPost[] }) 
               </div>
               <div className="p-4">
                 <p className="text-xs text-slate-500 mb-1">
-                  {new Date(post.date).toLocaleDateString(isVi ? 'vi-VN' : 'en-US', {
+                  {new Date(post.date).toLocaleDateString(dateLocale, {
                     year: 'numeric', month: 'long', day: 'numeric',
                   })}
                 </p>

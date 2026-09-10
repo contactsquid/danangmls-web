@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useLanguage } from './LanguageProvider';
+import { forLang } from '@/lib/translations';
 
 interface Props {
   buildingName?: string;
@@ -18,14 +19,20 @@ export default function ForeignEligibleBadge({ buildingName, size = 'sm', href }
   const { lang } = useLanguage();
   const isVi = lang === 'vi';
 
-  const label = isVi ? 'Người nước ngoài mua được' : 'Foreign Buyer Eligible';
+  const label = forLang({ en: 'Foreign Buyer Eligible', vi: 'Người nước ngoài mua được', ko: '외국인 구입 가능', ru: 'Доступно иностранцам' }, lang);
   const tooltip = buildingName
-    ? (isVi
-        ? `Tòa nhà ${buildingName} cho phép người nước ngoài sở hữu căn hộ.`
-        : `${buildingName} is approved for foreign ownership.`)
-    : (isVi
-        ? 'Tòa nhà này cho phép người nước ngoài sở hữu căn hộ.'
-        : 'This building is approved for foreign ownership.');
+    ? forLang({
+        en: `${buildingName} is approved for foreign ownership.`,
+        vi: `Tòa nhà ${buildingName} cho phép người nước ngoài sở hữu căn hộ.`,
+        ko: `${buildingName}은(는) 외국인 소유가 허용된 건물입니다.`,
+        ru: `${buildingName} одобрен для покупки иностранцами.`,
+      }, lang)
+    : forLang({
+        en: 'This building is approved for foreign ownership.',
+        vi: 'Tòa nhà này cho phép người nước ngoài sở hữu căn hộ.',
+        ko: '이 건물은 외국인 소유가 허용되어 있습니다.',
+        ru: 'Этот дом одобрен для покупки иностранцами.',
+      }, lang);
 
   const padding = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm';
   const iconSize = size === 'sm' ? 'w-3 h-3' : 'w-4 h-4';

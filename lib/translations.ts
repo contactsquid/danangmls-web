@@ -3,7 +3,7 @@ export type Lang = 'en' | 'vi' | 'ko' | 'ru';
 // Russian counts three ways: 1 объявление, 2-4 объявления, 5+ объявлений — and the
 // teens are the exception that catches naive implementations (11-14 take the last
 // form). A plain `${n} объявлений` reads wrong for most numbers a listings page shows.
-function ruPlural(n: number, one: string, few: string, many: string): string {
+export function ruPlural(n: number, one: string, few: string, many: string): string {
   const mod10 = n % 10, mod100 = n % 100;
   if (mod10 === 1 && mod100 !== 11) return one;
   if (mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return few;

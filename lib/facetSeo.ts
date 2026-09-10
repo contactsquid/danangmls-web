@@ -1,5 +1,6 @@
 import { type Lang, viOrEn } from './translations';
 import type { Facet, Mode } from './facets';
+import { facetSeoKoRu } from './facetSeoKoRu';
 
 // Facet-aware bottom-section copy (SEO prose + FAQ). Returns null to fall back
 // to the generic mode-level copy in translations.ts (used for district/bedroom
@@ -14,6 +15,9 @@ const EN_TYPE_PLURAL: Record<string, string> = {
 };
 
 export function facetSeoBody(f: Facet, mode: Mode, langIn: Lang): FacetSeoBody | null {
+  // ko/ru have their own bodies; they return null for building facets so those
+  // fall back to the generic translated mode copy rather than English.
+  if (langIn === 'ko' || langIn === 'ru') return facetSeoKoRu(f, mode, langIn);
   const lang = viOrEn(langIn);
   if (f.kind === 'type') return lang === 'vi' ? typeVi(f.value, mode) : typeEn(f.value, mode);
   if (f.kind === 'foreign') return lang === 'vi' ? foreignVi() : foreignEn();
