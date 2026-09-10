@@ -1,3 +1,5 @@
+import https from 'node:https';
+import { createGunzip, createInflate, createBrotliDecompress } from 'node:zlib';
 import { Listing } from './types';
 import { detectNeighborhood } from './neighborhoods';
 import { extractPriceFromText } from './price';
@@ -42,17 +44,49 @@ const forSaleParsed: { value: Listing[] | null; at: number } = { value: null, at
 let rentalsInFlight: Promise<Listing[]> | null = null;
 let forSaleInFlight: Promise<Listing[]> | null = null;
 
+// These CSVs deliberately do NOT go through the global fetch(), because Next
+// patches it and both of its caching modes break on a ~10MB body:
+//   • cache: 'force-cache' TRUNCATES — measured 2026-09-10 in production it
+//     returned 149,288 of 10,086,878 chars (1.48%, 62 rows of 4,206), which is
+//     what cut the live site to 58 rentals.
+//   • cache: 'no-store' is rejected inside a route that sets `revalidate`
+//     (the listing pages use revalidate = 300), which 500'd every detail page.
+// Reading the stream directly sidesteps the data cache entirely. The
+// module-level cache above is the real cache.
+function httpsGetText(url: string, redirectsLeft = 5): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, {
+      headers: { 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'danangmls-web' },
+    }, (res) => {
+      const status = res.statusCode || 0;
+      if (status >= 300 && status < 400 && res.headers.location) {
+        res.resume();
+        if (redirectsLeft <= 0) return reject(new Error('CSV fetch: too many redirects'));
+        return resolve(httpsGetText(new URL(res.headers.location, url).toString(), redirectsLeft - 1));
+      }
+      if (status !== 200) { res.resume(); return reject(new Error(`Failed to fetch CSV: ${status}`)); }
+
+      const enc = String(res.headers['content-encoding'] || '').toLowerCase();
+      const stream =
+        enc === 'gzip' ? res.pipe(createGunzip()) :
+        enc === 'br' ? res.pipe(createBrotliDecompress()) :
+        enc === 'deflate' ? res.pipe(createInflate()) :
+        res;
+
+      const chunks: Buffer[] = [];
+      stream.on('data', (c: Buffer) => chunks.push(c));
+      stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+      stream.on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(30_000, () => req.destroy(new Error('CSV fetch timeout')));
+  });
+}
+
 async function fetchCSV(url: string, cache: { value: string | null; at: number }): Promise<string> {
   if (cache.value !== null && Date.now() - cache.at < CACHE_TTL_MS) return cache.value;
-  // MUST be 'no-store'. With `cache: 'force-cache'` Vercel's fetch data cache
-  // TRUNCATES an oversized response instead of passing it through: measured
-  // 2026-09-10 in production, force-cache returned 149,288 of 10,086,878 chars
-  // (1.48%, 62 rows of 4,206) while no-store returned the whole file. That is
-  // what reduced the live site to 58 rentals. The module-level cache above is
-  // the real cache; these CSVs are ~10MB and were never data-cacheable anyway.
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to fetch CSV: ${res.status}`);
-  cache.value = await res.text();
+  const text = await httpsGetText(url);
+  cache.value = text;
   cache.at = Date.now();
   return cache.value;
 }
