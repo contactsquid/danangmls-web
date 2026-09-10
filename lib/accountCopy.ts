@@ -9,6 +9,15 @@ import type { Lang } from './translations';
  * an English-only sign-up means they cannot self-serve at all.
  */
 
+/** Header nav label only. The account pages themselves are EN/VI, so this is a
+ *  deliberate one-string override rather than a ko/ru AccountCopy (92 fields). */
+export const ADD_PROPERTY_NAV = {
+  en: 'Add property',
+  vi: 'Đăng tin',
+  ko: '매물 등록',
+  ru: 'Разместить объект',
+} as const;
+
 export interface AccountCopy {
   // Sign up
   signupTitle: string;

@@ -20,14 +20,42 @@ export const VI_DISTRICTS: Record<string, string> = {
   'Hoa Vang':     'Hòa Vang',
 };
 
+// Korean and Russian read the district names transliterated. These are DISPLAY
+// only — facet URLs come from facetSlug, which stays on the English slug.
+export const KO_DISTRICTS: Record<string, string> = {
+  'Hai Chau':     '하이쩌우',
+  'Thanh Khe':    '탄케',
+  'Son Tra':      '썬짜',
+  'Ngu Hanh Son': '응우한선',
+  'Lien Chieu':   '리엔찌에우',
+  'Cam Le':       '깜레',
+  'Hoi An':       '호이안',
+  'Hoa Vang':     '호아방',
+};
+
+export const RU_DISTRICTS: Record<string, string> = {
+  'Hai Chau':     'Хайчау',
+  'Thanh Khe':    'Тханькхе',
+  'Son Tra':      'Шонча',
+  'Ngu Hanh Son': 'Нгуханьшон',
+  'Lien Chieu':   'Лиенчиеу',
+  'Cam Le':       'Камле',
+  'Hoi An':       'Хойан',
+  'Hoa Vang':     'Хоаванг',
+};
+
 export function localizeType(type: string, lang: string): string {
   return lang === 'vi' ? (VI_TYPES[type] ?? type) : type;
 }
 
 export function localizeDistrict(district: string, lang: string): string {
-  if (lang !== 'vi') return district;
+  const map = lang === 'vi' ? VI_DISTRICTS
+            : lang === 'ko' ? KO_DISTRICTS
+            : lang === 'ru' ? RU_DISTRICTS
+            : null;
+  if (!map) return district;
   // Try exact match first, then case-insensitive
-  return VI_DISTRICTS[district] ?? VI_DISTRICTS[Object.keys(VI_DISTRICTS).find(k => k.toLowerCase() === district.toLowerCase()) ?? ''] ?? district;
+  return map[district] ?? map[Object.keys(map).find(k => k.toLowerCase() === district.toLowerCase()) ?? ''] ?? district;
 }
 
 /**

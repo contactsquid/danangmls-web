@@ -5,9 +5,28 @@ import { useLanguage } from './LanguageProvider';
 import { renderInline } from '@/lib/inlineFormat';
 import { facetUrl, FOREIGN_FACET, type Facet } from '@/lib/facets';
 import { localizeType, localizeDistrict } from '@/lib/price';
+import { forLang } from '@/lib/translations';
 import { SEO_DISTRICTS, DISTRICT_HERO } from '@/lib/pageImages';
 
 const TYPES = ['House', 'Apartment', 'Villa'];
+
+// Chip labels, the type verb and these two headings were vi-or-English only, so
+// /ko and /ru rendered them in English. The h2/intro above already come from the
+// translations table, which is why only these were left showing.
+const SEO_COPY = {
+  en: { verbRent: 'for rent', verbSale: 'for sale', byType: 'By type', popular: 'Popular searches',
+        rent: ['3-Bedroom Houses for Rent', '2-Bedroom Houses for Rent', 'Furnished Apartments for Rent', 'Villas for Rent', 'Houses for Rent in Son Tra', 'Rentals in Ngu Hanh Son'],
+        sale: ['Apartments for Sale', '3-Bedroom Homes for Sale', 'Foreign-Buyer-Eligible Homes', 'Villas for Sale', 'Property for Sale in Ngu Hanh Son', 'Property for Sale in Son Tra'] },
+  vi: { verbRent: 'cho thuê', verbSale: 'bán', byType: 'Theo loại hình', popular: 'Tìm kiếm phổ biến',
+        rent: ['Nhà 3 phòng ngủ cho thuê', 'Nhà 2 phòng ngủ cho thuê', 'Căn hộ cho thuê', 'Biệt thự cho thuê', 'Nhà cho thuê tại Sơn Trà', 'Cho thuê tại Ngũ Hành Sơn'],
+        sale: ['Căn hộ bán', 'Nhà 3 phòng ngủ bán', 'Người nước ngoài mua được', 'Biệt thự bán', 'Bán tại Ngũ Hành Sơn', 'Bán tại Sơn Trà'] },
+  ko: { verbRent: '임대', verbSale: '매매', byType: '유형별', popular: '인기 검색',
+        rent: ['침실 3개 주택 임대', '침실 2개 주택 임대', '가구 완비 아파트 임대', '빌라 임대', '썬짜 주택 임대', '응우한선 임대 매물'],
+        sale: ['아파트 매매', '침실 3개 주택 매매', '외국인 구입 가능 주택', '빌라 매매', '응우한선 부동산 매매', '썬짜 부동산 매매'] },
+  ru: { verbRent: 'в аренду', verbSale: 'на продажу', byType: 'По типу', popular: 'Популярные запросы',
+        rent: ['Дома с 3 спальнями в аренду', 'Дома с 2 спальнями в аренду', 'Меблированные квартиры в аренду', 'Виллы в аренду', 'Дома в аренду в Шонче', 'Аренда в Нгуханьшоне'],
+        sale: ['Квартиры на продажу', 'Дома с 3 спальнями на продажу', 'Жильё, доступное иностранцам', 'Виллы на продажу', 'Недвижимость на продажу в Нгуханьшоне', 'Недвижимость на продажу в Шонче'] },
+} as const;
 
 // Bottom-of-page SEO prose (moved down from the hero) + a district photo grid
 // and type quick-links for internal linking.
@@ -17,27 +36,33 @@ export default function PageSeoSection({ mode, districtImages = {}, seoOverride 
   const h2mid = seoOverride ? '' : (mode === 'rent' ? t.rentH2mid : '');
   const h2b   = mode === 'rent' ? t.rentH2b   : t.saleH2b;
   const intro = seoOverride?.intro ?? (mode === 'rent' ? t.rentIntro : t.saleIntro);
-  const verb  = mode === 'rent' ? (lang === 'vi' ? 'cho thuê' : 'for rent') : (lang === 'vi' ? 'bán' : 'for sale');
+  const c     = forLang(SEO_COPY, lang);
+  const verb  = mode === 'rent' ? c.verbRent : c.verbSale;
 
   const chip = 'inline-flex items-center rounded-full bg-blue-50 text-blue-700 text-sm font-medium px-3 py-1.5 hover:bg-blue-100 hover:underline transition-colors';
 
-  const popularSearches: { label: string; facet: Facet }[] = mode === 'rent'
-    ? [
-        { label: lang === 'vi' ? 'Nhà 3 phòng ngủ cho thuê' : '3-Bedroom Houses for Rent', facet: { kind: 'bedrooms', value: '3' } },
-        { label: lang === 'vi' ? 'Nhà 2 phòng ngủ cho thuê' : '2-Bedroom Houses for Rent', facet: { kind: 'bedrooms', value: '2' } },
-        { label: lang === 'vi' ? 'Căn hộ cho thuê' : 'Furnished Apartments for Rent', facet: { kind: 'type', value: 'Apartment' } },
-        { label: lang === 'vi' ? 'Biệt thự cho thuê' : 'Villas for Rent', facet: { kind: 'type', value: 'Villa' } },
-        { label: lang === 'vi' ? 'Nhà cho thuê tại Sơn Trà' : 'Houses for Rent in Son Tra', facet: { kind: 'district', value: 'Son Tra' } },
-        { label: lang === 'vi' ? 'Cho thuê tại Ngũ Hành Sơn' : 'Rentals in Ngu Hanh Son', facet: { kind: 'district', value: 'Ngu Hanh Son' } },
-      ]
-    : [
-        { label: lang === 'vi' ? 'Căn hộ bán' : 'Apartments for Sale', facet: { kind: 'type', value: 'Apartment' } },
-        { label: lang === 'vi' ? 'Nhà 3 phòng ngủ bán' : '3-Bedroom Homes for Sale', facet: { kind: 'bedrooms', value: '3' } },
-        { label: lang === 'vi' ? 'Người nước ngoài mua được' : 'Foreign-Buyer-Eligible Homes', facet: FOREIGN_FACET },
-        { label: lang === 'vi' ? 'Biệt thự bán' : 'Villas for Sale', facet: { kind: 'type', value: 'Villa' } },
-        { label: lang === 'vi' ? 'Bán tại Ngũ Hành Sơn' : 'Property for Sale in Ngu Hanh Son', facet: { kind: 'district', value: 'Ngu Hanh Son' } },
-        { label: lang === 'vi' ? 'Bán tại Sơn Trà' : 'Property for Sale in Son Tra', facet: { kind: 'district', value: 'Son Tra' } },
-      ];
+  // Facet order is fixed; only the visible label varies by locale.
+  const RENT_FACETS: Facet[] = [
+    { kind: 'bedrooms', value: '3' },
+    { kind: 'bedrooms', value: '2' },
+    { kind: 'type', value: 'Apartment' },
+    { kind: 'type', value: 'Villa' },
+    { kind: 'district', value: 'Son Tra' },
+    { kind: 'district', value: 'Ngu Hanh Son' },
+  ];
+  const SALE_FACETS: Facet[] = [
+    { kind: 'type', value: 'Apartment' },
+    { kind: 'bedrooms', value: '3' },
+    FOREIGN_FACET,
+    { kind: 'type', value: 'Villa' },
+    { kind: 'district', value: 'Ngu Hanh Son' },
+    { kind: 'district', value: 'Son Tra' },
+  ];
+  const popularSearches: { label: string; facet: Facet }[] =
+    (mode === 'rent' ? c.rent : c.sale).map((label, i) => ({
+      label,
+      facet: (mode === 'rent' ? RENT_FACETS : SALE_FACETS)[i],
+    }));
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-14">
@@ -80,7 +105,7 @@ export default function PageSeoSection({ mode, districtImages = {}, seoOverride 
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">{lang === 'vi' ? 'Theo loại hình' : 'By type'}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">{c.byType}</p>
             <div className="flex flex-wrap gap-2">
               {TYPES.map(ty => (
                 <Link key={ty} href={facetUrl(mode, lang, { kind: 'type', value: ty })} className={chip}>
@@ -97,7 +122,7 @@ export default function PageSeoSection({ mode, districtImages = {}, seoOverride 
 
           {/* Popular searches — a real list of internal facet links */}
           <div className="mt-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">{lang === 'vi' ? 'Tìm kiếm phổ biến' : 'Popular searches'}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">{c.popular}</p>
             <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-1.5 list-disc pl-5 text-sm marker:text-slate-300">
               {popularSearches.map(p => (
                 <li key={p.label}><Link href={facetUrl(mode, lang, p.facet)} className="text-blue-700 hover:underline">{p.label}</Link></li>

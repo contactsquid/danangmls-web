@@ -8,7 +8,7 @@ import AgentAvatar from '@/components/AgentAvatar';
 import { createClient } from '@/lib/supabase/client';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { signOutAction } from '@/app/account/actions';
-import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
+import { ACCOUNT_COPY, accountPaths, ADD_PROPERTY_NAV } from '@/lib/accountCopy';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
 import { agentPaths } from '@/lib/agentCopy';
 import type { Lang } from '@/lib/translations';
@@ -129,7 +129,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
             {forLang(LISTING_FORM_COPY, lang).myListings}
           </Link>
           <Link href={paths.newListing} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
-            {t.addPropertyNav}
+            {forLang(ADD_PROPERTY_NAV, lang)}
           </Link>
 
           {/* Admins moderate often enough that the link belongs here rather than

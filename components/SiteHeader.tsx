@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import { useLanguage } from './LanguageProvider';
 import LanguagePicker from './LanguagePicker';
-import { accountPaths, ACCOUNT_COPY } from '@/lib/accountCopy';
+import { accountPaths, ADD_PROPERTY_NAV } from '@/lib/accountCopy';
 import { facetBase } from '@/lib/facets';
+import { forLang } from '@/lib/translations';
 import AccountMenu from './account/AccountMenu';
 
 
@@ -28,7 +29,7 @@ export default function SiteHeader() {
   // header a static component: checking the session here would make every page
   // on the site wait on an auth round-trip.
   const addListingHref = accountPaths[isVi ? 'vi' : 'en'].newListing;
-  const addListingLabel = ACCOUNT_COPY[isVi ? 'vi' : 'en'].addPropertyNav;
+  const addListingLabel = forLang(ADD_PROPERTY_NAV, lang);
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
