@@ -44,11 +44,13 @@ let forSaleInFlight: Promise<Listing[]> | null = null;
 
 async function fetchCSV(url: string, cache: { value: string | null; at: number }): Promise<string> {
   if (cache.value !== null && Date.now() - cache.at < CACHE_TTL_MS) return cache.value;
-  // Was `cache: 'no-store'` (forced every route dynamic). The CSVs are 6–9MB so
-  // Next's data cache can't store them anyway (>2MB limit) — the module-level
-  // cache above is the real cache. Using force-cache instead removes the
-  // "dynamic" signal so sheet-backed routes can be ISR-cached (revalidate).
-  const res = await fetch(url, { cache: 'force-cache' });
+  // MUST be 'no-store'. With `cache: 'force-cache'` Vercel's fetch data cache
+  // TRUNCATES an oversized response instead of passing it through: measured
+  // 2026-09-10 in production, force-cache returned 149,288 of 10,086,878 chars
+  // (1.48%, 62 rows of 4,206) while no-store returned the whole file. That is
+  // what reduced the live site to 58 rentals. The module-level cache above is
+  // the real cache; these CSVs are ~10MB and were never data-cacheable anyway.
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to fetch CSV: ${res.status}`);
   cache.value = await res.text();
   cache.at = Date.now();
