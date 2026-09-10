@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     canonical: 'https://danangmls.com/ru/for-sale',
     languages: {
       en: 'https://danangmls.com/for-sale',
-      vi: 'https://danangmls.com/ru/for-sale',
+      ru: 'https://danangmls.com/ru/for-sale',
       'x-default': 'https://danangmls.com/for-sale',
     },
   },

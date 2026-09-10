@@ -7,7 +7,8 @@ import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import RunningCosts from './RunningCosts';
 import type { Listing } from '@/lib/types';
-import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
+import { forLang } from '@/lib/translations';
+import { convertPrice, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
 import { getDistrict } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
 import { listingFieldHref, facetUrl, FOREIGN_FACET, facetBase } from '@/lib/facets';
@@ -47,7 +48,7 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
     : localizedTitle(listing, lang);
   // localizedText is vi-identical (vi_text || text) and adds ko/ru.
   const sourceText   = localizedText(listing, lang);
-  const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
+  const displayPrice = listing.price ? convertPrice(listing.price, lang) : listing.price;
 
   // Type / bedrooms / district each link to their facet page (rent or sale) when
   // one exists; listingFieldHref returns null otherwise (e.g. unknown district).
@@ -93,7 +94,7 @@ export default function ListingDetail({ listing, similarListings = [], agentSlug
           {/* Price + badges */}
           <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
             <p className="text-3xl font-bold text-slate-900">
-              {displayPrice || <span className="text-slate-400 text-xl font-normal">{lang === 'vi' ? 'Liên hệ để biết giá' : 'Price on request'}</span>}
+              {displayPrice || <span className="text-slate-400 text-xl font-normal">{forLang({ en: 'Price on request', vi: 'Liên hệ để biết giá', ko: '가격 문의', ru: 'Цена по запросу' }, lang)}</span>}
             </p>
             <div className="flex flex-wrap gap-2">
               {listing.type && (

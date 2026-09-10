@@ -6,7 +6,8 @@ import Carousel from './Carousel';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
-import { convertPriceToVND, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle } from '@/lib/price';
+import { forLang } from '@/lib/translations';
+import { convertPrice, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle } from '@/lib/price';
 import { listingFieldHref, facetUrl, FOREIGN_FACET, listingHref } from '@/lib/facets';
 
 interface Props {
@@ -48,7 +49,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
     : localizedTitle(listing, lang);
-  const displayPrice = (lang === 'vi' && listing.price) ? convertPriceToVND(listing.price) : listing.price;
+  const displayPrice = listing.price ? convertPrice(listing.price, lang) : listing.price;
   const altPrefix = localizedAltPrefix(
     { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
     lang,
@@ -76,7 +77,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
         )}
         {/* Price */}
         <p className="text-lg font-bold text-slate-900 mb-1">
-          {displayPrice || <span className="text-slate-400 text-sm font-normal">{lang === 'vi' ? 'Liên hệ để biết giá' : 'Price on request'}</span>}
+          {displayPrice || <span className="text-slate-400 text-sm font-normal">{forLang({ en: 'Price on request', vi: 'Liên hệ để biết giá', ko: '가격 문의', ru: 'Цена по запросу' }, lang)}</span>}
         </p>
 
         {/* Title */}

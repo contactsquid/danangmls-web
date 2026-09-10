@@ -1,5 +1,10 @@
 // Approximate VND/USD rate (matches the AI enrichment pipeline's conversion)
 const VND_RATE = 26300;
+// Fetched 2026-09-10. Hardcoded like VND_RATE rather than called live: a listing
+// grid renders thousands of prices and must not depend on an FX request. Re-check
+// these periodically — a stale rate shows a wrong number, not an error.
+const KRW_RATE = 1339;
+const RUB_RATE = 85;
 
 export const VI_TYPES: Record<string, string> = {
   'Apartment': 'Căn Hộ',
@@ -7,6 +12,22 @@ export const VI_TYPES: Record<string, string> = {
   'Land':      'Đất Nền',
   'Villa':     'Biệt Thự',
   'Commercial': 'Thương Mại',
+};
+
+export const KO_TYPES: Record<string, string> = {
+  'Apartment':  '아파트',
+  'House':      '주택',
+  'Land':       '토지',
+  'Villa':      '빌라',
+  'Commercial': '상가',
+};
+
+export const RU_TYPES: Record<string, string> = {
+  'Apartment':  'Квартира',
+  'House':      'Дом',
+  'Land':       'Участок',
+  'Villa':      'Вилла',
+  'Commercial': 'Коммерческая',
 };
 
 export const VI_DISTRICTS: Record<string, string> = {
@@ -45,7 +66,11 @@ export const RU_DISTRICTS: Record<string, string> = {
 };
 
 export function localizeType(type: string, lang: string): string {
-  return lang === 'vi' ? (VI_TYPES[type] ?? type) : type;
+  const map = lang === 'vi' ? VI_TYPES
+            : lang === 'ko' ? KO_TYPES
+            : lang === 'ru' ? RU_TYPES
+            : null;
+  return map ? (map[type] ?? type) : type;
 }
 
 export function localizeDistrict(district: string, lang: string): string {
@@ -226,6 +251,55 @@ export function extractPriceFromText(text: string, forSale: boolean): string {
   }
 
   return '';
+}
+
+// Korean reads large sums in 만 (10k) and 억 (100M); a raw 669,500 is hard to scan.
+function krwFormat(krw: number): string {
+  if (krw >= 100_000_000) {
+    const eok = krw / 100_000_000;
+    return `${eok % 1 === 0 ? eok : eok.toFixed(1)}억 원`;
+  }
+  if (krw >= 10_000) {
+    const man = Math.round(krw / 10_000);
+    return `${man.toLocaleString('ko-KR')}만 원`;
+  }
+  return `${Math.round(krw).toLocaleString('ko-KR')}원`;
+}
+
+function rubFormat(rub: number): string {
+  if (rub >= 1_000_000) {
+    const mln = rub / 1_000_000;
+    return `${mln % 1 === 0 ? mln : mln.toFixed(1)} млн ₽`;
+  }
+  // Round to the nearest 1,000: a rent range is an estimate, and "59 755 ₽" reads
+  // as false precision next to the Vietnamese (18.5 triệu) and Korean (94만) forms.
+  const n = rub >= 10_000 ? Math.round(rub / 1000) * 1000 : Math.round(rub);
+  // ru-RU groups with a non-breaking space, which is what a Russian reader expects
+  return `${n.toLocaleString('ru-RU')} ₽`;
+}
+
+function koSuffix(rest: string): string { return /month/i.test(rest) ? '/월' : ''; }
+function ruSuffix(rest: string): string { return /month/i.test(rest) ? '/мес.' : ''; }
+
+/** Rewrites a "$500/month" or "$262,000 for sale" price into the page language's
+ *  currency. English is returned untouched. Ranges keep their range shape. */
+export function convertPrice(price: string, lang: string): string {
+  if (!price) return price;
+  const cfg = lang === 'vi' ? { rate: VND_RATE, fmt: vndFormat, sfx: viSuffix }
+            : lang === 'ko' ? { rate: KRW_RATE, fmt: krwFormat, sfx: koSuffix }
+            : lang === 'ru' ? { rate: RUB_RATE, fmt: rubFormat, sfx: ruSuffix }
+            : null;
+  if (!cfg) return price;
+
+  const range = price.match(/^\$([0-9,]+)\s*-\s*\$([0-9,]+)(.*)/);
+  if (range) {
+    return `${cfg.fmt(parseDollars(range[1]) * cfg.rate)} - ${cfg.fmt(parseDollars(range[2]) * cfg.rate)}${cfg.sfx(range[3])}`;
+  }
+  const single = price.match(/^\$([0-9,]+)(.*)/);
+  if (single) {
+    return `${cfg.fmt(parseDollars(single[1]) * cfg.rate)}${cfg.sfx(single[2])}`;
+  }
+  return price;
 }
 
 export function convertPriceToVND(price: string): string {

@@ -8,19 +8,15 @@ import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
 import { socialImages } from '@/lib/ogImage';
 
-// Vietnamese fallback title for listings that don't have vi_title populated
-// (currently most rentals — Sheet1 lacks a VI_TITLE column). Generates a
-// keyword-rich Vietnamese title so the page isn't 100% English in <title>.
-// For Sale listings already have vi_title from the sheet so they don't hit
-// this fallback.
-function viFallbackTitle(listing: Listing): string {
-  const verb   = listing.forSale ? 'Bán' : 'Cho thuê';
-  const type   = listing.type ? localizeType(listing.type, 'ko') : 'Bất động sản';
-  const beds   = listing.bedrooms ? ` ${listing.bedrooms} phòng ngủ` : '';
-  const place  = listing.district
-    ? `${localizeDistrict(listing.district, 'ko')}, Đà Nẵng`
-    : 'Đà Nẵng';
-  return `${verb} ${type}${beds} tại ${place}`;
+// Korean fallback title for listings without ko_title. Reads as a Korean
+// search phrase ("다낭 하이쩌우 침실 3개 주택 임대") rather than a translated
+// English sentence, so <title> is never left in English.
+function koFallbackTitle(listing: Listing): string {
+  const verb  = listing.forSale ? '매매' : '임대';
+  const type  = listing.type ? localizeType(listing.type, 'ko') : '부동산';
+  const beds  = listing.bedrooms ? `침실 ${listing.bedrooms}개` : '';
+  const place = listing.district ? localizeDistrict(listing.district, 'ko') : '';
+  return ['다낭', place, beds, type, verb].filter(Boolean).join(' ');
 }
 
 interface Props {
@@ -57,10 +53,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug);
-  if (!listing) return { title: 'Không tìm thấy' };
-  const displayTitle = listing.vi_title || viFallbackTitle(listing);
+  if (!listing) return { title: '찾을 수 없음' };
+  const displayTitle = listing.ko_title || koFallbackTitle(listing);
   const ogImage = getShareableImage(listing.images);
-  const description = (listing.vi_text || listing.text).slice(0, 160) || `${listing.type} tại ${listing.district}. ${listing.price}.`;
+  const description = (listing.ko_text || listing.text).slice(0, 160) || `${listing.type} — ${listing.district}. ${listing.price}.`;
   return {
     title: displayTitle,
     description,
@@ -68,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://danangmls.com/ko/listing/${slug}`,
       languages: {
         en: `https://danangmls.com/listing/${slug}`,
-        vi: `https://danangmls.com/ko/listing/${slug}`,
+        ko: `https://danangmls.com/ko/listing/${slug}`,
         'x-default': `https://danangmls.com/listing/${slug}`,
       },
     },
@@ -111,15 +107,15 @@ export default async function KOListingPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
     name: listing.title,
-    description: listing.text || `${listing.type} tại ${listing.district}`,
+    description: listing.text || `${listing.type} — ${listing.district}`,
     url: `https://danangmls.com/ko/listing/${listing.slug}`,
     ...(listing.price && { price: listing.price }),
     ...(listing.images[0] && { image: listing.images[0] }),
     ...(listing.bedrooms && { numberOfRooms: listing.bedrooms }),
     address: {
       '@type': 'PostalAddress',
-      addressLocality: listing.district || 'Đà Nẵng',
-      addressRegion: 'Đà Nẵng',
+      addressLocality: listing.district || 'Da Nang',
+      addressRegion: 'Da Nang',
       addressCountry: 'VN',
     },
   };

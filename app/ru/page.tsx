@@ -15,13 +15,13 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
-  description: 'DanangMLS — danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An, Việt Nam. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày, có thể duyệt bằng tiếng Anh và tiếng Việt.',
+  title: 'Недвижимость в Дананге — база объявлений | DanangMLS',
+  description: 'DanangMLS — самый аккуратный список жилья в аренду и на продажу в Дананге и Хойане, Вьетнам. Объявления от местных агентов, обновляются ежедневно, доступны на английском, вьетнамском, корейском и русском.',
   alternates: {
     canonical: 'https://danangmls.com/ru',
     languages: {
       en: 'https://danangmls.com',
-      vi: 'https://danangmls.com/ru',
+      ru: 'https://danangmls.com/ru',
       'x-default': 'https://danangmls.com',
     },
   },

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     canonical: 'https://danangmls.com/ru/for-rent',
     languages: {
       en: 'https://danangmls.com/for-rent',
-      vi: 'https://danangmls.com/ru/for-rent',
+      ru: 'https://danangmls.com/ru/for-rent',
       'x-default': 'https://danangmls.com/for-rent',
     },
   },
