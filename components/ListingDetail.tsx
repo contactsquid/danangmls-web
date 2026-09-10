@@ -20,8 +20,6 @@ interface Props {
   /** Slug of the agent's verified profile, resolved server-side. Undefined when
    *  the agent has no profile, which is the normal case. */
   agentSlug?: string | null;
-  /** Listing has left the live sheet; page stays 200 so the indexed URL survives. */
-  archived?: boolean;
 }
 
 // Vietnamese fallback title for listings without vi_title — keeps the H1
@@ -47,7 +45,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null }: Props) {
+export default function ListingDetail({ listing, similarListings = [], agentSlug = null }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
   // "Listed" date for the detail page (not on thumbnails), shown as relative
@@ -93,26 +91,6 @@ export default function ListingDetail({ listing, archived = false, similarListin
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      {archived && (
-        <div className="mb-6 p-4 bg-slate-100 border border-slate-300 rounded-xl text-sm text-slate-700">
-          <p className="font-semibold mb-1">
-            {forLang({
-              en: 'This listing is no longer available',
-              vi: 'Tin đăng này không còn khả dụng',
-              ko: '이 매물은 더 이상 제공되지 않습니다',
-              ru: 'Это объявление больше не актуально',
-            }, lang)}
-          </p>
-          <p className="leading-relaxed">
-            {forLang({
-              en: 'It has been taken off the market. The details below are kept for reference — browse similar listings further down, or see everything currently available.',
-              vi: 'Bất động sản này đã ngừng cho thuê/bán. Thông tin bên dưới được giữ lại để tham khảo — xem các tin tương tự phía dưới hoặc tất cả tin đang có.',
-              ko: '이 매물은 현재 거래가 종료되었습니다. 아래 정보는 참고용으로 보관되어 있습니다. 비슷한 매물은 아래에서, 현재 가능한 매물은 전체 목록에서 확인하세요.',
-              ru: 'Объект снят с рынка. Информация ниже сохранена для справки — посмотрите похожие объекты ниже или весь актуальный список.',
-            }, lang)}
-          </p>
-        </div>
-      )}
       <Link href={facetBase(listing.forSale ? 'sale' : 'rent', lang)} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

@@ -6,7 +6,6 @@ import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
-import { getArchivedListing } from '@/lib/archive';
 import { socialImages } from '@/lib/ogImage';
 
 // Russian fallback title for listings without ru_title. Built as a
@@ -52,7 +51,7 @@ function getShareableImage(images: string[]): string | undefined {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
-  const listing = listings.find(l => l.slug === slug) ?? await getArchivedListing(slug);
+  const listing = listings.find(l => l.slug === slug);
   if (!listing) return { title: 'Не найдено' };
   const displayTitle = listing.ru_title || ruFallbackTitle(listing);
   const ogImage = getShareableImage(listing.images);
@@ -100,15 +99,8 @@ export const revalidate = 300;
 export default async function RUListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
-  // Expired listings keep their URL — a 404 discards the indexing Google
-  // already spent on it. Serve the archived copy at 200 with a banner.
-  let listing = listings.find(l => l.slug === slug);
-  let archived = false;
-  if (!listing) {
-    const fromArchive = await getArchivedListing(slug);
-    if (fromArchive) { listing = fromArchive; archived = true; }
-    else notFound();
-  }
+  const listing = listings.find(l => l.slug === slug);
+  if (!listing) notFound();
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -149,7 +141,7 @@ export default async function RUListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
+      <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );
