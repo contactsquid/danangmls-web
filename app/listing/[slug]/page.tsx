@@ -1,5 +1,6 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
+import { getArchivedListing } from '@/lib/archive';
 import { notFound, redirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
@@ -91,7 +92,8 @@ export const revalidate = 300;
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
-  const listing = listings.find(l => l.slug === slug);
+  let listing = listings.find(l => l.slug === slug);
+  let archived = false;
   if (!listing) {
     // Redirect old index-based slugs (e.g. "title-496") to current hash-based slugs
     const prefix = slug.slice(0, slug.lastIndexOf('-'));
@@ -106,7 +108,16 @@ export default async function ListingPage({ params }: Props) {
       const match = listings.find(l => l.slug.endsWith('-' + suffix));
       if (match) redirect(`/listing/${match.slug}`);
     }
-    notFound();
+    // Expired listings keep their URL. Google spent weeks indexing it; a 404
+    // throws that away and the visitor lands on nothing. Serve the archived copy
+    // at 200 with an "no longer available" banner and live similar listings.
+    const fromArchive = await getArchivedListing(slug);
+    if (fromArchive) {
+      listing = fromArchive;
+      archived = true;
+    } else {
+      notFound();
+    }
   }
 
   const jsonLd = {
@@ -151,7 +162,7 @@ export default async function ListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} similarListings={similarListings} agentSlug={agentSlug} />
+      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );

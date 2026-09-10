@@ -6,6 +6,7 @@ import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
+import { getArchivedListing } from '@/lib/archive';
 import { socialImages } from '@/lib/ogImage';
 
 // Korean fallback title for listings without ko_title. Reads as a Korean
@@ -52,7 +53,7 @@ function getShareableImage(images: string[]): string | undefined {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
-  const listing = listings.find(l => l.slug === slug);
+  const listing = listings.find(l => l.slug === slug) ?? await getArchivedListing(slug);
   if (!listing) return { title: '찾을 수 없음' };
   const displayTitle = listing.ko_title || koFallbackTitle(listing);
   const ogImage = getShareableImage(listing.images);
@@ -100,8 +101,15 @@ export const revalidate = 300;
 export default async function KOListingPage({ params }: Props) {
   const { slug } = await params;
   const listings = await getAllListings();
-  const listing = listings.find(l => l.slug === slug);
-  if (!listing) notFound();
+  // Expired listings keep their URL — a 404 discards the indexing Google
+  // already spent on it. Serve the archived copy at 200 with a banner.
+  let listing = listings.find(l => l.slug === slug);
+  let archived = false;
+  if (!listing) {
+    const fromArchive = await getArchivedListing(slug);
+    if (fromArchive) { listing = fromArchive; archived = true; }
+    else notFound();
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -142,7 +150,7 @@ export default async function KOListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
+      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );
