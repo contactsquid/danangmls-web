@@ -1,7 +1,7 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
-import { getAgentSlugForName, getOwnProfile } from '@/lib/agents';
+import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
@@ -139,7 +139,6 @@ export default async function KOListingPage({ params }: Props) {
   };
 
   const agentSlug = await getAgentSlugForName(listing.agent);
-  const me = await getOwnProfile();
 
   return (
     <div className="bg-slate-50">
@@ -151,7 +150,7 @@ export default async function KOListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} isAdmin={me?.is_admin ?? false} />
+      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );
