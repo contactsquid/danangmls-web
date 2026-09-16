@@ -41,7 +41,10 @@ function getShareableImage(images: string[]): string | undefined {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
-  const listing = listings.find(l => l.slug === slug);
+  // Fall back to the archive, same as the render below. Without this an archived
+  // page renders correctly but ships <title>Listing Not Found</title>, which reads
+  // as a soft 404 to Google and throws away the indexing the archive exists to keep.
+  const listing = listings.find(l => l.slug === slug) ?? await getArchivedListing(slug);
   if (!listing) return { title: 'Listing Not Found' };
   const ogImage = getShareableImage(listing.images);
   const description = listing.text.slice(0, 160) || `${listing.type} in ${listing.district}. ${listing.price}.`;
