@@ -3,7 +3,7 @@ import type { Listing } from '@/lib/types';
 import { getArchivedListing } from '@/lib/archive';
 import { notFound, redirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
-import { getAgentSlugForName } from '@/lib/agents';
+import { getAgentSlugForName, getOwnProfile } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import type { Metadata } from 'next';
 import { socialImages } from '@/lib/ogImage';
@@ -154,6 +154,7 @@ export default async function ListingPage({ params }: Props) {
   // Links "Listed by" through to the agent profile when they have a verified
   // one. Resolves to null (plain text) for the vast majority of sheet agents.
   const agentSlug = await getAgentSlugForName(listing.agent);
+  const me = await getOwnProfile();
 
   return (
     <div className="bg-slate-50">
@@ -165,7 +166,7 @@ export default async function ListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} />
+      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} isAdmin={me?.is_admin ?? false} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );

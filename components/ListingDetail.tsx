@@ -22,6 +22,10 @@ interface Props {
   agentSlug?: string | null;
   /** Listing has left the live sheet; page stays 200 so the indexed URL survives. */
   archived?: boolean;
+  /** True only for signed-in admins. Gates the internal Facebook-source-link
+   *  panel below — postUrl points at a scraped Facebook group post, not
+   *  something to expose to public site visitors. */
+  isAdmin?: boolean;
 }
 
 // Vietnamese fallback title for listings without vi_title — keeps the H1
@@ -47,7 +51,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, isAdmin = false }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
   // "Listed" date for the detail page (not on thumbnails), shown as relative
@@ -220,6 +224,18 @@ export default function ListingDetail({ listing, archived = false, similarListin
               </div>
             )}
           </div>
+
+          {/* Admin-only: link back to the Facebook post this listing was scraped
+              from, for comparing our copy/price against the source. Never shown
+              to public visitors — postUrl is an internal Facebook group link. */}
+          {isAdmin && listing.postUrl && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <h2 className="text-sm font-semibold text-amber-700 uppercase tracking-wide mb-2">🛠 Admin only</h2>
+              <a href={listing.postUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm break-all">
+                {listing.postUrl}
+              </a>
+            </div>
+          )}
 
           {/* Contact */}
           <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
