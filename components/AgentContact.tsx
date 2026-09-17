@@ -63,14 +63,16 @@ export default function AgentContact({ agents, listing, lang }: Props) {
             key={`${agent.name}-${agent.phone}`}
             className={i > 0 ? 'pt-4 border-t border-blue-100' : undefined}
           >
+            {/* No name on the agency block: that line is DanangMLS's own number, and
+                putting a scraped agent's name above it would imply it is theirs. */}
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-2">
-              {agent.profileSlug ? (
+              {agent.name && (agent.profileSlug ? (
                 <Link href={`/agent/${agent.profileSlug}`} className="font-semibold text-blue-700 hover:underline">
                   {agent.name}
                 </Link>
               ) : (
                 <span className="font-semibold text-slate-800">{agent.name}</span>
-              )}
+              ))}
               <span className="text-xs text-slate-500">{formatVnPhone(agent.phone)}</span>
             </div>
 

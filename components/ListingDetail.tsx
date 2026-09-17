@@ -281,14 +281,21 @@ export default function ListingDetail({ listing, archived = false, similarListin
               lang={lang}
             />
           ) : (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-            <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">📞 {t.contactInfo}</h2>
-            <div className="space-y-1 text-sm text-slate-700">
-              <p>📱 Zalo / WhatsApp: <a href="tel:+84973747373" className="text-blue-600 hover:underline">+84 973 747 373</a></p>
-              <p>📧 Email: <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a></p>
-              <p>🌐 Website: <a href={lang === 'vi' ? 'https://danang.homes/vi' : 'https://danang.homes'} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{lang === 'vi' ? 'danang.homes/vi' : 'danang.homes'}</a></p>
-            </div>
-          </div>
+            /* Everything else — above-floor listings, archived ones, and sub-floor
+               rows with no usable agent number — carries the AGENCY line. Same four
+               buttons, no name, replacing the old phone/email/website text block.
+               Email is dropped and the website becomes the last button. */
+            <AgentContact
+              agents={[{
+                name: '',
+                phone: AGENCY_PHONE,
+                profileSlug: null,
+                hasWhatsApp: true,
+                showWebsite: true,
+              }]}
+              listing={listing}
+              lang={lang}
+            />
           )}
 
           {/* Per-listing highlighted note (e.g. flexible lease, recent renovation) */}
