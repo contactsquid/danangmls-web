@@ -2,13 +2,19 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { formatVnPhone, zaloLink, telLink, enquiryFor } from '@/lib/agentContact';
+import { formatVnPhone, zaloLink, smsLink, whatsappLink, agencyWebsite, enquiryFor } from '@/lib/agentContact';
 import { forLang, type Lang } from '@/lib/translations';
 
 export type ContactAgent = {
   name: string;
-  phone: string;        // 9 local digits
+  phone: string;                 // 9 local digits
   profileSlug?: string | null;
+  /** Only true where the agent's OWN post text named WhatsApp, or where this is
+   *  the agency line. Never assumed — wa.me to an unregistered number fails
+   *  silently, which would rebuild the dead end this block exists to remove. */
+  hasWhatsApp?: boolean;
+  /** Approved agents (Blake's own people) also get a website button. */
+  showWebsite?: boolean;
 };
 
 type Props = {
@@ -38,10 +44,7 @@ export default function AgentContact({ agents, listing, lang }: Props) {
   const reachable = agents.filter(a => a.phone);
   if (reachable.length === 0) return null;
 
-  // A Vietnamese reader phones a local business directly — that is the norm here,
-  // not the exception. Every other language leads with messaging, because calling
-  // an agent who speaks little English is a dead end dressed up as a channel.
-  const callFirst = lang === 'vi';
+  const message = enquiryFor(listing, lang);
 
   return (
     <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
@@ -71,7 +74,19 @@ export default function AgentContact({ agents, listing, lang }: Props) {
               <span className="text-xs text-slate-500">{formatVnPhone(agent.phone)}</span>
             </div>
 
-            <div className={`flex flex-wrap gap-2 ${callFirst ? 'flex-row-reverse justify-end' : ''}`}>
+            {/* Fixed order: WhatsApp, Zalo, Message, Website. WhatsApp only where
+                we know the number is on it; Website only for approved agents. */}
+            <div className="flex flex-wrap gap-2">
+              {agent.hasWhatsApp && (
+                <a
+                  href={whatsappLink(agent.phone, message)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#25d366] text-white text-sm font-semibold hover:bg-[#1eb455] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25d366]"
+                >
+                  WhatsApp
+                </a>
+              )}
               <a
                 href={zaloLink(agent.phone)}
                 target="_blank"
@@ -80,12 +95,24 @@ export default function AgentContact({ agents, listing, lang }: Props) {
               >
                 Zalo
               </a>
+              {/* Replaced Call: an agent would rather receive a text from a new
+                  customer than a cold call, and the enquiry rides along prefilled. */}
               <a
-                href={telLink(agent.phone)}
+                href={smsLink(agent.phone, message)}
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white text-slate-700 border border-slate-200 text-sm font-semibold hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
               >
-                {forLang({ en: 'Call', vi: 'Gọi', ko: '전화', ru: 'Позвонить' }, lang)}
+                {forLang({ en: 'Message', vi: 'Nhắn tin', ko: '문자', ru: 'Написать' }, lang)}
               </a>
+              {agent.showWebsite && (
+                <a
+                  href={agencyWebsite(lang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white text-slate-700 border border-slate-200 text-sm font-semibold hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                >
+                  {forLang({ en: 'Website', vi: 'Website', ko: '웹사이트', ru: 'Сайт' }, lang)}
+                </a>
+              )}
             </div>
           </div>
         ))}
@@ -96,7 +123,7 @@ export default function AgentContact({ agents, listing, lang }: Props) {
           line and then an unreadable reply. Shown on every locale, including /vi —
           the DanangMLS link inside it is what earns the site credit for the
           introduction, and Vietnamese customers are the bulk of the market. */}
-      <CopyEnquiry text={enquiryFor(listing, lang)} lang={lang} />
+      <CopyEnquiry text={message} lang={lang} />
     </div>
   );
 }

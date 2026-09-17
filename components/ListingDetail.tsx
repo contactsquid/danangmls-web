@@ -8,7 +8,7 @@ import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import RunningCosts from './RunningCosts';
 import AgentContact from './AgentContact';
-import { isBelowServiceFloor } from '@/lib/agentContact';
+import { isBelowServiceFloor, isApprovedAgent, AGENCY_PHONE } from '@/lib/agentContact';
 import type { Listing } from '@/lib/types';
 import { forLang } from '@/lib/translations';
 import { convertPrice, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
@@ -64,11 +64,20 @@ export default function ListingDetail({ listing, archived = false, similarListin
   const sourceText   = localizedText(listing, lang);
   const displayPrice = listing.price ? convertPrice(listing.price, lang) : listing.price;
 
-  // Hand the enquiry to the agent when this is a rental below the 25,000,000 ₫
-  // service floor AND we actually have their number. An ARCHIVED listing keeps the
-  // agency block: the property is gone, so pointing a customer at the agent for it
-  // would waste both their time.
+  // Approved agents are DanangMLS's own people (Blake, his wife, staff). Their
+  // listings carry the AGENCY line rather than a scraped number, so they get the
+  // full button set — WhatsApp and Website included, because unlike a scraped
+  // agent we know the agency line is on WhatsApp and we know the website. This
+  // applies at ANY price: if Blake or his staff post something under the floor it
+  // is still their listing, it just shows whoever posted it by name.
+  const approved = !archived && Boolean(listing.agent) && isApprovedAgent(listing.agent);
+
+  // Otherwise hand the enquiry to the scraped agent when this is a rental below
+  // the 25,000,000 ₫ service floor AND we actually have their number. An ARCHIVED
+  // listing keeps the agency block: the property is gone, so pointing a customer
+  // at the agent for it would waste both their time.
   const handOffToAgent =
+    !approved &&
     !archived &&
     Boolean(listing.agentPhone) &&
     Boolean(listing.agent) &&
@@ -246,9 +255,28 @@ export default function ListingDetail({ listing, archived = false, similarListin
               not service, and sending them back to Facebook was a dead end. Falls
               through to the agency block whenever there is no usable number
               (~8% of sub-floor rentals) or the listing is at/above the floor. */}
-          {handOffToAgent ? (
+          {approved ? (
             <AgentContact
-              agents={[{ name: listing.agent, phone: listing.agentPhone || '', profileSlug: agentSlug }]}
+              agents={[{
+                name: listing.agent,
+                phone: AGENCY_PHONE,
+                profileSlug: agentSlug,
+                hasWhatsApp: true,     // the agency line is on WhatsApp
+                showWebsite: true,
+              }]}
+              listing={listing}
+              lang={lang}
+            />
+          ) : handOffToAgent ? (
+            <AgentContact
+              agents={[{
+                name: listing.agent,
+                phone: listing.agentPhone || '',
+                profileSlug: agentSlug,
+                // Never assumed for a scraped number — see ContactAgent.hasWhatsApp.
+                hasWhatsApp: false,
+                showWebsite: false,
+              }]}
               listing={listing}
               lang={lang}
             />

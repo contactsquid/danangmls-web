@@ -172,3 +172,55 @@ export function enquiryFor(listing: EnquiryListing, lang: Lang): string {
              :                  'this listing';
   return `Hi, I'm interested in ${what} on DanangMLS:\n${url}\nIs it still available?`;
 }
+
+
+// ── Approved agents (DanangMLS's own people) ─────────────────────────────────
+// These listings are Blake's own, posted by him or his staff, and they carry the
+// agency contact rather than a scraped number — so the buttons are safe to show
+// in full: we know the agency line is on WhatsApp and Zalo, and we know the
+// website. Everyone else is a scraped agent whose channels we cannot assume.
+//
+// Mirrors (but is deliberately separate from) APPROVED_AGENTS in
+// ~/.openclaw/scripts/maintain-sheet.js, which exists for dedup exemption — same
+// names, different purpose. Blake Barnett is here because he posts listings too.
+const APPROVED_AGENTS = new Set(['vy tran', 'blake barnett', 'alissa sparks', 'da nang homes']);
+
+/** Strips emoji the way the rest of the pipeline does — 1,078 scraped agent names
+ *  carry them, and "Vy Tran🏡✨" must still match "Vy Tran". */
+function normAgentName(name: string): string {
+  return String(name || '')
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\u{20E3}]/gu, '')
+    .trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+export function isApprovedAgent(name: string): boolean {
+  return APPROVED_AGENTS.has(normAgentName(name));
+}
+
+/** The agency line. Reachable on WhatsApp and Zalo, unlike a scraped number. */
+export const AGENCY_PHONE = '973747373';
+
+/**
+ * Opens the phone's SMS composer, with the enquiry prefilled.
+ *
+ * Blake's wife — who receives these — would rather get a text from a new customer
+ * than a cold call, which is why this replaced the Call button. `?body=` is the
+ * RFC 5724 form and is honoured by Android and current iOS.
+ */
+export function smsLink(local9: string, body?: string): string {
+  const base = `sms:+84${local9}`;
+  return body ? `${base}?body=${encodeURIComponent(body)}` : base;
+}
+
+/** wa.me only works if the number is registered on WhatsApp — so this is offered
+ *  for the agency line and for scraped agents ONLY once their own post text has
+ *  been seen to name WhatsApp. An unregistered link fails silently, which would
+ *  recreate the dead end this whole change exists to remove. */
+export function whatsappLink(local9: string, body?: string): string {
+  const base = `https://wa.me/84${local9}`;
+  return body ? `${base}?text=${encodeURIComponent(body)}` : base;
+}
+
+export function agencyWebsite(lang: Lang): string {
+  return lang === 'vi' ? 'https://danang.homes/vi' : 'https://danang.homes';
+}
