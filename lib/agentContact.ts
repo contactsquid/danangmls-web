@@ -10,6 +10,9 @@
 // Rentals only, and only below the floor: at or above it the lead is one Blake
 // wants, and nothing changes.
 
+import { KO_DISTRICTS, RU_DISTRICTS } from './price';
+import { ruPlural, type Lang } from './translations';
+
 const VND_RATE = 26300;                       // matches lib/price.ts
 const SERVICE_FLOOR_VND = 25_000_000;         // Blake's monthly floor
 const SERVICE_FLOOR_USD = SERVICE_FLOOR_VND / VND_RATE;   // ≈ $951
@@ -72,8 +75,21 @@ export function telLink(local9: string): string {
   return `tel:+84${local9}`;
 }
 
+export type EnquiryListing = {
+  slug: string;
+  bedrooms?: string;
+  district?: string;
+  type?: string;
+};
+
+function listingUrl(slug: string): string {
+  return `https://danangmls.com/listing/${slug}`;
+}
+
 /**
  * The Vietnamese enquiry a non-Vietnamese-speaking customer can send as-is.
+ * THIS is what gets copied — the agent reads Vietnamese. `enquiryLocal` renders
+ * the same thing in the reader's language so they can see what they are sending.
  *
  * 90%+ of these agents speak little English, so a bare phone number is close to
  * useless to a foreign customer — the number is not the barrier, the language is.
@@ -82,13 +98,8 @@ export function telLink(local9: string): string {
  * credit for the introduction and gives the agent a reason to post here directly,
  * instead of the customer arriving with no idea where the lead came from.
  */
-export function enquiryVi(listing: {
-  slug: string;
-  bedrooms?: string;
-  district?: string;
-  type?: string;
-}): string {
-  const url = `https://danangmls.com/listing/${listing.slug}`;
+export function enquiryVi(listing: EnquiryListing): string {
+  const url = listingUrl(listing.slug);
   const beds = String(listing.bedrooms || '').trim();
   const where = VI_DISTRICT[String(listing.district || '').trim()] || '';
 
@@ -115,3 +126,45 @@ const VI_DISTRICT: Record<string, string> = {
   'Hoa Vang': 'Hòa Vang',
   'Da Nang': 'Đà Nẵng',
 };
+
+/**
+ * The SAME enquiry in the reader's own language.
+ *
+ * Display only — `enquiryVi` is what actually gets copied, because the agent reads
+ * Vietnamese. Blake's point: a customer should never paste text they cannot read.
+ * Returns null for `vi`, where the Vietnamese IS the reader's language.
+ */
+export function enquiryLocal(listing: EnquiryListing, lang: Lang): string | null {
+  if (lang === 'vi') return null;
+  const url = listingUrl(listing.slug);
+  const beds = String(listing.bedrooms || '').trim();
+  const dist = String(listing.district || '').trim();
+  const n = Number(beds);
+  const hasBeds = Boolean(beds) && Number.isFinite(n) && n > 0;
+
+  if (lang === 'ko') {
+    const where = KO_DISTRICTS[dist] || dist;
+    const what = hasBeds && where ? `${where}의 침실 ${beds}개 매물`
+               : hasBeds          ? `침실 ${beds}개 매물`
+               : where            ? `${where} 매물`
+               :                    '이 매물';
+    return `안녕하세요. DanangMLS에서 ${what}을 보았습니다:\n${url}\n아직 임대 가능한가요?`;
+  }
+
+  if (lang === 'ru') {
+    const where = RU_DISTRICTS[dist] || dist;
+    // Transliterated district names would need prepositional-case inflection after
+    // "в", which these nominative forms do not carry. The parenthetical keeps the
+    // name uninflected and the sentence grammatical.
+    const bedsPart = hasBeds ? `${beds} ${ruPlural(n, 'спальня', 'спальни', 'спален')}` : '';
+    const inner = [bedsPart, where].filter(Boolean).join(', ');
+    const what = inner ? `объект (${inner})` : 'этот объект';
+    return `Здравствуйте! Меня интересует ${what} на DanangMLS:\n${url}\nОн ещё свободен?`;
+  }
+
+  const what = hasBeds && dist ? `the ${beds}-bedroom place in ${dist}`
+             : hasBeds        ? `the ${beds}-bedroom place`
+             : dist           ? `the place in ${dist}`
+             :                  'this listing';
+  return `Hi, I'm interested in ${what} on DanangMLS:\n${url}\nIs it still available?`;
+}

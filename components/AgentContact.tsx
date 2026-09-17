@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { formatVnPhone, zaloLink, telLink, enquiryVi } from '@/lib/agentContact';
+import { formatVnPhone, zaloLink, telLink, enquiryVi, enquiryLocal } from '@/lib/agentContact';
 import { forLang, type Lang } from '@/lib/translations';
 
 export type ContactAgent = {
@@ -94,12 +94,12 @@ export default function AgentContact({ agents, listing, lang }: Props) {
       {/* The language barrier, not the number, is what actually blocks a foreign
           customer — so hand them a ready message rather than a warning. Hidden on
           /vi, where the reader writes their own. */}
-      {lang !== 'vi' && <CopyEnquiry text={enquiryVi(listing)} lang={lang} />}
+      {lang !== 'vi' && <CopyEnquiry text={enquiryVi(listing)} gloss={enquiryLocal(listing, lang)} lang={lang} />}
     </div>
   );
 }
 
-function CopyEnquiry({ text, lang }: { text: string; lang: Lang }) {
+function CopyEnquiry({ text, gloss, lang }: { text: string; gloss: string | null; lang: Lang }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -127,6 +127,17 @@ function CopyEnquiry({ text, lang }: { text: string; lang: Lang }) {
       <p className="text-sm text-slate-700 bg-white border border-blue-100 rounded-lg p-3 whitespace-pre-line break-words">
         {text}
       </p>
+      {/* The reader should never paste text they cannot read. This is the same
+          message in their own language — display only; the Vietnamese above is
+          what the button copies, because that is what the agent reads. */}
+      {gloss && (
+        <p className="mt-2 text-xs text-slate-500 whitespace-pre-line break-words">
+          <span className="font-semibold">
+            {forLang({ en: 'It says:', vi: '', ko: '내용:', ru: 'Текст:' }, lang)}
+          </span>{' '}
+          {gloss}
+        </p>
+      )}
       <button
         type="button"
         onClick={copy}
