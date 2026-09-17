@@ -282,14 +282,17 @@ export default function ListingDetail({ listing, archived = false, similarListin
             />
           ) : (
             /* Everything else — above-floor listings, archived ones, and sub-floor
-               rows with no usable agent number — carries the AGENCY line. Same four
-               buttons, no name, replacing the old phone/email/website text block.
-               Email is dropped and the website becomes the last button. */
+               rows with no usable agent number — carries the AGENCY line, named as
+               Da Nang Homes. Blake: "There is always more than one contact person
+               for every property", so showing the agency as a second contact is
+               accurate even when the scraped agent is someone else. Listings the
+               team actually posted keep their own name (Vy Tran, Blake Barnett)
+               via the approved-agent branch above. */
             <AgentContact
               agents={[{
-                name: '',
+                name: 'Da Nang Homes',
                 phone: AGENCY_PHONE,
-                profileSlug: null,
+                profileSlug: null,   // no agent profile exists for the agency
                 hasWhatsApp: true,
                 showWebsite: true,
               }]}
