@@ -100,7 +100,14 @@ export async function lookupRedirectSlug(slug: string): Promise<string | null> {
   const seen = new Set<string>([slug]);
   for (let hop = 0; hop < MAX_HOPS; hop++) {
     const next = map.get(current);
-    if (!next || seen.has(next)) break;
+    if (!next) break;
+    // A cycle means the manifest disagrees with itself — two rows each claiming
+    // the other is the survivor, which real churn produces when two agents keep
+    // reposting one property. Serving ANY hop from inside a cycle is an infinite
+    // redirect for the visitor and the crawler, which is strictly worse than the
+    // soft 404 this feature replaced. Refuse the redirect entirely and let the
+    // page fall through to its archive/notFound handling.
+    if (seen.has(next)) return null;
     seen.add(next);
     current = next;
   }
@@ -154,9 +161,10 @@ export async function resolveListingRedirect(
   for (let hop = 0; hop < MAX_HOPS; hop++) {
     const next = await lookupOnce(current);
     if (!next) break;
-    // A cycle would otherwise spin until MAX_HOPS on every request. Stop and keep
-    // the last good target rather than returning nothing.
-    if (seen.has(next)) break;
+    // Same rule as the manifest path: inside a cycle, refuse the redirect rather
+    // than serving a hop that points straight back. An infinite redirect is worse
+    // than the soft 404 this replaced.
+    if (seen.has(next)) return null;
     seen.add(next);
     current = next;
     // Landed somewhere real — no need to keep walking.
