@@ -87,12 +87,9 @@ function listingUrl(slug: string): string {
 }
 
 /**
- * The Vietnamese enquiry a non-Vietnamese-speaking customer can send as-is.
- * THIS is what gets copied — the agent reads Vietnamese. `enquiryLocal` renders
- * the same thing in the reader's language so they can see what they are sending.
- *
- * 90%+ of these agents speak little English, so a bare phone number is close to
- * useless to a foreign customer — the number is not the barrier, the language is.
+ * The Vietnamese wording of the enquiry — now used only for `/vi` readers, via
+ * enquiryFor(). It was briefly what every locale sent, on the reasoning that the
+ * agent reads Vietnamese; see enquiryFor() for why that was wrong.
  *
  * It deliberately leads with the DanangMLS link. That is what earns the site
  * credit for the introduction and gives the agent a reason to post here directly,
@@ -128,14 +125,21 @@ const VI_DISTRICT: Record<string, string> = {
 };
 
 /**
- * The SAME enquiry in the reader's own language.
+ * The enquiry to send the agent, in the CUSTOMER's own language.
  *
- * Display only — `enquiryVi` is what actually gets copied, because the agent reads
- * Vietnamese. Blake's point: a customer should never paste text they cannot read.
- * Returns null for `vi`, where the Vietnamese IS the reader's language.
+ * This started out as Vietnamese-only, on the reasoning that the agent reads
+ * Vietnamese. Blake overruled it, and he is right: the customer is going to want
+ * to continue the conversation in their own language, so opening in Vietnamese
+ * buys one fluent message and then a reply the customer cannot read. Starting in
+ * their language sets the expectation honestly from the first line, and the agent
+ * translates either way.
+ *
+ * The DanangMLS link carries the attribution regardless of language — it is the
+ * part that earns the site credit for the introduction — so nothing is lost by
+ * dropping the Vietnamese, and /vi gets the block too now.
  */
-export function enquiryLocal(listing: EnquiryListing, lang: Lang): string | null {
-  if (lang === 'vi') return null;
+export function enquiryFor(listing: EnquiryListing, lang: Lang): string {
+  if (lang === 'vi') return enquiryVi(listing);
   const url = listingUrl(listing.slug);
   const beds = String(listing.bedrooms || '').trim();
   const dist = String(listing.district || '').trim();

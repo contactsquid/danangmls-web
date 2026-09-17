@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { formatVnPhone, zaloLink, telLink, enquiryVi, enquiryLocal } from '@/lib/agentContact';
+import { formatVnPhone, zaloLink, telLink, enquiryFor } from '@/lib/agentContact';
 import { forLang, type Lang } from '@/lib/translations';
 
 export type ContactAgent = {
@@ -91,15 +91,17 @@ export default function AgentContact({ agents, listing, lang }: Props) {
         ))}
       </div>
 
-      {/* The language barrier, not the number, is what actually blocks a foreign
-          customer — so hand them a ready message rather than a warning. Hidden on
-          /vi, where the reader writes their own. */}
-      {lang !== 'vi' && <CopyEnquiry text={enquiryVi(listing)} gloss={enquiryLocal(listing, lang)} lang={lang} />}
+      {/* A ready message in the customer's OWN language: they will continue the
+          conversation in it anyway, so opening in Vietnamese would buy one fluent
+          line and then an unreadable reply. Shown on every locale, including /vi —
+          the DanangMLS link inside it is what earns the site credit for the
+          introduction, and Vietnamese customers are the bulk of the market. */}
+      <CopyEnquiry text={enquiryFor(listing, lang)} lang={lang} />
     </div>
   );
 }
 
-function CopyEnquiry({ text, gloss, lang }: { text: string; gloss: string | null; lang: Lang }) {
+function CopyEnquiry({ text, lang }: { text: string; lang: Lang }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -116,28 +118,18 @@ function CopyEnquiry({ text, gloss, lang }: { text: string; gloss: string | null
 
   return (
     <div className="mt-4 pt-4 border-t border-blue-100">
-      <p className="text-xs text-slate-600 mb-2">
+      <p className="text-xs font-semibold text-slate-600 mb-2">
         {forLang({
-          en: 'This agent replies in Vietnamese. Send them this:',
-          vi: '',
-          ko: '이 중개인은 베트남어로 응답합니다. 이 메시지를 보내세요:',
-          ru: 'Этот агент отвечает по-вьетнамски. Отправьте ему это:',
+          en: 'Message to Agent:',
+          vi: 'Tin nhắn cho môi giới:',
+          ko: '중개인에게 보낼 메시지:',
+          ru: 'Сообщение агенту:',
         }, lang)}
       </p>
       <p className="text-sm text-slate-700 bg-white border border-blue-100 rounded-lg p-3 whitespace-pre-line break-words">
         {text}
       </p>
-      {/* The reader should never paste text they cannot read. This is the same
-          message in their own language — display only; the Vietnamese above is
-          what the button copies, because that is what the agent reads. */}
-      {gloss && (
-        <p className="mt-2 text-xs text-slate-500 whitespace-pre-line break-words">
-          <span className="font-semibold">
-            {forLang({ en: 'It says:', vi: '', ko: '내용:', ru: 'Текст:' }, lang)}
-          </span>{' '}
-          {gloss}
-        </p>
-      )}
+
       <button
         type="button"
         onClick={copy}
