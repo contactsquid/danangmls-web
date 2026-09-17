@@ -1,5 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
@@ -7,6 +7,7 @@ import { localizeType, localizeDistrict } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
 import { getArchivedListing } from '@/lib/archive';
+import { resolveListingRedirect } from '@/lib/redirects';
 import { socialImages } from '@/lib/ogImage';
 
 // Vietnamese fallback title for listings that don't have vi_title populated
@@ -110,6 +111,11 @@ export default async function ViListingPage({ params }: Props) {
   let listing = listings.find(l => l.slug === slug);
   let archived = false;
   if (!listing) {
+    // Removed as a duplicate of another row? The property is still listed, just
+    // under a different slug — send a real 308 to it rather than serving an
+    // archived copy (duplicate content) or a soft 404.
+    const to = await resolveListingRedirect(slug, s => listings.some(l => l.slug === s));
+    if (to) permanentRedirect(`/vi/listing/${to}`);
     const fromArchive = await getArchivedListing(slug);
     if (fromArchive) { listing = fromArchive; archived = true; }
     else notFound();

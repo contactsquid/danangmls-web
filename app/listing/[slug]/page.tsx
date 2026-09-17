@@ -1,7 +1,8 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { getArchivedListing } from '@/lib/archive';
-import { notFound, redirect } from 'next/navigation';
+import { resolveListingRedirect } from '@/lib/redirects';
+import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
@@ -111,6 +112,12 @@ export default async function ListingPage({ params }: Props) {
       const match = listings.find(l => l.slug.endsWith('-' + suffix));
       if (match) redirect(`/listing/${match.slug}`);
     }
+    // Removed as a duplicate of another row? The property is still listed, just
+    // under a different slug — so send a real 308 to it rather than serving an
+    // archived copy (which would be duplicate content) or a soft 404.
+    const to = await resolveListingRedirect(slug, s => listings.some(l => l.slug === s));
+    if (to) permanentRedirect(`/listing/${to}`);
+
     // Expired listings keep their URL. Google spent weeks indexing it; a 404
     // throws that away and the visitor lands on nothing. Serve the archived copy
     // at 200 with an "no longer available" banner and live similar listings.
