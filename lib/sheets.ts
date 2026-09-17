@@ -3,6 +3,7 @@ import { createGunzip, createInflate, createBrotliDecompress } from 'node:zlib';
 import { Listing } from './types';
 import { detectNeighborhood } from './neighborhoods';
 import { extractPriceFromText } from './price';
+import { normalizeVnPhone } from './agentContact';
 import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
@@ -115,7 +116,7 @@ const R = {
   POST_URL: 14,
   DATE:     15,
   MLS_URL:  17,
-  AGENT_CONTACT: 24, // written by n8n from the RAW post text; NOT rendered on the site
+  AGENT_CONTACT: 24, // written by n8n from the RAW post text; surfaced on sub-floor rentals via AgentContact
   VI_TITLE: 25,
   VI_TEXT:  26,
   KO_TITLE: 27, KO_TEXT: 28, RU_TITLE: 29, RU_TEXT: 30,
@@ -314,6 +315,7 @@ function parseRows(rows: string[][]): Listing[] {
         ko_text:      col(r, R.KO_TEXT),
         ru_title:     col(r, R.RU_TITLE),
         ru_text:      col(r, R.RU_TEXT),
+        agentPhone:   normalizeVnPhone(col(r, R.AGENT_CONTACT)),
         forSale:      false,
       };
       warnIfBadData(listing, 'Sheet1/Rentals');

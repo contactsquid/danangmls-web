@@ -7,6 +7,8 @@ import ListingCard from './ListingCard';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
 import RunningCosts from './RunningCosts';
+import AgentContact from './AgentContact';
+import { isBelowServiceFloor } from '@/lib/agentContact';
 import type { Listing } from '@/lib/types';
 import { forLang } from '@/lib/translations';
 import { convertPrice, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
@@ -61,6 +63,16 @@ export default function ListingDetail({ listing, archived = false, similarListin
   // localizedText is vi-identical (vi_text || text) and adds ko/ru.
   const sourceText   = localizedText(listing, lang);
   const displayPrice = listing.price ? convertPrice(listing.price, lang) : listing.price;
+
+  // Hand the enquiry to the agent when this is a rental below the 25,000,000 ₫
+  // service floor AND we actually have their number. An ARCHIVED listing keeps the
+  // agency block: the property is gone, so pointing a customer at the agent for it
+  // would waste both their time.
+  const handOffToAgent =
+    !archived &&
+    Boolean(listing.agentPhone) &&
+    Boolean(listing.agent) &&
+    isBelowServiceFloor(listing);
 
   // Type / bedrooms / district each link to their facet page (rent or sale) when
   // one exists; listingFieldHref returns null otherwise (e.g. unknown district).
@@ -228,7 +240,19 @@ export default function ListingDetail({ listing, archived = false, similarListin
               Resolved client-side; see AdminFbLinkPanel for why. */}
           {listing.postUrl && <AdminFbLinkPanel postUrl={listing.postUrl} />}
 
-          {/* Contact */}
+          {/* Contact.
+              Sub-floor rentals (< 25,000,000 ₫/mo) route to the agent who holds the
+              listing instead of the agency line — those are enquiries DanangMLS does
+              not service, and sending them back to Facebook was a dead end. Falls
+              through to the agency block whenever there is no usable number
+              (~8% of sub-floor rentals) or the listing is at/above the floor. */}
+          {handOffToAgent ? (
+            <AgentContact
+              agents={[{ name: listing.agent, phone: listing.agentPhone || '', profileSlug: agentSlug }]}
+              listing={listing}
+              lang={lang}
+            />
+          ) : (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
             <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">📞 {t.contactInfo}</h2>
             <div className="space-y-1 text-sm text-slate-700">
@@ -237,6 +261,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
               <p>🌐 Website: <a href={lang === 'vi' ? 'https://danang.homes/vi' : 'https://danang.homes'} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{lang === 'vi' ? 'danang.homes/vi' : 'danang.homes'}</a></p>
             </div>
           </div>
+          )}
 
           {/* Per-listing highlighted note (e.g. flexible lease, recent renovation) */}
           {(() => {
