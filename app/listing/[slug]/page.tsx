@@ -2,6 +2,7 @@ import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { getArchivedListing } from '@/lib/archive';
 import { resolveListingRedirect } from '@/lib/redirects';
+import { agentHasWhatsApp } from '@/lib/agentChannels';
 import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
@@ -161,6 +162,9 @@ export default async function ListingPage({ params }: Props) {
   // Links "Listed by" through to the agent profile when they have a verified
   // one. Resolves to null (plain text) for the vast majority of sheet agents.
   const agentSlug = await getAgentSlugForName(listing.agent);
+  // Only shown when this agent's OWN post text named WhatsApp — never assumed;
+  // see lib/agentChannels.ts. Unknown numbers fall back to Zalo + Message.
+  const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
 
   return (
     <div className="bg-slate-50">
@@ -172,7 +176,7 @@ export default async function ListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} />
+      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );

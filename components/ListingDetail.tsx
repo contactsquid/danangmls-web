@@ -23,6 +23,9 @@ interface Props {
   /** Slug of the agent's verified profile, resolved server-side. Undefined when
    *  the agent has no profile, which is the normal case. */
   agentSlug?: string | null;
+  /** Resolved server-side from the agent's own post wording. False when unknown —
+   *  a wa.me link to an unregistered number fails silently. */
+  agentHasWhatsApp?: boolean;
   /** Listing has left the live sheet; page stays 200 so the indexed URL survives. */
   archived?: boolean;
 }
@@ -50,7 +53,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false }: Props) {
   const { lang, t } = useLanguage();
   const images = listing.images.filter(Boolean);
   // "Listed" date for the detail page (not on thumbnails), shown as relative
@@ -273,8 +276,8 @@ export default function ListingDetail({ listing, archived = false, similarListin
                 name: listing.agent,
                 phone: listing.agentPhone || '',
                 profileSlug: agentSlug,
-                // Never assumed for a scraped number — see ContactAgent.hasWhatsApp.
-                hasWhatsApp: false,
+                // Only when this agent's own post named it — see lib/agentChannels.ts.
+                hasWhatsApp: agentHasWhatsApp,
                 showWebsite: false,
               }]}
               listing={listing}

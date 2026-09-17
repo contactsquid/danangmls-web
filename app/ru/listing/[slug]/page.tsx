@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
 import { getArchivedListing } from '@/lib/archive';
 import { resolveListingRedirect } from '@/lib/redirects';
+import { agentHasWhatsApp } from '@/lib/agentChannels';
 import { socialImages } from '@/lib/ogImage';
 
 // Russian fallback title for listings without ru_title. Built as a
@@ -145,6 +146,12 @@ export default async function RUListingPage({ params }: Props) {
 
   const agentSlug = await getAgentSlugForName(listing.agent);
 
+  // Only shown when this agent's OWN post text named WhatsApp — never assumed;
+
+  // see lib/agentChannels.ts. Unknown numbers fall back to Zalo + Message.
+
+  const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
+
   return (
     <div className="bg-slate-50">
       <script
@@ -155,7 +162,7 @@ export default async function RUListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} />
+      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );
