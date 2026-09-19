@@ -6,6 +6,8 @@ import Carousel from './Carousel';
 import ListingCard from './ListingCard';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
 import { useLanguage } from './LanguageProvider';
+import { useEffect, useRef } from 'react';
+import { reportStat } from '@/lib/stat';
 import RunningCosts from './RunningCosts';
 import AgentContact from './AgentContact';
 import { isBelowServiceFloor, isApprovedAgent, AGENCY_PHONE } from '@/lib/agentContact';
@@ -55,6 +57,17 @@ function districtHeading(name: string, lang: string): string {
 
 export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false }: Props) {
   const { lang, t } = useLanguage();
+
+  // One view per mount. React 18 StrictMode double-invokes effects in dev, and a
+  // language switch re-renders this component — the ref keeps either from
+  // counting the same read twice. Archived listings are excluded: nobody should
+  // see traffic on a property that is no longer available.
+  const viewCounted = useRef(false);
+  useEffect(() => {
+    if (viewCounted.current || archived || !listing.slug) return;
+    viewCounted.current = true;
+    reportStat(listing.slug, 'view', listing.agent);
+  }, [listing.slug, listing.agent, archived]);
   const images = listing.images.filter(Boolean);
   // "Listed" date for the detail page (not on thumbnails), shown as relative
   // time ("3 days ago") instead of an absolute date. Shown in the ACTIVE
@@ -269,6 +282,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
               }]}
               listing={listing}
               lang={lang}
+              agentName={listing.agent}
             />
           ) : handOffToAgent ? (
             <AgentContact
@@ -282,6 +296,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
               }]}
               listing={listing}
               lang={lang}
+              agentName={listing.agent}
             />
           ) : (
             /* Everything else — above-floor listings, archived ones, and sub-floor
@@ -301,6 +316,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
               }]}
               listing={listing}
               lang={lang}
+              agentName={listing.agent}
             />
           )}
 

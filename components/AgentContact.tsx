@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { formatVnPhone, zaloLink, smsLink, whatsappLink, agencyWebsite, enquiryFor } from '@/lib/agentContact';
 import { forLang, type Lang } from '@/lib/translations';
+import { reportStat, type StatKind } from '@/lib/stat';
 
 export type ContactAgent = {
   name: string;
@@ -21,6 +22,8 @@ type Props = {
   agents: ContactAgent[];
   listing: { slug: string; bedrooms?: string; district?: string; type?: string };
   lang: Lang;
+  /** Named on the stat row so the monthly report needs no join back to the sheet. */
+  agentName?: string | null;
 };
 
 /**
@@ -40,7 +43,11 @@ type Props = {
  *  - any "we can handle it instead" line. These are the enquiries DanangMLS does
  *    not want; offering to take them back defeats the entire point.
  */
-export default function AgentContact({ agents, listing, lang }: Props) {
+export default function AgentContact({ agents, listing, lang, agentName = null }: Props) {
+  // Reported on click rather than through a redirect: these targets are zalo.me,
+  // wa.me, sms: and an external site, and a server redirect through sms:/tel:
+  // schemes is unreliable across browsers. sendBeacon survives the navigation.
+  const onContact = (kind: StatKind) => () => reportStat(listing.slug, kind, agentName);
   const reachable = agents.filter(a => a.phone);
   if (reachable.length === 0) return null;
 
@@ -82,6 +89,7 @@ export default function AgentContact({ agents, listing, lang }: Props) {
               {agent.hasWhatsApp && (
                 <a
                   href={whatsappLink(agent.phone, message)}
+                onClick={onContact('whatsapp')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#25d366] text-white text-sm font-semibold hover:bg-[#1eb455] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25d366]"
@@ -91,6 +99,7 @@ export default function AgentContact({ agents, listing, lang }: Props) {
               )}
               <a
                 href={zaloLink(agent.phone)}
+                onClick={onContact('zalo')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#0068ff] text-white text-sm font-semibold hover:bg-[#0058d8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0068ff]"
@@ -101,6 +110,7 @@ export default function AgentContact({ agents, listing, lang }: Props) {
                   customer than a cold call, and the enquiry rides along prefilled. */}
               <a
                 href={smsLink(agent.phone, message)}
+                onClick={onContact('sms')}
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white text-slate-700 border border-slate-200 text-sm font-semibold hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
               >
                 {forLang({ en: 'Message', vi: 'Nhắn tin', ko: '문자', ru: 'Написать' }, lang)}
@@ -108,6 +118,7 @@ export default function AgentContact({ agents, listing, lang }: Props) {
               {agent.showWebsite && (
                 <a
                   href={agencyWebsite(lang)}
+                onClick={onContact('website')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white text-slate-700 border border-slate-200 text-sm font-semibold hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
