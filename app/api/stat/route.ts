@@ -54,13 +54,20 @@ export async function POST(req: NextRequest) {
     const admin = createAdminClient();
     if (!admin) return ok();
 
-    await admin.rpc('bump_listing_stat', {
+    const { error } = await admin.rpc('bump_listing_stat', {
       p_slug: slug,
       p_kind: kind,
       p_agent: agent || null,
     });
-  } catch {
-    // Never let telemetry surface as an error to a visitor.
+    // This endpoint always answers 204, so a total write failure is
+    // indistinguishable from success from the outside — which is exactly what
+    // happened on first deploy: a REVOKE had stripped EXECUTE from service_role
+    // and every beacon silently did nothing. Log it so the next failure is
+    // visible in the Vercel logs instead of surfacing as an empty report a month
+    // later.
+    if (error) console.error('[stat] rpc failed:', error.message, { slug, kind });
+  } catch (e) {
+    console.error('[stat] unexpected:', e instanceof Error ? e.message : String(e));
   }
   return ok();
 }
