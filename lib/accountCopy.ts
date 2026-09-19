@@ -70,6 +70,13 @@ export interface AccountCopy {
   saveProfile: string;
   savingProfile: string;
   signOut: string;
+  deleteTitle: string;
+  deleteBody: string;
+  deleteConfirmLabel: string;
+  /** Typed to confirm. Localised so it is not muscle memory from another site. */
+  deleteConfirmWord: string;
+  deleteButton: string;
+  cancel: string;
   adminLink: string;
   suspendedNotice: string;
   addListingPrompt: string;
@@ -117,6 +124,7 @@ export interface AccountCopy {
     photoSize: string;
     photoUpload: string;
     saveFailed: string;
+    deleteConfirm: string;
   };
   notices: {
     profileSaved: string;
@@ -175,6 +183,12 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     saveProfile: 'Save profile',
     savingProfile: 'Saving…',
     signOut: 'Sign out',
+    deleteTitle: 'Delete your account',
+    deleteBody: 'This removes your agent profile and stops all emails. It cannot be undone. Listings you posted stay on the site but will no longer link to a profile.',
+    deleteConfirmLabel: 'Type DELETE to confirm',
+    deleteConfirmWord: 'DELETE',
+    deleteButton: 'Delete account',
+    cancel: 'Cancel',
     adminLink: 'Admin — manage agents',
     suspendedNotice:
       'This profile is currently hidden from the public site. Contact DanangMLS if you think that is a mistake.',
@@ -204,6 +218,7 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     claimSimilarConfirm: 'Yes, this is me too',
     errors: {
       notConfigured: 'Agent accounts are not enabled on this site yet. Please try again later.',
+      deleteConfirm: 'Please type DELETE exactly to confirm.',
       nameRequired: 'Please enter your full name.',
       nameTooLong: 'That name is too long (80 characters max).',
       emailInvalid: 'Please enter a valid email address.',
@@ -272,6 +287,12 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     saveProfile: 'Lưu hồ sơ',
     savingProfile: 'Đang lưu…',
     signOut: 'Đăng xuất',
+    deleteTitle: 'Xóa tài khoản',
+    deleteBody: 'Thao tác này xóa hồ sơ môi giới của bạn và dừng toàn bộ email. Không thể hoàn tác. Các tin bạn đã đăng vẫn còn trên website nhưng sẽ không liên kết tới hồ sơ nữa.',
+    deleteConfirmLabel: 'Nhập XOA để xác nhận',
+    deleteConfirmWord: 'XOA',
+    deleteButton: 'Xóa tài khoản',
+    cancel: 'Hủy',
     adminLink: 'Quản trị — quản lý môi giới',
     suspendedNotice:
       'Hồ sơ này hiện đang bị ẩn khỏi trang công khai. Vui lòng liên hệ DanangMLS nếu bạn cho rằng đây là nhầm lẫn.',
@@ -301,6 +322,7 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     claimSimilarConfirm: 'Đúng, đây cũng là tôi',
     errors: {
       notConfigured: 'Tài khoản môi giới chưa được bật trên trang này. Vui lòng thử lại sau.',
+      deleteConfirm: 'Vui lòng nhập chính xác XOA để xác nhận.',
       nameRequired: 'Vui lòng nhập họ và tên của bạn.',
       nameTooLong: 'Tên quá dài (tối đa 80 ký tự).',
       emailInvalid: 'Vui lòng nhập địa chỉ email hợp lệ.',
@@ -352,3 +374,4 @@ export function safeNext(next: string | undefined, fallback: string): string {
   if (!next.startsWith('/') || next.startsWith('//')) return fallback;
   return next;
 }
+

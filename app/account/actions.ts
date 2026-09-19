@@ -4,6 +4,7 @@ import { forLang } from '@/lib/translations';
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { createAdminClient } from '@/lib/supabase/server';
 import { after } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SITE_URL, isSupabaseConfigured } from '@/lib/supabase/config';
@@ -167,6 +168,67 @@ export async function setPasswordAction(
 }
 
 // ─── Update profile ───────────────────────────────────────────────────────────
+/**
+ * Deletes the signed-in agent's own account.
+ *
+ * Blake asked for this because the onboarding emails repeat, and someone who has
+ * left the industry needs a way out that is not "ask us". Unsubscribing stops the
+ * email; this removes the account itself. Nghị định 13/2023/NĐ-CP also expects
+ * personal data to be erasable on request.
+ *
+ * There are NO foreign keys between auth.users and these tables (checked
+ * 2026-09-19), so nothing cascades — every row has to be named explicitly or it
+ * is left orphaned.
+ *
+ * What this deliberately does NOT do: remove the agent's listings from the Google
+ * Sheet. Those rows are shared pipeline data, a bulk sheet delete is the operation
+ * that has destroyed real rows here before, and it needs a backup and an explicit
+ * go-ahead. Losing the profile simply unlinks them — getAgentSlugForName returns
+ * null and the agent's name renders as plain text, which is what happens for the
+ * thousands of scraped agents who never signed up.
+ */
+export async function deleteAccountAction(
+  _prev: { error?: string } | undefined,
+  form: FormData,
+): Promise<{ error?: string }> {
+  const lang = langOf(form);
+  const t = forLang(ACCOUNT_COPY, lang);
+
+  const supabase = await createClient();
+  if (!supabase) return { error: t.errors.saveFailed };
+
+  // getUser(), never getSession(): a session cookie is client-supplied and can be
+  // forged. This is an irreversible action, so it must be authorised against the
+  // auth server.
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect(forLang(accountPaths, lang).login);
+
+  // Typed confirmation. A single click is too cheap for something unrecoverable,
+  // and the word is localised so it cannot be muscle-memory from another site.
+  const confirmation = str(form, 'confirm').trim().toUpperCase();
+  if (confirmation !== t.deleteConfirmWord.toUpperCase()) {
+    return { error: t.errors.deleteConfirm };
+  }
+
+  const admin = createAdminClient();
+  if (!admin) return { error: t.errors.saveFailed };
+
+  // Order matters: profile rows first, auth user last. If this fails halfway the
+  // account still exists and the agent can retry; deleting the auth user first
+  // would strand rows with no way to reach them.
+  await admin.from('agent_email_drip').delete().eq('user_id', user.id);
+  const { error: profileError } = await admin.from('agent_profiles').delete().eq('id', user.id);
+  if (profileError) return { error: t.errors.saveFailed };
+
+  const { error: authError } = await admin.auth.admin.deleteUser(user.id);
+  if (authError) return { error: t.errors.saveFailed };
+
+  await supabase.auth.signOut();
+  revalidatePath('/agents');
+  revalidatePath('/vi/moi-gioi');
+  redirect(lang === 'vi' ? '/vi?deleted=1' : '/?deleted=1');
+}
+
 export async function updateProfileAction(
   _prev: ActionState,
   form: FormData,

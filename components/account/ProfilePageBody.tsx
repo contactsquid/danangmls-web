@@ -2,6 +2,7 @@ import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import ProfileForm from '@/app/account/profile/ProfileForm';
 import { signOutAction } from '@/app/account/actions';
+import DeleteAccount from '@/components/account/DeleteAccount';
 import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 import { agentPaths } from '@/lib/agentCopy';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
@@ -60,6 +61,14 @@ export default function ProfilePageBody({
             {t.signOut}
           </button>
         </form>
+      </div>
+
+      {/* Last on the page and visually quiet: someone leaving the industry needs
+          this to exist, but nobody should meet it on the way to editing a bio.
+          Deletes the PROFILE only — listings stay and age out on their own
+          (rentals 60 days, for sale 90). */}
+      <div className="mt-6 pt-5 border-t border-slate-100">
+        <DeleteAccount lang={lang} />
       </div>
     </>
   );
