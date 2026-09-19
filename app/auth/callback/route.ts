@@ -1,7 +1,8 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, after, type NextRequest } from 'next/server';
 import type { EmailOtpType } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { sendWelcomeNow } from '@/lib/agentDrip/run';
 
 /** Where the email link lands. Handles both shapes Supabase can send:
  *   • ?code=…                      — PKCE (the default for the SSR client)
@@ -28,13 +29,27 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createClient();
 
+  // The address is confirmed by now, so this is the moment the welcome email
+  // goes out. Password-reset links also land here; sendWelcomeNow only acts on
+  // a drip row that has not had its welcome yet, so those are a no-op.
+  const welcome = async () => {
+    const { data } = await supabase.auth.getUser();
+    if (data.user) after(() => sendWelcomeNow(data.user!.id));
+  };
+
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) {
+      await welcome();
+      return NextResponse.redirect(`${origin}${next}`);
+    }
     console.error('[auth] Code exchange failed:', error.message);
   } else if (tokenHash && type) {
     const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) {
+      await welcome();
+      return NextResponse.redirect(`${origin}${next}`);
+    }
     console.error('[auth] OTP verification failed:', error.message);
   }
 
