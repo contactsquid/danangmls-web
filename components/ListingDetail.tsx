@@ -301,14 +301,14 @@ export default function ListingDetail({ listing, archived = false, similarListin
           ) : (
             /* Everything else — above-floor listings, archived ones, and sub-floor
                rows with no usable agent number — carries the AGENCY line, named as
-               Da Nang Homes. Blake: "There is always more than one contact person
+               Vy Tran (was "Da Nang Homes" until 2026-09-21). Blake: "There is always more than one contact person
                for every property", so showing the agency as a second contact is
                accurate even when the scraped agent is someone else. Listings the
                team actually posted keep their own name (Vy Tran, Blake Barnett)
                via the approved-agent branch above. */
             <AgentContact
               agents={[{
-                name: 'Da Nang Homes',
+                name: 'Vy Tran',
                 phone: AGENCY_PHONE,
                 profileSlug: null,   // no agent profile exists for the agency
                 hasWhatsApp: true,
