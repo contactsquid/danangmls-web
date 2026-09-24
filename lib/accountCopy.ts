@@ -65,6 +65,10 @@ export interface AccountCopy {
   agencyName: string;
   phone: string;
   phoneHint: string;
+  channelsLabel: string;
+  channelsHint: string;
+  whatsappLabel: string;
+  zaloLabel: string;
   listingName: string;
   listingNameHint: string;
   saveProfile: string;
@@ -176,7 +180,14 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     independentCheckbox: 'I work independently',
     agencyName: 'Agency name',
     phone: 'Phone / Zalo',
-    phoneHint: 'Not shown publicly. DanangMLS uses it to reach you about your listings.',
+    phoneHint: 'We use this to reach you about your listings. It is shown on your public '
+      + 'profile only if you tick an app below.',
+    channelsLabel: 'Show contact buttons on my profile',
+    channelsHint: 'Tick the apps you actually use. This publishes your number on your '
+      + 'public profile so customers can contact you directly. Leave both unticked and '
+      + 'your number stays private.',
+    whatsappLabel: 'WhatsApp — most foreign tenants use this',
+    zaloLabel: 'Zalo',
     listingName: 'Name used on your existing listings',
     listingNameHint:
       'If your properties are already on DanangMLS under a different name, enter it here and we will connect them to this profile after a quick check.',
@@ -280,7 +291,14 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     independentCheckbox: 'Tôi làm việc độc lập',
     agencyName: 'Tên công ty / sàn',
     phone: 'Điện thoại / Zalo',
-    phoneHint: 'Không hiển thị công khai. DanangMLS dùng để liên hệ với bạn về tin đăng.',
+    phoneHint: 'Chúng tôi dùng số này để liên hệ với bạn về tin đăng. Số chỉ hiển thị trên '
+      + 'trang hồ sơ công khai nếu bạn chọn một ứng dụng bên dưới.',
+    channelsLabel: 'Hiển thị nút liên hệ trên hồ sơ của tôi',
+    channelsHint: 'Chọn ứng dụng bạn đang dùng. Khi chọn, số của bạn sẽ hiển thị công khai '
+      + 'trên hồ sơ để khách liên hệ trực tiếp. Nếu không chọn ứng dụng nào, số của bạn '
+      + 'vẫn được giữ kín.',
+    whatsappLabel: 'WhatsApp — phần lớn khách nước ngoài dùng ứng dụng này',
+    zaloLabel: 'Zalo',
     listingName: 'Tên đang dùng trên các tin đăng hiện có',
     listingNameHint:
       'Nếu bất động sản của bạn đã có trên DanangMLS dưới một tên khác, hãy nhập tên đó vào đây và chúng tôi sẽ liên kết chúng với hồ sơ này sau khi kiểm tra.',

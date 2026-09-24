@@ -245,6 +245,10 @@ export async function updateProfileAction(
   const bio         = str(form, 'bio');
   const workplace   = str(form, 'workplace') || 'Independent';
   const phone       = str(form, 'phone');
+  // Ticking a channel is what publishes the number (agent_public gates on it),
+  // so a profile with no number must not be able to claim a channel.
+  const hasWhatsapp = form.get('has_whatsapp') === 'on' && phone.trim() !== '';
+  const hasZalo     = form.get('has_zalo')     === 'on' && phone.trim() !== '';
   const listingName = str(form, 'listing_agent_name');
 
   if (!displayName || displayName.length < 2) return { error: t.errors.nameRequired };
@@ -297,6 +301,8 @@ export async function updateProfileAction(
       bio,
       workplace,
       phone: phone || null,
+      has_whatsapp: hasWhatsapp,
+      has_zalo: hasZalo,
       // Claiming a name only records the claim. It has no public effect until an
       // admin verifies it — the RLS policy blocks self-verification and the
       // agent_public view nulls out unverified claims.

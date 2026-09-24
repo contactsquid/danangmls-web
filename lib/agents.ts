@@ -18,19 +18,27 @@ export interface AgentProfile {
   listing_agent_name: string | null;
   verified: boolean;
   created_at: string;
+  /** Published ONLY once the agent ticks WhatsApp or Zalo. The number was
+   *  originally collected under "not shown publicly", so the tick is the
+   *  consent to publish it — and `agent_public` nulls the column otherwise,
+   *  so no API path can leak a number the agent never agreed to show. */
+  phone: string | null;
+  has_whatsapp: boolean;
+  has_zalo: boolean;
 }
 
 /** The signed-in user's own profile, including the columns hidden from the public view. */
 export interface OwnAgentProfile extends AgentProfile {
   id: string;
-  phone: string | null;
   status: 'active' | 'suspended';
   is_admin: boolean;
   listing_agent_name_verified: boolean;
 }
 
-const PUBLIC_COLUMNS =
-  'slug, display_name, bio, photo_url, workplace, listing_agent_name, verified, created_at';
+// One string literal, not a concatenation: supabase-js parses the select list
+// with template-literal types at compile time, and `+` erases the literal type,
+// which makes the query resolve to GenericStringError[] instead of the row type.
+const PUBLIC_COLUMNS = 'slug, display_name, bio, photo_url, workplace, listing_agent_name, verified, created_at, phone, has_whatsapp, has_zalo';
 
 /** Agent names in the sheet arrive with inconsistent spacing and casing
  *  (they originate from scraped Facebook posts), so every comparison against
@@ -230,7 +238,7 @@ export const getOwnProfile = cache(async (): Promise<OwnAgentProfile | null> => 
     .from('agent_profiles')
     // Kept as one string literal, not a concatenation: supabase-js parses this
     // at the type level and a non-literal select silently degrades the row type.
-    .select('id, slug, display_name, bio, photo_url, workplace, phone, status, is_admin, listing_agent_name, listing_agent_name_verified, created_at')
+    .select('id, slug, display_name, bio, photo_url, workplace, phone, status, is_admin, listing_agent_name, listing_agent_name_verified, created_at, has_whatsapp, has_zalo')
     .eq('id', user.id)
     .maybeSingle();
 

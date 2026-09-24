@@ -1,6 +1,7 @@
 import { forLang } from '@/lib/translations';
 import Link from 'next/link';
 import AgentAvatar from './AgentAvatar';
+import AgentProfileContact from '@/components/AgentProfileContact';
 import AgentListings from './AgentListings';
 import { AGENT_COPY, agentPaths } from '@/lib/agentCopy';
 import type { Lang } from '@/lib/translations';
@@ -77,8 +78,10 @@ export default function AgentProfileView({ profile, listings, lang }: Props) {
             <p className="text-slate-600 leading-relaxed mt-4 whitespace-pre-line">{profile.bio.trim()}</p>
           )}
 
-          {/* Every lead funnels through DanangMLS by design — the agent's own
-              phone is intentionally not published here. */}
+          {/* The DanangMLS enquiry route is always offered. The agent's own
+              buttons appear BELOW it only when they have opted in (Blake,
+              2026-09-24) — before that the number stays private, which is the
+              promise it was collected under. */}
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href={contactHref}
@@ -93,6 +96,8 @@ export default function AgentProfileView({ profile, listings, lang }: Props) {
               {t.browseRentals}
             </Link>
           </div>
+
+          <AgentProfileContact profile={profile} lang={lang} />
         </div>
       </header>
 
