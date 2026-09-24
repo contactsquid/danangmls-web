@@ -180,13 +180,13 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     independentCheckbox: 'I work independently',
     agencyName: 'Agency name',
     phone: 'Phone / Zalo',
-    phoneHint: 'We use this to reach you about your listings. It is shown on your public '
-      + 'profile only if you tick an app below.',
-    channelsLabel: 'Show contact buttons on my profile',
-    channelsHint: 'Tick the apps you actually use. This publishes your number on your '
-      + 'public profile so customers can contact you directly. Leave both unticked and '
-      + 'your number stays private.',
-    whatsappLabel: 'WhatsApp — most foreign tenants use this',
+    phoneHint: 'Shown on your public profile as Zalo and Message buttons so customers '
+      + 'can reach you directly, and used by DanangMLS to contact you about your listings. '
+      + 'Leave it blank to stay unlisted.',
+    channelsLabel: 'Also on WhatsApp?',
+    channelsHint: 'Most foreign tenants use WhatsApp. Tick this and a WhatsApp button is '
+      + 'added to your profile alongside Zalo and Message.',
+    whatsappLabel: 'Show a WhatsApp button for this number',
     zaloLabel: 'Zalo',
     listingName: 'Name used on your existing listings',
     listingNameHint:
@@ -291,13 +291,13 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     independentCheckbox: 'Tôi làm việc độc lập',
     agencyName: 'Tên công ty / sàn',
     phone: 'Điện thoại / Zalo',
-    phoneHint: 'Chúng tôi dùng số này để liên hệ với bạn về tin đăng. Số chỉ hiển thị trên '
-      + 'trang hồ sơ công khai nếu bạn chọn một ứng dụng bên dưới.',
-    channelsLabel: 'Hiển thị nút liên hệ trên hồ sơ của tôi',
-    channelsHint: 'Chọn ứng dụng bạn đang dùng. Khi chọn, số của bạn sẽ hiển thị công khai '
-      + 'trên hồ sơ để khách liên hệ trực tiếp. Nếu không chọn ứng dụng nào, số của bạn '
-      + 'vẫn được giữ kín.',
-    whatsappLabel: 'WhatsApp — phần lớn khách nước ngoài dùng ứng dụng này',
+    phoneHint: 'Số này hiển thị trên hồ sơ công khai của bạn dưới dạng nút Zalo và Nhắn tin '
+      + 'để khách liên hệ trực tiếp, đồng thời DanangMLS dùng để liên hệ với bạn về tin đăng. '
+      + 'Để trống nếu bạn không muốn hiển thị.',
+    channelsLabel: 'Bạn có dùng WhatsApp không?',
+    channelsHint: 'Phần lớn khách nước ngoài dùng WhatsApp. Chọn mục này để thêm nút WhatsApp '
+      + 'vào hồ sơ, bên cạnh Zalo và Nhắn tin.',
+    whatsappLabel: 'Hiển thị nút WhatsApp cho số này',
     zaloLabel: 'Zalo',
     listingName: 'Tên đang dùng trên các tin đăng hiện có',
     listingNameHint:

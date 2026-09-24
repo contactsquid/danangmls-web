@@ -11,13 +11,16 @@ import { forLang, type Lang } from '@/lib/translations';
  * on. The message here is deliberately unprefilled: the visitor is contacting
  * the agent, not asking about one specific property.
  *
- * WHICH BUTTONS APPEAR IS THE AGENT'S CHOICE, not a guess. Listings infer
- * WhatsApp from the text of a scraped Facebook post (see agentChannels.ts);
- * here the agent ticks the apps they actually use, so there is nothing to infer.
+ * A saved number publishes Zalo and Message. Blake, 2026-09-24: "This is Vietnam
+ * and every agent wants to be contacted" — Zalo is effectively universal on a
+ * Vietnamese mobile and every number takes SMS, so there is nothing to opt into.
+ * That also makes a profile behave like the sub-floor listing block, which has
+ * always published a scraped agent's Zalo and Message without asking.
  *
- * Renders nothing at all unless the agent opted in — `agent_public` serves
- * `phone` as NULL until a channel is ticked, because the number was first
- * collected under "not shown publicly" and the tick is the consent to publish.
+ * WhatsApp is the exception and stays behind `has_whatsapp`: it is NOT universal
+ * in Vietnam, so showing it unasked would send foreign tenants to an app the
+ * agent may not run. Listings infer it from the text of a scraped Facebook post
+ * (agentChannels.ts); on a profile the agent ticks it themselves.
  */
 export default function AgentProfileContact({
   profile,
@@ -28,7 +31,6 @@ export default function AgentProfileContact({
 }) {
   const phone = normalizeVnPhone(profile.phone);
   if (!phone) return null;
-  if (!profile.has_whatsapp && !profile.has_zalo) return null;
 
   const btn = 'inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-semibold '
     + 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
@@ -61,16 +63,14 @@ export default function AgentProfileContact({
             WhatsApp
           </a>
         )}
-        {profile.has_zalo && (
-          <a
-            href={zaloLink(phone)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${btn} bg-[#0068ff] text-white hover:bg-[#0058d8] focus-visible:outline-[#0068ff]`}
-          >
-            Zalo
-          </a>
-        )}
+        <a
+          href={zaloLink(phone)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${btn} bg-[#0068ff] text-white hover:bg-[#0058d8] focus-visible:outline-[#0068ff]`}
+        >
+          Zalo
+        </a>
         <a
           href={smsLink(phone)}
           className={`${btn} bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 focus-visible:outline-slate-400`}

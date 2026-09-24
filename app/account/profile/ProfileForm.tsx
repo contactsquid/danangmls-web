@@ -169,9 +169,10 @@ export default function ProfileForm({
         />
         <p className={hintClass}>{t.phoneHint}</p>
 
-        {/* Ticking a box is the consent to publish the number — the number was
-            first collected under "not shown publicly", so it stays hidden until
-            the agent opts in here, and agent_public enforces that in SQL. */}
+        {/* A saved number publishes Zalo + Message automatically (Blake: Zalo is
+            universal on a Vietnamese mobile and every number takes SMS), so there
+            is no Zalo checkbox — a control that changed nothing would mislead.
+            WhatsApp is the one real choice, since it is not universal here. */}
         <fieldset className="mt-3 rounded-lg border border-slate-200 p-3">
           <legend className="px-1 text-sm font-medium text-slate-700">{t.channelsLabel}</legend>
           <label className="flex items-center gap-2 py-1 text-sm text-slate-700">
@@ -182,15 +183,6 @@ export default function ProfileForm({
               className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             />
             {t.whatsappLabel}
-          </label>
-          <label className="flex items-center gap-2 py-1 text-sm text-slate-700">
-            <input
-              type="checkbox"
-              name="has_zalo"
-              defaultChecked={profile.has_zalo}
-              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-            />
-            {t.zaloLabel}
           </label>
           <p className={hintClass}>{t.channelsHint}</p>
         </fieldset>
