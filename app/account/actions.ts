@@ -14,6 +14,7 @@ import { normalizeAgentName } from '@/lib/agents';
 import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
 import { searchAgentNames, type NameCandidate } from '@/lib/agentNameSearch';
 import type { Lang } from '@/lib/translations';
+import { normalizeVnPhone } from '@/lib/agentContact';
 
 export interface ActionState {
   error?: string;
@@ -46,11 +47,21 @@ export async function signUpAction(
   const email       = str(form, 'email').toLowerCase();
   const password    = str(form, 'password');
   const displayName = str(form, 'display_name');
+  const phoneRaw    = str(form, 'phone');
 
   if (!displayName || displayName.length < 2) return { error: t.errors.nameRequired };
   if (displayName.length > 80) return { error: t.errors.nameTooLong };
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { error: t.errors.emailInvalid };
   if (password.length < 8) return { error: t.errors.passwordShort };
+
+  // Required, and enforced HERE rather than by the form's `required` attribute —
+  // a server action is a public endpoint and the attribute is trivially skipped.
+  // Agents were signing up with no number at all (three of nine before
+  // 2026-09-24), which left a live listing nobody could respond to.
+  // normalizeVnPhone rejects landlines and malformed input rather than guessing,
+  // because a number that cannot take Zalo or SMS is no better than none.
+  const phone = normalizeVnPhone(phoneRaw);
+  if (!phone) return { error: t.errors.phoneRequired };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
@@ -58,7 +69,8 @@ export async function signUpAction(
     password,
     options: {
       // Read by the handle_new_user() trigger to name the profile and mint its slug.
-      data: { display_name: displayName },
+      // Canonical 0 + 9 digits. The trigger copies both into the new profile.
+      data: { display_name: displayName, phone: `0${phone}` },
       emailRedirectTo: `${SITE_URL}/auth/callback?next=${forLang(accountPaths, lang).profile}`,
     },
   });
@@ -255,6 +267,11 @@ export async function updateProfileAction(
   if (displayName.length > 80) return { error: t.errors.nameTooLong };
   if (bio.length > 2000)       return { error: t.errors.bioTooLong };
   if (workplace.length > 120)  return { error: t.errors.workplaceTooLong };
+  // Required here too, not only at signup — otherwise an agent could clear the
+  // field afterwards and land straight back in the state this was meant to end.
+  // It also collects a number from the agents who registered before signup
+  // asked for one: they cannot save any profile change without supplying it.
+  if (!normalizeVnPhone(phone)) return { error: t.errors.phoneRequired };
 
   // Photo is optional on every save — only replace it when a new file arrives.
   let photoUrl: string | undefined;

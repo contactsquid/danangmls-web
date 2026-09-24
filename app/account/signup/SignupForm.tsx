@@ -53,6 +53,24 @@ export default function SignupForm({ lang = 'en' }: { lang?: Lang }) {
         />
       </div>
 
+      {/* Required. Agents were reaching a live listing with no number behind it
+          (three of nine before 2026-09-24), so it is asked for at the front door
+          rather than left to a profile page they may never open. The server
+          re-validates it — `required` here is only the first line. */}
+      <div>
+        <label htmlFor="phone" className={labelClass}>{t.phone}</label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          required
+          autoComplete="tel"
+          placeholder="0905 897 639"
+          className={inputClass}
+        />
+        <p className={hintClass}>{t.signupPhoneHint}</p>
+      </div>
+
       <div>
         <label htmlFor="password" className={labelClass}>{t.password}</label>
         <input

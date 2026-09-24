@@ -65,6 +65,7 @@ export interface AccountCopy {
   agencyName: string;
   phone: string;
   phoneHint: string;
+  signupPhoneHint: string;
   channelsLabel: string;
   channelsHint: string;
   whatsappLabel: string;
@@ -113,6 +114,7 @@ export interface AccountCopy {
   errors: {
     notConfigured: string;
     nameRequired: string;
+    phoneRequired: string;
     nameTooLong: string;
     emailInvalid: string;
     passwordShort: string;
@@ -180,6 +182,8 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     independentCheckbox: 'I work independently',
     agencyName: 'Agency name',
     phone: 'Phone / Zalo',
+    signupPhoneHint: 'Shown on your profile as Zalo and Message buttons so customers can '
+      + 'reach you, and used by DanangMLS to contact you about your listings.',
     phoneHint: 'Shown on your public profile as Zalo and Message buttons so customers '
       + 'can reach you directly, and used by DanangMLS to contact you about your listings. '
       + 'Leave it blank to stay unlisted.',
@@ -231,6 +235,7 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
       notConfigured: 'Agent accounts are not enabled on this site yet. Please try again later.',
       deleteConfirm: 'Please type DELETE exactly to confirm.',
       nameRequired: 'Please enter your full name.',
+      phoneRequired: 'Please enter a valid Vietnamese mobile number, e.g. 0905 897 639.',
       nameTooLong: 'That name is too long (80 characters max).',
       emailInvalid: 'Please enter a valid email address.',
       passwordShort: 'Password must be at least 8 characters.',
@@ -291,6 +296,8 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
     independentCheckbox: 'Tôi làm việc độc lập',
     agencyName: 'Tên công ty / sàn',
     phone: 'Điện thoại / Zalo',
+    signupPhoneHint: 'Số này hiển thị trên hồ sơ của bạn dưới dạng nút Zalo và Nhắn tin để '
+      + 'khách liên hệ, đồng thời DanangMLS dùng để liên hệ với bạn về tin đăng.',
     phoneHint: 'Số này hiển thị trên hồ sơ công khai của bạn dưới dạng nút Zalo và Nhắn tin '
       + 'để khách liên hệ trực tiếp, đồng thời DanangMLS dùng để liên hệ với bạn về tin đăng. '
       + 'Để trống nếu bạn không muốn hiển thị.',
@@ -342,6 +349,7 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
       notConfigured: 'Tài khoản môi giới chưa được bật trên trang này. Vui lòng thử lại sau.',
       deleteConfirm: 'Vui lòng nhập chính xác XOA để xác nhận.',
       nameRequired: 'Vui lòng nhập họ và tên của bạn.',
+      phoneRequired: 'Vui lòng nhập số di động Việt Nam hợp lệ, ví dụ 0905 897 639.',
       nameTooLong: 'Tên quá dài (tối đa 80 ký tự).',
       emailInvalid: 'Vui lòng nhập địa chỉ email hợp lệ.',
       passwordShort: 'Mật khẩu phải có ít nhất 8 ký tự.',
