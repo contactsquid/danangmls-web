@@ -87,18 +87,57 @@ export const getAgentProfile = cache(async (slug: string): Promise<AgentProfile 
   return (data as AgentProfile | null) ?? null;
 });
 
-/** Every listing (rental + sale) credited to this profile in the Google Sheet.
+const OWNED_PREFIX = 'https://images.danang.homes/agent-listings/';
+
+/** The profile slug that posted this listing through the portal, or null for a
+ *  scraped Facebook row.
  *
- *  Returns [] when the name claim is unverified — `listing_agent_name` is served
- *  as NULL by the view in that case, so an unapproved claim cannot pull another
- *  agent's portfolio onto a profile page. */
+ *  The prefix is written server-side as `agent-listings/${profile.slug}/` from
+ *  the AUTHENTICATED session (app/account/listings/actions.ts), never from user
+ *  input — so an agent cannot put a listing under someone else's slug. That
+ *  makes upload provenance strictly stronger evidence of ownership than the
+ *  self-declared `listing_agent_name`, which is why it needs no admin approval. */
+function portalOwnerSlug(listing: Listing): string | null {
+  for (const url of listing.images) {
+    if (!url.startsWith(OWNED_PREFIX)) continue;
+    const rest = url.slice(OWNED_PREFIX.length);
+    const slash = rest.indexOf('/');
+    if (slash > 0) return rest.slice(0, slash);
+  }
+  return null;
+}
+
+/** Every listing (rental + sale) belonging to this profile, newest first.
+ *
+ *  TWO routes to ownership, and they are not equivalent:
+ *
+ *  1. **Posted through the portal** — proven by the image path, which the server
+ *     derives from the signed-in profile. Needs no approval.
+ *  2. **Claimed by name** — `listing_agent_name`, for scraped Facebook rows that
+ *     carry the agent's name. The view serves this as NULL until an admin
+ *     verifies it, so an unapproved claim still cannot pull another agent's
+ *     portfolio onto a profile page.
+ *
+ *  Route 1 was missing until 2026-09-24: an agent signed up, posted a listing
+ *  through the portal, and her profile showed nothing, because the only path to
+ *  a listing was an admin-verified name claim she had never made. A portal
+ *  listing not appearing on its own author's profile is the one case that can
+ *  never be a mis-claim. */
 export async function getAgentListings(profile: AgentProfile): Promise<Listing[]> {
   const claimed = normalizeAgentName(profile.listing_agent_name);
-  if (!claimed) return [];
 
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
 
-  return [...rentals, ...forSale].filter(l => normalizeAgentName(l.agent) === claimed);
+  const seen = new Set<string>();
+  const mine: Listing[] = [];
+  for (const l of [...rentals, ...forSale]) {
+    const owned = portalOwnerSlug(l) === profile.slug
+      || (claimed !== '' && normalizeAgentName(l.agent) === claimed);
+    if (!owned || seen.has(l.slug)) continue;   // a row can match both routes
+    seen.add(l.slug);
+    mine.push(l);
+  }
+  return mine.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 /** Counts per profile in one pass over the sheets, for the /agents directory.
@@ -114,10 +153,20 @@ export async function getAgentListingCounts(
     counts.set(p.slug, 0);
     if (claimed) wanted.set(claimed, p.slug);
   }
-  if (wanted.size === 0) return counts;
+  // NB: no early return on an empty `wanted`. Portal-posted listings are counted
+  // by image path, so a profile with no verified name claim can still have a
+  // real count — that bug showed the /agents directory "0 listings" for an agent
+  // who had just posted one.
 
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
   for (const listing of [...rentals, ...forSale]) {
+    // Upload provenance wins over the name claim, and `continue` stops a listing
+    // that matches both routes from being counted twice.
+    const posted = portalOwnerSlug(listing);
+    if (posted && counts.has(posted)) {
+      counts.set(posted, (counts.get(posted) ?? 0) + 1);
+      continue;
+    }
     const slug = wanted.get(normalizeAgentName(listing.agent));
     if (slug) counts.set(slug, (counts.get(slug) ?? 0) + 1);
   }
