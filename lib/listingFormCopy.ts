@@ -28,6 +28,9 @@ export interface ListingFormCopy {
   price: string;
   priceHintRent: string;
   priceHintSale: string;
+  minTerm: string;
+  minTermHint: string;
+  minTermOptions: { value: string; label: string }[];
   title: string;
   titleHint: string;
   description: string;
@@ -92,6 +95,15 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
     price: 'Price',
     priceHintRent: 'Monthly rent',
     priceHintSale: 'Total sale price',
+    minTerm: 'Minimum term',
+    minTermHint: 'The shortest stay you will accept. Quote your monthly rate for a '
+      + '1-year term — shorter stays usually cost more.',
+    minTermOptions: [
+      { value: '1 month',  label: '1-month minimum' },
+      { value: '3 months', label: '3-month minimum' },
+      { value: '6 months', label: '6-month minimum' },
+      { value: '1 year',   label: '1-year minimum' },
+    ],
     title: 'Listing title',
     titleHint: 'Leave blank and we will write one for you.',
     description: 'Description',
@@ -159,6 +171,15 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
     price: 'Giá',
     priceHintRent: 'Giá thuê mỗi tháng',
     priceHintSale: 'Tổng giá bán',
+    minTerm: 'Thời hạn thuê tối thiểu',
+    minTermHint: 'Thời gian thuê ngắn nhất bạn nhận. Hãy ghi giá thuê tháng theo hợp đồng '
+      + '1 năm — thuê ngắn hạn thường có giá cao hơn.',
+    minTermOptions: [
+      { value: '1 month',  label: 'Tối thiểu 1 tháng' },
+      { value: '3 months', label: 'Tối thiểu 3 tháng' },
+      { value: '6 months', label: 'Tối thiểu 6 tháng' },
+      { value: '1 year',   label: 'Tối thiểu 1 năm' },
+    ],
     title: 'Tiêu đề tin đăng',
     titleHint: 'Để trống và chúng tôi sẽ tự tạo tiêu đề cho bạn.',
     description: 'Mô tả',

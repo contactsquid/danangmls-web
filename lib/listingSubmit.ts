@@ -43,6 +43,8 @@ export const RENTAL_TAB = 'Sheet1';
 export const SALE_TAB = 'For Sale';
 
 export interface ListingSubmission {
+  /** Rentals only: shortest stay accepted. Empty for a sale. */
+  minTerm?: string;
   forSale: boolean;
   propertyType: string;
   district: string;
@@ -176,6 +178,7 @@ export function buildRow(s: ListingSubmission): BuiltRow {
     s.bathrooms && `Bathrooms: ${s.bathrooms}`,
     s.areaSqm && `Area: ${s.areaSqm} m²`,
     s.neighborhood && `Neighbourhood: ${s.neighborhood}`,
+    !s.forSale && s.minTerm && `Minimum term: ${s.minTerm}`,
   ].filter(Boolean).join(' · ');
   const text = extras ? `${s.description.trim()}\n\n${extras}` : s.description.trim();
 

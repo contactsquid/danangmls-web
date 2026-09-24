@@ -226,6 +226,27 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
           </select>
         </div>
         <p className={hintClass}>{forSale ? t.priceHintSale : t.priceHintRent}</p>
+
+        {/* Rentals only: a sale has no term. Sits under the price because the
+            two are read together — the rate only means something alongside the
+            term it assumes. Defaults to 1 year, which is what the quoted monthly
+            rate is expected to reflect (see the note on rental listing pages). */}
+        {!forSale && (
+          <div className="mt-4">
+            <label className={labelClass} htmlFor="min_term">{t.minTerm}</label>
+            <select
+              id="min_term"
+              name="min_term"
+              defaultValue="1 year"
+              className={inputClass}
+            >
+              {t.minTermOptions.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+            <p className={hintClass}>{t.minTermHint}</p>
+          </div>
+        )}
       </div>
 
       <div>

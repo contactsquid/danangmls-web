@@ -31,6 +31,15 @@ function priceAmount(price: string): string {
   return digits || '';
 }
 
+
+/** The term this listing was posted with, read back from the appended
+ *  "Minimum term: …" in the description. Falls back to a 1-year minimum, which
+ *  is the term the quoted monthly rate is assumed to reflect. */
+function currentMinTerm(text: string): string {
+  const m = /Minimum term:\s*(1 month|3 months|6 months|1 year)/i.exec(text || '');
+  return m ? m[1].toLowerCase() : '1 year';
+}
+
 export default function EditListingForm({ listing, lang }: { listing: Listing; lang: Lang }) {
   const t = forLang(LISTING_FORM_COPY, lang);
   const [state, formAction, pending] = useActionState(updateListingAction, initial);
@@ -147,6 +156,27 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
           </div>
         </div>
       </div>
+
+      {/* Rentals only — a sale has no term. The current value is read back out of
+          the description, which is where submit appends it (the sheet has no
+          dedicated column), so editing a listing keeps the term it was posted
+          with instead of silently resetting it to the default. */}
+      {!listing.forSale && (
+        <div>
+          <label className={labelClass} htmlFor="min_term">{t.minTerm}</label>
+          <select
+            id="min_term"
+            name="min_term"
+            defaultValue={currentMinTerm(listing.text)}
+            className={inputClass}
+          >
+            {t.minTermOptions.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          <p className={hintClass}>{t.minTermHint}</p>
+        </div>
+      )}
 
       <div>
         <label className={labelClass} htmlFor="title">{t.title}</label>

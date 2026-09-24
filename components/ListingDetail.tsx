@@ -336,6 +336,22 @@ export default function ListingDetail({ listing, archived = false, similarListin
             <div className="mb-8">
               <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">{t.description}</h2>
               <p className="text-slate-700 leading-relaxed whitespace-pre-line">{cleanText}</p>
+
+              {/* Rentals only. Da Nang quotes monthly rent against a 1-year term
+                  and marks it up for shorter stays, so a bare monthly figure
+                  reads as cheaper than a short let will actually be. Stated once
+                  here rather than baked into each description, so it also covers
+                  the scraped rows — which is most of them. */}
+              {!listing.forSale && (
+                <p className="mt-3 text-sm text-slate-500">
+                  {forLang({
+                    en: '* Rental rates are based on 1-year rental terms. The rate may increase for shorter stays.',
+                    vi: '* Giá thuê được tính theo hợp đồng 1 năm. Giá có thể cao hơn nếu thuê ngắn hạn.',
+                    ko: '* 임대료는 1년 계약 기준입니다. 단기 임대의 경우 임대료가 올라갈 수 있습니다.',
+                    ru: '* Стоимость указана для аренды на 1 год. При более коротком сроке она может быть выше.',
+                  }, lang)}
+                </p>
+              )}
             </div>
           )}
 
