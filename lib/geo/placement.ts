@@ -38,6 +38,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'Premier Village', pattern: /\bprem(?:ier|eir)\s+village\b/i, at: [16.04362, 108.24966], spreadM: 150 },
   // Chung cư Monarchy, 535 Trần Hưng Đạo, An Hải.
   { name: 'Monarchy', pattern: /\bmonarchy\b/i, at: [16.05484, 108.23297], spreadM: 40 },
+  // Sam Towers, Như Nguyệt / 01 Cầu Thuận Phước, Hải Châu (Blake's address) — the
+  // bridge's west-end roundabout on Như Nguyệt, per OSM.
+  { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.09333, 108.21727], spreadM: 40 },
   // Euro Village / Làng Châu Âu villa compound, Trần Hưng Đạo, Sơn Trà.
   { name: 'Euro Village', pattern: /\beuro\s*vill(?:age|a)\b|làng châu âu/i, at: [16.05432, 108.23111], spreadM: 200 },
   // The Ori Garden, Liên Chiểu.
