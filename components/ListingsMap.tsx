@@ -69,6 +69,7 @@ export default function ListingsMap({ listings }: { listings: Listing[] }) {
         m.bindPopup(() => {
           const label = l.geoLabel || '';
           const loc = precision === 0 ? t.mapAtBuilding(label)
+            : precision === 4 ? t.mapNearBuilding(label)
             : precision === 1 ? t.mapOnStreet(label)
             : precision === 2 ? t.mapInWard(label)
             : t.mapApprox(localizeDistrict(l.district, lang));

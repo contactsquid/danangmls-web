@@ -30,7 +30,8 @@ export interface Listing {
   foreignEligible?: boolean;        // For Sale only — true if in a known foreign-approved building
   foreignEligibleBuilding?: string; // Building name for the badge tooltip
   // Map placement, computed in lib/sheets.ts by lib/geo/placement.ts:
-  // [lat, lng, precision] with precision 0 building / 1 street / 2 ward / 3 district.
+  // [lat, lng, precision] with precision 0 building / 1 street / 2 ward / 3 district /
+  // 4 near a building (see PRECISION in lib/geo/placement.ts).
   // Absent when the listing has no usable district (not mapped).
   geo?:         [number, number, number];
   geoLabel?:    string; // building / street / ward name; '' for district precision

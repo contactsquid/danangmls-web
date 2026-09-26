@@ -5,7 +5,7 @@ import { distanceM, pointInGeometry } from './geometry';
 import { DISTRICT_BOUNDARIES } from '../districtBoundaries';
 
 const coords: GeoCoords = {
-  buildings: { 'Hiyori Garden Tower': [16.0694, 108.2345] },
+  buildings: { 'Hiyori Garden Tower': [16.0694, 108.2345], 'Hyatt Regency': [16.01259, 108.26377] },
   wards:     { 'Son Tra|an hai bac': [16.0745, 108.2320] },
   streets:   {
     'Son Tra|ho nghinh':  [16.0680, 108.2450],
@@ -71,4 +71,17 @@ test('with no known streets, district points skip small outlying parts (islands)
     const p = placeListing({ ...base, district: 'Hoi An', slug: `h-${i}` }, empty)!;
     assert.ok(pointInGeometry([p.geo[0], p.geo[1]], mainland), `h-${i} off the mainland`);
   }
+});
+
+test('"near <building>" is labelled near, not at', () => {
+  const p = placeListing({ ...base, district: 'Ngu Hanh Son', text: 'Garden house near Hyatt Regency, quiet lane' }, coords)!;
+  assert.equal(p.geo[2], PRECISION.nearBuilding);
+  assert.equal(p.geoLabel, 'Hyatt Regency');
+  assert.ok(distanceM([p.geo[0], p.geo[1]], [16.01259, 108.26377]) <= 301);
+});
+test('a building outside the listing\'s district is not used', () => {
+  // Hyatt Regency is in Ngu Hanh Son; this listing says Son Tra.
+  const p = placeListing({ ...base, text: 'Studio in Hyatt Regency' }, coords)!;
+  assert.notEqual(p.geo[2], PRECISION.building);
+  assert.notEqual(p.geo[2], PRECISION.nearBuilding);
 });
