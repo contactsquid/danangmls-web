@@ -1,1 +1,3291 @@
-{ "buildings": {}, "wards": {}, "streets": {}, "misses": [] }
+{
+ "buildings": {
+  "Hiyori Garden Tower": [
+   16.06126,
+   108.23562
+  ],
+  "FPT Plaza / F.Home": [
+   15.98184,
+   108.2622
+  ],
+  "Wyndham Soleil": [
+   16.07096,
+   108.24382
+  ],
+  "Risemount": [
+   16.05459,
+   108.24208
+  ],
+  "Hyatt Regency": [
+   16.01259,
+   108.26377
+  ],
+  "Azura": [
+   16.0717,
+   108.22938
+  ]
+ },
+ "wards": {
+  "Hai Chau|binh hien": [
+   16.05891,
+   108.22413
+  ],
+  "Hai Chau|binh thuan": [
+   16.08808,
+   108.21495
+  ],
+  "Hai Chau|hai chau 1": [
+   16.07132,
+   108.2215
+  ],
+  "Hai Chau|hai chau 2": [
+   16.07132,
+   108.2215
+  ],
+  "Hai Chau|hoa thuan dong": [
+   16.05414,
+   108.22072
+  ],
+  "Hai Chau|hoa thuan tay": [
+   16.05027,
+   108.21767
+  ],
+  "Hai Chau|phuoc ninh": [
+   16.06517,
+   108.22121
+  ],
+  "Hai Chau|thanh binh": [
+   16.07586,
+   108.20994
+  ],
+  "Hai Chau|thuan phuoc": [
+   16.09514,
+   108.2206
+  ],
+  "Thanh Khe|an khe": [
+   16.04995,
+   108.18554
+  ],
+  "Thanh Khe|chinh gian": [
+   16.06831,
+   108.19528
+  ],
+  "Thanh Khe|hoa khe": [
+   16.05806,
+   108.1887
+  ],
+  "Thanh Khe|tam thuan": [
+   16.07315,
+   108.2057
+  ],
+  "Thanh Khe|tan chinh": [
+   16.07157,
+   108.2093
+  ],
+  "Thanh Khe|thanh khe dong": [
+   16.06645,
+   108.18234
+  ],
+  "Thanh Khe|thanh khe tay": [
+   16.06645,
+   108.18234
+  ],
+  "Thanh Khe|thac gian": [
+   16.05753,
+   108.20712
+  ],
+  "Thanh Khe|vinh trung": [
+   16.0546,
+   108.21083
+  ],
+  "Thanh Khe|xuan ha": [
+   16.07016,
+   108.19286
+  ],
+  "Son Tra|an hai bac": [
+   16.08622,
+   108.23873
+  ],
+  "Son Tra|an hai dong": [
+   16.056,
+   108.24272
+  ],
+  "Son Tra|an hai tay": [
+   16.0664,
+   108.24311
+  ],
+  "Son Tra|man thai": [
+   16.09017,
+   108.24675
+  ],
+  "Son Tra|nai hien dong": [
+   16.09711,
+   108.22993
+  ],
+  "Son Tra|tho quang": [
+   16.0889,
+   108.24159
+  ],
+  "Ngu Hanh Son|hoa hai": [
+   15.99745,
+   108.26105
+  ],
+  "Ngu Hanh Son|hoa quy": [
+   15.98608,
+   108.24199
+  ],
+  "Ngu Hanh Son|khue my": [
+   16.03878,
+   108.24661
+  ],
+  "Ngu Hanh Son|my an": [
+   16.0251,
+   108.25953
+  ],
+  "Lien Chieu|hoa hiep bac": [
+   16.10716,
+   108.12627
+  ],
+  "Lien Chieu|hoa hiep nam": [
+   16.10844,
+   108.1322
+  ],
+  "Lien Chieu|hoa khanh bac": [
+   16.07651,
+   108.14884
+  ],
+  "Lien Chieu|hoa khanh nam": [
+   16.05204,
+   108.15353
+  ],
+  "Lien Chieu|hoa minh": [
+   16.0626,
+   108.16836
+  ],
+  "Cam Le|hoa an": [
+   16.0506,
+   108.17674
+  ],
+  "Cam Le|hoa phat": [
+   16.02559,
+   108.18795
+  ],
+  "Cam Le|hoa tho dong": [
+   16.01065,
+   108.19448
+  ],
+  "Cam Le|hoa tho tay": [
+   16.0001,
+   108.18359
+  ],
+  "Cam Le|hoa xuan": [
+   16.00495,
+   108.22045
+  ],
+  "Cam Le|khue trung": [
+   16.02206,
+   108.21095
+  ],
+  "Hoi An|an bang": [
+   15.91172,
+   108.34117
+  ],
+  "Hoi An|an my": [
+   15.89786,
+   108.36054
+  ],
+  "Hoi An|cam an nam": [
+   15.87507,
+   108.33298
+  ],
+  "Hoi An|cam chau": [
+   15.88417,
+   108.34842
+  ],
+  "Hoi An|cam ha": [
+   15.90397,
+   108.33224
+  ],
+  "Hoi An|cam kim": [
+   15.87265,
+   108.31774
+  ],
+  "Hoi An|cam nam": [
+   15.87552,
+   108.33314
+  ],
+  "Hoi An|cam pho": [
+   15.88406,
+   108.32916
+  ],
+  "Hoi An|cam thanh": [
+   15.88952,
+   108.36181
+  ],
+  "Hoi An|cua dai": [
+   15.89806,
+   108.36623
+  ],
+  "Hoi An|minh an": [
+   15.87769,
+   108.3257
+  ],
+  "Hoi An|son phong": [
+   15.88239,
+   108.33379
+  ],
+  "Hoi An|tan an": [
+   15.87432,
+   108.32205
+  ],
+  "Hoi An|thanh ha": [
+   15.88287,
+   108.30824
+  ],
+  "Hoa Vang|hoa bac": [
+   16.12986,
+   108.05013
+  ],
+  "Hoa Vang|hoa lien": [
+   16.09646,
+   108.09566
+  ],
+  "Hoa Vang|hoa ninh": [
+   16.05352,
+   108.08146
+  ],
+  "Hoa Vang|hoa son": [
+   16.07464,
+   108.02662
+  ],
+  "Hoa Vang|hoa phu": [
+   15.98519,
+   108.07418
+  ],
+  "Hoa Vang|hoa phong": [
+   15.98719,
+   108.14127
+  ],
+  "Hoa Vang|hoa chau": [
+   15.97915,
+   108.20087
+  ],
+  "Hoa Vang|hoa tien": [
+   15.96012,
+   108.13242
+  ],
+  "Hoa Vang|hoa khuong": [
+   15.96091,
+   108.13969
+  ],
+  "Hoa Vang|hoa phuoc": [
+   15.95635,
+   108.21602
+  ]
+ },
+ "streets": {
+  "Hai Chau|hoang dieu": [
+   16.05971,
+   108.21609
+  ],
+  "Hai Chau|nguyen van linh": [
+   16.06098,
+   108.2197
+  ],
+  "Thanh Khe|dien bien phu": [
+   16.06581,
+   108.20032
+  ],
+  "Hai Chau|trung nu vuong": [
+   16.05902,
+   108.22131
+  ],
+  "Thanh Khe|hai phong": [
+   16.07163,
+   108.21284
+  ],
+  "Hai Chau|le dinh ly": [
+   16.05099,
+   108.2095
+  ],
+  "Hai Chau|le duan": [
+   16.07136,
+   108.22026
+  ],
+  "Thanh Khe|nguyen phuoc nguyen": [
+   16.05989,
+   108.18103
+  ],
+  "Hai Chau|nui thanh": [
+   16.0493,
+   108.22073
+  ],
+  "Thanh Khe|tran cao van": [
+   16.066,
+   108.18298
+  ],
+  "Hai Chau|ong ich khiem": [
+   16.06405,
+   108.21539
+  ],
+  "Thanh Khe|truong chinh": [
+   16.05961,
+   108.17965
+  ],
+  "Hai Chau|hung vuong": [
+   16.06861,
+   108.22445
+  ],
+  "Hai Chau|le thanh nghi": [
+   16.04458,
+   108.21728
+  ],
+  "Son Tra|vo nguyen giap": [
+   16.08136,
+   108.24734
+  ],
+  "Thanh Khe|ha huy tap": [
+   16.06184,
+   108.19185
+  ],
+  "Ngu Hanh Son|vo nguyen giap": [
+   16.05317,
+   108.24802
+  ],
+  "Hai Chau|nguyen tri phuong": [
+   16.05238,
+   108.21057
+  ],
+  "Son Tra|ngo quyen": [
+   16.09362,
+   108.24406
+  ],
+  "Ngu Hanh Son|doan khue": [
+   16.02599,
+   108.24385
+  ],
+  "Thanh Khe|tran xuan le": [
+   16.05862,
+   108.18751
+  ],
+  "Thanh Khe|nguyen tat thanh": [
+   16.0763,
+   108.17732
+  ],
+  "Son Tra|truong dinh": [
+   16.0893,
+   108.24668
+  ],
+  "Son Tra|tran hung dao": [
+   16.08507,
+   108.22884
+  ],
+  "Son Tra|vo van kiet": [
+   16.06152,
+   108.23525
+  ],
+  "Son Tra|nguyen van thoai": [
+   16.05578,
+   108.24462
+  ],
+  "Son Tra|duong dinh nghe": [
+   16.0717,
+   108.23291
+  ],
+  "Thanh Khe|thai thi boi": [
+   16.06835,
+   108.19677
+  ],
+  "Son Tra|phan ba phien": [
+   16.0937,
+   108.24491
+  ],
+  "Lien Chieu|au co": [
+   16.07068,
+   108.14806
+  ],
+  "Cam Le|pham hung": [
+   16.00634,
+   108.20795
+  ],
+  "Son Tra|pham van dong": [
+   16.07028,
+   108.24148
+  ],
+  "Thanh Khe|huynh ngoc hue": [
+   16.06213,
+   108.18472
+  ],
+  "Ngu Hanh Son|che lan vien": [
+   16.04132,
+   108.24642
+  ],
+  "Hai Chau|nguyen tat thanh": [
+   16.0777,
+   108.20854
+  ],
+  "Ngu Hanh Son|le quang dao": [
+   16.04723,
+   108.24644
+  ],
+  "Ngu Hanh Son|le van hien": [
+   15.99699,
+   108.25927
+  ],
+  "Thanh Khe|le duan": [
+   16.06727,
+   108.20632
+  ],
+  "Ngu Hanh Son|phan tu": [
+   16.04552,
+   108.24471
+  ],
+  "Hai Chau|bach dang": [
+   16.08155,
+   108.22344
+  ],
+  "Ngu Hanh Son|chau thi vinh te": [
+   16.04675,
+   108.24156
+  ],
+  "Son Tra|chinh huu": [
+   16.06873,
+   108.23988
+  ],
+  "Ngu Hanh Son|nguyen dinh chieu": [
+   16.03,
+   108.24592
+  ],
+  "Son Tra|nguyen cong tru": [
+   16.06581,
+   108.23891
+  ],
+  "Hai Chau|tieu la": [
+   16.04493,
+   108.21734
+  ],
+  "Thanh Khe|pham nhu tang": [
+   16.06344,
+   108.18933
+  ],
+  "Ngu Hanh Son|nguyen van thoai": [
+   16.05289,
+   108.24069
+  ],
+  "Son Tra|nguyen xuan khoat": [
+   16.06986,
+   108.2367
+  ],
+  "Thanh Khe|cu chinh lan": [
+   16.0656,
+   108.19068
+  ],
+  "Son Tra|pham van": [
+   16.08754,
+   108.2449
+  ],
+  "Son Tra|vuong thua vu": [
+   16.08155,
+   108.24142
+  ],
+  "Ngu Hanh Son|trinh loi": [
+   16.02637,
+   108.24255
+  ],
+  "Hai Chau|phan thanh": [
+   16.05403,
+   108.22061
+  ],
+  "Lien Chieu|nguyen luong bang": [
+   16.07807,
+   108.14781
+  ],
+  "Thanh Khe|ly thai tong": [
+   16.07187,
+   108.17347
+  ],
+  "Hai Chau|nguyen huu tho": [
+   16.05186,
+   108.20936
+  ],
+  "Thanh Khe|le do": [
+   16.06596,
+   108.20223
+  ],
+  "Ngu Hanh Son|tuy ly vuong": [
+   16.02503,
+   108.24266
+  ],
+  "Son Tra|pham cu luong": [
+   16.05828,
+   108.23653
+  ],
+  "Hai Chau|ly tu trong": [
+   16.0786,
+   108.21439
+  ],
+  "Cam Le|nguyen phuoc lan": [
+   16.01728,
+   108.2323
+  ],
+  "Son Tra|hoang sa": [
+   16.09512,
+   108.2522
+  ],
+  "Son Tra|khuc hao": [
+   16.08992,
+   108.23563
+  ],
+  "Thanh Khe|dung si": [
+   16.06819,
+   108.18175
+  ],
+  "Cam Le|nguyen sac kim": [
+   16.00293,
+   108.22383
+  ],
+  "Cam Le|thanh luong": [
+   16.00804,
+   108.22936
+  ],
+  "Thanh Khe|phu loc 20": [
+   16.07297,
+   108.16839
+  ],
+  "Son Tra|truong han sieu": [
+   16.07994,
+   108.23083
+  ],
+  "Hai Chau|nguyen hoang": [
+   16.0548,
+   108.2121
+  ],
+  "Son Tra|vo duy ninh": [
+   16.09279,
+   108.24843
+  ],
+  "Thanh Khe|nguyen khang": [
+   16.05663,
+   108.18597
+  ],
+  "Ngu Hanh Son|hai trieu": [
+   16.0114,
+   108.25419
+  ],
+  "Ngu Hanh Son|my da dong 12": [
+   16.04446,
+   108.24743
+  ],
+  "Son Tra|le huu trac": [
+   16.0584,
+   108.24018
+  ],
+  "Lien Chieu|nguyen nhu hanh": [
+   16.0626,
+   108.17608
+  ],
+  "Son Tra|phan boi": [
+   16.06676,
+   108.2342
+  ],
+  "Cam Le|le quang chi": [
+   16.01602,
+   108.22369
+  ],
+  "Hai Chau|dinh tien hoang": [
+   16.07539,
+   108.21106
+  ],
+  "Cam Le|truong chinh": [
+   16.05911,
+   108.17852
+  ],
+  "Son Tra|phung ta chu": [
+   16.08569,
+   108.24493
+  ],
+  "Cam Le|phan khoi": [
+   15.98497,
+   108.2145
+  ],
+  "Lien Chieu|hoang van thai": [
+   16.04563,
+   108.13878
+  ],
+  "Son Tra|tan thai": [
+   16.08617,
+   108.24517
+  ],
+  "Son Tra|dinh dat": [
+   16.08183,
+   108.24543
+  ],
+  "Cam Le|mai chi tho": [
+   16.0139,
+   108.23006
+  ],
+  "Son Tra|cao ba quat": [
+   16.06385,
+   108.23066
+  ],
+  "Ngu Hanh Son|ton that thiep": [
+   16.04743,
+   108.24091
+  ],
+  "Son Tra|pham quang anh": [
+   16.05832,
+   108.23613
+  ],
+  "Son Tra|hoang bich son": [
+   16.07379,
+   108.24107
+  ],
+  "Son Tra|ly thanh tong": [
+   16.07267,
+   108.23367
+  ],
+  "Thanh Khe|dung si thanh khe": [
+   16.06819,
+   108.18175
+  ],
+  "Ngu Hanh Son|mai thuc lan": [
+   16.0538,
+   108.24181
+  ],
+  "Ngu Hanh Son|moc son 2": [
+   16.00091,
+   108.26579
+  ],
+  "Ngu Hanh Son|an thuong": [
+   16.05052,
+   108.24494
+  ],
+  "Ngu Hanh Son|nguyen lu": [
+   16.03301,
+   108.24083
+  ],
+  "Thanh Khe|pham van nghi": [
+   16.05668,
+   108.21022
+  ],
+  "Hai Chau|binh an 7": [
+   16.04201,
+   108.21539
+  ],
+  "Cam Le|nguyen xuan huu": [
+   16.01082,
+   108.20289
+  ],
+  "Hai Chau|pham van bach": [
+   16.03194,
+   108.22645
+  ],
+  "Son Tra|nguyen dinh": [
+   16.08063,
+   108.24161
+  ],
+  "Cam Le|nguyen nhu dai": [
+   16.01326,
+   108.19086
+  ],
+  "Son Tra|le boi": [
+   16.08237,
+   108.24714
+  ],
+  "Son Tra|tran quang khai": [
+   16.10168,
+   108.24962
+  ],
+  "Hai Chau|thai phien": [
+   16.06526,
+   108.2201
+  ],
+  "Ngu Hanh Son|do ba": [
+   16.05176,
+   108.24631
+  ],
+  "Hai Chau|phan dang luu": [
+   16.03812,
+   108.22584
+  ],
+  "Ngu Hanh Son|an thuong 29": [
+   16.05185,
+   108.24496
+  ],
+  "Hai Chau|phan chau trinh": [
+   16.06749,
+   108.22025
+  ],
+  "Lien Chieu|tran dinh tri": [
+   16.08223,
+   108.15689
+  ],
+  "Son Tra|pho duc chinh": [
+   16.08273,
+   108.23977
+  ],
+  "Hai Chau|doan khue": [
+   16.03575,
+   108.22534
+  ],
+  "Cam Le|nguyen an": [
+   16.00752,
+   108.22499
+  ],
+  "Son Tra|tran thanh tong": [
+   16.08905,
+   108.23273
+  ],
+  "Ngu Hanh Son|tran bach dang": [
+   16.05492,
+   108.246
+  ],
+  "Son Tra|ta my duat": [
+   16.06912,
+   108.23586
+  ],
+  "Son Tra|luong huu khanh": [
+   16.10507,
+   108.26319
+  ],
+  "Cam Le|le sy": [
+   16.01544,
+   108.22633
+  ],
+  "Thanh Khe|phan thanh": [
+   16.06301,
+   108.20875
+  ],
+  "Son Tra|le manh trinh": [
+   16.07457,
+   108.24359
+  ],
+  "Lien Chieu|hoa minh": [
+   16.08052,
+   108.15678
+  ],
+  "Cam Le|phan triem": [
+   16.00382,
+   108.2232
+  ],
+  "Hai Chau|quang trung": [
+   16.07558,
+   108.22389
+  ],
+  "Thanh Khe|phan phu tien": [
+   16.07611,
+   108.17489
+  ],
+  "Hai Chau|nguyen du": [
+   16.07864,
+   108.22003
+  ],
+  "Hai Chau|luu trong lu": [
+   16.03178,
+   108.23148
+  ],
+  "Son Tra|ho nghinh": [
+   16.06198,
+   108.24371
+  ],
+  "Thanh Khe|nguyen cong hang": [
+   16.05494,
+   108.18673
+  ],
+  "Ngu Hanh Son|truong sa": [
+   15.98843,
+   108.27169
+  ],
+  "Cam Le|ton dan": [
+   16.05703,
+   108.17833
+  ],
+  "Hai Chau|huynh thuc khang": [
+   16.06136,
+   108.21839
+  ],
+  "Cam Le|van tien dung": [
+   16.00125,
+   108.21308
+  ],
+  "Lien Chieu|ton duc thang": [
+   16.06531,
+   108.15509
+  ],
+  "Son Tra|nguyen phan vinh": [
+   16.1019,
+   108.24788
+  ],
+  "Cam Le|nhan hoa 8": [
+   15.98438,
+   108.20958
+  ],
+  "Hai Chau|chau thuong van": [
+   16.04448,
+   108.22046
+  ],
+  "Hai Chau|huy can": [
+   16.03276,
+   108.2155
+  ],
+  "Son Tra|nguyen hien": [
+   16.09132,
+   108.23485
+  ],
+  "Thanh Khe|nguyen chich": [
+   16.07242,
+   108.16904
+  ],
+  "Thanh Khe|lam quang thu": [
+   16.07839,
+   108.16707
+  ],
+  "Cam Le|cach mang thang 8": [
+   16.02273,
+   108.21468
+  ],
+  "Ngu Hanh Son|tran van giang": [
+   15.98386,
+   108.26794
+  ],
+  "Ngu Hanh Son|duong thi xuan quy": [
+   16.0424,
+   108.24356
+  ],
+  "Son Tra|chu huy man": [
+   16.08863,
+   108.24179
+  ],
+  "Cam Le|che viet tan": [
+   16.02094,
+   108.22954
+  ],
+  "Hai Chau|le hong phong": [
+   16.06412,
+   108.22029
+  ],
+  "Ngu Hanh Son|phan thuc duyen": [
+   16.05313,
+   108.24149
+  ],
+  "Ngu Hanh Son|tran thi ly": [
+   16.05022,
+   108.23002
+  ],
+  "Hai Chau|nhu nguyet": [
+   16.09346,
+   108.2172
+  ],
+  "Son Tra|le van quy": [
+   16.07117,
+   108.23831
+  ],
+  "Lien Chieu|ho tung mau": [
+   16.08083,
+   108.1624
+  ],
+  "Son Tra|tran sam": [
+   16.10071,
+   108.22949
+  ],
+  "Son Tra|le duc tho": [
+   16.10546,
+   108.2545
+  ],
+  "Thanh Khe|ly trien": [
+   16.05788,
+   108.18593
+  ],
+  "Lien Chieu|hoa minh 28": [
+   16.07555,
+   108.15977
+  ],
+  "Cam Le|nguyen thi sau": [
+   16.00594,
+   108.2289
+  ],
+  "Ngu Hanh Son|tran khanh du": [
+   16.05175,
+   108.24148
+  ],
+  "Ngu Hanh Son|an thuong 3": [
+   16.04893,
+   108.24686
+  ],
+  "Hai Chau|nguyen quang bich": [
+   16.04176,
+   108.21257
+  ],
+  "Ngu Hanh Son|truong van hien": [
+   16.01901,
+   108.2549
+  ],
+  "Hai Chau|nguyen chi thanh": [
+   16.07179,
+   108.22171
+  ],
+  "Lien Chieu|tran nguyen dan": [
+   16.07834,
+   108.15909
+  ],
+  "Son Tra|tran duy chien": [
+   16.08962,
+   108.24456
+  ],
+  "Son Tra|nguyen thong": [
+   16.06633,
+   108.23146
+  ],
+  "Son Tra|nguyen duc an": [
+   16.08209,
+   108.24413
+  ],
+  "Cam Le|thanh luong 18": [
+   16.01256,
+   108.2218
+  ],
+  "Ngu Hanh Son|ngo thi si": [
+   16.04833,
+   108.24765
+  ],
+  "Son Tra|nguyen dang tuyen": [
+   16.10488,
+   108.25969
+  ],
+  "Cam Le|kieu phung": [
+   15.98357,
+   108.21188
+  ],
+  "Lien Chieu|pham nhu xuong": [
+   16.06663,
+   108.14614
+  ],
+  "Ngu Hanh Son|nguyen dinh": [
+   16.03,
+   108.24592
+  ],
+  "Lien Chieu|hoa minh 19": [
+   16.07801,
+   108.15931
+  ],
+  "Cam Le|le trong tan": [
+   16.03534,
+   108.17967
+  ],
+  "Hoi An|pham nhu xuong": [
+   15.90276,
+   108.35152
+  ],
+  "Hai Chau|le vinh huy": [
+   16.04425,
+   108.21924
+  ],
+  "Thanh Khe|thanh tan": [
+   16.06795,
+   108.18587
+  ],
+  "Ngu Hanh Son|an bac 1": [
+   16.01823,
+   108.25221
+  ],
+  "Cam Le|bui thien ngo": [
+   16.00549,
+   108.22371
+  ],
+  "Cam Le|hoang hiep": [
+   16.01067,
+   108.22206
+  ],
+  "Son Tra|pham tu": [
+   16.06703,
+   108.24048
+  ],
+  "Son Tra|le van thu": [
+   16.08523,
+   108.24415
+  ],
+  "Hai Chau|cao thang": [
+   16.07597,
+   108.21383
+  ],
+  "Son Tra|nguyen trung truc": [
+   16.08744,
+   108.2297
+  ],
+  "Lien Chieu|le thiet": [
+   16.08253,
+   108.16031
+  ],
+  "Son Tra|tran thanh mai": [
+   16.07521,
+   108.24059
+  ],
+  "Ngu Hanh Son|khue my dong 5": [
+   16.03827,
+   108.24451
+  ],
+  "Ngu Hanh Son|my an 7": [
+   16.04719,
+   108.23689
+  ],
+  "Hai Chau|ly thuong kiet": [
+   16.08029,
+   108.22138
+  ],
+  "Ngu Hanh Son|an thuong 32": [
+   16.05068,
+   108.24635
+  ],
+  "Cam Le|pham xuan an": [
+   16.00919,
+   108.22274
+  ],
+  "Ngu Hanh Son|an thuong 31": [
+   16.0508,
+   108.24679
+  ],
+  "Thanh Khe|nguyen duc trung": [
+   16.0692,
+   108.18759
+  ],
+  "Hoi An|hung vuong": [
+   15.8777,
+   108.32256
+  ],
+  "Hai Chau|nai nam 5": [
+   16.03573,
+   108.2307
+  ],
+  "Hai Chau|vu trong phung": [
+   16.03296,
+   108.23267
+  ],
+  "Ngu Hanh Son|tran van dan": [
+   16.01249,
+   108.25305
+  ],
+  "Hai Chau|thanh thuy": [
+   16.08297,
+   108.21402
+  ],
+  "Thanh Khe|dao duy tu": [
+   16.06812,
+   108.21312
+  ],
+  "Ngu Hanh Son|le huu khanh": [
+   16.02988,
+   108.24094
+  ],
+  "Cam Le|quach thi trang": [
+   16.00497,
+   108.22356
+  ],
+  "Ngu Hanh Son|tran van du": [
+   16.04193,
+   108.24699
+  ],
+  "Ngu Hanh Son|le van huu": [
+   16.04192,
+   108.24109
+  ],
+  "Ngu Hanh Son|tran dai nghia": [
+   15.98311,
+   108.25595
+  ],
+  "Son Tra|tan thai 8": [
+   16.08617,
+   108.24517
+  ],
+  "Son Tra|hien thanh": [
+   16.06034,
+   108.24329
+  ],
+  "Cam Le|vu dinh lien": [
+   16.01327,
+   108.22693
+  ],
+  "Lien Chieu|kinh duong vuong": [
+   16.08055,
+   108.16064
+  ],
+  "Ngu Hanh Son|xuan quynh": [
+   16.023,
+   108.24284
+  ],
+  "Thanh Khe|hung vuong": [
+   16.06477,
+   108.21128
+  ],
+  "Thanh Khe|nguyen hong": [
+   16.06265,
+   108.19051
+  ],
+  "Cam Le|lo giang": [
+   15.99144,
+   108.21419
+  ],
+  "Ngu Hanh Son|tra lo": [
+   15.98095,
+   108.27226
+  ],
+  "Lien Chieu|hoang thi loan": [
+   16.07452,
+   108.15947
+  ],
+  "Lien Chieu|dong ke": [
+   16.07189,
+   108.1459
+  ],
+  "Hai Chau|tran ke xuong": [
+   16.06714,
+   108.21687
+  ],
+  "Ngu Hanh Son|luu quang vu": [
+   15.97059,
+   108.22931
+  ],
+  "Lien Chieu|bui tan dien": [
+   16.04752,
+   108.16561
+  ],
+  "Thanh Khe|phung chi kien": [
+   16.07839,
+   108.16593
+  ],
+  "Cam Le|nguyen quang lam": [
+   15.98103,
+   108.21264
+  ],
+  "Hai Chau|mai di": [
+   16.0437,
+   108.21837
+  ],
+  "Cam Le|truong son": [
+   16.01156,
+   108.16545
+  ],
+  "Hai Chau|dam rong": [
+   16.07983,
+   108.21582
+  ],
+  "Lien Chieu|bau mac": [
+   16.08563,
+   108.1503
+  ],
+  "Son Tra|lam hoanh": [
+   16.06129,
+   108.24548
+  ],
+  "Cam Le|ong ich duong": [
+   16.01697,
+   108.20469
+  ],
+  "Hoi An|nguyen tat thanh": [
+   15.89633,
+   108.30378
+  ],
+  "Son Tra|nguyen thi ba": [
+   16.09444,
+   108.23035
+  ],
+  "Hai Chau|ngo thi lieu": [
+   16.03782,
+   108.21457
+  ],
+  "Ngu Hanh Son|hoang binh chinh": [
+   15.9966,
+   108.26602
+  ],
+  "Thanh Khe|phu loc": [
+   16.0729,
+   108.16949
+  ],
+  "Ngu Hanh Son|ngu hanh son": [
+   16.04696,
+   108.23885
+  ],
+  "Thanh Khe|vo van tan": [
+   16.06703,
+   108.20334
+  ],
+  "Lien Chieu|ham trung 5": [
+   16.1006,
+   108.13317
+  ],
+  "Ngu Hanh Son|bat nan cong chua": [
+   15.98063,
+   108.27088
+  ],
+  "Hai Chau|nguyen dong chi": [
+   16.03845,
+   108.21754
+  ],
+  "Son Tra|nguyen binh khiem": [
+   16.06431,
+   108.23244
+  ],
+  "Hai Chau|nguyen huu dat": [
+   16.0422,
+   108.21351
+  ],
+  "Ngu Hanh Son|dang thai than": [
+   16.00868,
+   108.25666
+  ],
+  "Lien Chieu|ngo thi nham": [
+   16.07045,
+   108.15385
+  ],
+  "Thanh Khe|ky dong": [
+   16.07002,
+   108.18822
+  ],
+  "Son Tra|ha dac": [
+   16.06677,
+   108.24266
+  ],
+  "Ngu Hanh Son|bui ta han": [
+   16.03173,
+   108.24425
+  ],
+  "Hai Chau|xo viet nghe tinh": [
+   16.03328,
+   108.22533
+  ],
+  "Cam Le|tran van tra": [
+   16.002,
+   108.21039
+  ],
+  "Son Tra|nguyen thi hong": [
+   16.09927,
+   108.248
+  ],
+  "Ngu Hanh Son|my da tay": [
+   16.03179,
+   108.23901
+  ],
+  "Hoi An|cua dai": [
+   15.88069,
+   108.33688
+  ],
+  "Cam Le|nguyen huu tho": [
+   16.02023,
+   108.21147
+  ],
+  "Son Tra|nguyen duy hieu": [
+   16.05717,
+   108.24265
+  ],
+  "Ngu Hanh Son|hoi kieng 6": [
+   16.01092,
+   108.23657
+  ],
+  "Ngu Hanh Son|ba huyen thanh quan": [
+   16.04199,
+   108.24124
+  ],
+  "Son Tra|thach lam": [
+   16.05726,
+   108.24439
+  ],
+  "Son Tra|vu tong phan": [
+   16.09216,
+   108.24633
+  ],
+  "Cam Le|doan ngoc nhac": [
+   15.99705,
+   108.21559
+  ],
+  "Lien Chieu|nguyen huy tu": [
+   16.08182,
+   108.15974
+  ],
+  "Hai Chau|trieu nu vuong": [
+   16.06428,
+   108.21659
+  ],
+  "Son Tra|nguyen gia tri": [
+   16.09993,
+   108.25038
+  ],
+  "Hai Chau|le loi": [
+   16.07829,
+   108.21943
+  ],
+  "Ngu Hanh Son|pham huu kinh": [
+   16.05029,
+   108.23546
+  ],
+  "Ngu Hanh Son|an thuong 22": [
+   16.05147,
+   108.23919
+  ],
+  "Cam Le|tran vien": [
+   16.00052,
+   108.22073
+  ],
+  "Son Tra|mai hac de": [
+   16.06149,
+   108.23188
+  ],
+  "Son Tra|tran duc thong": [
+   16.08235,
+   108.24161
+  ],
+  "Son Tra|do anh han": [
+   16.08499,
+   108.23227
+  ],
+  "Ngu Hanh Son|khue my dong 1": [
+   16.03691,
+   108.2445
+  ],
+  "Ngu Hanh Son|vu van can": [
+   15.98798,
+   108.26187
+  ],
+  "Ngu Hanh Son|an thuong 10": [
+   16.04786,
+   108.24302
+  ],
+  "Ngu Hanh Son|minh mang": [
+   16.01081,
+   108.24382
+  ],
+  "Ngu Hanh Son|an thuong 17": [
+   16.04926,
+   108.24134
+  ],
+  "Hoi An|hai ba trung": [
+   15.88182,
+   108.32555
+  ],
+  "Son Tra|ly dao thanh": [
+   16.08703,
+   108.23856
+  ],
+  "Son Tra|ho han thuong": [
+   16.10123,
+   108.2346
+  ],
+  "Son Tra|phuoc truong 8": [
+   16.07649,
+   108.24391
+  ],
+  "Hai Chau|tien son": [
+   16.03514,
+   108.22127
+  ],
+  "Son Tra|an trung": [
+   16.06234,
+   108.23491
+  ],
+  "Son Tra|truong quyen": [
+   16.08703,
+   108.24527
+  ],
+  "Son Tra|nguyen thien ke": [
+   16.05827,
+   108.23917
+  ],
+  "Thanh Khe|yen khe 2": [
+   16.07003,
+   108.17786
+  ],
+  "Ngu Hanh Son|truong quang duoc": [
+   16.00908,
+   108.23859
+  ],
+  "Son Tra|trieu viet vuong": [
+   16.06467,
+   108.23161
+  ],
+  "Son Tra|luu huu phuoc": [
+   16.07992,
+   108.2327
+  ],
+  "Lien Chieu|duong duc hien": [
+   16.08288,
+   108.16055
+  ],
+  "Hai Chau|phu gia": [
+   16.07789,
+   108.212
+  ],
+  "Ngu Hanh Son|da man 11": [
+   16.02902,
+   108.24366
+  ],
+  "Son Tra|duong van nga": [
+   16.08745,
+   108.23098
+  ],
+  "Son Tra|hoang duc luong": [
+   16.07664,
+   108.23297
+  ],
+  "Ngu Hanh Son|son thuy 2": [
+   16.01308,
+   108.25397
+  ],
+  "Son Tra|dong kinh nghia thuc": [
+   16.07555,
+   108.24397
+  ],
+  "Son Tra|ly nhat quang": [
+   16.09759,
+   108.23211
+  ],
+  "Ngu Hanh Son|vu mong nguyen": [
+   16.0388,
+   108.24767
+  ],
+  "Hai Chau|luong nhu hoc": [
+   16.04273,
+   108.21144
+  ],
+  "Ngu Hanh Son|ho xuan huong": [
+   16.03844,
+   108.24328
+  ],
+  "Son Tra|my khe 7": [
+   16.06434,
+   108.23917
+  ],
+  "Hai Chau|nai nam": [
+   16.03386,
+   108.22743
+  ],
+  "Hai Chau|le dinh tham": [
+   16.04994,
+   108.21625
+  ],
+  "Hai Chau|han mac tu": [
+   16.08621,
+   108.21643
+  ],
+  "Lien Chieu|quang thanh 1": [
+   16.07848,
+   108.14656
+  ],
+  "Hai Chau|binh an": [
+   16.04201,
+   108.21539
+  ],
+  "Cam Le|le dai hanh": [
+   16.02444,
+   108.20864
+  ],
+  "Lien Chieu|tran tan": [
+   16.10121,
+   108.13404
+  ],
+  "Son Tra|nam tho 1": [
+   16.09408,
+   108.2481
+  ],
+  "Cam Le|dang van ngu": [
+   16.01347,
+   108.20662
+  ],
+  "Thanh Khe|be van dan": [
+   16.06503,
+   108.19926
+  ],
+  "Hoi An|nguyen duy hieu": [
+   15.87835,
+   108.33738
+  ],
+  "Son Tra|hoa lu": [
+   16.09238,
+   108.23588
+  ],
+  "Thanh Khe|nguyen dang": [
+   16.05535,
+   108.18439
+  ],
+  "Hoi An|tran hung dao": [
+   15.87948,
+   108.33325
+  ],
+  "Cam Le|nguyen hien le": [
+   16.01418,
+   108.22815
+  ],
+  "Ngu Hanh Son|da man 3": [
+   16.02068,
+   108.25043
+  ],
+  "Lien Chieu|dong bai": [
+   16.0668,
+   108.15135
+  ],
+  "Lien Chieu|le van si": [
+   16.07946,
+   108.15808
+  ],
+  "Ngu Hanh Son|kim dong": [
+   15.98237,
+   108.2723
+  ],
+  "Hai Chau|luu quy ky": [
+   16.03718,
+   108.22323
+  ],
+  "Ngu Hanh Son|huynh ba chanh": [
+   15.98839,
+   108.25513
+  ],
+  "Cam Le|nguyen duc thieu": [
+   16.01006,
+   108.20203
+  ],
+  "Cam Le|huynh ngoc du": [
+   16.0117,
+   108.21865
+  ],
+  "Lien Chieu|bui chat": [
+   16.08596,
+   108.14328
+  ],
+  "Cam Le|nguyen nhan": [
+   16.01176,
+   108.19828
+  ],
+  "Lien Chieu|pham thi lam anh": [
+   16.04766,
+   108.14662
+  ],
+  "Hai Chau|thi sach": [
+   16.05287,
+   108.20523
+  ],
+  "Ngu Hanh Son|hang phuong nu si": [
+   15.99013,
+   108.23307
+  ],
+  "Ngu Hanh Son|phan dinh thong": [
+   15.9875,
+   108.27098
+  ],
+  "Son Tra|tran nhan tong": [
+   16.09271,
+   108.24209
+  ],
+  "Thanh Khe|do quang": [
+   16.05958,
+   108.21215
+  ],
+  "Lien Chieu|doan phu tu": [
+   16.0682,
+   108.14586
+  ],
+  "Cam Le|tran mai ninh": [
+   16.02741,
+   108.21243
+  ],
+  "Lien Chieu|tran trieu luat": [
+   16.0666,
+   108.16311
+  ],
+  "Ngu Hanh Son|le dinh chinh": [
+   15.98777,
+   108.23591
+  ],
+  "Cam Le|nguyen cong hoan": [
+   16.04681,
+   108.17772
+  ],
+  "Son Tra|man quang": [
+   16.09177,
+   108.24235
+  ],
+  "Hai Chau|le co": [
+   16.04163,
+   108.22005
+  ],
+  "Son Tra|le tan trung": [
+   16.09832,
+   108.24845
+  ],
+  "Cam Le|binh thai 4": [
+   16.01032,
+   108.20029
+  ],
+  "Son Tra|nai hien dong": [
+   16.09711,
+   108.22993
+  ],
+  "Son Tra|dong giang": [
+   16.06006,
+   108.23307
+  ],
+  "Cam Le|vu lang": [
+   16.02212,
+   108.1819
+  ],
+  "Son Tra|duong van an": [
+   16.09028,
+   108.24086
+  ],
+  "Son Tra|ho si phan": [
+   16.09068,
+   108.23961
+  ],
+  "Thanh Khe|me nhu": [
+   16.06544,
+   108.1783
+  ],
+  "Cam Le|dang hoa": [
+   15.9979,
+   108.21129
+  ],
+  "Ngu Hanh Son|dong hai": [
+   15.98965,
+   108.26927
+  ],
+  "Lien Chieu|hoa phu 3": [
+   16.06755,
+   108.15905
+  ],
+  "Ngu Hanh Son|my an 4": [
+   16.04903,
+   108.23502
+  ],
+  "Lien Chieu|hoa minh 10": [
+   16.08196,
+   108.1575
+  ],
+  "Ngu Hanh Son|son thuy": [
+   16.01044,
+   108.25344
+  ],
+  "Cam Le|tran ngoc suong": [
+   16.00612,
+   108.1933
+  ],
+  "Son Tra|my khe 1": [
+   16.06386,
+   108.23987
+  ],
+  "Son Tra|tan thai 1": [
+   16.08861,
+   108.24629
+  ],
+  "Ngu Hanh Son|my an 11": [
+   16.04204,
+   108.23885
+  ],
+  "Lien Chieu|nguyen chanh": [
+   16.08629,
+   108.15574
+  ],
+  "Son Tra|an don 5": [
+   16.07207,
+   108.23812
+  ],
+  "Cam Le|nguyen quang dieu": [
+   16.00942,
+   108.21756
+  ],
+  "Hoi An|hai thuong lan ong": [
+   15.89237,
+   108.32801
+  ],
+  "Lien Chieu|le van thinh": [
+   16.07858,
+   108.16564
+  ],
+  "Ngu Hanh Son|do bi": [
+   16.05385,
+   108.24584
+  ],
+  "Ngu Hanh Son|le lo": [
+   16.0536,
+   108.24497
+  ],
+  "Son Tra|bui huy bich": [
+   16.09319,
+   108.23142
+  ],
+  "Ngu Hanh Son|da phuoc 3": [
+   16.02675,
+   108.23972
+  ],
+  "Ngu Hanh Son|an thuong 7": [
+   16.04857,
+   108.24451
+  ],
+  "Lien Chieu|dang huy tru": [
+   16.07921,
+   108.15801
+  ],
+  "Hai Chau|ngo chi lan": [
+   16.08398,
+   108.21735
+  ],
+  "Son Tra|man quang 9": [
+   16.10082,
+   108.24645
+  ],
+  "Ngu Hanh Son|an thuong 38": [
+   16.05043,
+   108.24461
+  ],
+  "Son Tra|an nhon 8": [
+   16.06871,
+   108.23373
+  ],
+  "Son Tra|nguyen dinh hoan": [
+   16.09887,
+   108.22986
+  ],
+  "Ngu Hanh Son|my da tay 12": [
+   16.03214,
+   108.24181
+  ],
+  "Hai Chau|nguyen khanh toan": [
+   16.03652,
+   108.21451
+  ],
+  "Ngu Hanh Son|chu lai": [
+   15.99268,
+   108.25568
+  ],
+  "Hai Chau|xuan dieu": [
+   16.08682,
+   108.22002
+  ],
+  "Son Tra|khuc thua du": [
+   16.0981,
+   108.23049
+  ],
+  "Ngu Hanh Son|da man 2": [
+   16.02111,
+   108.25033
+  ],
+  "Ngu Hanh Son|thuy son 3": [
+   16.01248,
+   108.25814
+  ],
+  "Thanh Khe|dao duy anh": [
+   16.05904,
+   108.21039
+  ],
+  "Ngu Hanh Son|an thuong 34": [
+   16.05008,
+   108.24628
+  ],
+  "Ngu Hanh Son|tung thien vuong": [
+   16.02594,
+   108.24334
+  ],
+  "Ngu Hanh Son|anh duc": [
+   16.00666,
+   108.24618
+  ],
+  "Son Tra|le tan toan": [
+   16.07451,
+   108.24104
+  ],
+  "Son Tra|my khe 8": [
+   16.06181,
+   108.24324
+  ],
+  "Ngu Hanh Son|an duong vuong": [
+   16.04358,
+   108.23757
+  ],
+  "Ngu Hanh Son|nguyen duc thuan": [
+   16.01916,
+   108.25275
+  ],
+  "Hai Chau|bui vien": [
+   16.03176,
+   108.23272
+  ],
+  "Son Tra|duong tri trach": [
+   16.07419,
+   108.24023
+  ],
+  "Son Tra|tan thai 5": [
+   16.08668,
+   108.24496
+  ],
+  "Hai Chau|phan ke binh": [
+   16.08237,
+   108.21684
+  ],
+  "Ngu Hanh Son|an thuong 33": [
+   16.05055,
+   108.24591
+  ],
+  "Lien Chieu|tu duc": [
+   16.09937,
+   108.12806
+  ],
+  "Ngu Hanh Son|le van tam": [
+   16.01945,
+   108.25469
+  ],
+  "Ngu Hanh Son|an thuong 15": [
+   16.04731,
+   108.24192
+  ],
+  "Ngu Hanh Son|pham khiem ich": [
+   16.01829,
+   108.25669
+  ],
+  "Son Tra|ly tu tan": [
+   16.10662,
+   108.25766
+  ],
+  "Son Tra|dang vu hy": [
+   16.05846,
+   108.24016
+  ],
+  "Lien Chieu|khanh an 2": [
+   16.06561,
+   108.14551
+  ],
+  "Son Tra|nguyen thi dinh": [
+   16.08231,
+   108.2322
+  ],
+  "Ngu Hanh Son|binh ki": [
+   15.99148,
+   108.24324
+  ],
+  "Ngu Hanh Son|nam long": [
+   16.00252,
+   108.24288
+  ],
+  "Ngu Hanh Son|da man": [
+   16.02189,
+   108.25192
+  ],
+  "Son Tra|nguyen sang": [
+   16.08858,
+   108.24686
+  ],
+  "Lien Chieu|pham van ngon": [
+   16.08088,
+   108.1463
+  ],
+  "Ngu Hanh Son|hoi kieng": [
+   16.00359,
+   108.23922
+  ],
+  "Cam Le|do quy": [
+   16.01695,
+   108.22123
+  ],
+  "Ngu Hanh Son|khue my dong": [
+   16.03878,
+   108.24661
+  ],
+  "Ngu Hanh Son|khue my dong 14": [
+   16.03702,
+   108.24667
+  ],
+  "Cam Le|thai van lung": [
+   16.01857,
+   108.22717
+  ],
+  "Son Tra|nguyen cong sau": [
+   16.073,
+   108.24163
+  ],
+  "Son Tra|do huy uyen": [
+   16.07529,
+   108.23233
+  ],
+  "Cam Le|le thiet": [
+   16.0068,
+   108.21393
+  ],
+  "Ngu Hanh Son|bach dang": [
+   16.05021,
+   108.24749
+  ],
+  "Hai Chau|tran van tru": [
+   16.05581,
+   108.22287
+  ],
+  "Son Tra|an hai dong": [
+   16.056,
+   108.24272
+  ],
+  "Hai Chau|pham ngu lao": [
+   16.06644,
+   108.21489
+  ],
+  "Cam Le|hoang dao thuy": [
+   16.01973,
+   108.19594
+  ],
+  "Ngu Hanh Son|cao son": [
+   15.98118,
+   108.26965
+  ],
+  "Ngu Hanh Son|ly van phuc": [
+   15.98559,
+   108.26889
+  ],
+  "Ngu Hanh Son|khue my dong 3": [
+   16.03835,
+   108.24653
+  ],
+  "Son Tra|suoi da 1": [
+   16.1035,
+   108.2625
+  ],
+  "Ngu Hanh Son|khue my dong 11": [
+   16.03756,
+   108.24645
+  ],
+  "Son Tra|phuoc truong 15": [
+   16.07619,
+   108.24192
+  ],
+  "Hai Chau|hai ho": [
+   16.08059,
+   108.21559
+  ],
+  "Cam Le|vu xuan thieu": [
+   16.01547,
+   108.22257
+  ],
+  "Ngu Hanh Son|my an 21": [
+   16.03715,
+   108.23888
+  ],
+  "Lien Chieu|le van mien": [
+   16.08708,
+   108.15547
+  ],
+  "Ngu Hanh Son|an thuong 6": [
+   16.04844,
+   108.2451
+  ],
+  "Ngu Hanh Son|khue my dong 15": [
+   16.0366,
+   108.24685
+  ],
+  "Ngu Hanh Son|khue bac 2": [
+   16.01566,
+   108.25104
+  ],
+  "Hai Chau|binh minh 1": [
+   16.0551,
+   108.22146
+  ],
+  "Hai Chau|tong phuoc pho": [
+   16.04823,
+   108.22215
+  ],
+  "Son Tra|phan huy thuc": [
+   16.09545,
+   108.22853
+  ],
+  "Ngu Hanh Son|da phuoc 2": [
+   16.02722,
+   108.23948
+  ],
+  "Ngu Hanh Son|le van thu": [
+   16.03162,
+   108.24029
+  ],
+  "Cam Le|vu thanh nam": [
+   16.01898,
+   108.233
+  ],
+  "Hai Chau|hoang van thu": [
+   16.06288,
+   108.22063
+  ],
+  "Son Tra|tan thai 4": [
+   16.08736,
+   108.24574
+  ],
+  "Hai Chau|duc loi 3": [
+   16.08397,
+   108.22234
+  ],
+  "Son Tra|an cu 5": [
+   16.07408,
+   108.24169
+  ],
+  "Hai Chau|mai lao bang": [
+   16.08459,
+   108.2178
+  ],
+  "Cam Le|con dau 18": [
+   16.01744,
+   108.22344
+  ],
+  "Son Tra|ho si tan": [
+   16.09431,
+   108.22959
+  ],
+  "Ngu Hanh Son|hoang ke viem": [
+   16.04879,
+   108.24348
+  ],
+  "Ngu Hanh Son|nguyen huu cau": [
+   16.00949,
+   108.26072
+  ],
+  "Son Tra|phuoc truong 3": [
+   16.07957,
+   108.24391
+  ],
+  "Ngu Hanh Son|nguyen than hien": [
+   15.99195,
+   108.26802
+  ],
+  "Ngu Hanh Son|nguyen cuu van": [
+   15.98772,
+   108.26041
+  ],
+  "Cam Le|nguyen hanh": [
+   16.0313,
+   108.21381
+  ],
+  "Hai Chau|phan boi": [
+   16.07944,
+   108.2215
+  ],
+  "Son Tra|nam tho": [
+   16.09408,
+   108.2481
+  ],
+  "Ngu Hanh Son|le thien tri": [
+   15.97858,
+   108.25118
+  ],
+  "Hai Chau|phan thanh tai": [
+   16.05343,
+   108.22197
+  ],
+  "Hai Chau|tran phu": [
+   16.08103,
+   108.22277
+  ],
+  "Hai Chau|nguyen suy": [
+   16.04329,
+   108.20866
+  ],
+  "Son Tra|pham thieu": [
+   16.07218,
+   108.24271
+  ],
+  "Hai Chau|le quy don": [
+   16.05554,
+   108.22122
+  ],
+  "Ngu Hanh Son|chuong duong": [
+   16.02977,
+   108.23718
+  ],
+  "Son Tra|vu van dung": [
+   16.05697,
+   108.23398
+  ],
+  "Thanh Khe|ham nghi": [
+   16.06635,
+   108.21036
+  ],
+  "Thanh Khe|nguyen gian thanh": [
+   16.05585,
+   108.18583
+  ],
+  "Hoi An|tong phuoc pho": [
+   15.88098,
+   108.38672
+  ],
+  "Lien Chieu|nguyen kieu": [
+   16.078,
+   108.14727
+  ],
+  "Hai Chau|mai am": [
+   16.08455,
+   108.2155
+  ],
+  "Son Tra|loc phuoc 1": [
+   16.0995,
+   108.24854
+  ],
+  "Lien Chieu|bau mac 23": [
+   16.08516,
+   108.14912
+  ],
+  "Lien Chieu|nguyen sinh sac": [
+   16.07981,
+   108.16541
+  ],
+  "Ngu Hanh Son|nguyen duy trinh": [
+   15.99037,
+   108.26707
+  ],
+  "Hai Chau|le lai": [
+   16.07529,
+   108.21821
+  ],
+  "Hai Chau|huu can": [
+   16.08761,
+   108.21763
+  ],
+  "Lien Chieu|thanh tinh": [
+   16.06203,
+   108.17425
+  ],
+  "Ngu Hanh Son|pham nhu hien": [
+   15.99142,
+   108.25031
+  ],
+  "Cam Le|te hanh": [
+   15.98752,
+   108.21023
+  ],
+  "Lien Chieu|hoa phu 16": [
+   16.06857,
+   108.16607
+  ],
+  "Cam Le|hoa an 23": [
+   16.04292,
+   108.17774
+  ],
+  "Cam Le|trung luong 14": [
+   16.02212,
+   108.23407
+  ],
+  "Cam Le|phong bac": [
+   16.01106,
+   108.19735
+  ],
+  "Lien Chieu|hoa my 8": [
+   16.0576,
+   108.16441
+  ],
+  "Cam Le|diep minh chau": [
+   16.00564,
+   108.22452
+  ],
+  "Son Tra|nguyen huy chuong": [
+   16.08789,
+   108.24528
+  ],
+  "Hai Chau|thanh long": [
+   16.08184,
+   108.21407
+  ],
+  "Son Tra|thu khoa huan": [
+   16.05677,
+   108.2413
+  ],
+  "Ngu Hanh Son|nguyen khac vien": [
+   16.00875,
+   108.26213
+  ],
+  "Hai Chau|doan quy phi": [
+   16.0296,
+   108.21981
+  ],
+  "Hoi An|pham van": [
+   15.89183,
+   108.31636
+  ],
+  "Ngu Hanh Son|bo quan": [
+   16.0131,
+   108.24039
+  ],
+  "Cam Le|quach xan": [
+   16.04268,
+   108.16965
+  ],
+  "Hai Chau|hai son": [
+   16.07997,
+   108.21597
+  ],
+  "Hai Chau|nguyen don tiet": [
+   16.08044,
+   108.2172
+  ],
+  "Hai Chau|hai phong": [
+   16.07158,
+   108.21552
+  ],
+  "Son Tra|phuoc truong 5": [
+   16.08137,
+   108.24486
+  ],
+  "Lien Chieu|dang dung": [
+   16.06915,
+   108.15087
+  ],
+  "Hai Chau|tran huu trang": [
+   16.03819,
+   108.21865
+  ],
+  "Cam Le|do doc lan": [
+   15.98192,
+   108.21143
+  ],
+  "Hai Chau|tien hoang": [
+   16.0759,
+   108.20881
+  ],
+  "Hai Chau|huynh ly": [
+   16.08823,
+   108.21622
+  ],
+  "Cam Le|doan huu trung": [
+   16.05103,
+   108.17901
+  ],
+  "Hai Chau|pham phu thu": [
+   16.06735,
+   108.22434
+  ],
+  "Thanh Khe|mai xuan thuong": [
+   16.06365,
+   108.19241
+  ],
+  "Son Tra|nguyen van sieu": [
+   16.06412,
+   108.23289
+  ],
+  "Cam Le|me thu": [
+   15.99974,
+   108.21161
+  ],
+  "Cam Le|nguyen ly": [
+   16.00048,
+   108.2121
+  ],
+  "Hai Chau|nguyen dang dao": [
+   16.03772,
+   108.20874
+  ],
+  "Lien Chieu|le hien mai": [
+   16.04334,
+   108.16778
+  ],
+  "Ngu Hanh Son|bui binh uyen": [
+   15.99887,
+   108.26563
+  ],
+  "Ngu Hanh Son|bo quan 12": [
+   16.01198,
+   108.24302
+  ],
+  "Lien Chieu|nguyen van cu": [
+   16.13508,
+   108.12143
+  ],
+  "Ngu Hanh Son|trung hoa 4": [
+   15.99104,
+   108.23262
+  ],
+  "Thanh Khe|phan lang": [
+   16.05456,
+   108.18904
+  ],
+  "Son Tra|hoang si khai": [
+   16.07539,
+   108.2318
+  ],
+  "Ngu Hanh Son|khai tay 1": [
+   15.97423,
+   108.22903
+  ],
+  "Hai Chau|le dinh duong": [
+   16.06134,
+   108.22264
+  ],
+  "Cam Le|tran dinh long": [
+   16.0074,
+   108.19961
+  ],
+  "Son Tra|an hai bac": [
+   16.06787,
+   108.23881
+  ],
+  "Cam Le|kieu son den": [
+   15.98459,
+   108.21184
+  ],
+  "Hoi An|tran nhan tong": [
+   15.88266,
+   108.35135
+  ],
+  "Hai Chau|ngo gia tu": [
+   16.06896,
+   108.2174
+  ],
+  "Cam Le|co man lan 2": [
+   15.98386,
+   108.21568
+  ],
+  "Son Tra|thich thien chieu": [
+   16.108,
+   108.25837
+  ],
+  "Cam Le|nguyen phuoc tan": [
+   16.01531,
+   108.1998
+  ],
+  "Cam Le|binh thai 3": [
+   16.01533,
+   108.20371
+  ],
+  "Son Tra|my khe": [
+   16.06338,
+   108.23981
+  ],
+  "Son Tra|le chan": [
+   16.08568,
+   108.2336
+  ],
+  "Hoi An|ton duc thang": [
+   15.89282,
+   108.31991
+  ],
+  "Lien Chieu|tran duc": [
+   16.04276,
+   108.16104
+  ],
+  "Son Tra|ho thau": [
+   16.08324,
+   108.24593
+  ],
+  "Lien Chieu|to hieu": [
+   16.07134,
+   108.16708
+  ],
+  "Hai Chau|hoang tich tri": [
+   16.08988,
+   108.21775
+  ],
+  "Hai Chau|truong chi cuong": [
+   16.03108,
+   108.22465
+  ],
+  "Hai Chau|duy tan": [
+   16.04923,
+   108.21935
+  ],
+  "Lien Chieu|trung lap 3": [
+   16.09875,
+   108.13112
+  ],
+  "Son Tra|ha bong": [
+   16.0671,
+   108.24434
+  ],
+  "Hoi An|vo nhu hung": [
+   15.88461,
+   108.30263
+  ],
+  "Ngu Hanh Son|trung hoa 1": [
+   15.99461,
+   108.23308
+  ],
+  "Ngu Hanh Son|hoang cong chat": [
+   16.01633,
+   108.25669
+  ],
+  "Son Tra|man quang 12": [
+   16.09955,
+   108.24564
+  ],
+  "Cam Le|thanh luong 17": [
+   16.01217,
+   108.22215
+  ],
+  "Hai Chau|ca van thinh": [
+   16.03448,
+   108.21675
+  ],
+  "Ngu Hanh Son|vo van dong": [
+   15.98627,
+   108.26917
+  ],
+  "Son Tra|nai hien dong 15": [
+   16.09463,
+   108.22817
+  ],
+  "Lien Chieu|thanh vinh 10": [
+   16.0743,
+   108.12284
+  ],
+  "Thanh Khe|nguyen van hue": [
+   16.0691,
+   108.17656
+  ],
+  "Lien Chieu|trung lap 11": [
+   16.09745,
+   108.12728
+  ],
+  "Lien Chieu|trung lap": [
+   16.09735,
+   108.12835
+  ],
+  "Lien Chieu|phu xuan 2": [
+   16.07219,
+   108.16492
+  ],
+  "Hoi An|nguyen khoa": [
+   15.87107,
+   108.34916
+  ],
+  "Thanh Khe|nguyen tri phuong": [
+   16.05868,
+   108.206
+  ],
+  "Lien Chieu|hoang trung thong": [
+   16.06695,
+   108.1638
+  ],
+  "Hai Chau|dao tri": [
+   16.02702,
+   108.22268
+  ],
+  "Son Tra|an trung dong 7": [
+   16.06138,
+   108.23729
+  ],
+  "Lien Chieu|hoa phu 8": [
+   16.06433,
+   108.16349
+  ],
+  "Son Tra|dong du": [
+   16.07992,
+   108.23043
+  ],
+  "Son Tra|thoi huu": [
+   16.10448,
+   108.26143
+  ],
+  "Thanh Khe|hoa khe 1": [
+   16.05884,
+   108.18706
+  ],
+  "Thanh Khe|dinh nup": [
+   16.06182,
+   108.18367
+  ],
+  "Ngu Hanh Son|hoa son 3": [
+   15.99679,
+   108.26232
+  ],
+  "Thanh Khe|ha khe": [
+   16.07263,
+   108.18985
+  ],
+  "Lien Chieu|dong bai 2": [
+   16.0668,
+   108.15135
+  ],
+  "Lien Chieu|hoa minh 20": [
+   16.07857,
+   108.16013
+  ],
+  "Hai Chau|nguyen thanh han": [
+   16.04661,
+   108.20732
+  ],
+  "Son Tra|an don": [
+   16.07408,
+   108.22966
+  ],
+  "Son Tra|giap hai": [
+   16.09084,
+   108.23769
+  ],
+  "Ngu Hanh Son|nguyen xuan yem": [
+   16.02003,
+   108.24462
+  ],
+  "Cam Le|thanh luong 9": [
+   16.00806,
+   108.22762
+  ],
+  "Cam Le|con dau 16": [
+   16.01853,
+   108.22214
+  ],
+  "Lien Chieu|xuan thieu 21": [
+   16.09817,
+   108.14172
+  ],
+  "Ngu Hanh Son|da man 6": [
+   16.03068,
+   108.24562
+  ],
+  "Ngu Hanh Son|an thuong 12": [
+   16.04747,
+   108.24248
+  ],
+  "Thanh Khe|phu xuan": [
+   16.07377,
+   108.16753
+  ],
+  "Hai Chau|phan lang": [
+   16.05333,
+   108.18956
+  ],
+  "Son Tra|an hai 14": [
+   16.08584,
+   108.23501
+  ],
+  "Hoi An|hoang dieu": [
+   15.87716,
+   108.33282
+  ],
+  "Cam Le|nguyen phu huong": [
+   16.00395,
+   108.16332
+  ],
+  "Lien Chieu|phan thi ne": [
+   16.0801,
+   108.16348
+  ],
+  "Hoi An|le hong phong": [
+   15.88403,
+   108.32005
+  ],
+  "Ngu Hanh Son|tran hoanh": [
+   16.0279,
+   108.24587
+  ],
+  "Cam Le|dong cong truong": [
+   15.98865,
+   108.20831
+  ],
+  "Lien Chieu|dao cong soan": [
+   16.09941,
+   108.13869
+  ],
+  "Cam Le|con dau 2": [
+   16.00408,
+   108.21738
+  ],
+  "Hai Chau|duc loi": [
+   16.08572,
+   108.22019
+  ],
+  "Cam Le|do doc loc": [
+   16.00381,
+   108.21727
+  ],
+  "Cam Le|co man mai": [
+   15.98618,
+   108.21311
+  ],
+  "Lien Chieu|vo tu": [
+   16.09621,
+   108.12923
+  ],
+  "Lien Chieu|tran quy khoach": [
+   16.07695,
+   108.16135
+  ],
+  "Lien Chieu|huynh thi bao hoa": [
+   16.04921,
+   108.14843
+  ],
+  "Hoi An|thai thi boi": [
+   15.90559,
+   108.34738
+  ],
+  "Cam Le|liem lac 2": [
+   15.97618,
+   108.21559
+  ],
+  "Lien Chieu|ngo xuan thu": [
+   16.11893,
+   108.11438
+  ],
+  "Lien Chieu|giap van cuong": [
+   16.08318,
+   108.16159
+  ],
+  "Cam Le|nhon hoa xuan": [
+   15.98442,
+   108.21061
+  ],
+  "Cam Le|cach mang thang tam": [
+   16.02073,
+   108.213
+  ],
+  "Hai Chau|han thuyen": [
+   16.03935,
+   108.2165
+  ],
+  "Son Tra|duc chinh": [
+   16.08273,
+   108.23977
+  ],
+  "Lien Chieu|phuoc ly 7": [
+   16.04228,
+   108.16739
+  ],
+  "Cam Le|nguyen van ngoc": [
+   15.97884,
+   108.21612
+  ],
+  "Son Tra|ha tong huan": [
+   16.10746,
+   108.25832
+  ],
+  "Lien Chieu|bac thuong 5": [
+   16.10035,
+   108.11852
+  ],
+  "Hai Chau|cao xuan duc": [
+   16.0874,
+   108.2193
+  ],
+  "Son Tra|duong tu minh": [
+   16.06725,
+   108.2416
+  ],
+  "Cam Le|thanh luong 16": [
+   16.00961,
+   108.22446
+  ],
+  "Cam Le|nguyen doa": [
+   15.98661,
+   108.21494
+  ],
+  "Hai Chau|binh minh 3": [
+   16.05458,
+   108.22119
+  ],
+  "Hai Chau|binh minh": [
+   16.05458,
+   108.22119
+  ],
+  "Thanh Khe|yen khe": [
+   16.06958,
+   108.17895
+  ],
+  "Cam Le|liem lac 12": [
+   15.97897,
+   108.21925
+  ],
+  "Son Tra|an hai 15": [
+   16.08545,
+   108.2369
+  ],
+  "Ngu Hanh Son|doan uan": [
+   16.03542,
+   108.24289
+  ],
+  "Thanh Khe|nguyen thi bay": [
+   16.0773,
+   108.17135
+  ],
+  "Ngu Hanh Son|huynh thi mot": [
+   15.98076,
+   108.26897
+  ],
+  "Ngu Hanh Son|giang chau": [
+   16.02977,
+   108.23834
+  ],
+  "Thanh Khe|bau lang": [
+   16.07039,
+   108.1863
+  ],
+  "Ngu Hanh Son|son thuy 8": [
+   16.01044,
+   108.25344
+  ],
+  "Cam Le|con dau": [
+   16.003,
+   108.22086
+  ],
+  "Ngu Hanh Son|le hy cat": [
+   16.02862,
+   108.2412
+  ],
+  "Thanh Khe|xuan hoa 2": [
+   16.06717,
+   108.18928
+  ],
+  "Thanh Khe|xuan hoa": [
+   16.06509,
+   108.19487
+  ],
+  "Son Tra|binh than": [
+   16.09539,
+   108.23914
+  ],
+  "Cam Le|do dang de": [
+   16.02133,
+   108.22846
+  ],
+  "Cam Le|hoang dinh ai": [
+   15.99714,
+   108.21507
+  ],
+  "Lien Chieu|chon tam": [
+   16.06521,
+   108.15966
+  ],
+  "Cam Le|lo giang 23": [
+   15.99082,
+   108.21451
+  ]
+ },
+ "misses": [
+  "Panoma",
+  "Monarchy",
+  "Times Square FUTA Residence",
+  "Muong Thanh",
+  "One River",
+  "Alphanam Luxury",
+  "Sun Cosmo",
+  "Cora Tower",
+  "Blooming Tower",
+  "The Filmore",
+  "Sam Towers",
+  "Indochina Riverside",
+  "The Song",
+  "Ariyana",
+  "Newtown Diamond",
+  "Hai Chau|nam duong",
+  "Son Tra|nam duong",
+  "Hoi An|cam an bac",
+  "Hoa Vang|hoa nhon",
+  "Hai Chau|dien bien phu",
+  "Hai Chau|tran cao van",
+  "Hai Chau|ton dan",
+  "Hai Chau|ha huy tap",
+  "Hai Chau|dong da",
+  "Hai Chau|truong chinh",
+  "Hai Chau|pham van nghi",
+  "Hai Chau|tran hung dao",
+  "Hai Chau|le do",
+  "Hai Chau|ton duc thang",
+  "Hai Chau|huynh ngoc hue",
+  "Hai Chau|nguyen phuoc nguyen",
+  "Hai Chau|thai thi boi",
+  "Thanh Khe|le trong tan",
+  "Ngu Hanh Son|duong dinh nghe",
+  "Thanh Khe|ton dan",
+  "Hai Chau|be van dan",
+  "Ngu Hanh Son|vo chi cong",
+  "Ngu Hanh Son|vo van kiet",
+  "Hai Chau|do quang",
+  "Son Tra|nguyen tat thanh",
+  "Ngu Hanh Son|pham van dong",
+  "Cam Le|tran kim xuyen",
+  "Hai Chau|ngo quyen",
+  "Lien Chieu|nguyen trieu luat",
+  "Hai Chau|pham nhu tang",
+  "Ngu Hanh Son|dao cong soan",
+  "Lien Chieu|nguyen tat thanh",
+  "Cam Le|truong quang duoc",
+  "Hai Chau|truong dinh",
+  "Son Tra|tran cao van",
+  "Cam Le|vu mien",
+  "Ngu Hanh Son|nguyen thanh tho",
+  "Cam Le|nguyen phuoc nguyen",
+  "Ngu Hanh Son|nguyen duc an",
+  "Hai Chau|le huu trac",
+  "Hai Chau|nguyen cong tru",
+  "Hai Chau|nguyen thong",
+  "Cam Le|vo chi cong",
+  "Cam Le|minh mang",
+  "Ngu Hanh Son|tran cao van",
+  "Hai Chau|nguyen luong bang",
+  "Hai Chau|nguyen dinh tu",
+  "Cam Le|nguyen huy tu",
+  "Hai Chau|ly thai tong",
+  "Ngu Hanh Son|nguyen cong tru",
+  "Hai Chau|phu loc",
+  "Cam Le|pham van nghi",
+  "Cam Le|phan van dang",
+  "Hai Chau|phu loc 20",
+  "Ngu Hanh Son|le huu trac",
+  "Ngu Hanh Son|ngo thi sy",
+  "Ngu Hanh Son|hoang bich son",
+  "Lien Chieu|yen khe",
+  "Hai Chau|ton that thiep",
+  "Hai Chau|phan huy thuc",
+  "Hai Chau|hai trieu",
+  "Lien Chieu|tran cao van",
+  "Thanh Khe|dang cong hoan",
+  "Ngu Hanh Son|nguyen thien ke",
+  "Son Tra|hai trieu",
+  "Hai Chau|ham nghi",
+  "Hai Chau|tran xuan le",
+  "Ngu Hanh Son|nguyen phuoc nguyen",
+  "Hai Chau|dang huy ta",
+  "Son Tra|nguyen chanh",
+  "Cam Le|dien bien phu",
+  "Thanh Khe|nguyen luong bang",
+  "Thanh Khe|hoa an 23",
+  "Lien Chieu|nam cao",
+  "Lien Chieu|dang huy ta",
+  "Thanh Khe|dung sy",
+  "Hai Chau|nguyen khang",
+  "Cam Le|nguyen nhu hanh",
+  "Thanh Khe|bui hien",
+  "Son Tra|hoang dieu",
+  "Cam Le|hoang thi loan",
+  "Hai Chau|le trong tan",
+  "Cam Le|hoang van thai",
+  "Hai Chau|nguyen chanh",
+  "Thanh Khe|le dinh ky",
+  "Cam Le|hoa minh 19",
+  "Thanh Khe|bau lang 2",
+  "Hai Chau|vo van kiet",
+  "Son Tra|le thiet",
+  "Hai Chau|nguyen xuan khoat",
+  "Hai Chau|hoa son 10",
+  "Ngu Hanh Son|ha huy tap",
+  "Ngu Hanh Son|my khe 1",
+  "Cam Le|hoa minh",
+  "Cam Le|hoa son 8",
+  "Hai Chau|pham khiem ich",
+  "Hai Chau|tran bach dang",
+  "Hai Chau|an don 5",
+  "Ngu Hanh Son|truong dang que",
+  "Son Tra|le huu tac",
+  "Hai Chau|hien thanh",
+  "Ngu Hanh Son|pho duc chinh",
+  "Hai Chau|le dai hanh",
+  "Ngu Hanh Son|le van si",
+  "Ngu Hanh Son|pham kiet",
+  "Ngu Hanh Son|nguyen ham ninh",
+  "Hai Chau|phan khoi",
+  "Cam Le|trung luong 16",
+  "Ngu Hanh Son|nguyen duy hieu",
+  "Hai Chau|hoang van thai",
+  "Hai Chau|phan trong tue",
+  "Hai Chau|chinh huu",
+  "Hai Chau|nguyen thuat",
+  "Cam Le|ngo chan luu",
+  "Hai Chau|cu chinh lan",
+  "Lien Chieu|ho truong 1",
+  "Cam Le|hoa phu 16",
+  "Ngu Hanh Son|an thuong western",
+  "Cam Le|hoa my 8",
+  "Thanh Khe|hoang thi loan",
+  "Cam Le|trung lap",
+  "Ngu Hanh Son|nguyen huy chuong",
+  "Cam Le|ly thai tong",
+  "Hai Chau|nguyen cong hang",
+  "Cam Le|tu ngan",
+  "Cam Le|nam ky khoi nghia",
+  "Ngu Hanh Son|phan boi",
+  "Cam Le|pham nhu xuong",
+  "Lien Chieu|le van sy",
+  "Thanh Khe|trinh duong",
+  "Hai Chau|ngo nhan tinh",
+  "Son Tra|thai thi boi",
+  "Son Tra|dao cong soan",
+  "Lien Chieu|nam cao extended",
+  "Ngu Hanh Son|phu xuan 5",
+  "Hai Chau|trinh dinh thao",
+  "Hai Chau|le van huu",
+  "Son Tra|dang huy ta",
+  "Son Tra|thanh thuy",
+  "Son Tra|nguyen van linh",
+  "Cam Le|hoa phu 3",
+  "Cam Le|phu loc 20",
+  "Cam Le|dao cong soan",
+  "Cam Le|ton duc thang",
+  "Ngu Hanh Son|hoang thi loan",
+  "Lien Chieu|nguyen cong thai",
+  "Cam Le|bo dam",
+  "Cam Le|bo dam 6",
+  "Ngu Hanh Son|nguyen quy anh",
+  "Cam Le|dong cong tuong",
+  "Thanh Khe|nguyen cong hoan",
+  "Lien Chieu|pham dinh ho",
+  "Cam Le|phuoc ly 7",
+  "Ngu Hanh Son|ngoc tinh",
+  "Son Tra|dinh le",
+  "Ngu Hanh Son|ham tu",
+  "Cam Le|thieu chuo",
+  "Thanh Khe|pham ngu tang",
+  "Hai Chau|ho tung mau",
+  "Hai Chau|x nguyen chi thanh",
+  "Cam Le|nguyen dinh hoang",
+  "Ngu Hanh Son|le thiet",
+  "Ngu Hanh Son|pham cu luong",
+  "Hai Chau|chau thi vinh te",
+  "Hai Chau|nguyen tat thanh extended",
+  "Son Tra|tran dang",
+  "Ngu Hanh Son|bui giang",
+  "Son Tra|le van hien",
+  "Ngu Hanh Son|nguyen sang",
+  "Hai Chau|ngo thi si",
+  "Cam Le|nguyen sinh sac",
+  "Lien Chieu|vu quynh",
+  "Cam Le|kinh duong vuong",
+  "Cam Le|le hien mau",
+  "Hai Chau|nguyen trung truc",
+  "Hai Chau|central pham kiet",
+  "Ngu Hanh Son|nguyen hanh",
+  "Hai Chau|le duc tho",
+  "Ngu Hanh Son|hoang sa",
+  "Cam Le|to vinh dien",
+  "Son Tra|chuong duong",
+  "Hai Chau|dao duy tu",
+  "Hai Chau|ba huyen thanh quan",
+  "Hai Chau|phan huynh dieu",
+  "Thanh Khe|han mac tu",
+  "Hai Chau|mai hac de",
+  "Son Tra|nguyen luong bang",
+  "Cam Le|nguyen son",
+  "Ngu Hanh Son|truong quang duong",
+  "Ngu Hanh Son|dinh dat",
+  "Hai Chau|le van si",
+  "Hai Chau|le ninh",
+  "Ngu Hanh Son|an hai",
+  "Hai Chau|truong thi 1",
+  "Ngu Hanh Son|vibrant chau thi vinh te",
+  "Ngu Hanh Son|my khe 7",
+  "Hai Chau|duong bich lien",
+  "Lien Chieu|bac son",
+  "Ngu Hanh Son|nam viet a",
+  "Hai Chau|trinh hoai duc",
+  "Hai Chau|tan thai",
+  "Hai Chau|hoang bich son",
+  "Hai Chau|ham tu",
+  "Hai Chau|nguyen van thoai",
+  "Ngu Hanh Son|nguyen dinh thong",
+  "Son Tra|vo chi cong",
+  "Son Tra|anh tho",
+  "Hai Chau|ha bong",
+  "Hai Chau|nguyen xi",
+  "Hai Chau|vuong thua vu",
+  "Ngu Hanh Son|da phuoc",
+  "Thanh Khe|ho nghinh",
+  "Hai Chau|nguyen huu hao",
+  "Ngu Hanh Son|ta my duat",
+  "Son Tra|le thuc",
+  "Cam Le|space prime nguyen dang dao",
+  "Hai Chau|nguyen loc trach",
+  "Son Tra|tran nguyen dan",
+  "Cam Le|nguyen khanh toan",
+  "Hai Chau|hoang dinh ai",
+  "Son Tra|ton dan",
+  "Hai Chau|tuy ly vuong",
+  "Hai Chau|dong giang",
+  "Cam Le|tong phuoc pho",
+  "Cam Le|le van thinh",
+  "Hai Chau|pham huu kinh",
+  "Thanh Khe|nguyen tat thanh coastal",
+  "Cam Le|nguyen huu dat",
+  "Cam Le|phan huynh dieu",
+  "Hai Chau|pham cu luong",
+  "Son Tra|ly van phuc",
+  "Ngu Hanh Son|tran quoc toan",
+  "Cam Le|le van sy",
+  "Hai Chau|truong quang duoc",
+  "Thanh Khe|phan dien bien phu",
+  "Son Tra|vu ngoc nha",
+  "Hai Chau|nguyen hien",
+  "Hai Chau|an duong vuong",
+  "Son Tra|my an 7",
+  "Ngu Hanh Son|my khe 8",
+  "Cam Le|phan trong tue",
+  "Hai Chau|cao ba quat",
+  "Ngu Hanh Son|le van quy",
+  "Ngu Hanh Son|ho han thuong",
+  "Lien Chieu|fronting ton duc thang",
+  "Ngu Hanh Son|prime beachfront",
+  "Son Tra|bach dang",
+  "Son Tra|dinh van chap",
+  "Son Tra|ton that thiep",
+  "Son Tra|ha ki ngo",
+  "Cam Le|nguyen thuy",
+  "Hai Chau|mai thuc lan",
+  "Ngu Hanh Son|le am",
+  "Son Tra|din dat",
+  "Cam Le|vinh dien",
+  "Son Tra|tran van du",
+  "Hai Chau|hoa minh",
+  "Hai Chau|nguyen dinh",
+  "Thanh Khe|nguyen huu tho",
+  "Hai Chau|k ha huy tap",
+  "Cam Le|trinh cong son",
+  "Son Tra|mai thuc lan",
+  "Hai Chau|hoa lu",
+  "Son Tra|nguyen quyen",
+  "Hai Chau|ha huy giap",
+  "Hai Chau|an trung",
+  "Son Tra|korean tourist",
+  "Cam Le|luu quang vu",
+  "Hoi An|duong khue",
+  "Cam Le|mai dang chon",
+  "Ngu Hanh Son|an thuong 2 pedestrian",
+  "Ngu Hanh Son|nguyen chanh",
+  "Lien Chieu|nhon hoa 21",
+  "Cam Le|nguyen bao",
+  "Ngu Hanh Son|my da tay 10",
+  "Son Tra|nguyen hoang",
+  "Cam Le|trung luong",
+  "Hai Chau|bau trang",
+  "Cam Le|bau trang",
+  "Thanh Khe|bac son",
+  "Cam Le|khe can",
+  "Son Tra|pham dinh ho",
+  "Hai Chau|prime commercial",
+  "Ngu Hanh Son|pham dinh ho",
+  "Cam Le|nguyen dinh thi",
+  "Cam Le|bau cau",
+  "Hai Chau|nam tran",
+  "Ngu Hanh Son|nguyen an ninh",
+  "Hai Chau|tran quang khai",
+  "Cam Le|nam cao",
+  "Ngu Hanh Son|le manh trinh",
+  "Hai Chau|mai chi tho",
+  "Cam Le|b tran quoc tang",
+  "Hai Chau|m tieu la",
+  "Hai Chau|nguyen phuoc tan",
+  "Cam Le|dam sen 16",
+  "Cam Le|tran van giau",
+  "Cam Le|doan quy phi",
+  "Hai Chau|cach mang thang 8",
+  "Hai Chau|bui ky",
+  "Son Tra|nam an 2",
+  "Ngu Hanh Son|han nguyen xuan khoat",
+  "Son Tra|an thuong western",
+  "Thanh Khe|hoang van thai",
+  "Cam Le|dang huy ta",
+  "Ngu Hanh Son|vuong thua vu",
+  "Ngu Hanh Son|le hy sat",
+  "Hai Chau|bau nang 11",
+  "Hoa Vang|nam ky khoi nghia ring",
+  "Hai Chau|an xuan 2",
+  "Hai Chau|le van quy",
+  "Cam Le|mieu bong 4",
+  "Cam Le|to hieu",
+  "Hai Chau|c hoang dieu",
+  "Son Tra|phan huynh dieu",
+  "Ngu Hanh Son|fronting phan huynh dieu",
+  "Hai Chau|nguyen nhan",
+  "Cam Le|ho kieng 5",
+  "Thanh Khe|ly trian",
+  "Hai Chau|bau nang",
+  "Lien Chieu|do dinh thien",
+  "Ngu Hanh Son|le tan toan",
+  "Ngu Hanh Son|huynh ngoc hue",
+  "Cam Le|nguyen hong anh",
+  "Hai Chau|hoa my 8",
+  "Thanh Khe|duong si",
+  "Thanh Khe|ngo nhan tinh",
+  "Son Tra|kim dong",
+  "Hoa Vang|hoa phu 26",
+  "Hai Chau|sale pham tu",
+  "Ngu Hanh Son|tran duc thong",
+  "Ngu Hanh Son|pham noi extension",
+  "Ngu Hanh Son|tran phu",
+  "Ngu Hanh Son|ngo chan luu",
+  "Ngu Hanh Son|ly thai tong",
+  "Son Tra|nguyen cong hoan",
+  "Hoi An|thanh tinh",
+  "Cam Le|khai dong 4",
+  "Lien Chieu|nguyen chich",
+  "Ngu Hanh Son|m le thuc",
+  "Ngu Hanh Son|nguyen van linh",
+  "Ngu Hanh Son|vo duy ninh",
+  "Lien Chieu|hong phuoc 1",
+  "Ngu Hanh Son|le thuoc",
+  "Thanh Khe|kiet cu chinh lan",
+  "Hai Chau|le van sy",
+  "Son Tra|che lan vien",
+  "Thanh Khe|le dai hanh",
+  "Ngu Hanh Son|nguyen cong hang",
+  "Thanh Khe|dang dinh van extended",
+  "Son Tra|phu loc",
+  "Hoi An|tran thu do",
+  "Ngu Hanh Son|le dinh ly",
+  "Cam Le|nguyen van ty",
+  "Thanh Khe|hoa minh 28",
+  "Hai Chau|phan van thuat",
+  "Cam Le|phuoc ly 12",
+  "Hai Chau|ong ich duong",
+  "Hai Chau|chuong duong",
+  "Ngu Hanh Son|lam hoanh",
+  "Cam Le|mai di",
+  "Thanh Khe|nguyen nhu hanh",
+  "Hai Chau|han river pedestrian",
+  "Son Tra|nguyen dinh chieu",
+  "Hai Chau|son han pedestrian",
+  "Cam Le|behind pham hung",
+  "Son Tra|vo quy huan",
+  "Son Tra|ba huyen thanh quan",
+  "Thanh Khe|hoa my 8",
+  "Lien Chieu|cool northeast",
+  "Son Tra|prime nguyen cong tru",
+  "Ngu Hanh Son|phung ta chu",
+  "Hai Chau|tran trieu luat",
+  "Hai Chau|mat tien dong da",
+  "Hai Chau|stunning thanh long",
+  "Hai Chau|prime da nang",
+  "Hai Chau|nguyen an ninh",
+  "Hai Chau|prime downtown da nang",
+  "Son Tra|prime son tra",
+  "Ngu Hanh Son|pham nhu tang",
+  "Cam Le|le dinh ly",
+  "Cam Le|trung lap 3",
+  "Hai Chau|spacious binh an",
+  "Hai Chau|le thiet",
+  "Thanh Khe|luu quang vu",
+  "Hai Chau|nguyen tri phong",
+  "Thanh Khe|dinh nhat tan",
+  "Hoi An|mai dang chon",
+  "Thanh Khe|thanh luong 18",
+  "Son Tra|le chan vien",
+  "Cam Le|bin hoa 2",
+  "Cam Le|dong khoa 2",
+  "Ngu Hanh Son|pham van",
+  "Cam Le|x phuoc ly 5",
+  "Son Tra|tran xuan le",
+  "Ngu Hanh Son|premium an thuong",
+  "Ngu Hanh Son|nguyen tat thanh",
+  "Ngu Hanh Son|bui huu nghia",
+  "Cam Le|phan vang dang",
+  "Hai Chau|dinh liet",
+  "Son Tra|nguyen chich",
+  "Thanh Khe|nhon hoa 11",
+  "Son Tra|han duong dinh nghe",
+  "Cam Le|hoa phu 8",
+  "Hai Chau|nguyen chich",
+  "Thanh Khe|khai quan",
+  "Hai Chau|nguyen cong hoan",
+  "Hai Chau|ha tong quyen",
+  "Hai Chau|tran dinh tri",
+  "Hai Chau|ngo chan luu",
+  "Thanh Khe|nguyen sinh sac",
+  "Cam Le|hoai kieng",
+  "Hai Chau|nguyen duy hieu",
+  "Son Tra|tran dinh tri",
+  "Son Tra|charming son tra",
+  "Cam Le|hoa my",
+  "Ngu Hanh Son|nguyen phan vinh",
+  "Hai Chau|do dang de",
+  "Hai Chau|tran nhan tong",
+  "Ngu Hanh Son|phan van dinh",
+  "Lien Chieu|bau nang 5",
+  "Cam Le|duong son",
+  "Hai Chau|thanh tinh",
+  "Hai Chau|phuoc tuong 3",
+  "Hai Chau|thanh nien",
+  "Ngu Hanh Son|bat nhan cong chua",
+  "Son Tra|phan hanh son",
+  "Cam Le|nam ky khoi nghia ring",
+  "Hai Chau|dong xoai",
+  "Hai Chau|duong thuong",
+  "Hai Chau|fronting le vinh huy",
+  "Hai Chau|da son 5",
+  "Hoi An|bau mac 9",
+  "Cam Le|ho tung mau",
+  "Son Tra|clear access",
+  "Son Tra|truong van hien",
+  "Hai Chau|vu quynh",
+  "Ngu Hanh Son|chau vinh te",
+  "Thanh Khe|prime thanh khe",
+  "Cam Le|nguyen luong bang",
+  "Son Tra|prime an hai bac",
+  "Son Tra|pham huu kinh",
+  "Cam Le|nguyen tat thanh",
+  "Ngu Hanh Son|be van dan",
+  "Son Tra|ly thai tong",
+  "Hai Chau|phu xuan",
+  "Ngu Hanh Son|nguyen phuoc nguyen car",
+  "Hai Chau|expanded nguyen tat thanh",
+  "Son Tra|extended nguyen tat thanh",
+  "Son Tra|nguyen phuoc nguyen",
+  "Thanh Khe|nguyen thuy",
+  "Lien Chieu|nguyen nhu do",
+  "Hai Chau|nguyen nhu do",
+  "Ngu Hanh Son|thanh thuy",
+  "Hai Chau|nguyen khoa chiem",
+  "Cam Le|cong dau",
+  "Hoi An|be van dan",
+  "Ngu Hanh Son|nguyen huy luong",
+  "Hai Chau|tran duc thong",
+  "Hai Chau|nguyen binh khiem",
+  "Ngu Hanh Son|do doc lan",
+  "Hai Chau|huynh can",
+  "Hoi An|tran van giang",
+  "Hai Chau|an hai",
+  "Hai Chau|story an hai",
+  "Cam Le|trung nghia 5",
+  "Hoi An|nguyen sinh sac",
+  "Son Tra|prime truong han sieu",
+  "Ngu Hanh Son|vo tu",
+  "Son Tra|ha huy tap",
+  "Ngu Hanh Son|diep minh chau",
+  "Hai Chau|ly nhan tong",
+  "Hai Chau|me linh",
+  "Lien Chieu|be van dan",
+  "Cam Le|kha vang can",
+  "Hai Chau|mai van ngoc",
+  "Son Tra|great deal an hai bac",
+  "Cam Le|chon tam 9",
+  "Hai Chau|hoang hoa tham",
+  "Cam Le|nguyen chon",
+  "Son Tra|thi sach",
+  "Son Tra|o to pho duc chinh",
+  "Cam Le|tran nguyen dan",
+  "Cam Le|ton dan extended",
+  "Hai Chau|an hai bac 8",
+  "Hai Chau|le thanh",
+  "Lien Chieu|le tu thong nhat",
+  "Hoi An|plot paved",
+  "Son Tra|bau nang",
+  "Lien Chieu|hong phuoc 5",
+  "Son Tra|vo duy duong",
+  "Hai Chau|phan lang 20",
+  "Son Tra|lam quang thu",
+  "Hoi An|hoang van thai",
+  "Cam Le|dinh thi thoi",
+  "Hai Chau|hoang trung thong",
+  "Ngu Hanh Son|thu khoa huan",
+  "Ngu Hanh Son|trung lap",
+  "Hai Chau|nguyen sac kim",
+  "Cam Le|nguyen ba loan",
+  "Lien Chieu|bau mac 20",
+  "Cam Le|hoa phu",
+  "Hai Chau|prime hai chau",
+  "Son Tra|hang phuong nu si",
+  "Hai Chau|le van thinh",
+  "Son Tra|ho tung mau",
+  "Ngu Hanh Son|prime an thuong",
+  "Hai Chau|prime minh mang",
+  "Son Tra|stunning minh mang",
+  "Son Tra|prime minh mang",
+  "Son Tra|bau mac 20",
+  "Hai Chau|bau hac 7",
+  "Hai Chau|bau hac",
+  "Hai Chau|nguyen hong",
+  "Thanh Khe|hoang dieu",
+  "Ngu Hanh Son|bau mac",
+  "Ngu Hanh Son|bau mac 9",
+  "Hai Chau|duy tu",
+  "Ngu Hanh Son|nguyen hu tu",
+  "Hai Chau|to hieu",
+  "Hai Chau|bach dang pedestrian",
+  "Thanh Khe|thanh khe",
+  "Son Tra|ta my duyet",
+  "Thanh Khe|hai pong",
+  "Son Tra|ong ich khiem",
+  "Cam Le|yen ne",
+  "Cam Le|bau cau 28",
+  "Hoi An|binh thai",
+  "Hai Chau|townhouses behind ha huy tap",
+  "Hai Chau|khe can"
+ ]
+}
