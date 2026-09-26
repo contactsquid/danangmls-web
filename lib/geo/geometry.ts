@@ -37,6 +37,19 @@ function polygons(g: Geometry): Position[][][] {
   return [];
 }
 
+function ringArea(ring: Position[]): number {
+  let a = 0;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) a += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+  return Math.abs(a / 2);
+}
+
+/** The largest polygon of a MultiPolygon: the mainland, without islands like Cu Lao Cham. */
+export function mainPart(g: Geometry): Geometry {
+  if (g.type !== 'MultiPolygon') return g;
+  const biggest = g.coordinates.reduce((a, b) => (ringArea(b[0]) > ringArea(a[0]) ? b : a));
+  return { type: 'Polygon', coordinates: biggest };
+}
+
 export function pointInGeometry(p: LatLng, g: Geometry): boolean {
   return polygons(g).some(([outer, ...holes]) => inRing(p, outer) && !holes.some(h => inRing(p, h)));
 }

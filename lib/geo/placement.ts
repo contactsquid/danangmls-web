@@ -1,7 +1,8 @@
 import { POPULAR_BUILDINGS } from '../buildingDefs';
 import { DISTRICT_BOUNDARIES } from '../districtBoundaries';
 import { extractStreet, normalizeName } from './streets';
-import { hashSeed, offsetPoint, pointInGeometry, randomPointIn, type LatLng } from './geometry';
+import type { Geometry } from 'geojson';
+import { hashSeed, mainPart, mulberry32, offsetPoint, pointInGeometry, randomPointIn, type LatLng } from './geometry';
 import COORDS from './coords.json';
 
 export const PRECISION = { building: 0, street: 1, ward: 2, district: 3 } as const;
@@ -21,7 +22,38 @@ export interface Placement { geo: [number, number, Precision]; geoLabel: string 
 
 // How far listings sharing one anchor are spread, so their pins don't sit on
 // top of each other. Scaled to how big the anchor really is.
-const SPREAD_M = { building: 30, street: 150, ward: 350 };
+const SPREAD_M = { building: 30, street: 150, ward: 350, district: 500 };
+
+// District-only listings are spread around the district's KNOWN listing locations
+// (its geocoded streets and wards), not uniformly over its boundary: most of Son
+// Tra's polygon is forested mountain, Lien Chieu's runs up the Hai Van pass, and
+// Hoi An's includes the Cham Islands. Uniform scatter put pins in all of those.
+const anchorCache = new WeakMap<GeoCoords, Map<string, LatLng[]>>();
+function districtAnchors(coords: GeoCoords, district: string, boundary: Geometry): LatLng[] {
+  let byDistrict = anchorCache.get(coords);
+  if (!byDistrict) { byDistrict = new Map(); anchorCache.set(coords, byDistrict); }
+  let anchors = byDistrict.get(district);
+  if (!anchors) {
+    const prefix = `${district}|`;
+    anchors = [...Object.entries(coords.streets), ...Object.entries(coords.wards)]
+      .filter(([k, p]) => k.startsWith(prefix) && pointInGeometry(p, boundary))
+      .map(([, p]) => p);
+    byDistrict.set(district, anchors);
+  }
+  return anchors;
+}
+
+function districtPoint(slug: string, seed: number, boundary: Geometry, anchors: LatLng[]): LatLng {
+  if (!anchors.length) return randomPointIn(mainPart(boundary), seed);
+  const rnd = mulberry32(seed);
+  let anchor = anchors[0];
+  for (let i = 0; i < 8; i++) {
+    anchor = anchors[Math.floor(rnd() * anchors.length)];
+    const p = offsetPoint(anchor, hashSeed(`${slug}#${i}`), SPREAD_M.district);
+    if (pointInGeometry(p, boundary)) return p;   // offsets near the coast can land in the sea
+  }
+  return anchor;
+}
 
 const round5 = (n: number) => Math.round(n * 1e5) / 1e5;
 const place = ([lat, lng]: LatLng, p: Precision, label: string): Placement =>
@@ -55,5 +87,5 @@ export function placeListing(
     return place(offsetPoint(wardAt, seed, SPREAD_M.ward), PRECISION.ward, l.neighborhood);
   }
 
-  return place(randomPointIn(boundary, seed), PRECISION.district, '');
+  return place(districtPoint(l.slug, seed, boundary, districtAnchors(coords, l.district, boundary)), PRECISION.district, '');
 }

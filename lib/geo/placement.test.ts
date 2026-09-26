@@ -52,3 +52,23 @@ test('district fallback is inside the district and stable', () => {
   assert.ok(pointInGeometry([a.geo[0], a.geo[1]], DISTRICT_BOUNDARIES['Son Tra']));
   assert.deepEqual(placeListing(base, coords), a);
 });
+
+test('district fallback clusters around where listings really are, not mountains or sea', () => {
+  const withAnchors: GeoCoords = { ...coords, streets: { 'Son Tra|ho nghinh': [16.0680, 108.2450] }, wards: {} };
+  for (let i = 0; i < 100; i++) {
+    const p = placeListing({ ...base, slug: `d-${i}` }, withAnchors)!;
+    assert.equal(p.geo[2], PRECISION.district);
+    assert.ok(distanceM([p.geo[0], p.geo[1]], [16.0680, 108.2450]) <= 501, `d-${i} strayed`);
+    assert.ok(pointInGeometry([p.geo[0], p.geo[1]], DISTRICT_BOUNDARIES['Son Tra']));
+  }
+});
+test('with no known streets, district points skip small outlying parts (islands)', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  const g = DISTRICT_BOUNDARIES['Hoi An'];
+  if (g.type !== 'MultiPolygon') return;
+  const mainland = { type: 'Polygon' as const, coordinates: g.coordinates.reduce((a, b) => (b[0].length > a[0].length ? b : a)) };
+  for (let i = 0; i < 100; i++) {
+    const p = placeListing({ ...base, district: 'Hoi An', slug: `h-${i}` }, empty)!;
+    assert.ok(pointInGeometry([p.geo[0], p.geo[1]], mainland), `h-${i} off the mainland`);
+  }
+});
