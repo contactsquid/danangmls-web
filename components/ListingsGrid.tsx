@@ -8,7 +8,7 @@ import { resolveFacet, isVilla } from '@/lib/facets';
 import { POPULAR_BUILDINGS } from '@/lib/buildingDefs';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
-import { localizeType, localizeDistrict } from '@/lib/price';
+import { localizeType, localizeDistrict, priceLow } from '@/lib/price';
 
 // Leaflet only downloads when a visitor switches to Map.
 const ListingsMap = dynamic(() => import('./ListingsMap'), {
@@ -180,7 +180,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
       }
       if (bedsFilter && l.bedrooms !== bedsFilter) return false;
       if (priceFilter) {
-        const num = parseInt(l.price.replace(/[^0-9]/g, '')) || 0;
+        const num = priceLow(l.price);   // a range filters by its low end
         // Rent ranges
         if (priceFilter === 'u500'  && !(num > 0 && num < 500))           return false;
         if (priceFilter === '500'   && !(num >= 500 && num < 1000))       return false;

@@ -1,4 +1,4 @@
-import { VND_RATE, KRW_RATE, RUB_RATE } from '../price';
+import { VND_RATE, KRW_RATE, RUB_RATE, priceLow } from '../price';
 
 type Lang = 'en' | 'vi' | 'ko' | 'ru';
 
@@ -12,10 +12,8 @@ function compact(n: number, decimalComma = false): string {
 /** The price as a map pin label: the low end of the listing's USD price, shortened
  *  and converted to the page language's currency. Null when the price has no number. */
 export function shortPrice(price: string, lang: Lang): string | null {
-  const m = price.match(/\$\s*([\d,]+(?:\.\d+)?)/);
-  if (!m) return null;
-  const usd = parseFloat(m[1].replace(/,/g, ''));
-  if (!isFinite(usd) || usd <= 0) return null;
+  const usd = priceLow(price);
+  if (!(usd > 0)) return null;
 
   if (lang === 'vi') {
     const vnd = usd * VND_RATE;

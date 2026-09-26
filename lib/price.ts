@@ -340,3 +340,12 @@ export function localizedText(l: { text: string; vi_text?: string; ko_text?: str
   if (lang === 'ru') return l.ru_text || l.text;
   return l.text;
 }
+
+/** The number to filter and sort a price by: the FIRST amount in it. A range like
+ *  "$760-$950/month" is its low end, 760 (Blake, 2026-09-26). Stripping every
+ *  non-digit instead glued the two ends into 760950, so all ~600 range-priced
+ *  listings landed in the top price bracket. 0 when there is no number. */
+export function priceLow(price: string): number {
+  const m = price.match(/\d[\d,]*(?:\.\d+)?/);
+  return m ? parseFloat(m[0].replace(/,/g, '')) : 0;
+}
