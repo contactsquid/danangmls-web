@@ -11,6 +11,7 @@ import { Listing } from './types';
 // Card uses:   title, price, district, type, bedrooms, slug, forSale,
 //              foreignEligible, foreignEligibleBuilding, images,
 //              vi_title / ko_title / ru_title
+// Map uses:    geo, geoLabel (components/ListingsMap.tsx)
 // Filters use: title, district, text (search + neighborhood), type, bedrooms,
 //              price, neighborhood, foreignEligible
 const GRID_IMAGE_CAP = 5;      // cards rarely need more; big payload cut

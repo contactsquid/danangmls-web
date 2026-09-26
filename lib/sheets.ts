@@ -4,6 +4,7 @@ import { Listing } from './types';
 import { detectNeighborhood } from './neighborhoods';
 import { extractPriceFromText } from './price';
 import { normalizeVnPhone } from './agentContact';
+import { placeListing } from './geo/placement';
 import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
@@ -318,6 +319,7 @@ function parseRows(rows: string[][]): Listing[] {
         agentPhone:   normalizeVnPhone(col(r, R.AGENT_CONTACT)),
         forSale:      false,
       };
+      Object.assign(listing, placeListing(listing) ?? {});
       warnIfBadData(listing, 'Sheet1/Rentals');
       return listing;
     })
@@ -408,6 +410,7 @@ async function parseForSale(): Promise<Listing[]> {
         foreignEligible: foreignEligibleFlag,
         foreignEligibleBuilding: foreignBuilding?.name,
       };
+      Object.assign(listing, placeListing(listing) ?? {});
       warnIfBadData(listing, 'For Sale');
       return listing;
     })
