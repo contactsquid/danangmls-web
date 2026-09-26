@@ -94,7 +94,8 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
           : precision === 2 ? t.mapInWard(label)
           : t.mapApprox(localizeDistrict(l.district, lang));
         const img = l.images[0] ? `<img src="${esc(l.images[0])}" alt="" loading="lazy">` : '';
-        const beds = l.bedrooms ? `🛏 ${esc(l.bedrooms)} ${esc(t.br)} · ` : '';
+        // '0' is a land plot, a commercial space or a studio: no bedroom count to show.
+        const beds = l.bedrooms && l.bedrooms !== '0' ? `🛏 ${esc(l.bedrooms)} ${esc(t.br)} · ` : '';
         return `<a href="${esc(listingHref(l.slug, lang))}">${img}<div class="b">`
           + `<div class="p">${esc(l.price ? convertPrice(l.price, lang) : '')}</div>`
           + `<div class="t">${esc(localizedTitle(l, lang))}</div>`
