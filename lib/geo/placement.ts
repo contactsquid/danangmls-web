@@ -51,8 +51,14 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'One River', pattern: /\bone\s+river\b/i, at: [15.99095, 108.26142], spreadM: 400 },
   // Vista Residence, 40 Xô Viết Nghệ Tĩnh, Hòa Cường (Blake; OSM has that house number).
   { name: 'Vista Residence', pattern: /\bvista\s+(?:residences?|apartments?|building|tower)\b/i, at: [16.03295, 108.22207], spreadM: 40 },
+  // Euro Village 2, Hòa Xuân, Cẩm Lệ (Blake: Plus Code 26FG+H7 → 7P8C26FG+H7). Checked
+  // before the original so "Euro Village 2" never lands in Sơn Trà.
+  { name: 'Euro Village 2', pattern: /\beuro\s*vill(?:age|a)\s*(?:2|ii|two)\b/i, at: [16.02394, 108.22569], spreadM: 200 },
   // Euro Village / Làng Châu Âu villa compound, Trần Hưng Đạo, Sơn Trà.
-  { name: 'Euro Village', pattern: /\beuro\s*vill(?:age|a)\b|làng châu âu/i, at: [16.05432, 108.23111], spreadM: 200 },
+  { name: 'Euro Village', pattern: /\beuro\s*vill(?:age|a)\b(?!\s*(?:2|ii|two)\b)|làng châu âu/i, at: [16.05432, 108.23111], spreadM: 200 },
+  // A Cẩm Lệ listing saying just "Euro Village" means Euro Village 2: the original is
+  // in another district, so the entry above never applies to it.
+  { name: 'Euro Village 2', pattern: /\beuro\s*vill(?:age|a)\b/i, at: [16.02394, 108.22569], spreadM: 200 },
   // The Ori Garden, Liên Chiểu.
   { name: 'The Ori Garden', pattern: /\bori\s+garden\b/i, at: [16.10009, 108.12951], spreadM: 60 },
   // Wyndham Danang Golden Bay, 01 Lê Văn Duyệt, Sơn Trà.

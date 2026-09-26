@@ -165,3 +165,17 @@ test('"sea vista" is not Vista Residence', () => {
   const p = placeListing({ slug: 'sv', district: 'Hai Chau', neighborhood: '', title: 'Apartment with a sea vista', text: '' }, empty)!;
   assert.notEqual(p.geoLabel, 'Vista Residence');
 });
+
+test('Euro Village 2 (Hoa Xuan) is not the original Euro Village (Son Tra)', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  const at = (district: string, title: string) => placeListing({ slug: title, district, neighborhood: '', title, text: '' }, empty)!;
+  const ev2 = at('Cam Le', 'Villa in Euro Village 2');
+  assert.equal(ev2.geoLabel, 'Euro Village 2');
+  assert.ok(distanceM([ev2.geo[0], ev2.geo[1]], [16.02394, 108.22569]) <= 201);
+  // A Cam Le listing that just says "Euro Village" means the one in its district.
+  assert.equal(at('Cam Le', '3-Bedroom Villa Near Euro Village in Hoa Xuan').geoLabel, 'Euro Village 2');
+  // Plain "Euro Village" in Son Tra is still the original…
+  assert.equal(at('Son Tra', 'Villa with 4 Bedrooms in Euro Village').geoLabel, 'Euro Village');
+  // …but "Euro Village 2" never lands on the original.
+  assert.notEqual(at('Son Tra', 'Luxury Villa Near Euro Village 2').geoLabel, 'Euro Village');
+});
