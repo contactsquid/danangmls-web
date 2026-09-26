@@ -41,6 +41,11 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Sam Towers, Như Nguyệt / 01 Cầu Thuận Phước, Hải Châu (Blake's address) — the
   // bridge's west-end roundabout on Như Nguyệt, per OSM.
   { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.09333, 108.21727], spreadM: 40 },
+  // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
+  // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
+  { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
+  // Elysia Complex City, Vũ Trọng Phụng, Hòa Cường (Blake: Plus Code 26MJ+3M7 → 7P8C26MJ+3M7).
+  { name: 'Elysia', pattern: /\belysia\b/i, at: [16.03266, 108.23167], spreadM: 80 },
   // Euro Village / Làng Châu Âu villa compound, Trần Hưng Đạo, Sơn Trà.
   { name: 'Euro Village', pattern: /\beuro\s*vill(?:age|a)\b|làng châu âu/i, at: [16.05432, 108.23111], spreadM: 200 },
   // The Ori Garden, Liên Chiểu.

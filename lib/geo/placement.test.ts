@@ -141,6 +141,8 @@ test('complexes pin at their address', () => {
     ['Son Tra', '2BR Monarchy apartment, river view', 'Monarchy', [16.05484, 108.23297], 41],
     ['Son Tra', 'House in Euro Village', 'Euro Village', [16.05432, 108.23111], 201],
     ['Hai Chau', 'Luxury 2BR at SAM Towers with river view', 'Sam Towers', [16.09333, 108.21727], 41],
+    ['Ngu Hanh Son', 'Sun Cosmo Residence 1BR', 'Sun Cosmo', [16.05043, 108.23331], 51],
+    ['Hai Chau', 'Elysia Complex City apartment', 'Elysia', [16.03266, 108.23167], 81],
   ];
   for (const [district, title, label, at, within] of cases) {
     const p = placeListing({ slug: title, district, neighborhood: '', title, text: '' }, empty)!;
