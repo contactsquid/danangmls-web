@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useSyncExternalStore } from 'react';
+import dynamic from 'next/dynamic';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import { resolveFacet, isVilla } from '@/lib/facets';
@@ -8,6 +9,12 @@ import { POPULAR_BUILDINGS } from '@/lib/buildingDefs';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
 import { localizeType, localizeDistrict } from '@/lib/price';
+
+// Leaflet only downloads when a visitor switches to Map.
+const ListingsMap = dynamic(() => import('./ListingsMap'), {
+  ssr: false,
+  loading: () => <div className="w-full h-[70vh] min-h-[420px] rounded-2xl bg-slate-100 animate-pulse" />,
+});
 
 const PAGE_SIZE = 48;
 // Roughly two rows on a desktop grid. These load eagerly so the top of the page
@@ -66,6 +73,25 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
   const [bedsFilter, setBeds]       = useState(initialBeds);
   const [priceFilter, setPrice]     = useState('');
   const [foreignOnly, setForeignOnly] = useState(initialForeign);
+  // A shared ?view=map link opens on the map. Read hydration-safely: the server
+  // (and the first client render) always see list view.
+  const urlWantsMap = useSyncExternalStore(
+    () => () => {},
+    () => new URLSearchParams(window.location.search).get('view') === 'map',
+    () => false,
+  );
+  const [viewChoice, setView] = useState<'list' | 'map' | null>(null);
+  const view = viewChoice ?? (urlWantsMap ? 'map' : 'list');
+  // ?view=map makes the map shareable. replaceState: no history entry per toggle,
+  // and the canonical URL (server-rendered) is untouched.
+  const chooseView = (v: 'list' | 'map') => {
+    setView(v);
+    try {
+      const u = new URL(window.location.href);
+      if (v === 'map') u.searchParams.set('view', 'map'); else u.searchParams.delete('view');
+      window.history.replaceState(window.history.state, '', u);
+    } catch {}
+  };
 
   // Persist filters in sessionStorage so they survive navigation to a listing
   // detail page and back. Keyed by mode so rent/sale don't bleed into each other.
@@ -277,6 +303,15 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
             </button>
           )}
 
+          <div className="inline-flex rounded-lg border border-slate-200 overflow-hidden text-sm" role="group">
+            {(['list', 'map'] as const).map(v => (
+              <button key={v} type="button" onClick={() => chooseView(v)} aria-pressed={view === v}
+                className={`px-3 py-2 font-medium transition-colors ${view === v ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                {v === 'list' ? t.mapList : t.mapMap}
+              </button>
+            ))}
+          </div>
+
           <span className="ml-auto text-sm text-slate-400">
             {t.listingCount(!poolComplete && !hasFilters && deferred ? deferred.total : filtered.length)}
           </span>
@@ -292,6 +327,8 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <p className="text-lg font-medium text-slate-500">{t.noListings}</p>
           <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">{t.clearFilters}</button>
         </div>
+      ) : view === 'map' ? (
+        <ListingsMap listings={filtered} />
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
