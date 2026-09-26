@@ -116,3 +116,19 @@ test('no pin is ever on water or outside its district', () => {
     }
   }
 });
+
+// Blake, 2026-09-26: "Fusion" / "Fusion Resort" → Fusion Resort & Villas, Trường Sa.
+test('Fusion listings are pinned at Fusion Resort & Villas on Truong Sa', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  for (const [title, text] of [['Luxury Pool Villa at Fusion Resort Da Nang', ''], ['Spacious 4-Bedroom Villa', 'Located in Fusion Villa Danang']]) {
+    const p = placeListing({ slug: title, district: 'Ngu Hanh Son', neighborhood: '', title, text }, empty)!;
+    assert.equal(p.geo[2], PRECISION.building);
+    assert.equal(p.geoLabel, 'Fusion Resort & Villas');
+    assert.ok(distanceM([p.geo[0], p.geo[1]], [15.97242, 108.28229]) <= 151);
+  }
+});
+test('Fusion Suites (a different hotel, in Son Tra) is not the resort', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  const p = placeListing({ slug: 'fs', district: 'Son Tra', neighborhood: '', title: 'Studio near Fusion Suites', text: '' }, empty)!;
+  assert.notEqual(p.geoLabel, 'Fusion Resort & Villas');
+});

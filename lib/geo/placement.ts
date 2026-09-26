@@ -25,6 +25,14 @@ export interface Placement { geo: [number, number, Precision]; geoLabel: string;
 // top of each other. Scaled to how big the anchor really is.
 const SPREAD_M = { building: 30, nearBuilding: 300, street: 150, ward: 350, district: 500 };
 
+// Places Blake has pinned by hand: map-only, so unlike POPULAR_BUILDINGS they don't
+// create a building page or a "Popular buildings" card. spreadM is the grounds' size.
+const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number }[] = [
+  // "Fusion" / "Fusion Resort" (Blake, 2026-09-26): Fusion Resort & Villas, Trường Sa,
+  // Ngũ Hành Sơn. Fusion Suites is a different hotel on Vo Nguyen Giap, so excluded.
+  { name: 'Fusion Resort & Villas', pattern: /\bfusion\b(?!\s+suites?)/i, at: [15.97242, 108.28229], spreadM: 150 },
+];
+
 // "Garden house near Hyatt Regency" is not IN the Hyatt. A building name right after
 // one of these phrases places the pin around the building, labelled "Near …".
 const NEAR_BEFORE = /(?:near|close to|next to|opposite|across from|behind|walk(?:ing)?(?: distance)? (?:to|from)|minutes? (?:walk )?(?:to|from)|steps (?:to|from)|gần|cạnh|đối diện)\s+(?:the\s+)?$/i;
@@ -82,6 +90,14 @@ export function placeListing(
     }
     return ok(anchor) ? anchor : null;
   };
+
+  const landmark = MAP_LANDMARKS.find(m => m.pattern.test(hay) && ok(m.at));
+  if (landmark) {
+    const idx = hay.search(landmark.pattern);
+    const near = NEAR_BEFORE.test(hay.slice(Math.max(0, idx - 40), idx));
+    const p = around(landmark.at, near ? SPREAD_M.nearBuilding : landmark.spreadM);
+    if (p) return place(p, near ? PRECISION.nearBuilding : PRECISION.building, landmark.name);
+  }
 
   // A building or street only counts when its own point obeys the rules: outside the
   // ward or district means the listing's data or the mention is wrong.
