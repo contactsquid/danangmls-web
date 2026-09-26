@@ -25,12 +25,32 @@ export interface Placement { geo: [number, number, Precision]; geoLabel: string;
 // top of each other. Scaled to how big the anchor really is.
 const SPREAD_M = { building: 30, nearBuilding: 300, street: 150, ward: 350, district: 500 };
 
-// Places Blake has pinned by hand: map-only, so unlike POPULAR_BUILDINGS they don't
-// create a building page or a "Popular buildings" card. spreadM is the grounds' size.
-const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number }[] = [
-  // "Fusion" / "Fusion Resort" (Blake, 2026-09-26): Fusion Resort & Villas, Trường Sa,
-  // Ngũ Hành Sơn. Fusion Suites is a different hotel on Vo Nguyen Giap, so excluded.
+// Places pinned by verified address (Blake, 2026-09-26): map-only, so unlike
+// POPULAR_BUILDINGS they don't create a building page or a "Popular buildings" card.
+// spreadM is roughly the grounds' size. `near: true` = a landmark people live NEAR,
+// never in (parks, malls, resorts): always labelled "Near …".
+// Coordinates are OpenStreetMap features whose name/address matched — don't add a
+// place without that check: fuzzy geocoding put "Sam Towers" on Meridian Towers.
+const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number; near?: boolean }[] = [
+  // Fusion Resort & Villas, Trường Sa, Ngũ Hành Sơn. Fusion Suites is a different hotel on Vo Nguyen Giap.
   { name: 'Fusion Resort & Villas', pattern: /\bfusion\b(?!\s+suites?)/i, at: [15.97242, 108.28229], spreadM: 150 },
+  // Premier Village Resort, 99 Võ Nguyên Giáp (villas for rent inside it).
+  { name: 'Premier Village', pattern: /\bprem(?:ier|eir)\s+village\b/i, at: [16.04362, 108.24966], spreadM: 150 },
+  // Chung cư Monarchy, 535 Trần Hưng Đạo, An Hải.
+  { name: 'Monarchy', pattern: /\bmonarchy\b/i, at: [16.05484, 108.23297], spreadM: 40 },
+  // Euro Village / Làng Châu Âu villa compound, Trần Hưng Đạo, Sơn Trà.
+  { name: 'Euro Village', pattern: /\beuro\s*vill(?:age|a)\b|làng châu âu/i, at: [16.05432, 108.23111], spreadM: 200 },
+  // The Ori Garden, Liên Chiểu.
+  { name: 'The Ori Garden', pattern: /\bori\s+garden\b/i, at: [16.10009, 108.12951], spreadM: 60 },
+  // Wyndham Danang Golden Bay, 01 Lê Văn Duyệt, Sơn Trà.
+  { name: 'Golden Bay', pattern: /\bgolden\s*bay\b/i, at: [16.09806, 108.22438], spreadM: 40 },
+  { name: 'Mikazuki', pattern: /\bmikazuki\b/i, at: [16.09358, 108.14436], spreadM: 150, near: true },
+  { name: 'Furama Resort', pattern: /\bfurama\b/i, at: [16.03975, 108.25134], spreadM: 150, near: true },
+  // Asia Park, since renamed Sun World Danang Wonders / Da Nang Downtown.
+  { name: 'Asia Park', pattern: /\basia\s+park\b|danang\s+wonders|da\s*nang\s+downtown/i, at: [16.04122, 108.22639], spreadM: 300, near: true },
+  { name: 'Vincom Plaza', pattern: /\bvincom\b/i, at: [16.07136, 108.23026], spreadM: 300, near: true },
+  { name: 'APEC Park', pattern: /\bapec\s+park\b|công viên apec/i, at: [16.05875, 108.22351], spreadM: 300, near: true },
+  { name: 'East Sea Park', pattern: /\beast\s+sea\s+park\b|công viên biển đông/i, at: [16.06835, 108.24593], spreadM: 300, near: true },
 ];
 
 // "Garden house near Hyatt Regency" is not IN the Hyatt. A building name right after
@@ -94,8 +114,8 @@ export function placeListing(
   const landmark = MAP_LANDMARKS.find(m => m.pattern.test(hay) && ok(m.at));
   if (landmark) {
     const idx = hay.search(landmark.pattern);
-    const near = NEAR_BEFORE.test(hay.slice(Math.max(0, idx - 40), idx));
-    const p = around(landmark.at, near ? SPREAD_M.nearBuilding : landmark.spreadM);
+    const near = landmark.near || NEAR_BEFORE.test(hay.slice(Math.max(0, idx - 40), idx));
+    const p = around(landmark.at, near ? Math.max(SPREAD_M.nearBuilding, landmark.spreadM) : landmark.spreadM);
     if (p) return place(p, near ? PRECISION.nearBuilding : PRECISION.building, landmark.name);
   }
 

@@ -132,3 +132,25 @@ test('Fusion Suites (a different hotel, in Son Tra) is not the resort', () => {
   const p = placeListing({ slug: 'fs', district: 'Son Tra', neighborhood: '', title: 'Studio near Fusion Suites', text: '' }, empty)!;
   assert.notEqual(p.geoLabel, 'Fusion Resort & Villas');
 });
+
+// Blake, 2026-09-26: common complexes and landmarks, by verified address.
+test('complexes pin at their address', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  const cases: [string, string, string, [number, number], number][] = [
+    ['Ngu Hanh Son', 'Villa at Premier Village Resort', 'Premier Village', [16.04362, 108.24966], 151],
+    ['Son Tra', '2BR Monarchy apartment, river view', 'Monarchy', [16.05484, 108.23297], 41],
+    ['Son Tra', 'House in Euro Village', 'Euro Village', [16.05432, 108.23111], 201],
+  ];
+  for (const [district, title, label, at, within] of cases) {
+    const p = placeListing({ slug: title, district, neighborhood: '', title, text: '' }, empty)!;
+    assert.equal(p.geoLabel, label, title);
+    assert.equal(p.geo[2], PRECISION.building, title);
+    assert.ok(distanceM([p.geo[0], p.geo[1]], at) <= within, title);
+  }
+});
+test('parks, malls and resorts are always "near" — nobody lives in Asia Park', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  const p = placeListing({ slug: 'ap', district: 'Hai Chau', neighborhood: '', title: 'Apartment by Asia Park', text: '' }, empty)!;
+  assert.equal(p.geo[2], PRECISION.nearBuilding);
+  assert.equal(p.geoLabel, 'Asia Park');
+});
