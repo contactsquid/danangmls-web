@@ -15,16 +15,27 @@ export function groupPoints(points: GroupPoint[], cellPx: number, minGroup = MIN
     if (cell) cell.push(p); else cells.set(key, [p]);
   }
   const singles: number[] = [];
-  const groups: Group[] = [];
+  let groups: (Group & { sx: number; sy: number })[] = [];
   for (const cell of cells.values()) {
     if (cell.length < minGroup) { for (const p of cell) singles.push(p.id); continue; }
-    groups.push({
-      x: cell.reduce((s, p) => s + p.x, 0) / cell.length,
-      y: cell.reduce((s, p) => s + p.y, 0) / cell.length,
-      ids: cell.map(p => p.id),
-    });
+    const sx = cell.reduce((s, p) => s + p.x, 0), sy = cell.reduce((s, p) => s + p.y, 0);
+    groups.push({ x: sx / cell.length, y: sy / cell.length, sx, sy, ids: cell.map(p => p.id) });
   }
-  return { singles, groups };
+  // A crowd straddling a cell edge makes two circles side by side, drawn on top
+  // of each other. Merge any two whose centres are closer than a cell.
+  for (let merged = true; merged; ) {
+    merged = false;
+    outer: for (let i = 0; i < groups.length; i++) for (let j = i + 1; j < groups.length; j++) {
+      const a = groups[i], b = groups[j];
+      if (Math.hypot(a.x - b.x, a.y - b.y) >= cellPx) continue;
+      const ids = [...a.ids, ...b.ids], sx = a.sx + b.sx, sy = a.sy + b.sy;
+      groups[i] = { x: sx / ids.length, y: sy / ids.length, sx, sy, ids };
+      groups = groups.filter((_, k) => k !== j);
+      merged = true;
+      break outer;
+    }
+  }
+  return { singles, groups: groups.map(({ x, y, ids }) => ({ x, y, ids })) };
 }
 
 export interface Tag { id: number; x: number; y: number; w: number; h: number; pinned?: boolean }

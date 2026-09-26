@@ -3,11 +3,11 @@ import FacetPage, { facetMetadata } from '@/components/FacetPage';
 
 export const dynamic = 'force-dynamic';
 
-interface Props { params: Promise<{ filter: string }> }
+interface Props { params: Promise<{ filter: string }>; searchParams: Promise<{ view?: string | string[] }> }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { filter } = await params;
-  return facetMetadata('rent', 'ru', filter);
+  return facetMetadata('rent', 'ru', filter, (await searchParams).view);
 }
 
 export default async function Page({ params }: Props) {

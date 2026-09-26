@@ -198,7 +198,7 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
 
   return (
     <div>
-      <div ref={elRef} className="w-full h-[70vh] min-h-[420px] rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 relative z-0" />
+      <div ref={elRef} data-listings-map className="w-full h-[70vh] min-h-[420px] rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 relative z-0" />
       <p className="text-xs text-slate-500 mt-2">{t.mapFresh(fresh.length, mode === 'sale')}</p>
       {unmapped > 0 && <p className="text-xs text-slate-400 mt-1">{t.mapUnmapped(unmapped)}</p>}
     </div>

@@ -17,6 +17,7 @@ import { facetSeoBody } from '@/lib/facetSeo';
 import { popularBuildings } from '@/lib/buildings';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { Metadata } from 'next';
+import { withMapPreview } from '@/lib/mapPreview';
 
 const BASE = 'https://danangmls.com';
 
@@ -25,7 +26,7 @@ async function fetchFor(mode: Mode) {
 }
 
 /** Shared generateMetadata for all four facet routes. */
-export async function facetMetadata(mode: Mode, lang: Lang, filterSlug: string): Promise<Metadata> {
+export async function facetMetadata(mode: Mode, lang: Lang, filterSlug: string, view?: unknown): Promise<Metadata> {
   const facet = resolveFacet(filterSlug, lang);
   if (!facet) return { title: 'Not Found', robots: { index: false, follow: false } };
   const all = await fetchFor(mode);
@@ -34,7 +35,7 @@ export async function facetMetadata(mode: Mode, lang: Lang, filterSlug: string):
   const enUrl = BASE + facetUrl(mode, 'en', facet);
   const viUrl = BASE + facetUrl(mode, 'vi', facet);
   const self = lang === 'vi' ? viUrl : enUrl;
-  return {
+  return withMapPreview({
     title: c.title,
     description: c.description,
     alternates: { canonical: self, languages: { en: enUrl, vi: viUrl, 'x-default': enUrl } },
@@ -50,7 +51,7 @@ export async function facetMetadata(mode: Mode, lang: Lang, filterSlug: string):
     twitter: { card: 'summary_large_image', images: socialImages(facetImage(facet).ogImage, c.title) },
     // Don't index a facet page while it has no inventory (still crawlable).
     ...(filtered.length === 0 ? { robots: { index: false, follow: true } } : {}),
-  };
+  }, view, lang, mode, facet.kind === 'district' ? facet.value : undefined);
 }
 
 /** Shared page body for all four facet routes. */

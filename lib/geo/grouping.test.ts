@@ -52,3 +52,17 @@ test('pinned tags (an open popup) never move', () => {
 test('tag width grows with the price text', () => {
   assert.ok(tagWidthPx('$2.5k') > tagWidthPx('$90'));
 });
+
+test('circles from neighbouring cells that would overlap merge into one', () => {
+  // Two crowds straddling a cell edge at x=64: 12 just left, 12 just right.
+  const left = Array.from({ length: 12 }, (_, i) => ({ id: i, x: 60 + (i % 3), y: 30 + Math.floor(i / 3) }));
+  const right = Array.from({ length: 12 }, (_, i) => ({ id: 100 + i, x: 66 + (i % 3), y: 30 + Math.floor(i / 3) }));
+  const r = groupPoints([...left, ...right], 64);
+  assert.equal(r.groups.length, 1);
+  assert.equal(r.groups[0].ids.length, 24);
+});
+test('circles far apart stay separate', () => {
+  const a = Array.from({ length: 12 }, (_, i) => ({ id: i, x: 10 + i, y: 10 }));
+  const b = Array.from({ length: 12 }, (_, i) => ({ id: 100 + i, x: 400 + i, y: 10 }));
+  assert.equal(groupPoints([...a, ...b], 64).groups.length, 2);
+});

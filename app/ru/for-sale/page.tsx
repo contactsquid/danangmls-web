@@ -12,6 +12,7 @@ import { districtImageMap, firstAnyImage } from '@/lib/pageImages';
 import { popularBuildings } from '@/lib/buildings';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
+import { withMapPreview } from '@/lib/mapPreview';
 import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 
 // Grid pages render ALL listings in one page (too large to ISR-prerender:
@@ -19,7 +20,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 // shared fetchCSV back to no-store for these routes only.
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: 'Недвижимость на продажу в Дананге | DanangMLS',
   description: 'Дома, квартиры, виллы и участки на продажу в Дананге и Хойане. Обновляется ежедневно.',
   alternates: {
@@ -35,6 +36,11 @@ export const metadata: Metadata = {
     locale: 'ru_RU',
   },
 };
+
+// A shared ?view=map link previews as a picture of the map (lib/mapPreview.ts).
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ view?: string | string[] }> }): Promise<Metadata> {
+  return withMapPreview(metadata, (await searchParams).view, 'ru', 'sale');
+}
 
 export default async function RUForSalePage() {
   const listings = await getForSaleListings();

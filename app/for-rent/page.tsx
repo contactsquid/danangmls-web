@@ -14,6 +14,7 @@ import { districtImageMap, firstAnyImage } from '@/lib/pageImages';
 import { popularBuildings } from '@/lib/buildings';
 import { listingsItemListLd } from '@/lib/schema';
 import type { Metadata } from 'next';
+import { withMapPreview } from '@/lib/mapPreview';
 import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 
 // Grid pages render ALL listings in one page (too large to ISR-prerender:
@@ -21,7 +22,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 // shared fetchCSV back to no-store for these routes only.
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: 'Houses for Rent in Da Nang, Vietnam — Furnished Rentals',
   description: 'Find houses, apartments, and villas for rent in Da Nang and Hoi An, Vietnam. Browse hundreds of rental listings updated daily from local agents.',
   alternates: {
@@ -40,6 +41,11 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
+
+// A shared ?view=map link previews as a picture of the map (lib/mapPreview.ts).
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ view?: string | string[] }> }): Promise<Metadata> {
+  return withMapPreview(metadata, (await searchParams).view, 'en', 'rent');
+}
 
 export default async function ForRentPage() {
   const listings = await getListings();
