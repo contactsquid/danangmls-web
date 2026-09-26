@@ -44,6 +44,7 @@ export interface Translations {
   mapAtBuilding: (building: string) => string;
   mapNearBuilding: (building: string) => string;
   mapUnmapped: (n: number) => string;
+  mapFresh: (n: number, forSale: boolean) => string;
   noListings: string;
   clearFilters: string;
   br: string;
@@ -157,6 +158,7 @@ export const translations: Record<Lang, Translations> = {
     mapInWard: (w) => `In ${w}`,
     mapAtBuilding: (b) => `At ${b}`,
     mapNearBuilding: (b) => `Near ${b}`,
+    mapFresh: (n, sale) => `Showing ${n} ${sale ? (n === 1 ? 'listing' : 'listings') + ' for sale' : (n === 1 ? 'rental' : 'rentals')} added in the last ${sale ? 4 : 2} weeks`,
     mapUnmapped: (n) => `${n} ${n === 1 ? 'listing has' : 'listings have'} no district and ${n === 1 ? "isn't" : "aren't"} shown on the map`,
     noListings: 'No listings match your search',
     clearFilters: 'Clear filters',
@@ -270,6 +272,7 @@ export const translations: Record<Lang, Translations> = {
     mapInWard: (w) => `Phường ${w}`,
     mapAtBuilding: (b) => `Tòa ${b}`,
     mapNearBuilding: (b) => `Gần ${b}`,
+    mapFresh: (n, sale) => `Hiển thị ${n} tin ${sale ? 'bán' : 'cho thuê'} đăng trong ${sale ? 4 : 2} tuần qua`,
     mapUnmapped: (n) => `${n} tin chưa có quận nên không hiển thị trên bản đồ`,
     noListings: 'Không tìm thấy bất động sản phù hợp',
     clearFilters: 'Xóa bộ lọc',
@@ -349,6 +352,7 @@ export const translations: Record<Lang, Translations> = {
     mapInWard: (w) => `${w} 지역`,
     mapAtBuilding: (b) => b,
     mapNearBuilding: (b) => `${b} 인근`,
+    mapFresh: (n, sale) => `최근 ${sale ? 4 : 2}주 이내 등록된 ${sale ? '매매' : '임대'} 매물 ${n}건 표시`,
     mapUnmapped: (n) => `구 정보가 없는 매물 ${n}개는 지도에 표시되지 않습니다`,
     noListings: '검색 결과와 일치하는 매물이 없습니다.',
     clearFilters: '필터 초기화',
@@ -428,6 +432,7 @@ export const translations: Record<Lang, Translations> = {
     mapInWard: (w) => `Квартал ${w}`,
     mapAtBuilding: (b) => `Комплекс ${b}`,
     mapNearBuilding: (b) => `Рядом с ${b}`,
+    mapFresh: (n, sale) => `Показаны ${n} ${ruPlural(n, 'объявление', 'объявления', 'объявлений')} ${sale ? 'о продаже' : 'об аренде'} за последние ${sale ? '4 недели' : '2 недели'}`,
     mapUnmapped: (n) => `${n} ${ruPlural(n, 'объявление', 'объявления', 'объявлений')} без района не ${n === 1 ? 'показано' : 'показаны'} на карте`,
     noListings: 'Объявления по вашему запросу не найдены',
     clearFilters: 'Сбросить фильтры',
