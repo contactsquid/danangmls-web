@@ -46,6 +46,11 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
   // Elysia Complex City, Vũ Trọng Phụng, Hòa Cường (Blake: Plus Code 26MJ+3M7 → 7P8C26MJ+3M7).
   { name: 'Elysia', pattern: /\belysia\b/i, at: [16.03266, 108.23167], spreadM: 80 },
+  // One River villas, Song Hào, Hòa Hải (Blake). Not in OSM as a place: pinned at
+  // the centre of Song Hào (~1.2 km), spread to cover most of the street.
+  { name: 'One River', pattern: /\bone\s+river\b/i, at: [15.99095, 108.26142], spreadM: 400 },
+  // Vista Residence, 40 Xô Viết Nghệ Tĩnh, Hòa Cường (Blake; OSM has that house number).
+  { name: 'Vista Residence', pattern: /\bvista\s+(?:residences?|apartments?|building|tower)\b/i, at: [16.03295, 108.22207], spreadM: 40 },
   // Euro Village / Làng Châu Âu villa compound, Trần Hưng Đạo, Sơn Trà.
   { name: 'Euro Village', pattern: /\beuro\s*vill(?:age|a)\b|làng châu âu/i, at: [16.05432, 108.23111], spreadM: 200 },
   // The Ori Garden, Liên Chiểu.

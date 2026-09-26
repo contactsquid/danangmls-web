@@ -143,6 +143,8 @@ test('complexes pin at their address', () => {
     ['Hai Chau', 'Luxury 2BR at SAM Towers with river view', 'Sam Towers', [16.09333, 108.21727], 41],
     ['Ngu Hanh Son', 'Sun Cosmo Residence 1BR', 'Sun Cosmo', [16.05043, 108.23331], 51],
     ['Hai Chau', 'Elysia Complex City apartment', 'Elysia', [16.03266, 108.23167], 81],
+    ['Ngu Hanh Son', 'Pool villa in One River', 'One River', [15.99095, 108.26142], 401],
+    ['Hai Chau', 'Vista Residence 2BR', 'Vista Residence', [16.03295, 108.22207], 41],
   ];
   for (const [district, title, label, at, within] of cases) {
     const p = placeListing({ slug: title, district, neighborhood: '', title, text: '' }, empty)!;
@@ -156,4 +158,10 @@ test('parks, malls and resorts are always "near" — nobody lives in Asia Park',
   const p = placeListing({ slug: 'ap', district: 'Hai Chau', neighborhood: '', title: 'Apartment by Asia Park', text: '' }, empty)!;
   assert.equal(p.geo[2], PRECISION.nearBuilding);
   assert.equal(p.geoLabel, 'Asia Park');
+});
+
+test('"sea vista" is not Vista Residence', () => {
+  const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
+  const p = placeListing({ slug: 'sv', district: 'Hai Chau', neighborhood: '', title: 'Apartment with a sea vista', text: '' }, empty)!;
+  assert.notEqual(p.geoLabel, 'Vista Residence');
 });
