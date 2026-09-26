@@ -14,18 +14,32 @@ body {
 
 /* Listings map (components/ListingsMap.tsx) */
 .dmls-pin { background: none; border: 0; }
+/* Design A (Blake, 2026-09-26): white pill, blue property-type icon, price.
+   The marker's anchor is the tip of the little pointer under the tag. */
 .dmls-pin span {
-  position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
-  padding: 2px 7px; border-radius: 9999px; font: 600 12px/1.4 system-ui, sans-serif;
-  background: #fff; color: #0f172a; border: 1.5px solid #1e40af;
-  box-shadow: 0 1px 3px rgb(0 0 0 / .25); cursor: pointer;
+  position: absolute; left: 0; top: 0; transform: translate(-50%, calc(-100% - 6px));
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+  padding: 6px 10px 6px 8px; border-radius: 9999px; background: #fff; color: #0f172a;
+  font: 700 13px/1 var(--font-geist-sans), system-ui, sans-serif;
+  box-shadow: 0 1px 2px rgb(15 23 42 / .18), 0 3px 10px rgb(15 23 42 / .14);
+  cursor: pointer; transition: transform .12s ease, background-color .12s ease;
 }
-.dmls-pin span:hover { background: #1e40af; color: #fff; }
+.dmls-pin span::after {
+  content: ""; position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%);
+  border: 6px solid transparent; border-bottom: 0; border-top-color: #fff;
+}
+.dmls-pin svg { width: 15px; height: 15px; flex: none; color: #2563eb; }
+.dmls-pin:hover span { transform: translate(-50%, calc(-100% - 6px)) scale(1.08); }
+.dmls-pin:focus-visible span { outline: 3px solid #93c5fd; outline-offset: 2px; }
+.dmls-pin.sel span { background: #0f172a; color: #fff; }
+.dmls-pin.sel span::after { border-top-color: #0f172a; }
+.dmls-pin.sel svg { color: #fff; }
 .dmls-cluster { background: none; border: 0; }
 .dmls-cluster span {
-  display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
-  border-radius: 9999px; background: rgb(30 64 175 / .9); color: #fff;
-  font: 700 13px system-ui, sans-serif; box-shadow: 0 0 0 5px rgb(30 64 175 / .25);
+  display: flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+  border-radius: 9999px; background: #fff; color: #0f172a;
+  font: 700 14px var(--font-geist-sans), system-ui, sans-serif; cursor: pointer;
+  box-shadow: 0 0 0 6px rgb(37 99 235 / .22), 0 3px 10px rgb(15 23 42 / .2);
 }
 .dmls-popup .leaflet-popup-content { margin: 0; width: 240px !important; }
 .dmls-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 12px; overflow: hidden; }

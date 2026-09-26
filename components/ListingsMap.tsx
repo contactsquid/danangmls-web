@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
 import type { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
 import { shortPrice } from '@/lib/geo/shortPrice';
 import { isFreshForMap } from '@/lib/geo/freshness';
+import { declutter, groupPoints, tagWidthPx } from '@/lib/geo/grouping';
+import { PIN_ICONS, pinKind } from '@/lib/geo/pinIcon';
 import { convertPrice, localizeDistrict, localizedTitle } from '@/lib/price';
 import { listingHref } from '@/lib/facets';
 import { addBasemap, MAP_MAX_ZOOM } from '@/lib/mapTiles';
@@ -15,11 +16,14 @@ import { addBasemap, MAP_MAX_ZOOM } from '@/lib/mapTiles';
 // visitors never download Leaflet. Placement comes precomputed on each listing
 // (lib/geo/placement.ts); only recent listings are shown (lib/geo/freshness.ts).
 //
-// Two display modes, re-chosen on every pan/zoom (Blake, 2026-09-26: "too many
-// circled counts instead of the pricing"): with fewer than PINS_BELOW listings in
-// view, every listing is its own price tag; otherwise tags merge into count
-// bubbles that spiderfy at max zoom.
+// Display rules (Blake, 2026-09-26), re-applied on every pan/zoom:
+// - fewer than PINS_BELOW listings in view: every listing is a price tag;
+// - otherwise listings are binned on a screen grid and only cells holding 11+
+//   become a numbered circle (lib/geo/grouping.ts); smaller cells stay tags.
 const PINS_BELOW = 100;
+const CELL_PX = 72;
+// How far a tag may be nudged off its spot so it doesn't cover a neighbour.
+const MAX_NUDGE_PX = 90;
 
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
@@ -27,7 +31,7 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
   const { lang, t } = useLanguage();
   const elRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ref = useRef<{ L: any; map: any; cluster: any; pins: any } | null>(null);
+  const ref = useRef<{ L: any; map: any; layer: any } | null>(null);
   // Memoised so the marker effect re-runs only when the filtered set changes.
   const fresh = useMemo(() => {
     const now = Date.now();
@@ -36,24 +40,15 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
   const mapped = useMemo(() => fresh.filter(l => l.geo), [fresh]);
   const unmapped = fresh.length - mapped.length;
 
-  // Map + both marker layers, created once.
+  // The map, created once.
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const L = (await import('leaflet')).default;
-      // leaflet.markercluster attaches itself to the global L.
-      (window as unknown as { L: typeof L }).L = L;
-      await import('leaflet.markercluster');
       if (cancelled || !elRef.current || ref.current) return;
       const map = L.map(elRef.current, { scrollWheelZoom: true, maxZoom: MAP_MAX_ZOOM }).setView([16.05, 108.22], 12);
       addBasemap(L, map);
-      const cluster = L.markerClusterGroup({
-        chunkedLoading: true, showCoverageOnHover: false, spiderfyOnMaxZoom: true, maxClusterRadius: 50,
-        iconCreateFunction: (c: { getChildCount(): number }) => L.divIcon({
-          html: `<span>${c.getChildCount()}</span>`, className: 'dmls-cluster', iconSize: L.point(40, 40),
-        }),
-      });
-      ref.current = { L, map, cluster, pins: L.layerGroup() };
+      ref.current = { L, map, layer: L.layerGroup().addTo(map) };
       window.dispatchEvent(new Event('dmls-map-ready'));
     })();
     return () => {
@@ -64,13 +59,32 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
 
   // Markers, rebuilt whenever the filtered set or language changes.
   useEffect(() => {
-    const makeMarker = (l: Listing) => {
+    // Tag markers are cached by listing index and reused across pans: opening a
+    // popup auto-pans the map, and recreating its marker would close the popup.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tags = new Map<number, any>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let groupMarkers: any[] = [];
+
+    const prices = new Map<number, string>();
+    const priceOf = (i: number) => {
+      let p = prices.get(i);
+      if (p === undefined) { p = shortPrice(mapped[i].price, lang) ?? '•'; prices.set(i, p); }
+      return p;
+    };
+
+    const tagFor = (i: number) => {
+      const cached = tags.get(i);
+      if (cached) return cached;
       const { L } = ref.current!;
+      const l = mapped[i];
       const [lat, lng, precision] = l.geo!;
-      const tag = shortPrice(l.price, lang) ?? '•';
+      const price = priceOf(i);
       const m = L.marker([lat, lng], {
-        icon: L.divIcon({ html: `<span>${esc(tag)}</span>`, className: 'dmls-pin', iconSize: [0, 0] }),
+        icon: L.divIcon({ html: `<span>${PIN_ICONS[pinKind(l)]}${esc(price)}</span>`, className: 'dmls-pin', iconSize: [0, 0] }),
         riseOnHover: true,
+        keyboard: true,
+        title: localizedTitle(l, lang),
       });
       m.bindPopup(() => {
         const label = l.geoLabel || '';
@@ -85,39 +99,92 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
           + `<div class="p">${esc(l.price ? convertPrice(l.price, lang) : '')}</div>`
           + `<div class="t">${esc(localizedTitle(l, lang))}</div>`
           + `<div class="m">${beds}${esc(loc)}</div></div></a>`;
-      }, { className: 'dmls-popup', maxWidth: 240, minWidth: 240 });
+      }, { className: 'dmls-popup', maxWidth: 240, minWidth: 240, offset: [0, -34] });
+      // The open listing's tag turns dark, so you can see which pin the card belongs to.
+      m.on('popupopen', () => m.getElement()?.classList.add('sel'));
+      m.on('popupclose', () => m.getElement()?.classList.remove('sel'));
+      tags.set(i, m);
       return m;
     };
 
-    // Price tags or bubbles, depending on how many listings are in view.
     const refresh = () => {
       if (!ref.current) return;
-      const { map, cluster, pins } = ref.current;
+      const { L, map, layer } = ref.current;
+      const zoom = map.getZoom();
       const view = map.getBounds();
-      const inView = mapped.filter(l => view.contains([l.geo![0], l.geo![1]]));
-      if (inView.length < PINS_BELOW) {
-        if (map.hasLayer(cluster)) map.removeLayer(cluster);
-        // Pad the area a little so a short pan doesn't reveal an empty edge.
-        const around = view.pad(0.25);
-        pins.clearLayers();
-        for (const l of mapped) if (around.contains([l.geo![0], l.geo![1]])) pins.addLayer(makeMarker(l));
-        if (!map.hasLayer(pins)) map.addLayer(pins);
-      } else {
-        if (map.hasLayer(pins)) { map.removeLayer(pins); pins.clearLayers(); }
-        if (!map.hasLayer(cluster)) map.addLayer(cluster);
+      // Pad the drawn area a little so a short pan doesn't reveal an empty edge.
+      const around = view.pad(0.25);
+      const near: number[] = [];
+      let inView = 0;
+      mapped.forEach((l, i) => {
+        const p: [number, number] = [l.geo![0], l.geo![1]];
+        if (around.contains(p)) near.push(i);
+        if (view.contains(p)) inView++;
+      });
+
+      let showTags = near;
+      const groups: { at: unknown; ids: number[] }[] = [];
+      const circlesPx: { x: number; y: number }[] = [];
+      if (inView >= PINS_BELOW && zoom < MAP_MAX_ZOOM) {
+        const r = groupPoints(near.map(i => {
+          const p = map.project([mapped[i].geo![0], mapped[i].geo![1]], zoom);
+          return { id: i, x: p.x, y: p.y };
+        }), CELL_PX);
+        showTags = r.singles;
+        for (const g of r.groups) {
+          groups.push({ at: map.unproject([g.x, g.y], zoom), ids: g.ids });
+          // A tag's anchor is its pointer tip and its body sits ~20px above it, so
+          // shift the circle's footprint down to compare like with like.
+          circlesPx.push({ x: g.x, y: g.y + 20 });
+        }
       }
+
+      // Nudge overlapping tags apart (screen pixels at this zoom). The tag whose
+      // popup is open stays put so its card doesn't jump.
+      // Circles are fixed obstacles (negative ids) so tags aren't nudged under them.
+      const spots = declutter([
+        ...circlesPx.map((c, k) => ({ id: -1 - k, x: c.x, y: c.y, w: 58, h: 58, pinned: true })),
+        ...showTags.map(i => {
+          const p = map.project([mapped[i].geo![0], mapped[i].geo![1]], zoom);
+          return { id: i, x: p.x, y: p.y, w: tagWidthPx(priceOf(i)), h: 28, pinned: !!tags.get(i)?.isPopupOpen() };
+        }),
+      ], MAX_NUDGE_PX).filter(s => s.id >= 0);
+
+      // Tags: add what's newly needed, drop what isn't, move the rest into place.
+      const want = new Set(showTags);
+      for (const [i, m] of tags) if (!want.has(i) && layer.hasLayer(m)) layer.removeLayer(m);
+      for (const s of spots) {
+        const m = tagFor(s.id);
+        if (!s.pinned) m.setLatLng(map.unproject([s.x, s.y], zoom));
+        if (!layer.hasLayer(m)) layer.addLayer(m);
+      }
+
+      // Circles carry no state, so they are simply redrawn.
+      for (const m of groupMarkers) layer.removeLayer(m);
+      groupMarkers = groups.map(g => {
+        const m = L.marker(g.at, {
+          icon: L.divIcon({ html: `<span>${g.ids.length}</span>`, className: 'dmls-cluster', iconSize: L.point(46, 46) }),
+          keyboard: true,
+          title: String(g.ids.length),
+          zIndexOffset: 1000,
+        });
+        m.on('click', () => map.fitBounds(L.latLngBounds(g.ids.map(i => [mapped[i].geo![0], mapped[i].geo![1]])), { padding: [40, 40], maxZoom: MAP_MAX_ZOOM }));
+        layer.addLayer(m);
+        return m;
+      });
     };
 
     let attachedTo: { off(ev: string, fn: () => void): void } | null = null;
     const start = () => {
       if (!ref.current || attachedTo) return;
-      const { map, cluster } = ref.current;
-      cluster.clearLayers();
-      cluster.addLayers(mapped.map(makeMarker));
+      const { L, map, layer } = ref.current;
+      layer.clearLayers();
       map.on('moveend', refresh);
       attachedTo = map;
-      if (mapped.length) map.fitBounds(cluster.getBounds(), { padding: [30, 30], maxZoom: 15 });
-      refresh();   // fitBounds may not move the map (no moveend), so choose the mode now too
+      if (mapped.length) {
+        map.fitBounds(L.latLngBounds(mapped.map(l => [l.geo![0], l.geo![1]])), { padding: [30, 30], maxZoom: 15 });
+      }
+      refresh();   // fitBounds may not move the map (no moveend), so draw now too
     };
 
     start();
