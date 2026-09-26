@@ -1,10 +1,10 @@
 // Approximate VND/USD rate (matches the AI enrichment pipeline's conversion)
-const VND_RATE = 26300;
+export const VND_RATE = 26300;
 // Fetched 2026-09-10. Hardcoded like VND_RATE rather than called live: a listing
 // grid renders thousands of prices and must not depend on an FX request. Re-check
 // these periodically — a stale rate shows a wrong number, not an error.
-const KRW_RATE = 1339;
-const RUB_RATE = 85;
+export const KRW_RATE = 1339;
+export const RUB_RATE = 85;
 
 export const VI_TYPES: Record<string, string> = {
   'Apartment': 'Căn Hộ',
