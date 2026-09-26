@@ -3,9 +3,10 @@
 import { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { DISTRICT_BOUNDARIES } from '@/lib/districtBoundaries';
+import { addBasemap, MAP_MAX_ZOOM } from '@/lib/mapTiles';
 
 // Client-only Leaflet map: a clean light basemap with the district's real
-// boundary drawn as a bold outline, zoomed to fit. No API key (CARTO/OSM tiles).
+// boundary drawn as a bold outline, zoomed to fit. Basemap: lib/mapTiles.ts.
 export default function DistrictBoundaryMap({ district }: { district: string }) {
   const elRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,14 +18,10 @@ export default function DistrictBoundaryMap({ district }: { district: string }) 
       const L = (await import('leaflet')).default;
       if (cancelled || !elRef.current || mapRef.current) return;
 
-      const map = L.map(elRef.current, { scrollWheelZoom: false });
+      const map = L.map(elRef.current, { scrollWheelZoom: false, maxZoom: MAP_MAX_ZOOM });
       mapRef.current = map;
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-      }).addTo(map);
+      addBasemap(L, map);
 
       const geom = DISTRICT_BOUNDARIES[district];
       if (geom) {

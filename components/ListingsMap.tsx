@@ -8,6 +8,7 @@ import { useLanguage } from './LanguageProvider';
 import { shortPrice } from '@/lib/geo/shortPrice';
 import { convertPrice, localizeDistrict, localizedTitle } from '@/lib/price';
 import { listingHref } from '@/lib/facets';
+import { addBasemap, MAP_MAX_ZOOM } from '@/lib/mapTiles';
 
 // Map view for ListingsGrid. Loaded with next/dynamic (ssr: false) so list-view
 // visitors never download Leaflet. Placement comes precomputed on each listing
@@ -34,11 +35,8 @@ export default function ListingsMap({ listings }: { listings: Listing[] }) {
       (window as unknown as { L: typeof L }).L = L;
       await import('leaflet.markercluster');
       if (cancelled || !elRef.current || ref.current) return;
-      const map = L.map(elRef.current, { scrollWheelZoom: true }).setView([16.05, 108.22], 12);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd', maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-      }).addTo(map);
+      const map = L.map(elRef.current, { scrollWheelZoom: true, maxZoom: MAP_MAX_ZOOM }).setView([16.05, 108.22], 12);
+      addBasemap(L, map);
       const cluster = L.markerClusterGroup({
         chunkedLoading: true, showCoverageOnHover: false, spiderfyOnMaxZoom: true, maxClusterRadius: 50,
         iconCreateFunction: (c: { getChildCount(): number }) => L.divIcon({
