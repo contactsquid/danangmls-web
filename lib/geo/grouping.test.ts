@@ -66,3 +66,10 @@ test('circles far apart stay separate', () => {
   const b = Array.from({ length: 12 }, (_, i) => ({ id: 100 + i, x: 400 + i, y: 10 }));
   assert.equal(groupPoints([...a, ...b], 64).groups.length, 2);
 });
+
+test('nudging never moves a tag somewhere it is not allowed', () => {
+  // Only the left half-plane (x <= 100) is allowed, like a riverbank.
+  const tags = Array.from({ length: 6 }, (_, i) => ({ id: i, x: 95 + i, y: 100, w: 70, h: 28 }));
+  const out = declutter(tags, 90, t => t.x <= 100);
+  for (const t of out) assert.ok(t.x <= 101, `tag ${t.id} crossed to x=${t.x}`);
+});

@@ -35,4 +35,5 @@ export interface Listing {
   // Absent when the listing has no usable district (not mapped).
   geo?:         [number, number, number];
   geoLabel?:    string; // building / street / ward name; '' for district precision
+  geoArea?:     string; // ward key the pin is confined to ('' = its district); the map nudging honours it
 }

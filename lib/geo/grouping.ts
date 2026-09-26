@@ -48,9 +48,10 @@ export function tagWidthPx(price: string): number {
 const hits = (a: Tag, b: Tag) => Math.abs(a.x - b.x) * 2 < a.w + b.w + 4 && Math.abs(a.y - b.y) * 2 < a.h + b.h + 4;
 
 /** With circles only for 11+, up to 10 tags can share a spot and pile into an
- *  unreadable stack. Nudge each tag to the nearest free position within maxShift px;
- *  a tag with no free spot stays put. Pinned tags (an open popup) never move. */
-export function declutter(tags: Tag[], maxShift: number): Tag[] {
+ *  unreadable stack. Nudge each tag to the nearest free position within maxShift px
+ *  that canPlace accepts; a tag with no free spot stays put. Pinned tags (an open
+ *  popup) never move. */
+export function declutter(tags: Tag[], maxShift: number, canPlace: (t: Tag) => boolean = () => true): Tag[] {
   // Candidate offsets on a 6px lattice, nearest first.
   const offsets: [number, number][] = [];
   for (let dy = -maxShift; dy <= maxShift; dy += 6)
@@ -79,6 +80,8 @@ export function declutter(tags: Tag[], maxShift: number): Tag[] {
     if (!t.pinned) {
       for (const [dx, dy] of offsets) {
         const c = { ...t, x: t.x + dx, y: t.y + dy };
+        // canPlace keeps a nudged tag inside its ward/district and off water.
+        if ((dx || dy) && !canPlace(c)) continue;
         if (!near(c).some(p => hits(c, p))) { spot = c; break; }
       }
     }

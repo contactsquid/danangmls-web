@@ -328,7 +328,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <button onClick={clearAll} className="mt-3 text-blue-600 text-sm hover:underline">{t.clearFilters}</button>
         </div>
       ) : view === 'map' ? (
-        <ListingsMap listings={filtered} mode={mode} />
+        <ListingsMap listings={filtered} mode={mode} district={distFilter} neighborhood={hoodFilter} />
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

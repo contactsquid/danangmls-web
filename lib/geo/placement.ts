@@ -1,8 +1,7 @@
 import { POPULAR_BUILDINGS } from '../buildingDefs';
-import { DISTRICT_BOUNDARIES } from '../districtBoundaries';
-import { extractStreet, normalizeName } from './streets';
-import type { Geometry } from 'geojson';
-import { hashSeed, mainPart, mulberry32, offsetPoint, pointInGeometry, randomPointIn, type LatLng } from './geometry';
+import { extractStreet } from './streets';
+import { hashSeed, mulberry32, offsetPoint, type LatLng } from './geometry';
+import { hasDistrict, pointAllowed, randomAllowedPoint, wardKey } from './areas';
 import COORDS from './coords.json';
 
 export const PRECISION = { building: 0, street: 1, ward: 2, district: 3, nearBuilding: 4 } as const;
@@ -18,7 +17,9 @@ export interface GeoCoords {
   misses: string[];
 }
 
-export interface Placement { geo: [number, number, Precision]; geoLabel: string }
+/** `geoArea` is the ward key the pin is confined to ('' = just its district), so the
+ *  map's overlap nudging (client side) keeps it there too. */
+export interface Placement { geo: [number, number, Precision]; geoLabel: string; geoArea: string }
 
 // How far listings sharing one anchor are spread, so their pins don't sit on
 // top of each other. Scaled to how big the anchor really is.
@@ -28,76 +29,105 @@ const SPREAD_M = { building: 30, nearBuilding: 300, street: 150, ward: 350, dist
 // one of these phrases places the pin around the building, labelled "Near …".
 const NEAR_BEFORE = /(?:near|close to|next to|opposite|across from|behind|walk(?:ing)?(?: distance)? (?:to|from)|minutes? (?:walk )?(?:to|from)|steps (?:to|from)|gần|cạnh|đối diện)\s+(?:the\s+)?$/i;
 
-// District-only listings are spread around the district's KNOWN listing locations
-// (its geocoded streets and wards), not uniformly over its boundary: most of Son
-// Tra's polygon is forested mountain, Lien Chieu's runs up the Hai Van pass, and
-// Hoi An's includes the Cham Islands. Uniform scatter put pins in all of those.
+// Anchors for spreading pins we can't place precisely: the known street/ward points
+// inside the region, i.e. where that area's listings actually are.
 const anchorCache = new WeakMap<GeoCoords, Map<string, LatLng[]>>();
-function districtAnchors(coords: GeoCoords, district: string, boundary: Geometry): LatLng[] {
-  let byDistrict = anchorCache.get(coords);
-  if (!byDistrict) { byDistrict = new Map(); anchorCache.set(coords, byDistrict); }
-  let anchors = byDistrict.get(district);
-  if (!anchors) {
+function anchors(coords: GeoCoords, district: string, ward: string | null): LatLng[] {
+  let byRegion = anchorCache.get(coords);
+  if (!byRegion) { byRegion = new Map(); anchorCache.set(coords, byRegion); }
+  const key = ward ?? district;
+  let found = byRegion.get(key);
+  if (!found) {
     const prefix = `${district}|`;
-    anchors = [...Object.entries(coords.streets), ...Object.entries(coords.wards)]
-      .filter(([k, p]) => k.startsWith(prefix) && pointInGeometry(p, boundary))
+    found = [...Object.entries(coords.streets), ...Object.entries(coords.wards)]
+      .filter(([k, p]) => k.startsWith(prefix) && pointAllowed(p, district, ward))
       .map(([, p]) => p);
-    byDistrict.set(district, anchors);
+    byRegion.set(key, found);
   }
-  return anchors;
-}
-
-function districtPoint(slug: string, seed: number, boundary: Geometry, anchors: LatLng[]): LatLng {
-  if (!anchors.length) return randomPointIn(mainPart(boundary), seed);
-  const rnd = mulberry32(seed);
-  let anchor = anchors[0];
-  for (let i = 0; i < 8; i++) {
-    anchor = anchors[Math.floor(rnd() * anchors.length)];
-    const p = offsetPoint(anchor, hashSeed(`${slug}#${i}`), SPREAD_M.district);
-    if (pointInGeometry(p, boundary)) return p;   // offsets near the coast can land in the sea
-  }
-  return anchor;
+  return found;
 }
 
 const round5 = (n: number) => Math.round(n * 1e5) / 1e5;
-const place = ([lat, lng]: LatLng, p: Precision, label: string): Placement =>
-  ({ geo: [round5(lat), round5(lng), p], geoLabel: label });
 
-/** Where a listing goes on the map: the most precise location its data supports. */
+/** Where a listing goes on the map: the most precise location its data supports —
+ *  always inside its district, inside its ward when we know it, and never on water
+ *  (Blake, 2026-09-26). */
 export function placeListing(
   l: { slug: string; district: string; neighborhood: string; title: string; text: string },
   coords: GeoCoords = COORDS as unknown as GeoCoords,
 ): Placement | null {
-  const boundary = DISTRICT_BOUNDARIES[l.district];
-  if (!boundary) return null;            // covers '' and 'Not Provided'
+  if (!hasDistrict(l.district)) return null;            // covers '' and 'Not Provided'
+  const district = l.district;
+  const ward = wardKey(district, l.neighborhood);
+  // Checks run on the ROUNDED point — the one that ships — so rounding can't nudge
+  // a pin by the riverbank into the river.
+  const r5 = ([lat, lng]: LatLng): LatLng => [round5(lat), round5(lng)];
+  const ok = (p: LatLng) => pointAllowed(r5(p), district, ward);
+  const inDistrict = (p: LatLng) => pointAllowed(r5(p), district, null);
+  // randomAllowedPoint, retried until its rounded point still obeys the rule.
+  const anywhere = (w: string | null, test: (p: LatLng) => boolean) => {
+    for (let i = 0; i < 8; i++) { const p = randomAllowedPoint(district, w, hashSeed(`${l.slug}~${i}`)); if (p && test(p)) return p; }
+    return null;
+  };
   const seed = hashSeed(l.slug);
   const hay = `${l.title} ${l.text}`;
+  const place = ([lat, lng]: LatLng, p: Precision, label: string, area = ward ?? ''): Placement =>
+    ({ geo: [round5(lat), round5(lng), p], geoLabel: label, geoArea: area });
 
-  // Same rule as streets: a building outside the listing's own district means the
-  // district or the mention is wrong, so it doesn't get to move the pin.
-  const building = POPULAR_BUILDINGS.find(b =>
-    b.pattern.test(hay) && coords.buildings[b.name] && pointInGeometry(coords.buildings[b.name], boundary));
+  // A seeded spot around an anchor that obeys the rules; the anchor itself if none does.
+  const around = (anchor: LatLng, radiusM: number, salt = ''): LatLng | null => {
+    for (let i = 0; i < 12; i++) {
+      const p = offsetPoint(anchor, hashSeed(`${l.slug}${salt}#${i}`), radiusM);
+      if (ok(p)) return p;
+    }
+    return ok(anchor) ? anchor : null;
+  };
+
+  // A building or street only counts when its own point obeys the rules: outside the
+  // ward or district means the listing's data or the mention is wrong.
+  const building = POPULAR_BUILDINGS.find(b => b.pattern.test(hay) && coords.buildings[b.name] && ok(coords.buildings[b.name]));
   if (building) {
     const at = coords.buildings[building.name];
     const idx = hay.search(building.pattern);
     const near = NEAR_BEFORE.test(hay.slice(Math.max(0, idx - 40), idx));
-    return near
-      ? place(offsetPoint(at, seed, SPREAD_M.nearBuilding), PRECISION.nearBuilding, building.name)
-      : place(offsetPoint(at, seed, SPREAD_M.building), PRECISION.building, building.name);
+    const p = around(at, near ? SPREAD_M.nearBuilding : SPREAD_M.building);
+    if (p) return place(p, near ? PRECISION.nearBuilding : PRECISION.building, building.name);
   }
 
-  // Street and ward coordinates must sit inside the listing's own district: that is
-  // what stops a same-named street elsewhere in the city from pulling the pin over.
   const street = extractStreet(hay);
-  const streetAt = street && coords.streets[`${l.district}|${street.key}`];
-  if (street && streetAt && pointInGeometry(streetAt, boundary)) {
-    return place(offsetPoint(streetAt, seed, SPREAD_M.street), PRECISION.street, street.name);
+  const streetAt = street && coords.streets[`${district}|${street.key}`];
+  if (street && streetAt && ok(streetAt)) {
+    const p = around(streetAt, SPREAD_M.street);
+    if (p) return place(p, PRECISION.street, street.name);
   }
 
-  const wardAt = l.neighborhood && coords.wards[`${l.district}|${normalizeName(l.neighborhood)}`];
-  if (wardAt && pointInGeometry(wardAt, boundary)) {
-    return place(offsetPoint(wardAt, seed, SPREAD_M.ward), PRECISION.ward, l.neighborhood);
+  // Ward, then district: spread around where that area's listings are, else anywhere
+  // allowed in it.
+  const spread = (list: LatLng[], radiusM: number): LatLng | null => {
+    if (!list.length) return null;
+    const rnd = mulberry32(seed);
+    for (let i = 0; i < 6; i++) {
+      const p = around(list[Math.floor(rnd() * list.length)], radiusM, `a${i}`);
+      if (p) return p;
+    }
+    return null;
+  };
+  if (ward) {
+    const p = spread(anchors(coords, district, ward), SPREAD_M.ward) ?? anywhere(ward, ok);
+    if (p) return place(p, PRECISION.ward, l.neighborhood);
   }
-
-  return place(districtPoint(l.slug, seed, boundary, districtAnchors(coords, l.district, boundary)), PRECISION.district, '');
+  // District level: the rule is just "in the district, not on water".
+  const list = anchors(coords, district, null);
+  if (list.length) {
+    const rnd = mulberry32(seed);
+    for (let i = 0; i < 6; i++) {
+      const a = list[Math.floor(rnd() * list.length)];
+      for (let j = 0; j < 12; j++) {
+        const p = offsetPoint(a, hashSeed(`${l.slug}d${i}#${j}`), SPREAD_M.district);
+        if (inDistrict(p)) return place(p, PRECISION.district, '', '');
+      }
+    }
+  }
+  const p = anywhere(null, inDistrict);
+  return p ? place(p, PRECISION.district, '', '') : null;
 }

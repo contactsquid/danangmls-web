@@ -66,7 +66,11 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
     });
   }
 
-  const neighborhoods = district ? (NEIGHBORHOODS[district] ?? []) : [];
+  const known = district ? (NEIGHBORHOODS[district] ?? []) : [];
+  // A listing saved under a name no longer in the list (e.g. "An Bang" before the
+  // list moved to real wards) keeps it as an option, so saving doesn't wipe it.
+  const neighborhoods = listing.neighborhood && known.length && !known.includes(listing.neighborhood)
+    ? [...known, listing.neighborhood] : known;
   const listingsHref = lang === 'vi' ? '/vi/tai-khoan/tin-dang' : '/account/listings';
 
   if (state.url) {

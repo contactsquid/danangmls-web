@@ -8,6 +8,8 @@ import { shortPrice } from '@/lib/geo/shortPrice';
 import { isFreshForMap } from '@/lib/geo/freshness';
 import { declutter, groupPoints, tagWidthPx } from '@/lib/geo/grouping';
 import { PIN_ICONS, pinKind } from '@/lib/geo/pinIcon';
+import { pointAllowed, wardGeometry, wardKey } from '@/lib/geo/areas';
+import { DISTRICT_BOUNDARIES } from '@/lib/districtBoundaries';
 import { convertPrice, localizeDistrict, localizedTitle } from '@/lib/price';
 import { listingHref } from '@/lib/facets';
 import { addBasemap, MAP_MAX_ZOOM } from '@/lib/mapTiles';
@@ -27,7 +29,11 @@ const MAX_NUDGE_PX = 90;
 
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
-export default function ListingsMap({ listings, mode }: { listings: Listing[]; mode: 'rent' | 'sale' }) {
+export default function ListingsMap({ listings, mode, district = '', neighborhood = '' }: {
+  listings: Listing[]; mode: 'rent' | 'sale';
+  /** The grid's district / neighborhood filters: their outline is drawn on the map. */
+  district?: string; neighborhood?: string;
+}) {
   const { lang, t } = useLanguage();
   const elRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,7 +155,13 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
           const p = map.project([mapped[i].geo![0], mapped[i].geo![1]], zoom);
           return { id: i, x: p.x, y: p.y, w: tagWidthPx(priceOf(i)), h: 28, pinned: !!tags.get(i)?.isPopupOpen() };
         }),
-      ], MAX_NUDGE_PX).filter(s => s.id >= 0);
+      ], MAX_NUDGE_PX, t => {
+        // A nudged tag must stay inside its ward/district and off water, like its pin.
+        if (t.id < 0) return true;
+        const l = mapped[t.id];
+        const ll = map.unproject([t.x, t.y], zoom);
+        return pointAllowed([ll.lat, ll.lng], l.district, l.geoArea || null);
+      }).filter(s => s.id >= 0);
 
       // Tags: add what's newly needed, drop what isn't, move the rest into place.
       const want = new Set(showTags);
@@ -195,6 +207,29 @@ export default function ListingsMap({ listings, mode }: { listings: Listing[]; m
       attachedTo?.off('moveend', refresh);
     };
   }, [mapped, lang, t]);
+
+  // Outline of the filtered neighborhood (its ward) or district.
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let outline: any = null;
+    const draw = () => {
+      if (!ref.current || outline) return;
+      const { L, map } = ref.current;
+      const ward = district && neighborhood ? wardKey(district, neighborhood) : null;
+      const geom = ward ? wardGeometry(ward) : district ? DISTRICT_BOUNDARIES[district] : null;
+      if (!geom) return;
+      outline = L.geoJSON(geom, {
+        interactive: false,
+        style: { color: '#2563eb', weight: 3, opacity: 0.9, fillColor: '#3b82f6', fillOpacity: 0.06 },
+      }).addTo(map);
+    };
+    draw();
+    window.addEventListener('dmls-map-ready', draw);
+    return () => {
+      window.removeEventListener('dmls-map-ready', draw);
+      if (outline && ref.current) ref.current.map.removeLayer(outline);
+    };
+  }, [district, neighborhood]);
 
   return (
     <div>

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { placeListing, PRECISION, type GeoCoords } from './placement';
 import { distanceM, pointInGeometry } from './geometry';
 import { DISTRICT_BOUNDARIES } from '../districtBoundaries';
+import { inWater, pointAllowed, wardAt } from './areas';
 
 const coords: GeoCoords = {
   buildings: { 'Hiyori Garden Tower': [16.0694, 108.2345], 'Hyatt Regency': [16.01259, 108.26377] },
@@ -62,14 +63,11 @@ test('district fallback clusters around where listings really are, not mountains
     assert.ok(pointInGeometry([p.geo[0], p.geo[1]], DISTRICT_BOUNDARIES['Son Tra']));
   }
 });
-test('with no known streets, district points skip small outlying parts (islands)', () => {
+test('with no known streets, district points stay off the Cham Islands', () => {
   const empty: GeoCoords = { buildings: {}, wards: {}, streets: {}, misses: [] };
-  const g = DISTRICT_BOUNDARIES['Hoi An'];
-  if (g.type !== 'MultiPolygon') return;
-  const mainland = { type: 'Polygon' as const, coordinates: g.coordinates.reduce((a, b) => (b[0].length > a[0].length ? b : a)) };
   for (let i = 0; i < 100; i++) {
     const p = placeListing({ ...base, district: 'Hoi An', slug: `h-${i}` }, empty)!;
-    assert.ok(pointInGeometry([p.geo[0], p.geo[1]], mainland), `h-${i} off the mainland`);
+    assert.notEqual(wardAt([p.geo[0], p.geo[1]]), 'Hoi An|tan hiep', `h-${i}`);
   }
 });
 
@@ -84,4 +82,37 @@ test('a building outside the listing\'s district is not used', () => {
   const p = placeListing({ ...base, text: 'Studio in Hyatt Regency' }, coords)!;
   assert.notEqual(p.geo[2], PRECISION.building);
   assert.notEqual(p.geo[2], PRECISION.nearBuilding);
+});
+
+// Blake, 2026-09-26: pins stay inside their ward and district, never on water.
+test('a listing with a known ward is always placed inside that ward', () => {
+  const real: GeoCoords = { buildings: {}, wards: {}, misses: [], streets: {
+    // Nguyen Van Thoai runs along My An's edge; this point is in My An.
+    'Ngu Hanh Son|nguyen van thoai': [16.0529, 108.2407],
+  } };
+  for (let i = 0; i < 60; i++) {
+    const p = placeListing({ slug: `m-${i}`, district: 'Ngu Hanh Son', neighborhood: 'My An', title: '', text: i % 2 ? 'House on Nguyen Van Thoai Street' : '' }, real)!;
+    assert.equal(wardAt([p.geo[0], p.geo[1]]), 'Ngu Hanh Son|my an', `m-${i}`);
+    assert.equal(p.geoArea, 'Ngu Hanh Son|my an');
+  }
+});
+test('a street point outside the listing\'s ward is not used; the pin goes in the ward', () => {
+  const real: GeoCoords = { buildings: {}, wards: {}, misses: [], streets: { 'Ngu Hanh Son|nguyen van thoai': [16.0529, 108.2407] } };
+  const p = placeListing({ slug: 'k-1', district: 'Ngu Hanh Son', neighborhood: 'Khue My', title: '', text: 'House on Nguyen Van Thoai Street' }, real)!;
+  assert.equal(p.geo[2], PRECISION.ward);
+  assert.equal(wardAt([p.geo[0], p.geo[1]]), 'Ngu Hanh Son|khue my');
+});
+test('no pin is ever on water or outside its district', () => {
+  const riverside: GeoCoords = { buildings: {}, wards: {}, misses: [], streets: {
+    'Son Tra|tran hung dao': [16.0650, 108.2300],   // runs along the Han River
+    'Hai Chau|bach dang': [16.0700, 108.2245],      // the Hai Chau riverbank
+  } };
+  for (let i = 0; i < 150; i++) {
+    for (const [district, text] of [['Son Tra', 'On Tran Hung Dao Street'], ['Hai Chau', 'On Bach Dang Street'], ['Ngu Hanh Son', '']]) {
+      const p = placeListing({ slug: `w-${district}-${i}`, district, neighborhood: '', title: '', text }, riverside)!;
+      const at: [number, number] = [p.geo[0], p.geo[1]];
+      assert.equal(inWater(at), false, `${district} #${i} on water`);
+      assert.ok(pointAllowed(at, district), `${district} #${i} outside district`);
+    }
+  }
 });
