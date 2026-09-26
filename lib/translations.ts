@@ -36,6 +36,13 @@ export interface Translations {
   anyPrice: string;
   clearAll: string;
   listingCount: (n: number) => string;
+  mapList: string;
+  mapMap: string;
+  mapApprox: (district: string) => string;
+  mapOnStreet: (street: string) => string;
+  mapInWard: (ward: string) => string;
+  mapAtBuilding: (building: string) => string;
+  mapUnmapped: (n: number) => string;
   noListings: string;
   clearFilters: string;
   br: string;
@@ -143,6 +150,12 @@ export const translations: Record<Lang, Translations> = {
     anyPrice: 'Any Price',
     clearAll: 'Clear all',
     listingCount: (n) => `${n} ${n === 1 ? 'listing' : 'listings'}`,
+    mapList: 'List', mapMap: 'Map',
+    mapApprox: (d) => `Approximate location: ${d}`,
+    mapOnStreet: (s) => `On ${s} Street`,
+    mapInWard: (w) => `In ${w}`,
+    mapAtBuilding: (b) => `At ${b}`,
+    mapUnmapped: (n) => `${n} ${n === 1 ? 'listing has' : 'listings have'} no district and ${n === 1 ? "isn't" : "aren't"} shown on the map`,
     noListings: 'No listings match your search',
     clearFilters: 'Clear filters',
     br: 'BR',
@@ -249,6 +262,12 @@ export const translations: Record<Lang, Translations> = {
     anyPrice: 'Tất Cả Giá',
     clearAll: 'Xóa tất cả',
     listingCount: (n) => `${n} danh sách`,
+    mapList: 'Danh sách', mapMap: 'Bản đồ',
+    mapApprox: (d) => `Vị trí tương đối: khu vực ${d}`,
+    mapOnStreet: (s) => `Đường ${s}`,
+    mapInWard: (w) => `Phường ${w}`,
+    mapAtBuilding: (b) => `Tòa ${b}`,
+    mapUnmapped: (n) => `${n} tin chưa có quận nên không hiển thị trên bản đồ`,
     noListings: 'Không tìm thấy bất động sản phù hợp',
     clearFilters: 'Xóa bộ lọc',
     br: 'PN',
@@ -321,6 +340,12 @@ export const translations: Record<Lang, Translations> = {
     anyPrice: '가격 무관',
     clearAll: '모두 지우기',
     listingCount: (n) => `매물 ${n}건`,
+    mapList: '목록', mapMap: '지도',
+    mapApprox: (d) => `대략적인 위치: ${d}`,
+    mapOnStreet: (s) => `${s} 거리`,
+    mapInWard: (w) => `${w} 지역`,
+    mapAtBuilding: (b) => b,
+    mapUnmapped: (n) => `구 정보가 없는 매물 ${n}개는 지도에 표시되지 않습니다`,
     noListings: '검색 결과와 일치하는 매물이 없습니다.',
     clearFilters: '필터 초기화',
     br: '침실',
@@ -393,6 +418,12 @@ export const translations: Record<Lang, Translations> = {
     anyPrice: 'Любая цена',
     clearAll: 'Очистить все',
     listingCount: (n) => `${n} ${ruPlural(n, 'объявление', 'объявления', 'объявлений')}`,
+    mapList: 'Список', mapMap: 'Карта',
+    mapApprox: (d) => `Примерное расположение: ${d}`,
+    mapOnStreet: (s) => `Улица ${s}`,
+    mapInWard: (w) => `Квартал ${w}`,
+    mapAtBuilding: (b) => `Комплекс ${b}`,
+    mapUnmapped: (n) => `${n} ${ruPlural(n, 'объявление', 'объявления', 'объявлений')} без района не ${n === 1 ? 'показано' : 'показаны'} на карте`,
     noListings: 'Объявления по вашему запросу не найдены',
     clearFilters: 'Сбросить фильтры',
     br: 'СП',
