@@ -243,21 +243,12 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
 // Only en/vi today — Korean and Russian read through forLang() and fall back to
 // English until this copy is translated.
 export const TYPE_LABELS: Record<'en' | 'vi', Record<string, string>> = {
-  en: {
-    House: 'House', Apartment: 'Apartment', Villa: 'Villa', Land: 'Land',
-    Office: 'Office', Retail: 'Retail', Townhouse: 'Townhouse',
-    Studio: 'Studio', Shophouse: 'Shophouse',
-  },
-  vi: {
-    House: 'Nhà phố', Apartment: 'Căn hộ', Villa: 'Biệt thự', Land: 'Đất nền',
-    Office: 'Văn phòng', Retail: 'Mặt bằng kinh doanh', Townhouse: 'Nhà liền kề',
-    Studio: 'Studio', Shophouse: 'Shophouse',
-  },
+  en: { Apartment: 'Apartment', Commercial: 'Commercial', House: 'House', Land: 'Land', Villa: 'Villa' },
+  vi: { Apartment: 'Căn hộ', Commercial: 'Thương mại', House: 'Nhà phố', Land: 'Đất nền', Villa: 'Biệt thự' },
 };
 
-export const SUBMITTABLE_TYPES = [
-  'House', 'Apartment', 'Villa', 'Land', 'Office', 'Retail', 'Townhouse', 'Studio', 'Shophouse',
-] as const;
+/** The same lists the search uses (lib/propertyTypes.ts): Land is for sale only. */
+export { propertyTypesFor } from './propertyTypes';
 
 /** Districts, English value + Vietnamese label. "Da Nang" is deliberately absent:
  *  it is the catch-all the scrapers fall back to, not something an agent posting

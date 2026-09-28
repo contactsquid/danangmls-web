@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { updateListingAction, type ListingActionState } from '@/app/account/listings/actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import {
-  LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_TYPES, SUBMITTABLE_DISTRICTS,
+  LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_DISTRICTS,
 } from '@/lib/listingFormCopy';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
-import { BEDROOM_OPTIONS, needsRooms } from '@/lib/listingRooms';
+import { propertyTypesFor, bedroomOptions } from '@/lib/propertyTypes';
 import { localizeDistrict } from '@/lib/price';
 import { accountPaths } from '@/lib/accountCopy';
 import type { Lang } from '@/lib/translations';
@@ -69,10 +69,13 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
     });
   }
 
-  // A saved bedroom count outside the dropdown (e.g. "12" from before it existed)
-  // stays selectable, so saving doesn't wipe it.
-  const bedroomChoices: string[] = listing.bedrooms && !(BEDROOM_OPTIONS as readonly string[]).includes(listing.bedrooms)
-    ? [...BEDROOM_OPTIONS, listing.bedrooms] : [...BEDROOM_OPTIONS];
+  const types = propertyTypesFor(listing.forSale);
+  // Rooms follow the type (lib/propertyTypes.ts). A saved count the dropdown doesn't
+  // offer (e.g. "12" from before it existed) stays selectable while the type is
+  // unchanged, so saving doesn't wipe it.
+  const offered = bedroomOptions(propertyType);
+  const bedroomChoices: string[] = propertyType === listing.type && listing.bedrooms && offered.length && !offered.includes(listing.bedrooms)
+    ? [...offered, listing.bedrooms] : offered;
 
   const known = district ? (NEIGHBORHOODS[district] ?? []) : [];
   // A listing saved under a name no longer in the list (e.g. "An Bang" before the
@@ -106,7 +109,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
         <div>
           <label className={labelClass} htmlFor="property_type">{t.propertyType}</label>
           <select id="property_type" name="property_type" required value={propertyType} onChange={e => setPropertyType(e.target.value)} className={inputClass}>
-            {SUBMITTABLE_TYPES.map(v => (
+            {types.map(v => (
               <option key={v} value={v}>{forLang(TYPE_LABELS, lang)[v] ?? v}</option>
             ))}
           </select>
@@ -141,12 +144,12 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
       )}
 
       <div className="grid grid-cols-2 gap-4">
-        {needsRooms(propertyType) && (
+        {bedroomChoices.length > 0 && (
           <div>
             <label className={labelClass} htmlFor="bedrooms">{t.bedrooms}</label>
             <select id="bedrooms" name="bedrooms" required defaultValue={listing.bedrooms} className={inputClass}>
               <option value="" disabled>{t.choose}</option>
-              {bedroomChoices.map(v => <option key={v} value={v}>{v === '0' ? t.studio : v}</option>)}
+              {bedroomChoices.map(v => <option key={v} value={v}>{v === '0' && propertyType === 'Apartment' ? t.studio : v}</option>)}
             </select>
           </div>
         )}

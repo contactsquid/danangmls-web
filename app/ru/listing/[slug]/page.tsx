@@ -1,4 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
+import { schemaRooms } from '@/lib/propertyTypes';
 import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
@@ -125,7 +126,7 @@ export default async function RUListingPage({ params }: Props) {
     url: `https://danangmls.com/ru/listing/${listing.slug}`,
     ...(listing.price && { price: listing.price }),
     ...(listing.images[0] && { image: listing.images[0] }),
-    ...(listing.bedrooms && { numberOfRooms: listing.bedrooms }),
+    ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {
       '@type': 'PostalAddress',
       addressLocality: listing.district || 'Da Nang',

@@ -1,4 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
+import { schemaRooms, bedroomsViPhrase } from '@/lib/propertyTypes';
 import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
@@ -19,7 +20,7 @@ import { socialImages } from '@/lib/ogImage';
 function viFallbackTitle(listing: Listing): string {
   const verb   = listing.forSale ? 'Bán' : 'Cho thuê';
   const type   = listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản';
-  const beds   = listing.bedrooms ? ` ${listing.bedrooms} phòng ngủ` : '';
+  const beds   = bedroomsViPhrase(listing.type, listing.bedrooms);
   const place  = listing.district
     ? `${localizeDistrict(listing.district, 'vi')}, Đà Nẵng`
     : 'Đà Nẵng';
@@ -130,7 +131,7 @@ export default async function ViListingPage({ params }: Props) {
     url: `https://danangmls.com/vi/listing/${listing.slug}`,
     ...(listing.price && { price: listing.price }),
     ...(listing.images[0] && { image: listing.images[0] }),
-    ...(listing.bedrooms && { numberOfRooms: listing.bedrooms }),
+    ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {
       '@type': 'PostalAddress',
       addressLocality: listing.district || 'Đà Nẵng',

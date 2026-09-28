@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { bedroomsLabel, bedroomsViPhrase } from '@/lib/propertyTypes';
 import Link from 'next/link';
 import Carousel from './Carousel';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
@@ -34,7 +35,7 @@ function MetaChip({ href, title, children }: { href: string | null; title?: stri
 function viFallbackTitle(listing: Listing): string {
   const verb  = listing.forSale ? 'Bán' : 'Cho thuê';
   const type  = listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản';
-  const beds  = listing.bedrooms ? ` ${listing.bedrooms} phòng ngủ` : '';
+  const beds  = bedroomsViPhrase(listing.type, listing.bedrooms);
   const place = listing.district
     ? `${localizeDistrict(listing.district, 'vi')}, Đà Nẵng`
     : 'Đà Nẵng';
@@ -49,6 +50,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
   const displayTitle = lang === 'vi'
     ? (listing.vi_title || viFallbackTitle(listing))
     : localizedTitle(listing, lang);
+  const bedsLabel = bedroomsLabel(listing.type, listing.bedrooms, t);
   const displayPrice = listing.price ? convertPrice(listing.price, lang) : listing.price;
   const altPrefix = localizedAltPrefix(
     { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
@@ -87,10 +89,12 @@ export default function ListingCard({ listing, priority = false }: Props) {
 
         {/* Meta — each chip links to its facet page when one exists */}
         <div className="flex flex-wrap gap-2 mt-auto">
-          {listing.bedrooms && (
+          {/* "Studio" for a 0-bedroom apartment, nothing for land or an unknown count
+              (lib/propertyTypes.ts). */}
+          {bedsLabel && (
             <MetaChip href={listingFieldHref('bedrooms', String(listing.bedrooms), mode, lang)}
               title={lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ` : `Browse ${listing.bedrooms}-bedroom ${mode === 'rent' ? 'rentals' : 'homes'}`}>
-              🛏 {listing.bedrooms} {t.br}
+              🛏 {bedsLabel}
             </MetaChip>
           )}
           {listing.type && (

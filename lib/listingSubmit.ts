@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { randomUUID } from 'node:crypto';
-import { VALID_DISTRICTS, VALID_TYPES } from './sheets';
+import { VALID_DISTRICTS } from './sheets';
 
 /**
  * Turns an agent's form submission into a row for the listings Google Sheet.
@@ -117,15 +117,13 @@ function submissionPostUrl(): string {
   return `${SITE}/submitted/${randomUUID()}`;
 }
 
-export { BEDROOM_OPTIONS, BATHROOM_OPTIONS, needsRooms } from './listingRooms';
-import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, needsRooms } from './listingRooms';
+import { bedroomOptions, bathroomOptions, propertyTypesFor } from './propertyTypes';
 
 /** Auto-title for agents who leave it blank, in the house style of scraped
  *  titles ("3-Bedroom House for Rent in Hai Chau, Da Nang"). */
 export function autoTitle(s: Pick<ListingSubmission, 'bedrooms' | 'propertyType' | 'district' | 'forSale'>): string {
   const beds = s.bedrooms.trim();
-  const bedPart = s.propertyType === 'Studio' ? ''
-    : beds === '0' ? 'Studio '
+  const bedPart = beds === '0' ? (s.propertyType === 'Apartment' ? 'Studio ' : '')
     : beds.endsWith('+') ? `${beds} Bedroom `
     : Number(beds) > 0 ? `${Number(beds)}-Bedroom ` : '';
   const action = s.forSale ? 'for Sale' : 'for Rent';
@@ -147,12 +145,13 @@ export interface ValidationResult {
 /** `requireBathrooms`: the add form collects bathrooms; the edit form has no
  *  bathrooms field (they live in the description text, not a column). */
 export function validateSubmission(s: ListingSubmission, opts: { requireBathrooms?: boolean } = {}): ValidationResult {
-  if (!VALID_TYPES.has(s.propertyType)) return { ok: false, code: 'type' };
+  if (!propertyTypesFor(s.forSale).includes(s.propertyType)) return { ok: false, code: 'type' };
   if (!VALID_DISTRICTS.has(s.district)) return { ok: false, code: 'district' };
-  if (needsRooms(s.propertyType)) {
-    if (!(BEDROOM_OPTIONS as readonly string[]).includes(s.bedrooms)) return { ok: false, code: 'bedrooms' };
-    if (opts.requireBathrooms && !(BATHROOM_OPTIONS as readonly string[]).includes(s.bathrooms)) return { ok: false, code: 'bathrooms' };
-  }
+  // Rooms by type (lib/propertyTypes.ts): Studio only for apartments, 0 allowed for
+  // commercial, none for land.
+  const beds = bedroomOptions(s.propertyType), baths = bathroomOptions(s.propertyType);
+  if (beds.length && !beds.includes(s.bedrooms)) return { ok: false, code: 'bedrooms' };
+  if (opts.requireBathrooms && baths.length && !baths.includes(s.bathrooms)) return { ok: false, code: 'bathrooms' };
   if (!Number.isFinite(s.priceAmount) || s.priceAmount <= 0) return { ok: false, code: 'price' };
   // A VND price typed as USD (or vice versa) is the most likely data-entry
   // error, and it poisons price filters for everyone. These bounds are wide

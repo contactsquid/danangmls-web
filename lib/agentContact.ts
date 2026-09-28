@@ -97,7 +97,8 @@ function listingUrl(slug: string): string {
  */
 export function enquiryVi(listing: EnquiryListing): string {
   const url = listingUrl(listing.slug);
-  const beds = String(listing.bedrooms || '').trim();
+  const raw = String(listing.bedrooms || '').trim();
+  const beds = raw === '0' ? '' : raw;   // a studio/commercial 0 isn't "căn 0 phòng ngủ"
   const where = VI_DISTRICT[String(listing.district || '').trim()] || '';
 
   // "căn 3 phòng ngủ ở Ngũ Hành Sơn" — modifier follows the noun, which is the

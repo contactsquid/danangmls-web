@@ -1,5 +1,28 @@
 import type { NextConfig } from "next";
 
+// Property types were cut to Apartment / Commercial / House / Villa (+ Land for
+// sale) on 2026-09-28 (lib/propertyTypes.ts). The retired type pages move
+// permanently so their rankings follow: townhouses and shophouses are houses,
+// hotels/offices/retail are commercial, studios are apartments, land for rent is
+// commercial. ko/ru reuse the English slugs.
+const RETIRED_EN: Record<string, string> = {
+  townhouse: 'house', shophouse: 'house', hotel: 'commercial', office: 'commercial', retail: 'commercial', studio: 'apartment',
+};
+const RETIRED_VI: Record<string, string> = {
+  'nha-pho': 'nha', shophouse: 'nha', 'van-phong': 'thuong-mai', 'mat-bang': 'thuong-mai', studio: 'can-ho',
+};
+const RETIRED_TYPE_REDIRECTS = [
+  ...['/for-rent', '/for-sale', '/ko/for-rent', '/ko/for-sale', '/ru/for-rent', '/ru/for-sale'].flatMap(base =>
+    Object.entries(RETIRED_EN).map(([from, to]) => ({ source: `${base}/${from}`, destination: `${base}/${to}`, permanent: true }))),
+  ...['/vi/thue', '/vi/mua-ban'].flatMap(base =>
+    Object.entries(RETIRED_VI).map(([from, to]) => ({ source: `${base}/${from}`, destination: `${base}/${to}`, permanent: true }))),
+  // Land for rent is commercial.
+  { source: '/for-rent/land', destination: '/for-rent/commercial', permanent: true },
+  { source: '/ko/for-rent/land', destination: '/ko/for-rent/commercial', permanent: true },
+  { source: '/ru/for-rent/land', destination: '/ru/for-rent/commercial', permanent: true },
+  { source: '/vi/thue/dat', destination: '/vi/thue/thuong-mai', permanent: true },
+];
+
 const nextConfig: NextConfig = {
   experimental: {
     // Next defaults the client-side Router Cache for DYNAMIC segments to 0, so
@@ -37,6 +60,7 @@ const nextConfig: NextConfig = {
       { source: '/apartments-for-rent', destination: '/for-rent/apartment', permanent: true },
       { source: '/vi/thue-nha', destination: '/vi/thue/nha', permanent: true },
       { source: '/vi/thue-can-ho', destination: '/vi/thue/can-ho', permanent: true },
+      ...RETIRED_TYPE_REDIRECTS,
     ];
   },
   async headers() {

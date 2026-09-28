@@ -7,6 +7,7 @@ import { normalizeVnPhone } from './agentContact';
 import { placeListing } from './geo/placement';
 import { stripPromptEcho } from './promptEcho';
 import { stripAgentPhones } from './agentPhones';
+import { canonicalType, RENT_TYPES, SALE_TYPES } from './propertyTypes';
 import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
@@ -159,10 +160,9 @@ export const VALID_DISTRICTS = new Set([
   'Lien Chieu', 'Cam Le', 'Hoi An', 'Hoa Vang', 'Da Nang',
 ]);
 
-export const VALID_TYPES = new Set([
-  'House', 'Apartment', 'Villa', 'Land', 'Office',
-  'Retail', 'Townhouse', 'Studio', 'Shophouse',
-]);
+// The site's property types (lib/propertyTypes.ts). Scraped types are mapped onto
+// these when the sheet is read, so search, facets and the forms all agree.
+export const VALID_TYPES = new Set<string>([...RENT_TYPES, ...SALE_TYPES]);
 
 // ─── District normalisation ───────────────────────────────────────────────────
 const DISTRICT_LIST = ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son', 'Lien Chieu', 'Cam Le', 'Hoi An', 'Hoa Vang'] as const;
@@ -303,7 +303,7 @@ function parseRows(rows: string[][]): Listing[] {
         price:        col(r, R.PRICE) || extractPriceFromText(text, false),
         district,
         bedrooms:     col(r, R.BEDROOMS),
-        type:         col(r, R.TYPE),
+        type:         canonicalType(col(r, R.TYPE), false),
         agent:        col(r, R.AGENT),
         images:       [col(r, R.IMG1), col(r, R.IMG2), col(r, R.IMG3), col(r, R.IMG4), col(r, R.IMG5), col(r, R.IMG6), col(r, R.IMG7), col(r, R.IMG8), col(r, R.IMG9), col(r, R.IMG10)].filter(isServableImage),
         contact:      col(r, R.CONTACT),
@@ -393,7 +393,7 @@ async function parseForSale(): Promise<Listing[]> {
         price:        col(r, FS.PRICE) || extractPriceFromText(text, true),
         district,
         bedrooms:     col(r, FS.BEDROOMS),
-        type,
+        type:         canonicalType(type, true),
         agent:        col(r, FS.AGENT),
         images:       [
           col(r, FS.IMG1),  col(r, FS.IMG2),  col(r, FS.IMG3),

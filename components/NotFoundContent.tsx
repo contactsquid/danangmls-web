@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { RENT_TYPES, SALE_TYPES } from '@/lib/propertyTypes';
 import ListingsGrid from '@/components/ListingsGrid';
 import type { Listing } from '@/lib/types';
 import { getUniqueValues } from '@/lib/sheets';
@@ -44,7 +45,7 @@ export default function NotFoundContent({ rentals, forSale }: Props) {
   const t        = isVi ? COPY.vi : COPY.en;
 
   const listings  = mode === 'sale' ? forSale : rentals;
-  const types     = getUniqueValues(listings, 'type');
+  const types     = [...(mode === 'sale' ? SALE_TYPES : RENT_TYPES)];
   const districts = getUniqueValues(listings, 'district');
 
   return (

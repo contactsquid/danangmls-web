@@ -1,4 +1,5 @@
 import type { Lang } from '@/lib/translations';
+import { RENT_TYPES, SALE_TYPES } from '@/lib/propertyTypes';
 import { getListings, getForSaleListings, getUniqueValues } from '@/lib/sheets';
 import { toGridListings } from '@/lib/gridListing';
 import ListingsGrid from '@/components/ListingsGrid';
@@ -68,7 +69,7 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
   const c = facetContent(facet, mode, lang, filtered.length);
   const init = facetInitialFilters(facet);
   const body = facetSeoBody(facet, mode, lang);
-  const types = getUniqueValues(all, 'type');
+  const types = [...(mode === 'sale' ? SALE_TYPES : RENT_TYPES)];   // same as the add-listing form
   const districts = getUniqueValues(all, 'district');
   const itemListLd = listingsItemListLd(filtered, { forSale: mode === 'sale', vi: lang === 'vi' });
 

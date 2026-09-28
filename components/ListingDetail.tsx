@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { bedroomsLabel, bedroomsViPhrase } from '@/lib/propertyTypes';
 import AdminFbLinkPanel from './AdminFbLinkPanel';
 import Carousel from './Carousel';
 import ListingCard from './ListingCard';
@@ -39,7 +40,7 @@ interface Props {
 function viFallbackTitle(listing: Listing): string {
   const verb  = listing.forSale ? 'Bán' : 'Cho thuê';
   const type  = listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản';
-  const beds  = listing.bedrooms ? ` ${listing.bedrooms} phòng ngủ` : '';
+  const beds  = bedroomsViPhrase(listing.type, listing.bedrooms);
   const place = listing.district
     ? `${localizeDistrict(listing.district, 'vi')}, Đà Nẵng`
     : 'Đà Nẵng';
@@ -103,6 +104,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
   // one exists; listingFieldHref returns null otherwise (e.g. unknown district).
   const detailMode = listing.forSale ? 'sale' : 'rent';
   const typeHref = listing.type     ? listingFieldHref('type', listing.type, detailMode, lang) : null;
+  const bedsLabel = bedroomsLabel(listing.type, listing.bedrooms, t);
   const bedsHref = listing.bedrooms ? listingFieldHref('bedrooms', String(listing.bedrooms), detailMode, lang) : null;
   const distHref = listing.district ? listingFieldHref('district', listing.district, detailMode, lang) : null;
   const browseVerb = listing.forSale
@@ -183,18 +185,18 @@ export default function ListingDetail({ listing, archived = false, similarListin
                   </span>
                 )
               )}
-              {listing.bedrooms && (
+              {bedsLabel && (
                 bedsHref ? (
                   <Link
                     href={bedsHref}
                     title={lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ ${browseVerb}` : `Browse ${listing.bedrooms}-bedroom ${browseVerb}`}
                     className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full hover:bg-slate-200 hover:underline transition-colors"
                   >
-                    🛏 {listing.bedrooms} {t.br}
+                    🛏 {bedsLabel}
                   </Link>
                 ) : (
                   <span className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full">
-                    🛏 {listing.bedrooms} {t.br}
+                    🛏 {bedsLabel}
                   </span>
                 )
               )}

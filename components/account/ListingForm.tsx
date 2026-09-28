@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { submitListingAction, type ListingActionState } from '@/app/account/listings/actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import {
-  LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_TYPES, SUBMITTABLE_DISTRICTS,
+  LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_DISTRICTS,
 } from '@/lib/listingFormCopy';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
-import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, needsRooms } from '@/lib/listingRooms';
+import { propertyTypesFor, bedroomOptions, bathroomOptions } from '@/lib/propertyTypes';
 import { localizeDistrict } from '@/lib/price';
 import type { Lang } from '@/lib/translations';
 
@@ -33,6 +33,7 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
   const [district, setDistrict] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [bedrooms, setBedrooms] = useState('');
+  const [bathrooms, setBathrooms] = useState('');
   // The order of this array IS the order photos are submitted in (and so the
   // order they land in the sheet's Image URL columns) — same "order is
   // meaning, first is the hero" model as EditListingForm.tsx. The <input>
@@ -73,6 +74,14 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
   // Neighbourhood options follow the district, exactly like the listing search
   // filters do (components/ListingsGrid.tsx) — same source of truth.
   const neighborhoods = district ? (NEIGHBORHOODS[district] ?? []) : [];
+
+  // Types follow rent/sale (Land is sale-only); rooms follow the type
+  // (lib/propertyTypes.ts). A type that isn't offered after switching rent/sale
+  // counts as unchosen.
+  const types = propertyTypesFor(forSale);
+  const typeValue = types.includes(propertyType) ? propertyType : '';
+  const bedChoices = bedroomOptions(typeValue);
+  const bathChoices = bathroomOptions(typeValue);
 
   const profileHref = lang === 'vi' ? `/vi/moi-gioi/${profileSlug}` : `/agent/${profileSlug}`;
 
@@ -142,16 +151,18 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
         <div>
           <label className={labelClass} htmlFor="property_type">{t.propertyType}</label>
           <select
-            id="property_type" name="property_type" required value={propertyType}
+            id="property_type" name="property_type" required value={typeValue}
             onChange={e => {
-              setPropertyType(e.target.value);
-              // A studio listing is a studio: preselect it rather than make them pick twice.
-              if (e.target.value === 'Studio' && !bedrooms) setBedrooms('0');
+              const next = e.target.value;
+              setPropertyType(next);
+              // Clear a room choice the new type doesn't offer (e.g. Studio → House).
+              if (!bedroomOptions(next).includes(bedrooms)) setBedrooms('');
+              if (!bathroomOptions(next).includes(bathrooms)) setBathrooms('');
             }}
             className={inputClass}
           >
             <option value="" disabled>{t.choose}</option>
-            {SUBMITTABLE_TYPES.map(v => (
+            {types.map(v => (
               <option key={v} value={v}>{forLang(TYPE_LABELS, lang)[v] ?? v}</option>
             ))}
           </select>
@@ -190,22 +201,22 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {/* Required dropdowns for homes; hidden for land and commercial space, which
-            have no bedrooms (lib/listingRooms.ts). "Studio" is saved as 0. */}
-        {(propertyType === '' || needsRooms(propertyType)) && (
+        {/* Required once a type is chosen; hidden for Land. "Studio" (saved as 0) is
+            offered for apartments only; commercial space can have 0 bedrooms. */}
+        {bedChoices.length > 0 && (
           <>
             <div>
               <label className={labelClass} htmlFor="bedrooms">{t.bedrooms}</label>
               <select id="bedrooms" name="bedrooms" required value={bedrooms} onChange={e => setBedrooms(e.target.value)} className={inputClass}>
                 <option value="" disabled>{t.choose}</option>
-                {BEDROOM_OPTIONS.map(v => <option key={v} value={v}>{v === '0' ? t.studio : v}</option>)}
+                {bedChoices.map(v => <option key={v} value={v}>{v === '0' && typeValue === 'Apartment' ? t.studio : v}</option>)}
               </select>
             </div>
             <div>
               <label className={labelClass} htmlFor="bathrooms">{t.bathrooms}</label>
-              <select id="bathrooms" name="bathrooms" required defaultValue="" className={inputClass}>
+              <select id="bathrooms" name="bathrooms" required value={bathrooms} onChange={e => setBathrooms(e.target.value)} className={inputClass}>
                 <option value="" disabled>{t.choose}</option>
-                {BATHROOM_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
+                {bathChoices.map(v => <option key={v} value={v}>{v}</option>)}
               </select>
             </div>
           </>

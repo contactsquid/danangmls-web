@@ -1,4 +1,5 @@
 import { getForSaleListings, getUniqueValues } from '@/lib/sheets';
+import { SALE_TYPES } from '@/lib/propertyTypes';
 import { toGridListings } from '@/lib/gridListing';
 
 const INITIAL_GRID_LISTINGS = 48; // matches ListingsGrid PAGE_SIZE — the rest arrives from /api/grid-listings
@@ -47,7 +48,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
 export default async function ForSalePage() {
   const listings = await getForSaleListings();
-  const types     = getUniqueValues(listings, 'type');
+  const types     = [...SALE_TYPES];   // fixed list, same as the add-listing form
   const districts = getUniqueValues(listings, 'district');
   const itemListLd = listingsItemListLd(listings, { forSale: true, vi: false });
 

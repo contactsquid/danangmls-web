@@ -17,10 +17,10 @@ export interface Facet { kind: FacetKind; value: string }
 export const FOREIGN_FACET: Facet = { kind: 'foreign', value: 'foreign' };
 
 // Canonical property types + their EN/VI slugs
+// The five types of lib/propertyTypes.ts. Retired type pages (townhouse,
+// shophouse, office, retail, studio…) 308 to their new type — next.config.ts.
 const TYPE_VI_SLUG: Record<string, string> = {
-  House: 'nha', Apartment: 'can-ho', Villa: 'biet-thu', Townhouse: 'nha-pho',
-  Studio: 'studio', Land: 'dat', Office: 'van-phong', Retail: 'mat-bang',
-  Shophouse: 'shophouse', Commercial: 'thuong-mai',
+  House: 'nha', Apartment: 'can-ho', Villa: 'biet-thu', Land: 'dat', Commercial: 'thuong-mai',
 };
 const TYPE_VALUES = Object.keys(TYPE_VI_SLUG);
 const EN_SLUG_TO_TYPE: Record<string, string> = Object.fromEntries(TYPE_VALUES.map(t => [t.toLowerCase(), t]));

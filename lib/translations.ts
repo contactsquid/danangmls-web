@@ -48,6 +48,7 @@ export interface Translations {
   noListings: string;
   clearFilters: string;
   br: string;
+  studio: string;
   under500: string;
   r500: string;
   r1000: string;
@@ -163,6 +164,7 @@ export const translations: Record<Lang, Translations> = {
     noListings: 'No listings match your search',
     clearFilters: 'Clear filters',
     br: 'BR',
+    studio: 'Studio',
     under500: 'Under $500',
     r500: '$500 – $1,000',
     r1000: '$1,000 – $2,000',
@@ -277,6 +279,7 @@ export const translations: Record<Lang, Translations> = {
     noListings: 'Không tìm thấy bất động sản phù hợp',
     clearFilters: 'Xóa bộ lọc',
     br: 'PN',
+    studio: 'Studio',
     under500: 'Dưới 13 triệu ₫',
     r500: '13 – 26 triệu ₫',
     r1000: '26 – 53 triệu ₫',
@@ -357,6 +360,7 @@ export const translations: Record<Lang, Translations> = {
     noListings: '검색 결과와 일치하는 매물이 없습니다.',
     clearFilters: '필터 초기화',
     br: '침실',
+    studio: '원룸',
     under500: '$500 미만',
     r500: '$500 – $1,000',
     r1000: '$1,000 – $2,000',
@@ -437,6 +441,7 @@ export const translations: Record<Lang, Translations> = {
     noListings: 'Объявления по вашему запросу не найдены',
     clearFilters: 'Сбросить фильтры',
     br: 'СП',
+    studio: 'Студия',
     under500: 'До $500',
     r500: '$500 – $1,000',
     r1000: '$1,000 – $2,000',
