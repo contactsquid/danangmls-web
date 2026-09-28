@@ -23,6 +23,7 @@ export interface ListingFormCopy {
   neighborhoodAny: string;
   bedrooms: string;
   bathrooms: string;
+  studio: string;
   area: string;
   areaHint: string;
   price: string;
@@ -90,6 +91,7 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
     neighborhoodAny: 'Not specified',
     bedrooms: 'Bedrooms',
     bathrooms: 'Bathrooms',
+    studio: 'Studio',
     area: 'Area',
     areaHint: 'Square metres',
     price: 'Price',
@@ -151,6 +153,8 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
       description: 'Please write a longer description (at least 30 characters).',
       photos: 'Please add at least one photo.',
       agentName: 'Your profile needs a name before you can post.',
+      bedrooms: 'Please choose the number of bedrooms.',
+      bathrooms: 'Please choose the number of bathrooms.',
     },
   },
   vi: {
@@ -166,6 +170,7 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
     neighborhoodAny: 'Không xác định',
     bedrooms: 'Phòng ngủ',
     bathrooms: 'Phòng tắm',
+    studio: 'Studio',
     area: 'Diện tích',
     areaHint: 'Mét vuông',
     price: 'Giá',
@@ -227,6 +232,8 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
       description: 'Vui lòng viết mô tả dài hơn (ít nhất 30 ký tự).',
       photos: 'Vui lòng thêm ít nhất một hình ảnh.',
       agentName: 'Hồ sơ của bạn cần có tên trước khi đăng tin.',
+      bedrooms: 'Vui lòng chọn số phòng ngủ.',
+      bathrooms: 'Vui lòng chọn số phòng tắm.',
     },
   },
 };

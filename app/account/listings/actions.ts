@@ -101,7 +101,7 @@ export async function submitListingAction(
     agentName: profile.display_name,
   };
 
-  const check = validateSubmission(submission);
+  const check = validateSubmission(submission, { requireBathrooms: true });
   if (!check.ok && check.code) return { error: t.errors[check.code] };
 
   // ─── Append ─────────────────────────────────────────────────────────────────

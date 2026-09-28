@@ -10,6 +10,7 @@ import {
   LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_TYPES, SUBMITTABLE_DISTRICTS,
 } from '@/lib/listingFormCopy';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
+import { BEDROOM_OPTIONS, needsRooms } from '@/lib/listingRooms';
 import { localizeDistrict } from '@/lib/price';
 import { accountPaths } from '@/lib/accountCopy';
 import type { Lang } from '@/lib/translations';
@@ -45,6 +46,8 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
   const [state, formAction, pending] = useActionState(updateListingAction, initial);
 
   const [district, setDistrict] = useState(listing.district);
+
+  const [propertyType, setPropertyType] = useState(listing.type);
   // The order of this array IS the order the photos will be stored in, so the
   // first entry is the hero. "Set as main" moves an entry to the front rather
   // than storing a separate hero flag — one source of truth, and it matches how
@@ -65,6 +68,11 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
       return next;
     });
   }
+
+  // A saved bedroom count outside the dropdown (e.g. "12" from before it existed)
+  // stays selectable, so saving doesn't wipe it.
+  const bedroomChoices: string[] = listing.bedrooms && !(BEDROOM_OPTIONS as readonly string[]).includes(listing.bedrooms)
+    ? [...BEDROOM_OPTIONS, listing.bedrooms] : [...BEDROOM_OPTIONS];
 
   const known = district ? (NEIGHBORHOODS[district] ?? []) : [];
   // A listing saved under a name no longer in the list (e.g. "An Bang" before the
@@ -97,7 +105,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelClass} htmlFor="property_type">{t.propertyType}</label>
-          <select id="property_type" name="property_type" required defaultValue={listing.type} className={inputClass}>
+          <select id="property_type" name="property_type" required value={propertyType} onChange={e => setPropertyType(e.target.value)} className={inputClass}>
             {SUBMITTABLE_TYPES.map(v => (
               <option key={v} value={v}>{forLang(TYPE_LABELS, lang)[v] ?? v}</option>
             ))}
@@ -133,15 +141,15 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
       )}
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className={labelClass} htmlFor="bedrooms">
-            {t.bedrooms} <span className="text-slate-400 font-normal">({t.optional})</span>
-          </label>
-          <input
-            id="bedrooms" name="bedrooms" type="number" min="0" max="20"
-            defaultValue={listing.bedrooms} className={inputClass}
-          />
-        </div>
+        {needsRooms(propertyType) && (
+          <div>
+            <label className={labelClass} htmlFor="bedrooms">{t.bedrooms}</label>
+            <select id="bedrooms" name="bedrooms" required defaultValue={listing.bedrooms} className={inputClass}>
+              <option value="" disabled>{t.choose}</option>
+              {bedroomChoices.map(v => <option key={v} value={v}>{v === '0' ? t.studio : v}</option>)}
+            </select>
+          </div>
+        )}
         <div>
           <label className={labelClass} htmlFor="price">{t.price}</label>
           <div className="flex gap-2">

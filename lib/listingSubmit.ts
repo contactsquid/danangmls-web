@@ -117,11 +117,17 @@ function submissionPostUrl(): string {
   return `${SITE}/submitted/${randomUUID()}`;
 }
 
+export { BEDROOM_OPTIONS, BATHROOM_OPTIONS, needsRooms } from './listingRooms';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, needsRooms } from './listingRooms';
+
 /** Auto-title for agents who leave it blank, in the house style of scraped
  *  titles ("3-Bedroom House for Rent in Hai Chau, Da Nang"). */
 export function autoTitle(s: Pick<ListingSubmission, 'bedrooms' | 'propertyType' | 'district' | 'forSale'>): string {
-  const beds = Number(s.bedrooms);
-  const bedPart = Number.isFinite(beds) && beds > 0 ? `${beds}-Bedroom ` : '';
+  const beds = s.bedrooms.trim();
+  const bedPart = s.propertyType === 'Studio' ? ''
+    : beds === '0' ? 'Studio '
+    : beds.endsWith('+') ? `${beds} Bedroom `
+    : Number(beds) > 0 ? `${Number(beds)}-Bedroom ` : '';
   const action = s.forSale ? 'for Sale' : 'for Rent';
   const where = s.district && s.district !== 'Da Nang' ? ` in ${s.district}, Da Nang` : ' in Da Nang';
   return `${bedPart}${s.propertyType} ${action}${where}`;
@@ -129,7 +135,7 @@ export function autoTitle(s: Pick<ListingSubmission, 'bedrooms' | 'propertyType'
 
 export type ValidationCode =
   | 'type' | 'district' | 'price' | 'rentRange' | 'saleRange'
-  | 'description' | 'photos' | 'agentName';
+  | 'description' | 'photos' | 'agentName' | 'bedrooms' | 'bathrooms';
 
 export interface ValidationResult {
   ok: boolean;
@@ -138,9 +144,15 @@ export interface ValidationResult {
   code?: ValidationCode;
 }
 
-export function validateSubmission(s: ListingSubmission): ValidationResult {
+/** `requireBathrooms`: the add form collects bathrooms; the edit form has no
+ *  bathrooms field (they live in the description text, not a column). */
+export function validateSubmission(s: ListingSubmission, opts: { requireBathrooms?: boolean } = {}): ValidationResult {
   if (!VALID_TYPES.has(s.propertyType)) return { ok: false, code: 'type' };
   if (!VALID_DISTRICTS.has(s.district)) return { ok: false, code: 'district' };
+  if (needsRooms(s.propertyType)) {
+    if (!(BEDROOM_OPTIONS as readonly string[]).includes(s.bedrooms)) return { ok: false, code: 'bedrooms' };
+    if (opts.requireBathrooms && !(BATHROOM_OPTIONS as readonly string[]).includes(s.bathrooms)) return { ok: false, code: 'bathrooms' };
+  }
   if (!Number.isFinite(s.priceAmount) || s.priceAmount <= 0) return { ok: false, code: 'price' };
   // A VND price typed as USD (or vice versa) is the most likely data-entry
   // error, and it poisons price filters for everyone. These bounds are wide
@@ -177,7 +189,7 @@ export function buildRow(s: ListingSubmission): BuiltRow {
   const extras = [
     s.bathrooms && `Bathrooms: ${s.bathrooms}`,
     s.areaSqm && `Area: ${s.areaSqm} m²`,
-    s.neighborhood && `Neighbourhood: ${s.neighborhood}`,
+    s.neighborhood && `Neighborhood: ${s.neighborhood}`,
     !s.forSale && s.minTerm && `Minimum term: ${s.minTerm}`,
   ].filter(Boolean).join(' · ');
   const text = extras ? `${s.description.trim()}\n\n${extras}` : s.description.trim();

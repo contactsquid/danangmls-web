@@ -10,6 +10,7 @@ import {
   LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_TYPES, SUBMITTABLE_DISTRICTS,
 } from '@/lib/listingFormCopy';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, needsRooms } from '@/lib/listingRooms';
 import { localizeDistrict } from '@/lib/price';
 import type { Lang } from '@/lib/translations';
 
@@ -30,6 +31,8 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
   const [forSale, setForSale] = useState(false);
   const [district, setDistrict] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const [bedrooms, setBedrooms] = useState('');
   // The order of this array IS the order photos are submitted in (and so the
   // order they land in the sheet's Image URL columns) — same "order is
   // meaning, first is the hero" model as EditListingForm.tsx. The <input>
@@ -138,7 +141,15 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelClass} htmlFor="property_type">{t.propertyType}</label>
-          <select id="property_type" name="property_type" required defaultValue="" className={inputClass}>
+          <select
+            id="property_type" name="property_type" required value={propertyType}
+            onChange={e => {
+              setPropertyType(e.target.value);
+              // A studio listing is a studio: preselect it rather than make them pick twice.
+              if (e.target.value === 'Studio' && !bedrooms) setBedrooms('0');
+            }}
+            className={inputClass}
+          >
             <option value="" disabled>{t.choose}</option>
             {SUBMITTABLE_TYPES.map(v => (
               <option key={v} value={v}>{forLang(TYPE_LABELS, lang)[v] ?? v}</option>
@@ -179,18 +190,26 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <div>
-          <label className={labelClass} htmlFor="bedrooms">
-            {t.bedrooms} <span className="text-slate-400 font-normal">({t.optional})</span>
-          </label>
-          <input id="bedrooms" name="bedrooms" type="number" min="0" max="20" className={inputClass} />
-        </div>
-        <div>
-          <label className={labelClass} htmlFor="bathrooms">
-            {t.bathrooms} <span className="text-slate-400 font-normal">({t.optional})</span>
-          </label>
-          <input id="bathrooms" name="bathrooms" type="number" min="0" max="20" className={inputClass} />
-        </div>
+        {/* Required dropdowns for homes; hidden for land and commercial space, which
+            have no bedrooms (lib/listingRooms.ts). "Studio" is saved as 0. */}
+        {(propertyType === '' || needsRooms(propertyType)) && (
+          <>
+            <div>
+              <label className={labelClass} htmlFor="bedrooms">{t.bedrooms}</label>
+              <select id="bedrooms" name="bedrooms" required value={bedrooms} onChange={e => setBedrooms(e.target.value)} className={inputClass}>
+                <option value="" disabled>{t.choose}</option>
+                {BEDROOM_OPTIONS.map(v => <option key={v} value={v}>{v === '0' ? t.studio : v}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className={labelClass} htmlFor="bathrooms">{t.bathrooms}</label>
+              <select id="bathrooms" name="bathrooms" required defaultValue="" className={inputClass}>
+                <option value="" disabled>{t.choose}</option>
+                {BATHROOM_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
+              </select>
+            </div>
+          </>
+        )}
         <div>
           <label className={labelClass} htmlFor="area_sqm">
             {t.area} <span className="text-slate-400 font-normal">({t.optional})</span>
