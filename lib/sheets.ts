@@ -5,6 +5,7 @@ import { detectNeighborhood } from './neighborhoods';
 import { extractPriceFromText } from './price';
 import { normalizeVnPhone } from './agentContact';
 import { placeListing } from './geo/placement';
+import { stripPromptEcho } from './promptEcho';
 import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
@@ -319,6 +320,11 @@ function parseRows(rows: string[][]): Listing[] {
         agentPhone:   normalizeVnPhone(col(r, R.AGENT_CONTACT)),
         forSale:      false,
       };
+      // Leaked enrichment-prompt lines ("1. Translate into English…") — see lib/promptEcho.ts.
+      listing.text = stripPromptEcho(listing.text);
+      listing.vi_text = stripPromptEcho(listing.vi_text);
+      listing.ko_text = stripPromptEcho(listing.ko_text);
+      listing.ru_text = stripPromptEcho(listing.ru_text);
       Object.assign(listing, placeListing(listing) ?? {});
       warnIfBadData(listing, 'Sheet1/Rentals');
       return listing;
@@ -410,6 +416,11 @@ async function parseForSale(): Promise<Listing[]> {
         foreignEligible: foreignEligibleFlag,
         foreignEligibleBuilding: foreignBuilding?.name,
       };
+      // Leaked enrichment-prompt lines ("1. Translate into English…") — see lib/promptEcho.ts.
+      listing.text = stripPromptEcho(listing.text);
+      listing.vi_text = stripPromptEcho(listing.vi_text);
+      listing.ko_text = stripPromptEcho(listing.ko_text);
+      listing.ru_text = stripPromptEcho(listing.ru_text);
       Object.assign(listing, placeListing(listing) ?? {});
       warnIfBadData(listing, 'For Sale');
       return listing;
