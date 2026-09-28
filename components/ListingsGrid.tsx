@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useSyncExternalStore } from 'react';
 import dynamic from 'next/dynamic';
+import { bedroomsDisplay } from '@/lib/propertyTypes';
 import { Listing } from '@/lib/types';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import { resolveFacet, isVilla } from '@/lib/facets';
@@ -15,6 +16,11 @@ const ListingsMap = dynamic(() => import('./ListingsMap'), {
   ssr: false,
   loading: () => <div className="w-full h-[70vh] min-h-[420px] rounded-2xl bg-slate-100 animate-pulse" />,
 });
+
+const isStudioListing = (l: Listing) => {
+  const d = bedroomsDisplay(l.type, l.bedrooms);
+  return !!d && 'studio' in d;
+};
 
 const PAGE_SIZE = 48;
 // Roughly two rows on a desktop grid. These load eagerly so the top of the page
@@ -178,7 +184,9 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
         const haystack = (l.title + ' ' + l.text).toLowerCase();
         if (!haystack.includes(hoodFilter.toLowerCase()) && l.neighborhood !== hoodFilter) return false;
       }
-      if (bedsFilter && l.bedrooms !== bedsFilter) return false;
+      // "Studio" = 0-bedroom apartments (lib/propertyTypes.ts), not every '0'.
+      if (bedsFilter === 'studio') { if (!isStudioListing(l)) return false; }
+      else if (bedsFilter && l.bedrooms !== bedsFilter) return false;
       if (priceFilter) {
         const num = priceLow(l.price);   // a range filters by its low end
         // Rent ranges
@@ -262,6 +270,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <select value={bedsFilter} onChange={e => setBeds(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">{t.anyBeds}</option>
+            <option value="studio">{t.studio}</option>
             {['1','2','3','4','5','6'].map(n => <option key={n} value={n}>{n} {t.br}</option>)}
           </select>
 

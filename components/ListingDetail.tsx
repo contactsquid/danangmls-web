@@ -105,7 +105,8 @@ export default function ListingDetail({ listing, archived = false, similarListin
   const detailMode = listing.forSale ? 'sale' : 'rent';
   const typeHref = listing.type     ? listingFieldHref('type', listing.type, detailMode, lang) : null;
   const bedsLabel = bedroomsLabel(listing.type, listing.bedrooms, t);
-  const bedsHref = listing.bedrooms ? listingFieldHref('bedrooms', String(listing.bedrooms), detailMode, lang) : null;
+  const bedsKey = bedsLabel === t.studio ? 'studio' : String(listing.bedrooms);   // studio → /studio page
+  const bedsHref = listing.bedrooms ? listingFieldHref('bedrooms', bedsKey, detailMode, lang) : null;
   const distHref = listing.district ? listingFieldHref('district', listing.district, detailMode, lang) : null;
   const browseVerb = listing.forSale
     ? forLang({ en: 'for sale', vi: 'rao bán', ko: '매매', ru: 'на продажу' }, lang)
@@ -189,7 +190,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
                 bedsHref ? (
                   <Link
                     href={bedsHref}
-                    title={lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ ${browseVerb}` : `Browse ${listing.bedrooms}-bedroom ${browseVerb}`}
+                    title={bedsKey === 'studio' ? (lang === 'vi' ? `Xem căn hộ studio ${browseVerb}` : `Browse studio apartments ${browseVerb}`) : lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ ${browseVerb}` : `Browse ${listing.bedrooms}-bedroom ${browseVerb}`}
                     className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full hover:bg-slate-200 hover:underline transition-colors"
                   >
                     🛏 {bedsLabel}

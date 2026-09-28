@@ -51,6 +51,8 @@ export default function ListingCard({ listing, priority = false }: Props) {
     ? (listing.vi_title || viFallbackTitle(listing))
     : localizedTitle(listing, lang);
   const bedsLabel = bedroomsLabel(listing.type, listing.bedrooms, t);
+  // The facet a bedrooms chip links to: 'studio' for a studio apartment.
+  const bedsKey = bedsLabel === t.studio ? 'studio' : String(listing.bedrooms);
   const displayPrice = listing.price ? convertPrice(listing.price, lang) : listing.price;
   const altPrefix = localizedAltPrefix(
     { bedrooms: listing.bedrooms, type: listing.type, district: listing.district, forSale: listing.forSale },
@@ -92,8 +94,8 @@ export default function ListingCard({ listing, priority = false }: Props) {
           {/* "Studio" for a 0-bedroom apartment, nothing for land or an unknown count
               (lib/propertyTypes.ts). */}
           {bedsLabel && (
-            <MetaChip href={listingFieldHref('bedrooms', String(listing.bedrooms), mode, lang)}
-              title={lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ` : `Browse ${listing.bedrooms}-bedroom ${mode === 'rent' ? 'rentals' : 'homes'}`}>
+            <MetaChip href={listingFieldHref('bedrooms', bedsKey, mode, lang)}
+              title={bedsKey === 'studio' ? (lang === 'vi' ? 'Xem căn hộ studio' : `Browse studio apartments ${mode === 'rent' ? 'for rent' : 'for sale'}`) : lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ` : `Browse ${listing.bedrooms}-bedroom ${mode === 'rent' ? 'rentals' : 'homes'}`}>
               🛏 {bedsLabel}
             </MetaChip>
           )}

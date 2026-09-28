@@ -3,13 +3,14 @@ import type { NextConfig } from "next";
 // Property types were cut to Apartment / Commercial / House / Villa (+ Land for
 // sale) on 2026-09-28 (lib/propertyTypes.ts). The retired type pages move
 // permanently so their rankings follow: townhouses and shophouses are houses,
-// hotels/offices/retail are commercial, studios are apartments, land for rent is
-// commercial. ko/ru reuse the English slugs.
+// hotels/offices/retail are commercial, land for rent is
+// commercial. /studio is the studio-apartments page (a bedrooms facet), not a
+// retired type. ko/ru reuse the English slugs.
 const RETIRED_EN: Record<string, string> = {
-  townhouse: 'house', shophouse: 'house', hotel: 'commercial', office: 'commercial', retail: 'commercial', studio: 'apartment',
+  townhouse: 'house', shophouse: 'house', hotel: 'commercial', office: 'commercial', retail: 'commercial',
 };
 const RETIRED_VI: Record<string, string> = {
-  'nha-pho': 'nha', shophouse: 'nha', 'van-phong': 'thuong-mai', 'mat-bang': 'thuong-mai', studio: 'can-ho',
+  'nha-pho': 'nha', shophouse: 'nha', 'van-phong': 'thuong-mai', 'mat-bang': 'thuong-mai',
 };
 const RETIRED_TYPE_REDIRECTS = [
   ...['/for-rent', '/for-sale', '/ko/for-rent', '/ko/for-sale', '/ru/for-rent', '/ru/for-sale'].flatMap(base =>

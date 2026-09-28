@@ -221,6 +221,12 @@ export function facetContentKo(
       subtitle: `다낭 ${f.value}의 아파트 ${verb} 매물 ${count}건 — ${daily}`,
       description: `${f.value} 다낭: 사진, 면적, 침실 수, 가격이 포함된 ${verb} 매물 ${count}건. 매일 업데이트됩니다.` };
   }
+  if (f.value === 'studio') {
+    const h1 = `다낭 원룸(스튜디오) 아파트 ${verb}`;
+    return { h1, title: h1,
+      subtitle: `다낭과 호이안의 원룸(스튜디오) 아파트 ${verb} 매물 ${count}건 — 해변과 시내 가까운 가구 완비 매물, 매일 업데이트됩니다.`,
+      description: `다낭과 호이안의 원룸(스튜디오) 아파트 ${verb} 매물 ${count}건. 사진, 가격, 위치 정보를 매일 업데이트합니다.` };
+  }
   const h1 = `다낭 침실 ${f.value}개 ${verb} 매물`;
   return { h1, title: h1,
     subtitle: `다낭과 호이안의 침실 ${f.value}개 ${verb} 매물 ${count}건 — ${daily}`,
@@ -258,6 +264,12 @@ export function facetContentRu(
     return { h1, title: h1,
       subtitle: `${count} квартир ${verb} в комплексе ${f.value}, Дананг — база ${daily}`,
       description: `${f.value}, Дананг: ${count} квартир ${verb} — фото, площадь, спальни и цена. Обновляется ежедневно.` };
+  }
+  if (f.value === 'studio') {
+    const h1 = `Квартиры-студии ${verb} в Дананге`;
+    return { h1, title: h1,
+      subtitle: `${count} квартир-студий ${verb} в Дананге и Хойане — меблированные, рядом с пляжем и центром, база ${daily}`,
+      description: `Квартиры-студии ${verb} в Дананге и Хойане: ${count} объявлений с фото, ценой и расположением на DanangMLS.` };
   }
   const h1 = `Жильё с ${f.value} спальнями ${verb} в Дананге`;
   return { h1, title: h1,

@@ -1,5 +1,6 @@
 import { type Lang, viOrEn } from './translations';
 import type { Listing } from './types';
+import { bedroomsDisplay } from './propertyTypes';
 import { POPULAR_BUILDINGS, buildingSlug, buildingMatches, BUILDING_PAGE_MIN_LISTINGS } from './buildingDefs';
 import { localizeType, localizeDistrict } from './price';
 import { facetContentKo, facetContentRu } from './facetSeoKoRu';
@@ -49,6 +50,8 @@ export function facetSlug(f: Facet, langIn: Lang): string {
   if (f.kind === 'district') return districtSlug(f.value);
   // Building names are proper nouns — same slug in both languages.
   if (f.kind === 'building') return buildingSlug(f.value);
+  // Studio (0-bedroom apartments) is a bedrooms facet with the same slug in both languages.
+  if (f.kind === 'bedrooms' && f.value === 'studio') return 'studio';
   if (f.kind === 'bedrooms') return lang === 'vi' ? `${f.value}-phong-ngu` : `${f.value}-bedroom${f.value === '1' ? '' : 's'}`;
   return lang === 'vi' ? FOREIGN_SLUG.vi : FOREIGN_SLUG.en; // foreign
 }
@@ -59,6 +62,7 @@ export function resolveFacet(slug: string, _lang?: Lang): Facet | null {
   if (EN_SLUG_TO_TYPE[s]) return { kind: 'type', value: EN_SLUG_TO_TYPE[s] };
   if (VI_SLUG_TO_TYPE[s]) return { kind: 'type', value: VI_SLUG_TO_TYPE[s] };
   if (DISTRICT_SLUGS[s]) return { kind: 'district', value: DISTRICT_SLUGS[s] };
+  if (s === 'studio') return { kind: 'bedrooms', value: 'studio' };
   const m = s.match(/^(\d+)-(?:bedrooms?|phong-ngu)$/);
   if (m && +m[1] >= 1 && +m[1] <= 9) return { kind: 'bedrooms', value: m[1] };
   if (s === FOREIGN_SLUG.en || s === FOREIGN_SLUG.vi) return { ...FOREIGN_FACET };
@@ -76,6 +80,12 @@ export function isVilla(l: Listing): boolean {
   return /\bvillas?\b/i.test(`${l.title || ''} ${l.text || ''}`);
 }
 
+/** A studio is a 0-bedroom apartment (lib/propertyTypes.ts). */
+const isStudio = (l: Pick<Listing, 'type' | 'bedrooms'>) => {
+  const d = bedroomsDisplay(l.type, l.bedrooms);
+  return !!d && 'studio' in d;
+};
+
 export function facetMatches(l: Listing, f: Facet): boolean {
   if (f.kind === 'type') {
     // Villa is a SUBSET of House, not a sibling. The enrichment types nearly every
@@ -87,6 +97,7 @@ export function facetMatches(l: Listing, f: Facet): boolean {
     return (l.type || '').toLowerCase() === f.value.toLowerCase();
   }
   if (f.kind === 'district') return (l.district || '').toLowerCase().includes(f.value.toLowerCase());
+  if (f.kind === 'bedrooms' && f.value === 'studio') return isStudio(l);
   if (f.kind === 'bedrooms') return String(l.bedrooms || '') === f.value;
   if (f.kind === 'foreign') return !!l.foreignEligible;
   if (f.kind === 'building') {
@@ -140,6 +151,7 @@ export function listingFieldHref(kind: 'type' | 'district' | 'bedrooms', raw: st
     return DISTRICT_SLUGS[s] ? facetUrl(mode, linkLang, { kind: 'district', value: DISTRICT_SLUGS[s] }) : null;
   }
   const n = String(raw).trim();
+  if (n === 'studio') return facetUrl(mode, linkLang, { kind: 'bedrooms', value: 'studio' });
   if (!/^\d+$/.test(n) || +n < 1 || +n > 9) return null;
   return facetUrl(mode, linkLang, { kind: 'bedrooms', value: n });
 }
@@ -208,6 +220,12 @@ function facetContentEn(f: Facet, mode: Mode, count: number): FacetContent {
       subtitle: `Browse ${count} ${mode === 'rent' ? 'apartments for rent' : 'apartments for sale'} at ${f.value}, Da Nang — updated daily from local agents.`,
       description: `${f.value} Da Nang: ${count} ${mode === 'rent' ? 'apartments available for rent' : 'apartments for sale'}, with photos, size, bedrooms and price. Updated daily on DanangMLS.` };
   }
+  if (f.value === 'studio') {
+    const h1 = `Studio Apartments ${forX} in Da Nang, Vietnam`;
+    return { h1, title: h1,
+      subtitle: `Browse ${count} studio apartments ${rentSale} in Da Nang and Hoi An — compact, furnished one-room living near the beach and the city, updated daily.`,
+      description: `Studio apartments ${rentSale} in Da Nang and Hoi An: ${count} listings with photos, price and location, updated daily from local agents on DanangMLS.` };
+  }
   const noun = mode === 'rent' ? 'Rentals' : 'Homes for Sale';
   const lcNoun = mode === 'rent' ? 'rentals' : 'homes for sale';
   const h1 = `${f.value}-Bedroom ${noun} in Da Nang, Vietnam`;
@@ -247,6 +265,12 @@ function facetContentVi(f: Facet, mode: Mode, count: number): FacetContent {
       subtitle: `Xem ${count} căn hộ ${thueBanLc} tại ${f.value}, Đà Nẵng — cập nhật hàng ngày từ môi giới địa phương.`,
       description: `${f.value} Đà Nẵng: ${count} căn hộ ${thueBanLc}, kèm hình ảnh, diện tích, số phòng ngủ và giá. Cập nhật hàng ngày trên DanangMLS.` };
   }
+  if (f.kind === 'bedrooms' && f.value === 'studio') {
+    const h1 = `Căn Hộ Studio ${thueBan} tại Đà Nẵng, Việt Nam`;
+    return { h1, title: h1,
+      subtitle: `Xem ${count} căn hộ studio ${thueBanLc} tại Đà Nẵng và Hội An — không gian gọn gàng, đầy đủ nội thất, gần biển và trung tâm, cập nhật hàng ngày.`,
+      description: `Căn hộ studio ${thueBanLc} tại Đà Nẵng và Hội An. ${count} tin đăng có ảnh, giá và vị trí, cập nhật hàng ngày trên DanangMLS.` };
+  }
   const h1 = mode === 'rent'
     ? `Cho Thuê ${f.value} Phòng Ngủ tại Đà Nẵng, Việt Nam`
     : `Bán Nhà ${f.value} Phòng Ngủ tại Đà Nẵng, Việt Nam`;
@@ -265,6 +289,7 @@ export function facetsWithInventory(listings: Listing[]): Facet[] {
     if (l.district) { const s = districtSlug(l.district); if (DISTRICT_SLUGS[s]) add({ kind: 'district', value: DISTRICT_SLUGS[s] }); }
     const b = String(l.bedrooms || '').trim();
     if (/^\d+$/.test(b) && +b >= 1 && +b <= 9) add({ kind: 'bedrooms', value: b });
+    if (isStudio(l)) add({ kind: 'bedrooms', value: 'studio' });
     if (l.foreignEligible) add({ ...FOREIGN_FACET });
   }
   // Buildings earn a page only above the inventory floor — a one-listing page
