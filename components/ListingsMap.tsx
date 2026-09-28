@@ -1,18 +1,16 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
-import { bedroomsLabel } from '@/lib/propertyTypes';
 import 'leaflet/dist/leaflet.css';
 import type { Listing } from '@/lib/types';
 import { useLanguage } from './LanguageProvider';
 import { shortPrice } from '@/lib/geo/shortPrice';
 import { isFreshForMap } from '@/lib/geo/freshness';
 import { declutter, groupPoints, tagWidthPx } from '@/lib/geo/grouping';
-import { PIN_ICONS, pinKind } from '@/lib/geo/pinIcon';
 import { pointAllowed, wardGeometry, wardKey } from '@/lib/geo/areas';
 import { DISTRICT_BOUNDARIES } from '@/lib/districtBoundaries';
-import { convertPrice, localizeDistrict, localizedTitle } from '@/lib/price';
-import { listingHref } from '@/lib/facets';
+import { localizedTitle } from '@/lib/price';
+import { pinHtml, popupHtml, POPUP_OPTIONS } from '@/lib/mapMarkers';
 import { addBasemap, MAP_MAX_ZOOM } from '@/lib/mapTiles';
 
 // Map view for ListingsGrid. Loaded with next/dynamic (ssr: false) so list-view
@@ -28,7 +26,6 @@ const CELL_PX = 72;
 // How far a tag may be nudged off its spot so it doesn't cover a neighbour.
 const MAX_NUDGE_PX = 90;
 
-const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
 export default function ListingsMap({ listings, mode, district = '', neighborhood = '' }: {
   listings: Listing[]; mode: 'rent' | 'sale';
@@ -85,29 +82,14 @@ export default function ListingsMap({ listings, mode, district = '', neighborhoo
       if (cached) return cached;
       const { L } = ref.current!;
       const l = mapped[i];
-      const [lat, lng, precision] = l.geo!;
-      const price = priceOf(i);
+      const [lat, lng] = l.geo!;
       const m = L.marker([lat, lng], {
-        icon: L.divIcon({ html: `<span>${PIN_ICONS[pinKind(l)]}${esc(price)}</span>`, className: 'dmls-pin', iconSize: [0, 0] }),
+        icon: L.divIcon({ html: pinHtml(l, lang, priceOf(i)), className: 'dmls-pin', iconSize: [0, 0] }),
         riseOnHover: true,
         keyboard: true,
         title: localizedTitle(l, lang),
       });
-      m.bindPopup(() => {
-        const label = l.geoLabel || '';
-        const loc = precision === 0 ? t.mapAtBuilding(label)
-          : precision === 4 ? t.mapNearBuilding(label)
-          : precision === 1 ? t.mapOnStreet(label)
-          : precision === 2 ? t.mapInWard(label)
-          : t.mapApprox(localizeDistrict(l.district, lang));
-        const img = l.images[0] ? `<img src="${esc(l.images[0])}" alt="" loading="lazy">` : '';
-        const bl = bedroomsLabel(l.type, l.bedrooms, t);   // Studio / 3 BR / none for land
-        const beds = bl ? `🛏 ${esc(bl)} · ` : '';
-        return `<a href="${esc(listingHref(l.slug, lang))}">${img}<div class="b">`
-          + `<div class="p">${esc(l.price ? convertPrice(l.price, lang) : '')}</div>`
-          + `<div class="t">${esc(localizedTitle(l, lang))}</div>`
-          + `<div class="m">${beds}${esc(loc)}</div></div></a>`;
-      }, { className: 'dmls-popup', maxWidth: 240, minWidth: 240, offset: [0, -34] });
+      m.bindPopup(() => popupHtml(l, lang, t), POPUP_OPTIONS);
       // The open listing's tag turns dark, so you can see which pin the card belongs to.
       m.on('popupopen', () => m.getElement()?.classList.add('sel'));
       m.on('popupclose', () => m.getElement()?.classList.remove('sel'));

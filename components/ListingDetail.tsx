@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { bedroomsLabel, bedroomsViPhrase } from '@/lib/propertyTypes';
 import AdminFbLinkPanel from './AdminFbLinkPanel';
+import ListingMapSection from './ListingMapSection';
 import Carousel from './Carousel';
 import ListingCard from './ListingCard';
 import ForeignEligibleBadge from './ForeignEligibleBadge';
@@ -371,19 +372,9 @@ export default function ListingDetail({ listing, archived = false, similarListin
               <p className="text-slate-600 leading-relaxed mb-4">
                 {districtCopy(districtInfo, lang).description}
               </p>
-              <div className="rounded-xl overflow-hidden border border-slate-200 h-64">
-                <iframe
-                  title={`Map of ${districtInfo.name} District, Da Nang`}
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${districtInfo.bbox.join(',')}&layer=mapnik&marker=${districtInfo.lat},${districtInfo.lng}`}
-                  className="w-full h-full"
-                  loading="lazy"
-                />
-              </div>
-              <p className="text-xs text-slate-400 mt-1 text-right">
-                <a href={`https://www.openstreetmap.org/?mlat=${districtInfo.lat}&mlon=${districtInfo.lng}#map=14/${districtInfo.lat}/${districtInfo.lng}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                  View larger map
-                </a>
-              </p>
+              {/* This listing + its similar listings on our own map, loaded when
+                  scrolled near (was an openstreetmap.org embed). */}
+              <ListingMapSection listing={listing} similar={similarListings} />
             </div>
           )}
 
