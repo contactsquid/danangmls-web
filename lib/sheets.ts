@@ -6,6 +6,7 @@ import { extractPriceFromText } from './price';
 import { normalizeVnPhone } from './agentContact';
 import { placeListing } from './geo/placement';
 import { stripPromptEcho } from './promptEcho';
+import { stripAgentPhones } from './agentPhones';
 import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
@@ -417,10 +418,13 @@ async function parseForSale(): Promise<Listing[]> {
         foreignEligibleBuilding: foreignBuilding?.name,
       };
       // Leaked enrichment-prompt lines ("1. Translate into English…") — see lib/promptEcho.ts.
-      listing.text = stripPromptEcho(listing.text);
-      listing.vi_text = stripPromptEcho(listing.vi_text);
-      listing.ko_text = stripPromptEcho(listing.ko_text);
-      listing.ru_text = stripPromptEcho(listing.ru_text);
+      // …and the scraped agents' own phone/Zalo numbers (lib/agentPhones.ts): For Sale
+      // enquiries go to Da Nang Homes. Rentals keep theirs — sub-floor rentals hand
+      // the lead to the agent (see ListingDetail).
+      listing.text = stripAgentPhones(stripPromptEcho(listing.text));
+      listing.vi_text = stripAgentPhones(stripPromptEcho(listing.vi_text));
+      listing.ko_text = stripAgentPhones(stripPromptEcho(listing.ko_text));
+      listing.ru_text = stripAgentPhones(stripPromptEcho(listing.ru_text));
       Object.assign(listing, placeListing(listing) ?? {});
       warnIfBadData(listing, 'For Sale');
       return listing;
