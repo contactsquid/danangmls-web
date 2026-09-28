@@ -1,4 +1,5 @@
-import { getListings, getUniqueValues } from '@/lib/sheets';
+import { getListings } from '@/lib/sheets';
+import { searchDistricts } from '@/lib/searchDistricts';
 import { RENT_TYPES } from '@/lib/propertyTypes';
 import { toGridListings } from '@/lib/gridListing';
 
@@ -48,7 +49,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 export default async function KORentPage() {
   const listings = await getListings();
   const types     = [...RENT_TYPES];   // fixed list, same as the add-listing form
-  const districts = getUniqueValues(listings, 'district');
+  const districts = searchDistricts(listings);   // no "Not Provided"
   const itemListLd = listingsItemListLd(listings, { forSale: false, vi: false });
 
   return (

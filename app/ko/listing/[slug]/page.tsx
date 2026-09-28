@@ -1,4 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
+import { getSimilarListings } from '@/lib/similarListings';
 import { schemaRooms } from '@/lib/propertyTypes';
 import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
@@ -34,20 +35,6 @@ async function getAllListings() {
   return [...r, ...f];
 }
 
-function getSimilarListings(current: Listing, all: Listing[], count = 4): Listing[] {
-  const candidates = all.filter(l => l.slug !== current.slug && l.forSale === current.forSale);
-  const tier1 = candidates.filter(l => l.type === current.type && l.district === current.district);
-  const tier2 = candidates.filter(l => l.type === current.type && l.district !== current.district);
-  const tier3 = candidates.filter(l => l.type !== current.type && l.district === current.district);
-  const results: Listing[] = [];
-  for (const tier of [tier1, tier2, tier3]) {
-    for (const l of tier) {
-      if (results.length >= count) return results;
-      results.push(l);
-    }
-  }
-  return results;
-}
 
 function getShareableImage(images: string[]): string | undefined {
   return images.find(img => img && !img.includes('fbcdn.net') && !img.includes('facebook.com')) || images[0] || undefined;

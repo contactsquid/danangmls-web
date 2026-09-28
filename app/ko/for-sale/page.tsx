@@ -1,4 +1,5 @@
-import { getForSaleListings, getUniqueValues } from '@/lib/sheets';
+import { getForSaleListings } from '@/lib/sheets';
+import { searchDistricts } from '@/lib/searchDistricts';
 import { SALE_TYPES } from '@/lib/propertyTypes';
 import { toGridListings } from '@/lib/gridListing';
 
@@ -46,7 +47,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 export default async function KOForSalePage() {
   const listings = await getForSaleListings();
   const types     = [...SALE_TYPES];   // fixed list, same as the add-listing form
-  const districts = getUniqueValues(listings, 'district');
+  const districts = searchDistricts(listings);   // no "Not Provided"
   const itemListLd = listingsItemListLd(listings, { forSale: true, vi: false });
 
   return (

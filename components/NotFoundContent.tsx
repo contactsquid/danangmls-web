@@ -1,10 +1,10 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { searchDistricts } from '@/lib/searchDistricts';
 import { RENT_TYPES, SALE_TYPES } from '@/lib/propertyTypes';
 import ListingsGrid from '@/components/ListingsGrid';
 import type { Listing } from '@/lib/types';
-import { getUniqueValues } from '@/lib/sheets';
 
 const COPY = {
   en: {
@@ -46,7 +46,7 @@ export default function NotFoundContent({ rentals, forSale }: Props) {
 
   const listings  = mode === 'sale' ? forSale : rentals;
   const types     = [...(mode === 'sale' ? SALE_TYPES : RENT_TYPES)];
-  const districts = getUniqueValues(listings, 'district');
+  const districts = searchDistricts(listings);   // no "Not Provided"
 
   return (
     <>
