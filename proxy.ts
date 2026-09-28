@@ -18,6 +18,58 @@ import { SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from '@/lib/sup
 // a cached manifest instead of doing a lookup per request.
 const LISTING_PATH_RE = /^\/(?:vi\/|ko\/|ru\/)?listing\/([a-z0-9-]+)\/?$/i;
 
+// Cross-domain SSO (additive, 2026-09-28): the sibling city sites share one
+// Supabase auth project, so the same credentials already work on both — see
+// mls-shared-agent-auth memory. This is the "stay logged in across domains"
+// half: an unauthenticated visitor on one of THESE specific gated pages gets
+// bounced through the other site's /api/sso/export before ever seeing a login
+// prompt, so a session that exists there carries over here. Every other path
+// through this file — the token refresh below, the listing-redirect above —
+// is unchanged.
+//
+// Deliberately narrow: only the actual signed-in-content pages (profile,
+// listings), never the auth-flow pages themselves (login/signup/reset/
+// password), which must never be intercepted or the reset-link flow breaks.
+const ACCOUNT_GATED_RE =
+  /^\/(?:account\/(?:profile|listings)(?:\/.*)?|vi\/tai-khoan\/(?:ho-so|tin-dang|dang-tin)(?:\/.*)?)$/;
+
+// This site's sibling in the shared-auth network. saigonmls-web's proxy.ts
+// carries the mirror-image constant pointing back at danangmls.com.
+const OTHER_MLS_DOMAIN = 'https://saigonmls.com';
+
+/** Builds the SSO-bounce redirect for a gated page with no local session, or
+ *  null if this request should not be bounced. Never throws — any failure
+ *  here must fall through to the existing flow below, which ends at the
+ *  ordinary login page, not an error. */
+function ssoBounce(request: NextRequest, hasSession: boolean): NextResponse | null {
+  try {
+    if (hasSession) return null;
+    const { pathname, searchParams } = request.nextUrl;
+    if (!ACCOUNT_GATED_RE.test(pathname)) return null;
+    // Already round-tripped once (either signal) — stop, so a stripped query
+    // param can never loop this forever.
+    if (searchParams.get('sso') === '1') return null;
+    if (request.cookies.get('sso_checked')) return null;
+
+    const target = new URL('/api/sso/export', OTHER_MLS_DOMAIN);
+    target.searchParams.set('return', request.nextUrl.toString());
+
+    const res = NextResponse.redirect(target);
+    // Belt-and-suspenders loop guard in case `?sso=1` gets stripped somewhere
+    // on the way back (a caching layer, a manual link, etc.).
+    res.cookies.set('sso_checked', '1', {
+      maxAge: 600,
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+    });
+    return res;
+  } catch (err) {
+    console.error('[sso] proxy bounce check failed:', err);
+    return null;
+  }
+}
+
 async function listingRedirect(request: NextRequest): Promise<NextResponse | null> {
   const m = LISTING_PATH_RE.exec(request.nextUrl.pathname);
   if (!m) return null;
@@ -71,7 +123,14 @@ export async function proxy(request: NextRequest) {
   });
 
   // Touching the user is what triggers the refresh-and-setAll cycle above.
-  await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Additive: see ssoBounce() above. Only overrides `response` for the exact
+  // gated paths it matches ("no session" here already went through the
+  // getUser() round-trip this function needed anyway); every other request
+  // falls through to the unchanged refresh response below.
+  const bounced = ssoBounce(request, Boolean(user));
+  if (bounced) return bounced;
 
   return response;
 }
