@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import type { EmailOtpType } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { safeLandingPath, ssoTokenType } from '@/lib/ssoRedirect';
 
 /**
  * Cross-domain SSO handoff — target side, the other half of app/api/sso/export.
@@ -19,19 +20,18 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
 
   const tokenHash = searchParams.get('token_hash');
-  const type = (searchParams.get('type') as EmailOtpType | null) ?? 'magiclink';
+  // Only the one-time magic-link token the export route mints — never a
+  // recovery/signup token, which a crafted link could otherwise redeem as a login.
+  const type: EmailOtpType | null = ssoTokenType(searchParams.get('type'));
 
-  // Only ever land on a path on this site — never a caller-supplied absolute
-  // URL, which would make this an open redirect.
-  const requestedRedirect = searchParams.get('redirect') ?? '/account';
-  const redirectPath = requestedRedirect.startsWith('/') && !requestedRedirect.startsWith('//')
-    ? requestedRedirect
-    : '/account';
+  // Only ever land on a path on this site. Resolved the way the browser will, so
+  // "/\evil.com" (read as "//evil.com") can't get past (review fix 2026-09-29).
+  const redirectPath = safeLandingPath(searchParams.get('redirect'), origin);
 
   const failOpen = () => NextResponse.redirect(`${origin}/account/login?sso=1`);
 
   try {
-    if (!isSupabaseConfigured || !tokenHash) return failOpen();
+    if (!isSupabaseConfigured || !tokenHash || !type) return failOpen();
 
     const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
