@@ -11,6 +11,9 @@ import { isSupabaseConfigured } from '@/lib/supabase/config';
  * server-side there forces per-request dynamic rendering, which 500s the
  * whole static build. Here an anonymous visitor (the overwhelming majority)
  * pays nothing; only a signed-in admin costs one small query.
+ *
+ * Also shown to Vy Tran (admin-verified claim on the "Vy Tran" listing name),
+ * at Blake's request, so she can compare listings with the original posts.
  */
 export default function AdminFbLinkPanel({ postUrl }: { postUrl: string }) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -26,11 +29,13 @@ export default function AdminFbLinkPanel({ postUrl }: { postUrl: string }) {
 
       const { data } = await supabase
         .from('agent_profiles')
-        .select('is_admin')
+        .select('is_admin, listing_agent_name, listing_agent_name_verified')
         .eq('id', session.user.id)
         .maybeSingle();
 
-      if (!cancelled && data?.is_admin) setIsAdmin(true);
+      const isVy = data?.listing_agent_name_verified
+        && data.listing_agent_name?.trim().toLowerCase() === 'vy tran';
+      if (!cancelled && (data?.is_admin || isVy)) setIsAdmin(true);
     })();
 
     return () => { cancelled = true; };
