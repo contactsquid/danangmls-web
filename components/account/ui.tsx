@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import AgentAvatar from '@/components/AgentAvatar';
+import { signOutAction } from '@/app/account/actions';
 
 // Shared form styling for the account area, so the sign-up, sign-in, reset and
 // profile screens stay visually identical without repeating class strings.
@@ -19,15 +21,31 @@ export function AccountShell({
   subtitle,
   children,
   wide = false,
+  signedIn,
 }: {
   title: string;
   subtitle?: ReactNode;
   children: ReactNode;
   wide?: boolean;
+  /** Server-rendered identity + sign-out, for signed-in pages. Independent of the
+   *  header's client-side AccountMenu, so sign-out is always reachable. */
+  signedIn?: { name: string; photoUrl: string | null; lang: 'en' | 'vi'; signOutLabel: string };
 }) {
   return (
     <div className="flex-1 bg-slate-50 flex flex-col">
       <main className={`${wide ? 'max-w-2xl' : 'max-w-md'} w-full mx-auto px-4 sm:px-6 py-12 flex-1`}>
+        {signedIn && (
+          <div className="flex items-center justify-end gap-3 mb-6">
+            <AgentAvatar src={signedIn.photoUrl} name={signedIn.name} className="w-8 h-8" />
+            <span className="text-sm text-slate-600 truncate">{signedIn.name}</span>
+            <form action={signOutAction}>
+              <input type="hidden" name="lang" value={signedIn.lang} />
+              <button type="submit" className="text-sm text-blue-700 hover:underline">
+                {signedIn.signOutLabel}
+              </button>
+            </form>
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-slate-900 mb-1">{title}</h1>
         {subtitle && <p className="text-slate-600 text-sm mb-6">{subtitle}</p>}
         <div className="bg-white rounded-xl border border-slate-200 p-6 mt-4">{children}</div>

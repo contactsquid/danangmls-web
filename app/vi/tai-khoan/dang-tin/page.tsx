@@ -4,7 +4,7 @@ import { AccountShell } from '@/components/account/ui';
 import ListingForm from '@/components/account/ListingForm';
 import { getOwnProfile } from '@/lib/agents';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
-import { accountPaths } from '@/lib/accountCopy';
+import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +23,12 @@ export default async function ViNewListingPage() {
   const t = LISTING_FORM_COPY.vi;
 
   return (
-    <AccountShell title={t.pageTitle} subtitle={t.pageSubtitle} wide>
+    <AccountShell
+      title={t.pageTitle}
+      subtitle={t.pageSubtitle}
+      wide
+      signedIn={{ name: profile.display_name, photoUrl: profile.photo_url, lang: 'vi', signOutLabel: ACCOUNT_COPY.vi.signOut }}
+    >
       <ListingForm lang="vi" profileSlug={profile.slug} />
     </AccountShell>
   );

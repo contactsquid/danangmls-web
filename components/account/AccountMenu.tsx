@@ -36,6 +36,10 @@ interface MenuProfile {
  */
 export default function AccountMenu({ lang }: { lang: Lang }) {
   const [profile, setProfile] = useState<MenuProfile | null>(null);
+  // Set as soon as a session exists, before the profile query resolves (or if it
+  // fails). Without this a signed-in agent whose profile read errors sees no menu
+  // at all — and so no way to sign out.
+  const [fallbackName, setFallbackName] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -46,11 +50,13 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
     let cancelled = false;
 
     (async () => {
+      try {
       const supabase = createClient();
       // getSession() reads the cookie locally — no network call when signed out,
       // which is the common case on public pages.
       const { data: { session } } = await supabase.auth.getSession();
       if (!session || cancelled) return;
+      setFallbackName(session.user.email ?? '?');
 
       const { data } = await supabase
         .from('agent_profiles')
@@ -59,6 +65,9 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
         .maybeSingle();
 
       if (!cancelled && data) setProfile(data as MenuProfile);
+      } catch (err) {
+        console.error('[AccountMenu] profile lookup failed:', err);
+      }
     })();
 
     return () => { cancelled = true; };
@@ -82,7 +91,16 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
 
   // Signed out (or still resolving): render nothing. The header keeps its
   // "Add property" button, which sends visitors through sign-in anyway.
-  if (!profile) return null;
+  if (!profile && !fallbackName) return null;
+
+  // Session but no profile row/photo yet: show the menu anyway, with an initials
+  // avatar and the essentials (add property, sign out).
+  const shown: MenuProfile = profile ?? {
+    slug: '',
+    display_name: fallbackName ?? '?',
+    photo_url: null,
+    is_admin: false,
+  };
 
   const paths = forLang(accountPaths, lang);
   const itemClass =
@@ -99,8 +117,8 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
         className="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <AgentAvatar
-          src={profile.photo_url}
-          name={profile.display_name}
+          src={shown.photo_url}
+          name={shown.display_name}
           className="w-9 h-9 hover:opacity-90 transition-opacity"
         />
       </button>
@@ -111,12 +129,14 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
           className="absolute right-0 mt-2 w-56 rounded-lg border border-slate-200 bg-white shadow-lg py-1 z-30"
         >
           <p className="px-4 py-2 text-xs text-slate-400 border-b border-slate-100 truncate">
-            {profile.display_name}
+            {shown.display_name}
           </p>
 
-          <Link href={forLang(agentPaths, lang).profile(profile.slug)} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
-            {t.viewProfile}
-          </Link>
+          {shown.slug && (
+            <Link href={forLang(agentPaths, lang).profile(shown.slug)} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
+              {t.viewProfile}
+            </Link>
+          )}
           <Link href={paths.profile} role="menuitem" className={itemClass} onClick={() => setOpen(false)}>
             {t.editProfile}
           </Link>
@@ -136,7 +156,7 @@ export default function AccountMenu({ lang }: { lang: Lang }) {
               at the foot of the profile page. Note this only decides what to
               SHOW — /admin/agents re-checks is_admin on the server, and the RLS
               policies would refuse the queries regardless. */}
-          {profile.is_admin && (
+          {shown.is_admin && (
             <Link
               href="/admin/agents"
               role="menuitem"
