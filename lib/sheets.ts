@@ -322,10 +322,10 @@ function parseRows(rows: string[][]): Listing[] {
         forSale:      false,
       };
       // Leaked enrichment-prompt lines ("1. Translate into English…") — see lib/promptEcho.ts.
-      listing.text = stripPromptEcho(listing.text);
-      listing.vi_text = stripPromptEcho(listing.vi_text);
-      listing.ko_text = stripPromptEcho(listing.ko_text);
-      listing.ru_text = stripPromptEcho(listing.ru_text);
+      listing.text = stripAgentPhones(stripPromptEcho(listing.text));
+      listing.vi_text = stripAgentPhones(stripPromptEcho(listing.vi_text));
+      listing.ko_text = stripAgentPhones(stripPromptEcho(listing.ko_text));
+      listing.ru_text = stripAgentPhones(stripPromptEcho(listing.ru_text));
       Object.assign(listing, placeListing(listing) ?? {});
       warnIfBadData(listing, 'Sheet1/Rentals');
       return listing;
