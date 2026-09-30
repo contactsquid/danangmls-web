@@ -1,3 +1,12 @@
 {
-  "crons": [{ "path": "/api/agent-drip", "schedule": "0 2 * * *" }]
+  "crons": [
+    {
+      "path": "/api/agent-drip",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/sync-listings",
+      "schedule": "*/10 * * * *"
+    }
+  ]
 }
