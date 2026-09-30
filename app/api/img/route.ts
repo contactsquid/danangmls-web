@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // cached pages and shares may. Until 2026-09-29 it fetched ANY url and cached the
 // result for 7 days — an open proxy anyone could relay content through our domain.
 // Now: https only, Facebook CDN or our own image hosts only, images only.
-const ALLOWED_HOST = /(^|\.)(fbcdn\.net|images\.danang\.homes|images\.saigonmls\.com)$/i;
+const ALLOWED_HOST = /(^|\.)(fbcdn\.net|images\.danang\.homes)$/i;
 const MAX_BYTES = 15 * 1024 * 1024;
 
 function allowedImageUrl(raw: string | null): URL | null {
