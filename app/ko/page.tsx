@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   openGraph: {
     images: OG_DEFAULT_IMAGES,
     locale: 'ko_KR',
-    title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
-    description: 'Danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày.',
+    title: '다낭 부동산 — 다낭 매물 정보 서비스 | DanangMLS',
+    description: '다낭 전역의 임대 및 매매 부동산을 가장 깔끔하게 정리한 목록. 현지 중개인의 매물을 매일 업데이트합니다.',
     url: 'https://danangmls.com/ko',
     type: 'website',
   },
