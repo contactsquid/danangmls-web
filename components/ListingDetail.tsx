@@ -20,6 +20,7 @@ import { getDistrict, districtCopy } from '@/lib/districts';
 import { getListingNote } from '@/lib/listingNotes';
 import { listingFieldHref, facetUrl, FOREIGN_FACET, facetBase } from '@/lib/facets';
 import { relativeTime } from '@/lib/relativeTime';
+import { renderDescription } from '@/lib/descriptionFormat';
 
 interface Props {
   listing: Listing;
@@ -339,7 +340,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           {cleanText && (
             <div className="mb-8">
               <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">{t.description}</h2>
-              <p className="text-slate-700 leading-relaxed whitespace-pre-line">{cleanText}</p>
+              <p className="text-slate-700 leading-relaxed whitespace-pre-line">{renderDescription(cleanText)}</p>
 
               {/* Rentals only. Da Nang quotes monthly rent against a 1-year term
                   and marks it up for shorter stays, so a bare monthly figure
