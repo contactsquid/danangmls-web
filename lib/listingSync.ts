@@ -21,6 +21,9 @@ import type { Listing } from './types';
 
 /** This site's city. The ONLY line that differs between the three repos' copies. */
 export const CITY = 'danang' as const;
+/** This site, as the owner of its rows (migration 0005). A sync reads, updates and
+ *  unlists only its own rows: lotusmls.com can hold listings in the same city. */
+export const SOURCE = 'danangmls' as const;
 
 // Refuse a run that would unlist more than this share of the city's listed rows.
 const MAX_UNLIST_SHARE = 0.3;
@@ -52,6 +55,7 @@ function rowOf(raw: Listing, kind: Kind) {
   const low = priceLow(l.price || '');
   return {
     city: CITY,
+    source: SOURCE,
     kind,
     slug: l.slug,
     post_url: l.postUrl || null,
@@ -103,7 +107,7 @@ export async function syncListings({ dryRun = false } = {}): Promise<SyncReport>
   // What's there now (small: slug, hash, listed).
   const existing = new Map<string, { hash: string; listed: boolean }>();
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await db.from('listings').select('slug, content_hash, listed').eq('city', CITY).range(from, from + 999);
+    const { data, error } = await db.from('listings').select('slug, content_hash, listed').eq('source', SOURCE).range(from, from + 999);
     if (error) throw new Error(`read existing: ${error.message}`);
     for (const r of data ?? []) existing.set(r.slug, { hash: r.content_hash, listed: r.listed });
     if (!data || data.length < 1000) break;
@@ -131,7 +135,7 @@ export async function syncListings({ dryRun = false } = {}): Promise<SyncReport>
     }
     // Small batches: PostgREST puts the IN list in the URL.
     for (let i = 0; i < toUnlist.length; i += 100) {
-      const { error } = await db.from('listings').update({ listed: false, updated_at: now }).eq('city', CITY).in('slug', toUnlist.slice(i, i + 100));
+      const { error } = await db.from('listings').update({ listed: false, updated_at: now }).eq('source', SOURCE).in('slug', toUnlist.slice(i, i + 100));
       if (error) throw new Error(`unlist: ${error.message}`);
       report.unlisted += Math.min(100, toUnlist.length - i);
     }

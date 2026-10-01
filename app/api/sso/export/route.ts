@@ -26,8 +26,8 @@ import { isSupabaseConfigured } from '@/lib/supabase/config';
  */
 export async function GET(request: NextRequest) {
   // Every site in the MLS family (2026-09-30: HanoiMLS joined). Keep this list the same in
-  // danangmls-web, saigonmls-web and hanoimls-web until lotusmls becomes the central login.
-  const ALLOWED_ORIGINS = ['https://danangmls.com', 'https://saigonmls.com', 'https://hanoimls.com'];
+  // danangmls-web, saigonmls-web, hanoimls-web and lotusmls-web until lotusmls becomes the central login.
+  const ALLOWED_ORIGINS = ['https://danangmls.com', 'https://saigonmls.com', 'https://hanoimls.com', 'https://lotusmls.com'];
 
   const { searchParams } = new URL(request.url);
   const returnParam = searchParams.get('return');
