@@ -143,7 +143,9 @@ export function enquiryFor(listing: EnquiryListing, lang: Lang): string {
   if (lang === 'vi') return enquiryVi(listing);
   const url = listingUrl(listing.slug);
   const beds = String(listing.bedrooms || '').trim();
-  const dist = String(listing.district || '').trim();
+  const distRaw = String(listing.district || '').trim();
+  // Sheet placeholder for a missing district — treat as absent so it never reaches the copy.
+  const dist = /^(not provided|n\/a|unknown|none)$/i.test(distRaw) ? '' : distRaw;
   const n = Number(beds);
   const hasBeds = Boolean(beds) && Number.isFinite(n) && n > 0;
 
@@ -170,7 +172,7 @@ export function enquiryFor(listing: EnquiryListing, lang: Lang): string {
   const what = hasBeds && dist ? `the ${beds}-bedroom place in ${dist}`
              : hasBeds        ? `the ${beds}-bedroom place`
              : dist           ? `the place in ${dist}`
-             :                  'this listing';
+             :                  'this property';
   return `Hi, I'm interested in ${what} on DanangMLS:\n${url}\nIs it still available?`;
 }
 
