@@ -53,3 +53,9 @@ body {
 /* The listing a page is about, on its location map: the dark tag, slightly larger. */
 .dmls-pin.main span { transform: translate(-50%, calc(-100% - 6px)) scale(1.12); }
 .dmls-pin.main:hover span { transform: translate(-50%, calc(-100% - 6px)) scale(1.18); }
+
+/* Phones zoom the page in when a field under 16px is focused (iOS Safari) and stay
+   zoomed (Blake, 2026-10-01, on lotusmls). Touch screens get 16px form text. */
+@media (pointer: coarse) {
+  input, select, textarea { font-size: 16px !important; }
+}

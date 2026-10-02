@@ -10,6 +10,9 @@ import { POPULAR_BUILDINGS } from '@/lib/buildingDefs';
 import ListingCard from './ListingCard';
 import { useLanguage } from './LanguageProvider';
 import { localizeType, localizeDistrict, priceLow } from '@/lib/price';
+import { SITE_CITY, cityJumpUrl, jumpCities } from '@/lib/cityJump';
+
+const CITY_LABEL: Record<string, string> = { en: 'City', vi: 'Thành phố', ko: '도시', ru: 'Город' };
 
 // Leaflet only downloads when a visitor switches to Map.
 const ListingsMap = dynamic(() => import('./ListingsMap'), {
@@ -246,6 +249,13 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
 
         {/* Filter row */}
         <div className="flex flex-wrap gap-2 items-center">
+          {/* City: this site's city by default; another city leaves for its page (lib/cityJump.ts). */}
+          <select value={SITE_CITY} aria-label={CITY_LABEL[lang] ?? CITY_LABEL.en}
+            onChange={e => { if (e.target.value !== SITE_CITY) window.location.href = cityJumpUrl(e.target.value, mode, lang); }}
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            {jumpCities(lang).map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}
+          </select>
+
           <select value={typeFilter} onChange={e => setType(e.target.value)}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
             <option value="">{t.allTypes}</option>
