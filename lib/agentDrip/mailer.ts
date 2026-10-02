@@ -16,6 +16,10 @@ const PASS = process.env.SMTP_PASS ?? '';
 
 export const isMailerConfigured = Boolean(USER && PASS);
 
+// Blake reviews every drip email for now (2026-10-02). DRIP_BCC overrides it; set it to
+// an empty string to stop the copies.
+const REVIEW_BCC = process.env.DRIP_BCC ?? 'blake@blaremedia.net';
+
 export async function sendMail(msg: {
   to: string;
   subject: string;
@@ -35,6 +39,7 @@ export async function sendMail(msg: {
   await transport.sendMail({
     from: { name: 'DanangMLS', address: USER },
     to: msg.to,
+    ...(REVIEW_BCC ? { bcc: REVIEW_BCC } : {}),
     subject: msg.subject,
     html: msg.html,
     text: msg.text,
