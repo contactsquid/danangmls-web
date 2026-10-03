@@ -17,6 +17,9 @@
 - Rentals under $1,000/month show the agent's own contact (Vy's if none); $1,000 and over show Vy (lib/agentContact.ts).
 
 ## Before you start
+- Claim the folder on the shared task board before changing anything:
+  `node ~/.openclaw/scripts/coda-board.js claim danangmls-web "<what>"`. If it is REFUSED, another session is working here:
+  don't touch it, tell Blake. When finished: `node ~/.openclaw/scripts/coda-board.js done <id> "<result>"`.
 - Several Coda sessions share this folder (office, Telegram, scheduled). Run `git status` and `git log --oneline -10` first.
   Uncommitted changes or commits you didn't make belong to another session: leave them alone and don't commit them.
 - Read the tail of `~/.openclaw/data/coda-activity.md`. After notable work, append
