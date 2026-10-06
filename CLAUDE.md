@@ -34,6 +34,8 @@
   vercel deploy --prod --yes --token $(node -e 'const j=require(process.env.HOME+"/.openclaw/credentials/vercel/token.json");console.log(j.token||Object.values(j)[0])')
   git stash pop
   ```
+- Commits MUST be authored `contactsquid <blake@blaremedia.net>` (set in this repo's git config). Any other author makes Vercel
+  BLOCK the deploy (TEAM_ACCESS_REQUIRED) while the CLI still prints a URL. Confirm the deploy is READY, not just started.
 - Then `git push origin main` (GitHub backup; see "This project").
 - Verify on the LIVE site after deploying: `curl` the pages you changed. For rendered UI, take a headless Chrome screenshot:
   `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --window-size=1280,2200 --virtual-time-budget=15000 --screenshot=out.png <url>`
