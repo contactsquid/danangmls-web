@@ -3,6 +3,8 @@ import Link from 'next/link';
 import AgentAvatar from './AgentAvatar';
 import { AGENT_COPY, agentPaths } from '@/lib/agentCopy';
 import { accountPaths } from '@/lib/accountCopy';
+import PageFaq from './PageFaq';
+import { renderInline } from '@/lib/inlineFormat';
 import type { Lang } from '@/lib/translations';
 import type { AgentProfile } from '@/lib/agents';
 
@@ -64,6 +66,24 @@ export default function AgentsDirectoryView({ profiles, counts, lang }: Props) {
           })}
         </ul>
       )}
+
+      {t.directorySections.map(sec => (
+        <section key={sec.h} className="mt-12 max-w-3xl">
+          <h2 className="text-2xl font-bold text-slate-900 mb-3">{sec.h}</h2>
+          <p className="text-slate-600 leading-relaxed">{renderInline(sec.p)}</p>
+          {sec.bullets && (
+            <ul className="list-disc pl-6 mt-3 space-y-1.5 text-slate-600 leading-relaxed">
+              {sec.bullets.map(b => (
+                <li key={b}>{renderInline(b)}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+
+      <div className="mt-12 -mx-4 sm:-mx-6">
+        <PageFaq mode="rent" faqOverride={{ heading: t.faqHeading, faq: t.faq }} />
+      </div>
 
       <section className="mt-12 bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-2">{t.ctaHeading}</h2>
