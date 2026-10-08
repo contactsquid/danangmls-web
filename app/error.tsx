@@ -21,10 +21,10 @@ const COPY = {
     home: 'Back to homepage',
   },
   vi: {
-    uploadHeading: 'Ảnh đó không tải lên được',
-    uploadBody: 'Chúng tôi chỉ nhận ảnh định dạng JPG, PNG hoặc WebP, tối đa 5 MB. Vui lòng chọn ảnh khác và thử lại.',
+    uploadHeading: 'Không tải được ảnh lên',
+    uploadBody: 'Hệ thống chỉ nhận ảnh JPG, PNG hoặc WebP, dung lượng tối đa 5 MB. Vui lòng chọn ảnh khác rồi thử lại.',
     heading: 'Đã xảy ra lỗi',
-    body: 'Trang này gặp sự cố. Vui lòng thử lại hoặc quay về trang chủ.',
+    body: 'Trang đang gặp sự cố. Vui lòng thử lại hoặc quay về trang chủ.',
     retry: 'Thử lại',
     home: 'Về trang chủ',
   },

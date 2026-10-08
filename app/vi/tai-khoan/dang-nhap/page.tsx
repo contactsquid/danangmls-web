@@ -9,15 +9,15 @@ import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Đăng Nhập Môi Giới',
+  title: 'Đăng nhập môi giới',
   robots: { index: false, follow: true },
 };
 
 const t = ACCOUNT_COPY.vi;
 
 const ERRORS: Record<string, string> = {
-  verification: 'Email của bạn đã được xác nhận — vui lòng đăng nhập bên dưới. (Nếu bạn chưa xác nhận, hãy yêu cầu liên kết mới.)',
-  unavailable: 'Tài khoản môi giới chưa được bật trên trang này.',
+  verification: 'Email của anh/chị đã xác nhận xong — vui lòng đăng nhập bên dưới. (Nếu anh/chị chưa xác nhận, vui lòng yêu cầu liên kết mới.)',
+  unavailable: 'Trang này chưa mở tài khoản môi giới.',
 };
 
 export default async function ViLoginPage({

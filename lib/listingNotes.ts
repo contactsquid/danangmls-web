@@ -14,7 +14,7 @@ export interface ListingNote {
 export const LISTING_NOTES: Record<string, ListingNote> = {
   'luxury-villa-with-private-pool-in-premier-village-rxyx5l': {
     en: 'Available for a 6-month lease — a flexible option, since most properties in Da Nang require a 12-month commitment.',
-    vi: 'Cho thuê tối thiểu 6 tháng — một lựa chọn linh hoạt, vì hầu hết các bất động sản tại Đà Nẵng yêu cầu hợp đồng 12 tháng.',
+    vi: 'Nhận hợp đồng thuê 6 tháng, linh hoạt hơn so với mức 12 tháng mà phần lớn nhà cho thuê tại Đà Nẵng yêu cầu.',
   },
 };
 

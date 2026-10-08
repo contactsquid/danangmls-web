@@ -110,81 +110,94 @@ function foreignEn(): FacetSeoBody {
 }
 
 // ─── Vietnamese ──────────────────────────────────────────────────────────────
+// Lowercase Vietnamese nouns for the generic types, used inside prose.
+const VI_TYPE_NOUN: Record<string, string> = {
+  Villa: 'biệt thự', Townhouse: 'nhà phố', Studio: 'căn hộ studio', Land: 'đất',
+  Office: 'văn phòng', Retail: 'mặt bằng kinh doanh', Shophouse: 'shophouse',
+  Commercial: 'mặt bằng kinh doanh',
+};
+
 function typeVi(value: string, mode: Mode): FacetSeoBody {
-  const thueBan = mode === 'rent' ? 'Cho Thuê' : 'Bán';
+  const thueBan = mode === 'rent' ? 'cho thuê' : 'bán';
   const thueBanLc = mode === 'rent' ? 'cho thuê' : 'bán';
+  const thueMua = mode === 'rent' ? 'thuê' : 'mua';
 
   if (value === 'House') {
     return {
-      h2: `Nhà ${thueBan} tại Đà Nẵng — Không Gian Rộng Rãi & Riêng Tư`,
+      h2: mode === 'rent'
+        ? `Nhà ${thueBan} Đà Nẵng — rộng rãi, riêng tư, đủ chỗ cho cả gia đình`
+        : `Bán nhà Đà Nẵng — rộng rãi, riêng tư, đủ chỗ cho cả gia đình`,
       intro: [
-        `**Nhà ${thueBanLc} tại Đà Nẵng** mang lại điều mà căn hộ khó có: nhiều **phòng ngủ**, bếp riêng, thường có sân, sân thượng hoặc chỗ để xe, và những con phố yên tĩnh chỉ cách biển vài phút. Nhà tại Đà Nẵng trải dài từ nhà phố ở **Hải Châu** đến nhà gia đình rộng rãi ở **An Thượng** và biệt thự sân vườn hướng **Ngũ Hành Sơn**.`,
+        `So với căn hộ, **nhà ${thueBanLc} tại Đà Nẵng** cho bạn nhiều hơn hẳn: nhiều **phòng ngủ**, bếp riêng, thường có sân, sân thượng hoặc chỗ để xe, lại nằm trong những con phố yên tĩnh chỉ cách biển vài phút chạy xe. Nhà ở Đà Nẵng có đủ kiểu, từ nhà phố gọn gàng ở **Hải Châu**, nhà rộng cho gia đình ở **An Thượng** đến biệt thự sân vườn về phía **Ngũ Hành Sơn**.`,
         mode === 'rent'
-          ? `Hầu hết **nhà cho thuê** có hai đến năm **phòng ngủ** và nhiều phòng tắm, cho thuê dài hạn từ ba tháng, thường đầy đủ nội thất với **bếp** hiện đại. So sánh thiết kế, quận và giá theo USD ở danh sách phía trên.`
-          : `**Nhà bán tại Đà Nẵng** gồm nhà phố nhiều tầng và nhà gắn liền với đất rộng rãi. Lưu ý người nước ngoài thường mua **căn hộ** đủ điều kiện thay vì nhà gắn liền với đất — hãy hỏi về hình thức sở hữu cho mỗi tin. So sánh quận, diện tích đất và giá USD phía trên.`,
+          ? `Phần lớn **nhà cho thuê** ở đây có từ hai đến năm **phòng ngủ** và nhiều phòng tắm, thường cho thuê dài hạn từ ba tháng trở lên, đầy đủ nội thất cùng **bếp** hiện đại. Bạn có thể so sánh thiết kế, quận và giá thuê (USD) ở các tin đăng phía trên, rồi nhắn thẳng cho môi giới khi ưng căn nào.`
+          : `**Nhà bán tại Đà Nẵng** gồm nhà phố nhiều tầng và nhà đất có diện tích sử dụng rộng. Lưu ý: người nước ngoài thường chỉ mua được **căn hộ** đủ điều kiện chứ không mua nhà gắn liền với đất, nên hãy hỏi kỹ về hình thức sở hữu của từng tin. Bạn có thể so sánh quận, diện tích đất và giá (USD) ở các tin đăng phía trên.`,
       ],
-      faqHeading: `Câu Hỏi Thường Gặp Về ${mode === 'rent' ? 'Thuê' : 'Mua'} Nhà tại Đà Nẵng`,
+      faqHeading: `Câu hỏi thường gặp khi ${thueMua} nhà tại Đà Nẵng`,
       faq: mode === 'rent' ? [
-        { q: 'Giá thuê một căn nhà tại Đà Nẵng là bao nhiêu?', a: `**Nhà cho thuê** hai đến ba **phòng ngủ** tại **Đà Nẵng** thường khoảng 500–1.200 USD mỗi **tháng**, tùy **khu vực**, diện tích và khoảng cách tới biển. Xem giá cập nhật ở danh sách phía trên.` },
-        { q: 'Nhà cho thuê tại Đà Nẵng có sẵn nội thất không?', a: `Nhiều **nhà cho thuê** có đầy đủ hoặc một phần nội thất gồm **bếp**, máy lạnh và đồ cơ bản. Mỗi tin đăng ghi rõ những gì đi kèm — hãy hỏi **đại lý** để xác nhận.` },
-        { q: 'Khu vực nào tốt để thuê nhà tại Đà Nẵng?', a: `Gia đình thường chọn **An Thượng** và **Mỹ An** gần biển Mỹ Khê, **Hải Châu** ở trung tâm, và **Ngũ Hành Sơn** để có nhà rộng và yên tĩnh hơn.` },
+        { q: 'Giá thuê nhà nguyên căn tại Đà Nẵng là bao nhiêu?', a: `**Nhà cho thuê** hai đến ba **phòng ngủ** tại **Đà Nẵng** thường có giá khoảng 500–1.200 USD mỗi **tháng**, tùy **khu vực**, diện tích và khoảng cách ra biển. Giá cập nhật có ở các tin đăng phía trên.` },
+        { q: 'Nhà cho thuê ở Đà Nẵng có sẵn nội thất không?', a: `Nhiều **nhà cho thuê** có sẵn nội thất toàn bộ hoặc một phần, gồm **bếp**, máy lạnh và đồ dùng cơ bản. Tin đăng nào cũng ghi rõ những gì đi kèm, nhưng bạn nên hỏi lại **môi giới** trước khi ký.` },
+        { q: 'Nên thuê nhà ở khu nào tại Đà Nẵng?', a: `Các gia đình thường chọn **An Thượng** và **Mỹ An** gần biển Mỹ Khê, **Hải Châu** nếu muốn ở trung tâm, hoặc **Ngũ Hành Sơn** nếu cần nhà rộng và yên tĩnh hơn.` },
       ] : [
-        { q: 'Người nước ngoài có mua được nhà đất tại Đà Nẵng không?', a: `Người nước ngoài thường không được sở hữu **nhà** gắn liền với đất hoặc **đất** tại **Việt Nam** — những loại này dành cho công dân Việt Nam. Người nước ngoài mua **căn hộ** đủ điều kiện với giấy chứng nhận sở hữu 50 năm có thể gia hạn.` },
-        { q: 'Giá một căn nhà tại Đà Nẵng là bao nhiêu?', a: `**Nhà bán** tại **Đà Nẵng** dao động rộng: nhà phố trong nội thành từ khoảng 150.000 USD, còn nhà gia đình lớn và **biệt thự** ven biển gần Mỹ Khê từ 400.000 USD trở lên. So sánh danh sách phía trên.` },
-        { q: 'Quy trình mua nhà tại Đà Nẵng như thế nào?', a: `Quy trình thường là: đặt cọc, ký hợp đồng mua bán, thanh toán theo đợt, rồi sang tên. Làm việc với **đại lý** địa phương và luật sư giúp thủ tục rõ ràng, nhất là về quyền sử dụng đất.` },
+        { q: 'Người nước ngoài có được mua nhà đất tại Đà Nẵng không?', a: `Nhìn chung là không. Người nước ngoài không được đứng tên **nhà** gắn liền với đất hay **đất** tại **Việt Nam**, vì loại tài sản này chỉ dành cho công dân Việt Nam. Thay vào đó, người nước ngoài có thể mua **căn hộ** đủ điều kiện, sở hữu theo giấy chứng nhận 50 năm và có thể gia hạn.` },
+        { q: 'Giá bán nhà tại Đà Nẵng là bao nhiêu?', a: `Giá **nhà bán** tại **Đà Nẵng** chênh lệch khá lớn: nhà phố ở khu xa biển từ khoảng 150.000 USD, còn nhà rộng cho gia đình và **biệt thự** ven biển gần Mỹ Khê từ 400.000 USD trở lên. Bạn có thể so sánh các tin đăng phía trên.` },
+        { q: 'Thủ tục mua nhà tại Đà Nẵng gồm những bước nào?', a: `Thông thường gồm: đặt cọc, ký hợp đồng mua bán, thanh toán theo tiến độ, rồi sang tên. Làm việc cùng **môi giới** địa phương và luật sư sẽ giúp giấy tờ rõ ràng, nhất là phần quyền sử dụng đất.` },
       ],
     };
   }
 
   if (value === 'Apartment') {
     return {
-      h2: `Căn Hộ ${thueBan} tại Đà Nẵng — Tiện Nghi & Dễ Quản Lý`,
+      h2: mode === 'rent'
+        ? `Căn hộ ${thueBan} Đà Nẵng — đầy đủ tiện ích, không lo bảo trì`
+        : `Bán căn hộ Đà Nẵng — đầy đủ tiện ích, không lo bảo trì`,
       intro: [
-        `**Căn hộ ${thueBanLc} tại Đà Nẵng** là cách dễ nhất để an cư: đầy đủ nội thất, ít phải bảo trì, và thường nằm trong tòa nhà có hồ bơi, phòng gym và bảo vệ 24 giờ. Lựa chọn từ **studio** nhỏ gọn đến **căn hộ ba phòng ngủ**, ở các tòa tháp ven biển **Sơn Trà** và **Mỹ An**, các tòa nhà ven sông Hàn, và khu căn hộ mới tại **Hải Châu** và **Ngũ Hành Sơn**.`,
+        `**Căn hộ ${thueBanLc} tại Đà Nẵng** là cách ổn định chỗ ở nhanh gọn: có sẵn nội thất, ít phải lo bảo trì, và thường nằm trong tòa nhà có hồ bơi, phòng gym, bảo vệ 24/24. Bạn có thể chọn từ **studio** nhỏ gọn đến **căn hộ ba phòng ngủ**, ở các tòa tháp ven biển **Sơn Trà** và **Mỹ An**, các tòa nhà dọc sông Hàn, hay những khu căn hộ mới tại **Hải Châu** và **Ngũ Hành Sơn**.`,
         mode === 'rent'
-          ? `**Căn hộ cho thuê** phù hợp cho người nước ngoài, người làm việc từ xa và các cặp đôi muốn một tổ ấm sẵn sàng dọn vào — hầu hết đầy đủ nội thất với **bếp** hiện đại, và có cả căn hộ dịch vụ cho kỳ lưu trú ngắn. So sánh ở danh sách phía trên.`
-          : `**Căn hộ bán** là hướng đi chính cho người nước ngoài: trong các tòa nhà được duyệt, người nước ngoài được sở hữu hợp pháp với giấy chứng nhận 50 năm có thể gia hạn (tối đa 30% số căn). Xem các tin dành cho người nước ngoài và so sánh tòa nhà, tầng, hướng và giá USD phía trên.`,
+          ? `**Căn hộ cho thuê** hợp với người nước ngoài, người làm việc từ xa và các cặp đôi muốn dọn vào ở ngay: đa số có đủ nội thất cùng **bếp** hiện đại, ngoài ra còn có căn hộ dịch vụ cho ai ở ngắn hạn. Bạn có thể so sánh từ studio đến căn cho gia đình, từng tòa nhà và giá thuê theo tháng (USD) ở các tin đăng phía trên.`
+          : `Với người nước ngoài, mua **căn hộ** là con đường chính để sở hữu nhà: trong các tòa nhà được phép bán cho người nước ngoài, bạn được sở hữu hợp pháp theo giấy chứng nhận 50 năm, có thể gia hạn (tối đa 30% số căn của mỗi tòa). Hãy xem các tin dành cho người nước ngoài, rồi so sánh tòa nhà, tầng, hướng nhìn và giá (USD) ở phía trên.`,
       ],
-      faqHeading: `Câu Hỏi Thường Gặp Về ${mode === 'rent' ? 'Thuê' : 'Mua'} Căn Hộ tại Đà Nẵng`,
+      faqHeading: `Câu hỏi thường gặp khi ${thueMua} căn hộ tại Đà Nẵng`,
       faq: mode === 'rent' ? [
-        { q: 'Giá thuê căn hộ tại Đà Nẵng là bao nhiêu?', a: `**Căn hộ** studio hoặc một **phòng ngủ** đầy đủ nội thất thường từ 300–500 USD mỗi **tháng**, trong khi căn hai đến ba **phòng ngủ** khoảng 500–1.200 USD tùy tòa nhà và **khu vực**. Xem giá cập nhật phía trên.` },
-        { q: 'Căn hộ tại Đà Nẵng có hồ bơi và phòng gym không?', a: `Nhiều tòa **căn hộ** tầm trung và cao cấp tại **Đà Nẵng** có hồ bơi, phòng gym và bảo vệ 24 giờ, tính trong **giá thuê** hoặc phí quản lý nhỏ. Mỗi tin ghi rõ tiện ích tòa nhà.` },
-        { q: 'Người nước ngoài có thuê được căn hộ tại Đà Nẵng không?', a: `Có. Người nước ngoài được tự do **thuê căn hộ** tại **Đà Nẵng** — chỉ cần ký hợp đồng với chủ nhà hoặc **đại lý**, người sẽ đăng ký tạm trú cho bạn.` },
+        { q: 'Giá thuê căn hộ tại Đà Nẵng là bao nhiêu?', a: `**Căn hộ** studio hoặc một **phòng ngủ** có nội thất thường từ 300–500 USD mỗi **tháng**, còn căn hai đến ba **phòng ngủ** khoảng 500–1.200 USD, tùy tòa nhà và **khu vực**. Các tòa ven biển có hồ bơi, phòng gym thường giá cao hơn. Giá cập nhật có ở phía trên.` },
+        { q: 'Căn hộ ở Đà Nẵng có hồ bơi và phòng gym không?', a: `Nhiều tòa **căn hộ** tầm trung và cao cấp ở **Đà Nẵng** có hồ bơi, phòng gym và bảo vệ 24/24, đã tính vào **giá thuê** hoặc thu qua một khoản phí quản lý nhỏ. Tiện ích của từng tòa đều ghi trong tin đăng.` },
+        { q: 'Người nước ngoài có thuê căn hộ ở Đà Nẵng được không?', a: `Được. Người nước ngoài có thể **thuê căn hộ** tại **Đà Nẵng** như bình thường: chỉ cần ký hợp đồng với chủ nhà hoặc **môi giới**, bên cho thuê sẽ khai báo tạm trú cho bạn với công an địa phương. Thuê theo tháng hay dài hạn đều phổ biến.` },
       ] : [
-        { q: 'Người nước ngoài có mua được căn hộ tại Đà Nẵng không?', a: `Có. Người nước ngoài được **mua** và sở hữu hợp pháp **căn hộ** tại **Đà Nẵng** trong các tòa nhà được duyệt, với giấy chứng nhận sở hữu 50 năm có thể gia hạn (tối đa 30% số căn trong tòa nhà). Xem các tin dành cho người nước ngoài.` },
-        { q: 'Giá một căn hộ tại Đà Nẵng là bao nhiêu?', a: `**Căn hộ** phổ thông từ khoảng 60.000–120.000 USD, **căn hộ** view biển tầm trung 150.000–300.000 USD, penthouse cao cấp cao hơn nhiều. So sánh giá USD phía trên.` },
-        { q: 'Mua căn hộ tại Đà Nẵng có phải khoản đầu tư tốt không?', a: `Nhiều người nước ngoài mua **căn hộ** đủ điều kiện tại **Đà Nẵng** để cho thuê và tăng giá dài hạn, nhờ du lịch và cộng đồng người nước ngoài ngày càng lớn. Lợi nhuận phụ thuộc tòa nhà, vị trí và thời điểm.` },
+        { q: 'Người nước ngoài có được mua căn hộ tại Đà Nẵng không?', a: `Có. Người nước ngoài được **mua** và sở hữu hợp pháp **căn hộ** tại **Đà Nẵng** trong các tòa nhà được phép, theo giấy chứng nhận sở hữu 50 năm, có thể gia hạn (tối đa 30% số căn của mỗi tòa). Xem các tin dành cho người nước ngoài để biết căn nào đủ điều kiện.` },
+        { q: 'Giá mua căn hộ tại Đà Nẵng là bao nhiêu?', a: `**Căn hộ** phổ thông từ khoảng 60.000–120.000 USD, **căn hộ** tầm trung ven biển 150.000–300.000 USD, còn penthouse cao cấp thì cao hơn nhiều. Giá phụ thuộc vào tòa nhà, tầng và hướng nhìn; bạn có thể so sánh giá USD ở phía trên.` },
+        { q: 'Mua căn hộ Đà Nẵng có đáng đầu tư không?', a: `Nhiều người nước ngoài mua **căn hộ** đủ điều kiện tại **Đà Nẵng** để cho thuê và chờ tăng giá dài hạn, nhờ du lịch phát triển và cộng đồng người nước ngoài ngày càng đông. Lợi nhuận còn tùy tòa nhà, vị trí và thời điểm mua.` },
       ],
     };
   }
 
   // Generic type (VI)
-  const viType = value; // localizeType would need lang; keep canonical inside prose via generic phrasing
+  const viType = VI_TYPE_NOUN[value] || value.toLowerCase();
+  const viTypeCap = viType.charAt(0).toUpperCase() + viType.slice(1);
   return {
-    h2: `${viType} ${thueBan} tại Đà Nẵng, Việt Nam`,
+    h2: mode === 'rent' ? `${viTypeCap} ${thueBan} Đà Nẵng, Việt Nam` : `Bán ${viType} Đà Nẵng, Việt Nam`,
     intro: [
-      `Đang tìm **${viType.toLowerCase()} ${thueBanLc} tại Đà Nẵng**? Xem các tin đăng hiện có trên khắp các **quận**, từ trung tâm **Hải Châu** đến biển **Sơn Trà** và **Ngũ Hành Sơn**. So sánh diện tích, vị trí và giá theo USD, và liên hệ **đại lý** về bất kỳ tin nào bạn quan tâm.`,
-      `Tin đăng mới được thêm hàng ngày từ các **đại lý bất động sản** địa phương trên khắp **Đà Nẵng** và Hội An.`,
+      `Bạn đang ${mode === 'rent' ? `tìm **${viType} ${thueBanLc} tại Đà Nẵng**` : `tìm mua **${viType} tại Đà Nẵng**`}? Các tin đăng hiện có trải khắp các **quận**, từ trung tâm **Hải Châu** đến vùng biển **Sơn Trà** và **Ngũ Hành Sơn**. Bạn có thể so sánh diện tích, vị trí, giá (USD) và liên hệ thẳng với **môi giới** khi thấy tin phù hợp.`,
+      `Tin đăng mới được cập nhật mỗi ngày từ các **môi giới bất động sản** địa phương ở **Đà Nẵng** và Hội An.`,
     ],
-    faqHeading: `Câu Hỏi Thường Gặp Về ${mode === 'rent' ? 'Thuê' : 'Mua'} Bất Động Sản tại Đà Nẵng`,
+    faqHeading: `Câu hỏi thường gặp khi ${thueMua} bất động sản tại Đà Nẵng`,
     faq: [
-      { q: `Giá ${thueBanLc} tại Đà Nẵng là bao nhiêu?`, a: `Giá tại **Đà Nẵng** thay đổi theo **khu vực**, diện tích và tình trạng. Xem danh sách phía trên để biết giá USD cập nhật.` },
+      { q: mode === 'rent' ? `Giá thuê ${viType} tại Đà Nẵng là bao nhiêu?` : `Giá ${viType} tại Đà Nẵng là bao nhiêu?`, a: `Giá ${viType} tại **Đà Nẵng** tùy vào **khu vực**, diện tích và hiện trạng. Bạn có thể xem giá cập nhật (USD) ở các tin đăng phía trên và so sánh giữa các quận để chọn mức giá hợp lý.` },
     ],
   };
 }
 
 function foreignVi(): FacetSeoBody {
   return {
-    h2: `Nhà Bán Cho Người Nước Ngoài Sở Hữu tại Đà Nẵng`,
+    h2: `Bất động sản người nước ngoài được phép mua tại Đà Nẵng`,
     intro: [
-      `Đây là những bất động sản tại **Đà Nẵng** mà người nước ngoài được **mua** hợp pháp. Theo luật Việt Nam, người nước ngoài được sở hữu **căn hộ** trong các tòa nhà được duyệt — tối đa 30% số căn — với **giấy chứng nhận sở hữu 50 năm, có thể gia hạn** (sổ hồng). **Nhà** gắn liền với đất và **đất** vẫn dành cho công dân Việt Nam.`,
-      `Mọi tin đăng ở đây đều thuộc tòa nhà được duyệt cho sở hữu nước ngoài. So sánh tòa nhà, tầng, hướng và giá USD phía trên, và hỏi **đại lý** về hạn mức nước ngoài còn lại cùng giấy chứng nhận sở hữu cho mỗi căn.`,
+      `Đây là những bất động sản tại **Đà Nẵng** mà người nước ngoài được phép **mua** hợp pháp. Theo luật Việt Nam, người nước ngoài được sở hữu **căn hộ** trong các tòa nhà được phép, tối đa 30% số căn của mỗi tòa, theo **giấy chứng nhận quyền sở hữu thời hạn 50 năm, có thể gia hạn** (sổ hồng). Riêng **nhà** gắn liền với đất và **đất** vẫn chỉ dành cho công dân Việt Nam.`,
+      `Mọi tin đăng ở đây đều nằm trong tòa nhà được phép bán cho người nước ngoài. Bạn có thể so sánh tòa nhà, tầng, hướng nhìn và giá (USD) ở phía trên, đồng thời hỏi **môi giới** xem hạn mức dành cho người nước ngoài còn bao nhiêu căn và giấy chứng nhận của từng căn ra sao.`,
     ],
-    faqHeading: `Câu Hỏi Thường Gặp Về Sở Hữu Bất Động Sản Của Người Nước Ngoài tại Đà Nẵng`,
+    faqHeading: `Câu hỏi thường gặp về việc người nước ngoài sở hữu bất động sản tại Đà Nẵng`,
     faq: [
-      { q: 'Người nước ngoài có được sở hữu bất động sản tại Đà Nẵng không?', a: `Có — người nước ngoài được sở hữu hợp pháp **căn hộ** trong các tòa nhà được duyệt tại **Đà Nẵng**, với giấy chứng nhận 50 năm có thể gia hạn, tối đa 30% số căn trong một tòa nhà.` },
-      { q: 'Người nước ngoài không được mua gì tại Việt Nam?', a: `Người nước ngoài thường không được sở hữu **đất** hoặc **nhà** gắn liền với đất — những loại này cần quốc tịch Việt Nam. Sở hữu nước ngoài giới hạn ở **căn hộ** đủ điều kiện.` },
-      { q: 'Người nước ngoài có được bán lại hoặc cho thuê căn hộ tại Đà Nẵng không?', a: `Có. Chủ sở hữu nước ngoài được **cho thuê** căn hộ để tạo thu nhập và bán lại, theo điều khoản của giấy chứng nhận sở hữu. Nhiều người mua **căn hộ** đủ điều kiện để cho thuê và tăng giá.` },
+      { q: 'Người nước ngoài có được sở hữu bất động sản tại Đà Nẵng không?', a: `Có. Người nước ngoài được sở hữu hợp pháp **căn hộ** trong các tòa nhà được phép tại **Đà Nẵng**, theo giấy chứng nhận 50 năm có thể gia hạn. Mỗi tòa nhà chỉ cho người nước ngoài sở hữu tối đa 30% số căn.` },
+      { q: 'Người nước ngoài không được mua loại bất động sản nào ở Việt Nam?', a: `Nhìn chung, người nước ngoài không được đứng tên **đất** hay **nhà** gắn liền với đất, vì những tài sản này yêu cầu quốc tịch Việt Nam. Người nước ngoài chỉ được sở hữu **căn hộ** đủ điều kiện.` },
+      { q: 'Người nước ngoài có được bán lại hoặc cho thuê căn hộ tại Đà Nẵng không?', a: `Được. Chủ sở hữu nước ngoài có thể **cho thuê** căn hộ để có thu nhập, cũng như bán lại, theo đúng điều khoản trên giấy chứng nhận sở hữu. Nhiều người mua **căn hộ** đủ điều kiện chính là để cho thuê và chờ tăng giá.` },
     ],
   };
 }
@@ -205,163 +218,163 @@ interface BuildingSeoVi { blurb: string[]; faq: { q: string; a: string }[] }
 
 // Vietnamese written natively for a Vietnamese renter — NOT a translation of the
 // English above. Uses the phrasing real agents use: "full nội thất", "view sông
-// Hàn", "tòa căn hộ", "vào ở được ngay". Kiểu cũ tone marks and "USD" spelled
+// Hàn", "tòa căn hộ", "xách vali vào ở". Kiểu cũ tone marks and "USD" spelled
 // out after the figure, matching the rest of the site.
 const BUILDING_SEO_VI: Record<string, BuildingSeoVi> = {
   'Sam Towers': {
     blurb: [
-      'Sam Towers là tòa căn hộ ven sông tại quận Hải Châu, Đà Nẵng, gần sông Hàn và cầu Rồng. Tất cả tin đăng tại đây đều là căn hộ, phù hợp khi cần một tòa nhà có thang máy, an ninh và chỗ để xe thay vì nhà riêng.',
-      'Phần lớn là căn 2 phòng ngủ, bên cạnh các căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện dao động khoảng 684–2.280 USD mỗi tháng, phổ biến quanh mức 950 USD.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông Hàn ở các tầng cao. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Sam Towers là tòa căn hộ ven sông tại quận Hải Châu, Đà Nẵng, gần sông Hàn và cầu Rồng. Tất cả tin đăng tại đây đều là căn hộ, hợp với bạn nếu muốn ở tòa nhà có thang máy, bảo vệ và chỗ để xe thay vì nhà riêng.',
+      'Phần lớn là căn 2 phòng ngủ, ngoài ra có căn 1 phòng ngủ và đôi khi có căn 3 phòng ngủ. Giá thuê hiện khoảng 684–2.280 USD mỗi tháng, phổ biến quanh mức 950 USD.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym và view sông Hàn ở các tầng cao. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Sam Towers khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **684–2.280 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Giá thuê căn hộ tại Sam Towers khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **684–2.280 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
       { q: 'Sam Towers nằm ở đâu?', a: 'Tại **quận Hải Châu**, gần **sông Hàn** và cầu Rồng, thuận tiện đi làm ở trung tâm và cách bãi biển Mỹ Khê một quãng ngắn.' },
-      { q: 'Căn hộ tại Sam Towers có mấy phòng ngủ?', a: 'Chủ yếu là **2 phòng ngủ**. Căn 1 phòng ngủ thường xuyên có, và thỉnh thoảng có căn 3 phòng ngủ.' },
-      { q: 'Sam Towers có hồ bơi và phòng gym không?', a: 'Có — **hồ bơi** và **phòng gym** được nhắc tới trong phần lớn tin đăng, cùng thang máy, an ninh và chỗ để xe.' },
+      { q: 'Căn hộ tại Sam Towers có mấy phòng ngủ?', a: 'Chủ yếu là **2 phòng ngủ**. Căn 1 phòng ngủ cũng khá thường gặp, thỉnh thoảng có căn 3 phòng ngủ.' },
+      { q: 'Sam Towers có hồ bơi và phòng gym không?', a: 'Có. Phần lớn tin đăng đều nhắc tới **hồ bơi** và **phòng gym**, kèm thang máy, bảo vệ và chỗ để xe.' },
     ],
   },
   'Panoma': {
     blurb: [
-      'Panoma nằm bên bờ sông Hàn phía Ngũ Hành Sơn, hiện là tòa có nhiều tin đăng nhất trên DanangMLS — dễ chọn vì cùng một địa chỉ mà có nhiều loại căn.',
-      'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio. Giá thuê hiện dao động khoảng 532–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Panoma nằm bên bờ sông Hàn phía Ngũ Hành Sơn, hiện là tòa có nhiều tin đăng nhất trên DanangMLS, nên bạn có nhiều lựa chọn căn trong cùng một địa chỉ.',
+      'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio. Giá thuê hiện khoảng 532–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym và view sông. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Panoma khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **532–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Panoma nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Panoma khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **532–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Panoma nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Panoma có mấy phòng ngủ?', a: 'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio.' },
-      { q: 'Căn hộ tại Panoma có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Panoma có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Sun Cosmo': {
     blurb: [
       'Sun Cosmo là tòa căn hộ ven sông tại Ngũ Hành Sơn, chạy xe vài phút là tới biển Mỹ Khê và khu An Thượng.',
-      'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 551–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym, ban công và view sông. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ. Giá thuê hiện khoảng 551–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym, ban công và view sông. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Sun Cosmo khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **551–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Sun Cosmo nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Sun Cosmo khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **551–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Sun Cosmo nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Sun Cosmo có mấy phòng ngủ?', a: 'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ.' },
-      { q: 'Căn hộ tại Sun Cosmo có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Sun Cosmo có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'The Filmore': {
     blurb: [
       'The Filmore là tòa căn hộ cao cấp ven sông Hàn tại Hải Châu. Mặt bằng giá ở đây cao hơn mặt bằng chung của thành phố.',
-      'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ. Giá thuê hiện dao động khoảng 1.064–4.940 USD mỗi tháng, phổ biến quanh mức 1.520 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông Hàn. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ. Giá thuê hiện khoảng 1.064–4.940 USD mỗi tháng, phổ biến quanh mức 1.520 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym và view sông Hàn. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại The Filmore khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **1.064–4.940 USD** mỗi tháng, phổ biến quanh **1.520 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'The Filmore nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại The Filmore khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **1.064–4.940 USD** mỗi tháng, phổ biến quanh **1.520 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'The Filmore nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại The Filmore có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ.' },
-      { q: 'Căn hộ tại The Filmore có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại The Filmore có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Hiyori Garden Tower': {
     blurb: [
-      'Hiyori Garden Tower do chủ đầu tư Nhật phát triển, nằm tại Sơn Trà, đi bộ ra biển và được khách Nhật, Hàn ưa chuộng.',
-      'Gần như toàn bộ là căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 646–1.064 USD mỗi tháng, phổ biến quanh mức 874 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym, ban công và gần biển. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Hiyori Garden Tower là tòa căn hộ do chủ đầu tư Nhật Bản phát triển tại Sơn Trà, có thể đi bộ ra biển, được nhiều khách thuê Nhật, Hàn ưa chuộng.',
+      'Gần như toàn bộ là căn 2 phòng ngủ. Giá thuê hiện khoảng 646–1.064 USD mỗi tháng, phổ biến quanh mức 874 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym, ban công và vị trí gần biển. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Hiyori Garden Tower khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **646–1.064 USD** mỗi tháng, phổ biến quanh **874 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Hiyori Garden Tower nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Hiyori Garden Tower khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **646–1.064 USD** mỗi tháng, phổ biến quanh **874 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Hiyori Garden Tower nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Hiyori Garden Tower có mấy phòng ngủ?', a: 'Gần như toàn bộ là căn 2 phòng ngủ.' },
-      { q: 'Căn hộ tại Hiyori Garden Tower có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Hiyori Garden Tower có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'FPT Plaza / F.Home': {
     blurb: [
-      'FPT Plaza và F.Home nằm cạnh khu FPT tại Ngũ Hành Sơn, thuận tiện cho nhân viên công nghệ và sinh viên. Đây cũng là mức giá mềm nhất trong nhóm các tòa căn hộ trên trang.',
-      'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ. Giá thuê hiện dao động khoảng 201–1.900 USD mỗi tháng, phổ biến quanh mức 532 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và ban công. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'FPT Plaza và F.Home nằm cạnh khu FPT tại Ngũ Hành Sơn, thuận tiện cho nhân viên công nghệ và sinh viên. Giá thuê ở đây cũng mềm nhất trong các tòa căn hộ trên DanangMLS.',
+      'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ. Giá thuê hiện khoảng 201–1.900 USD mỗi tháng, phổ biến quanh mức 532 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym và ban công. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại FPT Plaza / F.Home khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **201–1.900 USD** mỗi tháng, phổ biến quanh **532 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'FPT Plaza / F.Home nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại FPT Plaza / F.Home khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **201–1.900 USD** mỗi tháng, phổ biến quanh **532 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'FPT Plaza / F.Home nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại FPT Plaza / F.Home có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ, có thêm căn 1 và 3 phòng ngủ.' },
-      { q: 'Căn hộ tại FPT Plaza / F.Home có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại FPT Plaza / F.Home có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Monarchy': {
     blurb: [
       'Monarchy là tòa căn hộ ven sông tại Hải Châu, gần cầu Rồng và khu trung tâm.',
-      'Chủ yếu là căn 2 phòng ngủ, thỉnh thoảng có studio hoặc căn 3 phòng ngủ. Giá thuê hiện dao động khoảng 589–1.900 USD mỗi tháng, phổ biến quanh mức 798 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi và view sông Hàn. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Chủ yếu là căn 2 phòng ngủ, thỉnh thoảng có studio hoặc căn 3 phòng ngủ. Giá thuê hiện khoảng 589–1.900 USD mỗi tháng, phổ biến quanh mức 798 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi và view sông Hàn. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Monarchy khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **589–1.900 USD** mỗi tháng, phổ biến quanh **798 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Monarchy nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Monarchy khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **589–1.900 USD** mỗi tháng, phổ biến quanh **798 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Monarchy nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Monarchy có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ, thỉnh thoảng có studio hoặc căn 3 phòng ngủ.' },
-      { q: 'Căn hộ tại Monarchy có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Monarchy có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Times Square FUTA Residence': {
     blurb: [
       'Times Square FUTA Residence nằm ngay mặt biển tại Ngũ Hành Sơn. Giá thuê ở đây thuộc nhóm cao, đổi lại là view biển trực diện.',
-      'Số căn 1 phòng ngủ và 2 phòng ngủ khá cân bằng. Giá thuê hiện dao động khoảng 1.125–3.800 USD mỗi tháng, phổ biến quanh mức 2.470 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym, view biển và gần biển. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Số căn 1 phòng ngủ và 2 phòng ngủ khá cân bằng. Giá thuê hiện khoảng 1.125–3.800 USD mỗi tháng, phổ biến quanh mức 2.470 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym, view biển và vị trí sát biển. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Times Square FUTA Residence khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **1.125–3.800 USD** mỗi tháng, phổ biến quanh **2.470 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Times Square FUTA Residence nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Times Square FUTA Residence khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **1.125–3.800 USD** mỗi tháng, phổ biến quanh **2.470 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Times Square FUTA Residence nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Times Square FUTA Residence có mấy phòng ngủ?', a: 'Số căn 1 phòng ngủ và 2 phòng ngủ khá cân bằng.' },
-      { q: 'Căn hộ tại Times Square FUTA Residence có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Times Square FUTA Residence có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Blooming Tower': {
     blurb: [
-      'Blooming Tower nằm ven sông phía Hải Châu, thiên về các căn diện tích lớn hơn mặt bằng chung.',
-      'Chủ yếu là căn 2 và 3 phòng ngủ, phù hợp cho gia đình. Giá thuê hiện dao động khoảng 920–1.900 USD mỗi tháng, phổ biến quanh mức 920 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi và ban công. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Blooming Tower nằm ven sông phía Hải Châu, thiên về căn diện tích lớn hơn mặt bằng chung.',
+      'Chủ yếu là căn 2 và 3 phòng ngủ, phù hợp cho gia đình. Giá thuê hiện khoảng 920–1.900 USD mỗi tháng, phổ biến quanh mức 920 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi và ban công. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Blooming Tower khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **920–1.900 USD** mỗi tháng, phổ biến quanh **920 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Blooming Tower nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Blooming Tower khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **920–1.900 USD** mỗi tháng, phổ biến quanh **920 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Blooming Tower nằm ở đâu?', a: 'Tại **quận Hải Châu**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Blooming Tower có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 và 3 phòng ngủ, phù hợp cho gia đình.' },
-      { q: 'Căn hộ tại Blooming Tower có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Blooming Tower có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Muong Thanh': {
     blurb: [
-      'Mường Thanh là tổ hợp khách sạn và căn hộ tại Ngũ Hành Sơn, đi bộ ra biển Mỹ Khê, mức giá dễ chịu so với các tòa sát biển khác.',
-      'Gần như toàn bộ là căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 570–1.140 USD mỗi tháng, phổ biến quanh mức 722 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm gần biển và ban công. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Mường Thanh là tổ hợp khách sạn và căn hộ tại Ngũ Hành Sơn, có thể đi bộ ra biển Mỹ Khê, giá thuê dễ chịu hơn nhiều tòa sát biển khác.',
+      'Gần như toàn bộ là căn 2 phòng ngủ. Giá thuê hiện khoảng 570–1.140 USD mỗi tháng, phổ biến quanh mức 722 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới vị trí gần biển và ban công. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Muong Thanh khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **570–1.140 USD** mỗi tháng, phổ biến quanh **722 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Muong Thanh nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Muong Thanh khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **570–1.140 USD** mỗi tháng, phổ biến quanh **722 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Muong Thanh nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Muong Thanh có mấy phòng ngủ?', a: 'Gần như toàn bộ là căn 2 phòng ngủ.' },
-      { q: 'Căn hộ tại Muong Thanh có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Muong Thanh có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Wyndham Soleil': {
     blurb: [
-      'Wyndham Soleil nằm mặt biển Sơn Trà, là tòa tháp cao tầng dễ nhận ra trên trục ven biển; các căn ở tầng cao có view biển rộng.',
-      'Gồm căn 1 phòng ngủ và 2 phòng ngủ. Giá thuê hiện dao động khoảng 1.064–2.090 USD mỗi tháng, phổ biến quanh mức 1.064 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm gần biển và view biển. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Wyndham Soleil nằm ngay mặt biển Sơn Trà, là tòa tháp cao tầng dễ nhận ra trên trục ven biển; các căn ở tầng cao có view biển rộng.',
+      'Gồm căn 1 phòng ngủ và 2 phòng ngủ. Giá thuê hiện khoảng 1.064–2.090 USD mỗi tháng, phổ biến quanh mức 1.064 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới vị trí sát biển và view biển. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Wyndham Soleil khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **1.064–2.090 USD** mỗi tháng, phổ biến quanh **1.064 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Wyndham Soleil nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Wyndham Soleil khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **1.064–2.090 USD** mỗi tháng, phổ biến quanh **1.064 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Wyndham Soleil nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Wyndham Soleil có mấy phòng ngủ?', a: 'Gồm căn 1 phòng ngủ và 2 phòng ngủ.' },
-      { q: 'Căn hộ tại Wyndham Soleil có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Wyndham Soleil có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'Azura': {
     blurb: [
       'Azura là tòa căn hộ ven sông Hàn phía Sơn Trà, dễ nhận ra nhờ mặt kính cong đặc trưng.',
-      'Chủ yếu là căn 2 phòng ngủ. Giá thuê hiện dao động khoảng 418–1.600 USD mỗi tháng, phổ biến quanh mức 1.216 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tiện ích được nhắc tới nhiều gồm hồ bơi, phòng gym và view sông. Đa số căn được bàn giao full nội thất, có bếp, máy lạnh, máy giặt và wifi, vào ở được ngay. So sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê — danh sách cập nhật hằng ngày từ môi giới địa phương.',
+      'Chủ yếu là căn 2 phòng ngủ. Giá thuê hiện khoảng 418–1.600 USD mỗi tháng, phổ biến quanh mức 1.216 USD. Tất cả tin đăng tại đây đều là căn hộ.',
+      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym và view sông. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
     faq: [
-      { q: 'Giá thuê căn hộ tại Azura khoảng bao nhiêu?', a: 'Các tin đăng hiện tại dao động khoảng **418–1.600 USD** mỗi tháng, phổ biến quanh **1.216 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Azura nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Xem trang khu vực để biết toàn bộ tin đăng trong quận.' },
+      { q: 'Giá thuê căn hộ tại Azura khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **418–1.600 USD** mỗi tháng, phổ biến quanh **1.216 USD**, tùy diện tích và hướng nhìn.' },
+      { q: 'Azura nằm ở đâu?', a: 'Tại **quận Sơn Trà**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Azura có mấy phòng ngủ?', a: 'Chủ yếu là căn 2 phòng ngủ.' },
-      { q: 'Căn hộ tại Azura có sẵn nội thất không?', a: 'Đa số được bàn giao **full nội thất**, gồm bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn — tin đăng có ghi rõ.' },
+      { q: 'Căn hộ tại Azura có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
 };
@@ -574,7 +587,7 @@ function buildingVi(name: string, mode: Mode): FacetSeoBody {
   return {
     h2: `Căn hộ ${thueBan} tại ${name}, Đà Nẵng`,
     intro: v ? v.blurb : [
-      `${name} là một trong những tòa căn hộ được biết đến tại Đà Nẵng. Danh sách bên dưới là các căn hiện đang ${thueBan}, cập nhật hằng ngày từ môi giới địa phương.`,
+      `${name} là một trong những tòa căn hộ quen thuộc ở Đà Nẵng. Bên dưới là các căn đang ${thueBan} tại đây, do môi giới địa phương cập nhật hằng ngày.`,
     ],
     faqHeading: `${name} — Câu hỏi thường gặp`,
     faq: v ? v.faq : [],

@@ -19,13 +19,13 @@ export async function GET(request: NextRequest) {
   const u = searchParams.get('u') ?? '';
   const t = searchParams.get('t') ?? '';
   if (!verifyUnsubscribe(u, t)) {
-    return PAGE('Liên kết không hợp lệ', '<p>Liên kết hủy nhận email không hợp lệ hoặc đã hết hạn.</p>');
+    return PAGE('Liên kết không hợp lệ', '<p>Liên kết ngừng nhận email không đúng hoặc đã hết hạn. Anh/chị vui lòng bấm lại liên kết trong email gần nhất.</p>');
   }
   return PAGE(
-    'Hủy nhận email nhắc nhở',
-    `<p style="font-size:16px;line-height:1.6;">Bạn không muốn nhận email nhắc nhở đăng tin từ DanangMLS nữa?</p>
+    'Ngừng nhận email nhắc',
+    `<p style="font-size:16px;line-height:1.6;">Anh/chị muốn ngừng nhận email nhắc đăng tin từ DanangMLS?</p>
 <form method="post" action="/api/agent-drip/unsubscribe?u=${encodeURIComponent(u)}&t=${encodeURIComponent(t)}">
-<button type="submit" style="background:#2563eb;color:#fff;border:0;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;">Hủy nhận email</button></form>`,
+<button type="submit" style="background:#2563eb;color:#fff;border:0;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;">Ngừng nhận email</button></form>`,
   );
 }
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   const u = searchParams.get('u') ?? '';
   const t = searchParams.get('t') ?? '';
   if (!verifyUnsubscribe(u, t)) {
-    return PAGE('Liên kết không hợp lệ', '<p>Liên kết hủy nhận email không hợp lệ hoặc đã hết hạn.</p>');
+    return PAGE('Liên kết không hợp lệ', '<p>Liên kết ngừng nhận email không đúng hoặc đã hết hạn. Anh/chị vui lòng bấm lại liên kết trong email gần nhất.</p>');
   }
 
   const admin = createAdminClient();
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     .is('stopped_at', null);
 
   return PAGE(
-    'Đã hủy nhận email',
-    '<p style="font-size:16px;line-height:1.6;">Đã hủy nhận email nhắc nhở. Chúng tôi sẽ không gửi thêm email nhắc nhở nào nữa.</p>',
+    'Đã ngừng nhận email',
+    '<p style="font-size:16px;line-height:1.6;">Anh/chị đã ngừng nhận email nhắc. Chúng tôi sẽ không gửi thêm email nhắc đăng tin nào nữa. Hồ sơ môi giới của anh/chị vẫn còn trên DanangMLS.</p>',
   );
 }

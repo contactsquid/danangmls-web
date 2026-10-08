@@ -20,8 +20,8 @@ function metaDescription(profile: AgentProfile, listingCount: number): string {
   const where = profile.workplace && profile.workplace.toLowerCase() !== 'independent'
     ? ` tại ${profile.workplace}`
     : '';
-  const inventory = listingCount > 0 ? ` với ${listingCount} tin đăng hiện có` : '';
-  return `${profile.display_name}, môi giới bất động sản${where} ở Đà Nẵng, Việt Nam${inventory}. Xem các bất động sản cho thuê và bán của họ trên DanangMLS.`;
+  const inventory = listingCount > 0 ? `, hiện có ${listingCount} tin đăng` : '';
+  return `${profile.display_name}, môi giới bất động sản${where} tại Đà Nẵng, Việt Nam${inventory}. Xem nhà cho thuê và mua bán của môi giới này trên DanangMLS.`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonical = `https://danangmls.com/vi/moi-gioi/${profile.slug}`;
 
   return {
-    title: `${profile.display_name} — Môi Giới Bất Động Sản tại Đà Nẵng`,
+    title: `${profile.display_name} — Môi giới bất động sản tại Đà Nẵng`,
     description: metaDescription(profile, listings.length),
     alternates: { canonical, ...agentAlternates('profile', profile.slug) },
     // Same thin-content rule as the English page — a bare profile should not be
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: 'profile',
       url: canonical,
-      title: `${profile.display_name} — Môi Giới Bất Động Sản tại Đà Nẵng`,
+      title: `${profile.display_name} — Môi giới bất động sản tại Đà Nẵng`,
       description: metaDescription(profile, listings.length),
       images: socialImages(profile.photo_url, `${profile.display_name} — môi giới bất động sản, DanangMLS`),
     },

@@ -52,7 +52,7 @@ function viFallbackTitle(listing: Listing): string {
 // "About <district>, Da Nang" reads differently in each language, so the whole
 // heading is built per locale rather than concatenated around a translated name.
 function districtHeading(name: string, lang: string): string {
-  if (lang === 'vi') return `Về Quận ${name}, Đà Nẵng`;
+  if (lang === 'vi') return `Tìm hiểu khu vực ${name}, Đà Nẵng`;
   if (lang === 'ko') return `다낭 ${name} 지역 안내`;
   if (lang === 'ru') return `О районе ${name}, Дананг`;
   return `About ${name} District, Da Nang`;
@@ -111,7 +111,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
   const bedsHref = listing.bedrooms ? listingFieldHref('bedrooms', bedsKey, detailMode, lang) : null;
   const distHref = listing.district ? listingFieldHref('district', listing.district, detailMode, lang) : null;
   const browseVerb = listing.forSale
-    ? forLang({ en: 'for sale', vi: 'rao bán', ko: '매매', ru: 'на продажу' }, lang)
+    ? forLang({ en: 'for sale', vi: 'đang bán', ko: '매매', ru: 'на продажу' }, lang)
     : forLang({ en: 'rentals', vi: 'cho thuê', ko: '임대', ru: 'в аренду' }, lang);
   const districtInfo = getDistrict(listing.district);
 
@@ -141,7 +141,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           <p className="font-semibold mb-1">
             {forLang({
               en: 'This listing is no longer available',
-              vi: 'Tin đăng này không còn khả dụng',
+              vi: 'Tin đăng này không còn hiệu lực',
               ko: '이 매물은 더 이상 제공되지 않습니다',
               ru: 'Это объявление больше не актуально',
             }, lang)}
@@ -149,7 +149,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           <p className="leading-relaxed">
             {forLang({
               en: 'It has been taken off the market. The details below are kept for reference — browse similar listings further down, or see everything currently available.',
-              vi: 'Bất động sản này đã ngừng cho thuê/bán. Thông tin bên dưới được giữ lại để tham khảo — xem các tin tương tự phía dưới hoặc tất cả tin đang có.',
+              vi: 'Bất động sản này đã rút khỏi thị trường. Thông tin bên dưới được lưu lại để bạn tham khảo; bạn có thể xem các tin tương tự ở cuối trang hoặc toàn bộ tin đang đăng.',
               ko: '이 매물은 현재 거래가 종료되었습니다. 아래 정보는 참고용으로 보관되어 있습니다. 비슷한 매물은 아래에서, 현재 가능한 매물은 전체 목록에서 확인하세요.',
               ru: 'Объект снят с рынка. Информация ниже сохранена для справки — посмотрите похожие объекты ниже или весь актуальный список.',
             }, lang)}
@@ -170,7 +170,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           {/* Price + badges */}
           <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
             <p className="text-3xl font-bold text-slate-900">
-              {displayPrice || <span className="text-slate-400 text-xl font-normal">{forLang({ en: 'Price on request', vi: 'Liên hệ để biết giá', ko: '가격 문의', ru: 'Цена по запросу' }, lang)}</span>}
+              {displayPrice || <span className="text-slate-400 text-xl font-normal">{forLang({ en: 'Price on request', vi: 'Giá liên hệ', ko: '가격 문의', ru: 'Цена по запросу' }, lang)}</span>}
             </p>
             <div className="flex flex-wrap gap-2">
               {listing.type && (
@@ -192,7 +192,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
                 bedsHref ? (
                   <Link
                     href={bedsHref}
-                    title={bedsKey === 'studio' ? (lang === 'vi' ? `Xem căn hộ studio ${browseVerb}` : `Browse studio apartments ${browseVerb}`) : lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ ${browseVerb}` : `Browse ${listing.bedrooms}-bedroom ${browseVerb}`}
+                    title={bedsKey === 'studio' ? (lang === 'vi' ? `Xem căn hộ studio ${browseVerb}` : `Browse studio apartments ${browseVerb}`) : lang === 'vi' ? `Xem bất động sản ${listing.bedrooms} phòng ngủ ${browseVerb}` : `Browse ${listing.bedrooms}-bedroom ${browseVerb}`}
                     className="bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1 rounded-full hover:bg-slate-200 hover:underline transition-colors"
                   >
                     🛏 {bedsLabel}
@@ -218,7 +218,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
               {[
                 listing.type  ? localizeType(listing.type, lang)                             : null,
                 listing.forSale ? (lang === 'vi' ? 'bán tại' : 'for sale in') : (lang === 'vi' ? 'cho thuê tại' : 'for rent in'),
-                listing.district ? localizeDistrict(listing.district, lang) + ', Da Nang, Vietnam' : 'Da Nang, Vietnam',
+                (listing.district ? localizeDistrict(listing.district, lang) + ', ' : '') + ({ vi: 'Đà Nẵng, Việt Nam', ko: '베트남 다낭', ru: 'Дананг, Вьетнам' }[lang as string] ?? 'Da Nang, Vietnam'),
               ].filter(Boolean).join(' ')}
             </h2>
           )}
@@ -351,7 +351,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
                 <p className="mt-3 text-sm text-slate-500">
                   {forLang({
                     en: '* Rental rates are based on 1-year rental terms. The rate may increase for shorter stays.',
-                    vi: '* Giá thuê được tính theo hợp đồng 1 năm. Giá có thể cao hơn nếu thuê ngắn hạn.',
+                    vi: '* Giá thuê áp dụng cho hợp đồng 1 năm; thuê ngắn hạn giá có thể cao hơn.',
                     ko: '* 임대료는 1년 계약 기준입니다. 단기 임대의 경우 임대료가 올라갈 수 있습니다.',
                     ru: '* Стоимость указана для аренды на 1 год. При более коротком сроке она может быть выше.',
                   }, lang)}
@@ -381,11 +381,11 @@ export default function ListingDetail({ listing, archived = false, similarListin
 
           {/* Agent awareness callout */}
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-900">
-            <p className="font-semibold mb-1">⚠️ {forLang({ en: 'Browsing Facebook for listings?', vi: 'Đang tìm kiếm trên Facebook?', ko: '페이스북에서 매물을 찾고 계신가요?', ru: 'Ищете жильё в Facebook?' }, lang)}</p>
+            <p className="font-semibold mb-1">⚠️ {forLang({ en: 'Browsing Facebook for listings?', vi: 'Bạn đang tìm nhà trên Facebook?', ko: '페이스북에서 매물을 찾고 계신가요?', ru: 'Ищете жильё в Facebook?' }, lang)}</p>
             <p className="leading-relaxed">
               {forLang({
                 en: 'Be aware of the risks of using unverified agents. ',
-                vi: 'Hãy cẩn thận với các môi giới không có giấy phép. ',
+                vi: 'Hãy cẩn trọng khi làm việc với môi giới chưa được xác minh. ',
                 ko: '검증되지 않은 중개인을 이용할 때의 위험을 알아두세요. ',
                 ru: 'Помните о рисках при работе с непроверенными агентами. ',
               }, lang)}
@@ -395,7 +395,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
                 rel="noopener noreferrer"
                 className="font-semibold underline hover:text-amber-700"
               >
-                {forLang({ en: 'Read our guide before you proceed →', vi: 'Đọc hướng dẫn của chúng tôi →', ko: '진행하기 전에 안내를 읽어보세요 →', ru: 'Прочитайте наш гид, прежде чем продолжить →' }, lang)}
+                {forLang({ en: 'Read our guide before you proceed →', vi: 'Đọc hướng dẫn trước khi giao dịch →', ko: '진행하기 전에 안내를 읽어보세요 →', ru: 'Прочитайте наш гид, прежде чем продолжить →' }, lang)}
               </a>
             </p>
           </div>
@@ -410,8 +410,8 @@ export default function ListingDetail({ listing, archived = false, similarListin
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               {listing.forSale
-                ? forLang({ en: 'View more properties for sale in Da Nang', vi: 'Xem tất cả bất động sản bán tại Đà Nẵng', ko: '다낭 매매 매물 더 보기', ru: 'Смотреть больше объектов на продажу в Дананге' }, lang)
-                : forLang({ en: 'View more rentals in Da Nang', vi: 'Xem tất cả bất động sản cho thuê tại Đà Nẵng', ko: '다낭 임대 매물 더 보기', ru: 'Смотреть больше вариантов аренды в Дананге' }, lang)}
+                ? forLang({ en: 'View more properties for sale in Da Nang', vi: 'Xem thêm bất động sản đang bán tại Đà Nẵng', ko: '다낭 매매 매물 더 보기', ru: 'Смотреть больше объектов на продажу в Дананге' }, lang)
+                : forLang({ en: 'View more rentals in Da Nang', vi: 'Xem thêm nhà cho thuê tại Đà Nẵng', ko: '다낭 임대 매물 더 보기', ru: 'Смотреть больше вариантов аренды в Дананге' }, lang)}
             </Link>
           </div>
         </div>
@@ -421,7 +421,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
       {similarListings.length > 0 && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-10 mb-12">
           <h2 className="text-lg font-bold text-slate-800 mb-5">
-            {forLang({ en: 'Similar Listings', vi: 'Bất động sản tương tự', ko: '비슷한 매물', ru: 'Похожие объекты' }, lang)}
+            {forLang({ en: 'Similar Listings', vi: 'Tin đăng tương tự', ko: '비슷한 매물', ru: 'Похожие объекты' }, lang)}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {similarListings.map(l => (

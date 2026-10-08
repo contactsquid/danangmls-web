@@ -23,8 +23,8 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 const metadata: Metadata = {
-  title: 'Nhà Bán tại Đà Nẵng, Việt Nam',
-  description: 'Xem danh sách nhà, căn hộ, biệt thự và đất nền bán tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
+  title: 'Mua bán nhà đất Đà Nẵng: nhà phố, căn hộ, đất nền',
+  description: 'Mua bán nhà đất Đà Nẵng và Hội An: nhà phố, căn hộ, biệt thự, đất nền. Tin đăng cập nhật mỗi ngày từ môi giới bất động sản địa phương.',
   alternates: {
     canonical: 'https://danangmls.com/vi/mua-ban',
     languages: {

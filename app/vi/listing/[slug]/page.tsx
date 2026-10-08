@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listings = await getAllListings();
   const listing = listings.find(l => l.slug === slug) ?? await getArchivedListing(slug);
-  if (!listing) return { title: 'Không tìm thấy' };
+  if (!listing) return { title: 'Không tìm thấy tin đăng' };
   const displayTitle = listing.vi_title || viFallbackTitle(listing);
   const ogImage = getShareableImage(listing.images);
   const description = (listing.vi_text || listing.text).slice(0, 160) || `${listing.type} tại ${listing.district}. ${listing.price}.`;
@@ -132,7 +132,7 @@ export default async function ViListingPage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://danangmls.com/vi' },
-      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'Mua Bán' : 'Cho Thuê', item: `https://danangmls.com/vi/${listing.forSale ? 'mua-ban' : 'thue'}` },
+      { '@type': 'ListItem', position: 2, name: listing.forSale ? 'Mua bán' : 'Cho thuê', item: `https://danangmls.com/vi/${listing.forSale ? 'mua-ban' : 'thue'}` },
       { '@type': 'ListItem', position: 3, name: listing.title },
     ],
   };

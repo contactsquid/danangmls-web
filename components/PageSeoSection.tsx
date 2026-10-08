@@ -17,9 +17,9 @@ const SEO_COPY = {
   en: { verbRent: 'for rent', verbSale: 'for sale', byType: 'By type', popular: 'Popular searches',
         rent: ['3-Bedroom Houses for Rent', '2-Bedroom Houses for Rent', 'Furnished Apartments for Rent', 'Villas for Rent', 'Houses for Rent in Son Tra', 'Rentals in Ngu Hanh Son'],
         sale: ['Apartments for Sale', '3-Bedroom Homes for Sale', 'Foreign-Buyer-Eligible Homes', 'Villas for Sale', 'Property for Sale in Ngu Hanh Son', 'Property for Sale in Son Tra'] },
-  vi: { verbRent: 'cho thuê', verbSale: 'bán', byType: 'Theo loại hình', popular: 'Tìm kiếm phổ biến',
-        rent: ['Nhà 3 phòng ngủ cho thuê', 'Nhà 2 phòng ngủ cho thuê', 'Căn hộ cho thuê', 'Biệt thự cho thuê', 'Nhà cho thuê tại Sơn Trà', 'Cho thuê tại Ngũ Hành Sơn'],
-        sale: ['Căn hộ bán', 'Nhà 3 phòng ngủ bán', 'Người nước ngoài mua được', 'Biệt thự bán', 'Bán tại Ngũ Hành Sơn', 'Bán tại Sơn Trà'] },
+  vi: { verbRent: 'cho thuê', verbSale: 'đang bán', byType: 'Theo loại hình', popular: 'Tìm kiếm phổ biến',
+        rent: ['Cho thuê nhà 3 phòng ngủ', 'Cho thuê nhà 2 phòng ngủ', 'Căn hộ cho thuê Đà Nẵng', 'Biệt thự cho thuê', 'Nhà cho thuê Sơn Trà', 'Cho thuê nhà Ngũ Hành Sơn'],
+        sale: ['Bán căn hộ Đà Nẵng', 'Bán nhà 3 phòng ngủ', 'Nhà người nước ngoài được mua', 'Bán biệt thự', 'Mua bán nhà đất Ngũ Hành Sơn', 'Mua bán nhà đất Sơn Trà'] },
   ko: { verbRent: '임대', verbSale: '매매', byType: '유형별', popular: '인기 검색',
         rent: ['침실 3개 주택 임대', '침실 2개 주택 임대', '가구 완비 아파트 임대', '빌라 임대', '썬짜 주택 임대', '응우한선 임대 매물'],
         sale: ['아파트 매매', '침실 3개 주택 매매', '외국인 구입 가능 주택', '빌라 매매', '응우한선 부동산 매매', '썬짜 부동산 매매'] },
@@ -114,7 +114,7 @@ export default function PageSeoSection({ mode, districtImages = {}, seoOverride 
               ))}
               {mode === 'sale' && (
                 <Link href={facetUrl('sale', lang, FOREIGN_FACET)} className="inline-flex items-center rounded-full bg-emerald-50 text-emerald-700 text-sm font-medium px-3 py-1.5 hover:bg-emerald-100 hover:underline transition-colors">
-                  {lang === 'vi' ? 'Người nước ngoài mua được' : 'Foreign Buyer Eligible'}
+                  {lang === 'vi' ? 'Người nước ngoài được mua' : 'Foreign Buyer Eligible'}
                 </Link>
               )}
             </div>

@@ -235,48 +235,48 @@ function facetContentEn(f: Facet, mode: Mode, count: number): FacetContent {
 }
 
 function facetContentVi(f: Facet, mode: Mode, count: number): FacetContent {
-  const thueBan = mode === 'rent' ? 'Cho Thuê' : 'Bán';
   const thueBanLc = mode === 'rent' ? 'cho thuê' : 'bán';
   if (f.kind === 'type') {
     const viType = localizeType(f.value, 'vi');
-    const h1 = `${viType} ${thueBan} tại Đà Nẵng, Việt Nam`;
+    const viTypeLc = viType.toLowerCase();
+    const h1 = `${viTypeLc.charAt(0).toUpperCase()}${viTypeLc.slice(1)} ${thueBanLc} tại Đà Nẵng, Việt Nam`;
     return { h1, title: h1,
-      subtitle: `Xem ${count} ${viType.toLowerCase()} ${thueBanLc} tại Đà Nẵng và Hội An — cập nhật hàng ngày từ các đại lý địa phương.`,
-      description: `${viType} ${thueBanLc} tại Đà Nẵng và Hội An. ${count} tin đăng cập nhật hàng ngày trên DanangMLS.` };
+      subtitle: `${count} ${viTypeLc} ${thueBanLc} tại Đà Nẵng và Hội An, do môi giới địa phương cập nhật mỗi ngày.`,
+      description: `${viTypeLc.charAt(0).toUpperCase()}${viTypeLc.slice(1)} ${thueBanLc} tại Đà Nẵng và Hội An: ${count} tin đăng, cập nhật mỗi ngày trên DanangMLS.` };
   }
   if (f.kind === 'district') {
     const viDistrict = localizeDistrict(f.value, 'vi');
-    const h1 = `Bất Động Sản ${thueBan} tại ${viDistrict}, Đà Nẵng`;
+    const h1 = `Bất động sản ${thueBanLc} tại ${viDistrict}, Đà Nẵng`;
     return { h1, title: h1,
-      subtitle: `Xem ${count} bất động sản ${thueBanLc} tại ${viDistrict}, Đà Nẵng — nhà, căn hộ và biệt thự cập nhật hàng ngày.`,
-      description: `Nhà, căn hộ và biệt thự ${thueBanLc} tại ${viDistrict}, Đà Nẵng. ${count} tin đăng cập nhật hàng ngày trên DanangMLS.` };
+      subtitle: `${count} bất động sản ${thueBanLc} tại ${viDistrict}, Đà Nẵng: nhà, căn hộ và biệt thự, cập nhật mỗi ngày.`,
+      description: `Nhà, căn hộ và biệt thự ${thueBanLc} tại ${viDistrict}, Đà Nẵng: ${count} tin đăng, cập nhật mỗi ngày trên DanangMLS.` };
   }
   if (f.kind === 'foreign') {
-    const h1 = `Nhà Bán Cho Người Nước Ngoài Sở Hữu tại Đà Nẵng`;
+    const h1 = `Bất động sản người nước ngoài được sở hữu tại Đà Nẵng`;
     return { h1, title: h1,
-      subtitle: `Xem ${count} căn hộ tại Đà Nẵng mà người nước ngoài được phép sở hữu hợp pháp — trong các tòa nhà đã được duyệt, cập nhật hàng ngày.`,
-      description: `Căn hộ tại Đà Nẵng người nước ngoài được phép sở hữu, trong các tòa nhà đã được duyệt. ${count} tin đăng cập nhật hàng ngày trên DanangMLS.` };
+      subtitle: `${count} căn hộ tại Đà Nẵng mà người nước ngoài được phép đứng tên sở hữu hợp pháp, nằm trong các tòa nhà đã được duyệt bán cho người nước ngoài. Cập nhật mỗi ngày.`,
+      description: `Căn hộ Đà Nẵng người nước ngoài được phép sở hữu, trong các tòa nhà đã được duyệt bán cho người nước ngoài: ${count} tin đăng, cập nhật mỗi ngày trên DanangMLS.` };
   }
   if (f.kind === 'building') {
     const h1b = mode === 'rent'
-      ? `Cho Thuê Căn Hộ ${f.value} tại Đà Nẵng`
-      : `Bán Căn Hộ ${f.value} tại Đà Nẵng`;
+      ? `Cho thuê căn hộ ${f.value} tại Đà Nẵng`
+      : `Bán căn hộ ${f.value} tại Đà Nẵng`;
     return { h1: h1b, title: h1b,
-      subtitle: `Xem ${count} căn hộ ${thueBanLc} tại ${f.value}, Đà Nẵng — cập nhật hàng ngày từ môi giới địa phương.`,
-      description: `${f.value} Đà Nẵng: ${count} căn hộ ${thueBanLc}, kèm hình ảnh, diện tích, số phòng ngủ và giá. Cập nhật hàng ngày trên DanangMLS.` };
+      subtitle: `${count} căn hộ ${thueBanLc} tại ${f.value}, Đà Nẵng, do môi giới địa phương cập nhật mỗi ngày.`,
+      description: `${f.value} Đà Nẵng: ${count} căn hộ ${thueBanLc}, có hình ảnh, diện tích, số phòng ngủ và giá. Cập nhật mỗi ngày trên DanangMLS.` };
   }
   if (f.kind === 'bedrooms' && f.value === 'studio') {
-    const h1 = `Căn Hộ Studio ${thueBan} tại Đà Nẵng, Việt Nam`;
+    const h1 = `Căn hộ studio ${thueBanLc} tại Đà Nẵng, Việt Nam`;
     return { h1, title: h1,
-      subtitle: `Xem ${count} căn hộ studio ${thueBanLc} tại Đà Nẵng và Hội An — không gian gọn gàng, đầy đủ nội thất, gần biển và trung tâm, cập nhật hàng ngày.`,
-      description: `Căn hộ studio ${thueBanLc} tại Đà Nẵng và Hội An. ${count} tin đăng có ảnh, giá và vị trí, cập nhật hàng ngày trên DanangMLS.` };
+      subtitle: `${count} căn hộ studio ${thueBanLc} tại Đà Nẵng và Hội An: gọn gàng, đầy đủ nội thất, gần biển và trung tâm, cập nhật mỗi ngày.`,
+      description: `Căn hộ studio ${thueBanLc} tại Đà Nẵng và Hội An: ${count} tin đăng có ảnh, giá và vị trí, cập nhật mỗi ngày trên DanangMLS.` };
   }
   const h1 = mode === 'rent'
-    ? `Cho Thuê ${f.value} Phòng Ngủ tại Đà Nẵng, Việt Nam`
-    : `Bán Nhà ${f.value} Phòng Ngủ tại Đà Nẵng, Việt Nam`;
+    ? `Cho thuê nhà ${f.value} phòng ngủ tại Đà Nẵng, Việt Nam`
+    : `Bán nhà ${f.value} phòng ngủ tại Đà Nẵng, Việt Nam`;
   return { h1, title: h1,
-    subtitle: `Xem ${count} bất động sản ${f.value} phòng ngủ ${thueBanLc} tại Đà Nẵng và Hội An — cập nhật hàng ngày.`,
-    description: `Bất động sản ${f.value} phòng ngủ ${thueBanLc} tại Đà Nẵng và Hội An. ${count} tin đăng cập nhật hàng ngày trên DanangMLS.` };
+    subtitle: `${count} nhà và căn hộ ${f.value} phòng ngủ ${thueBanLc} tại Đà Nẵng và Hội An, cập nhật mỗi ngày.`,
+    description: `Nhà và căn hộ ${f.value} phòng ngủ ${thueBanLc} tại Đà Nẵng và Hội An: ${count} tin đăng, cập nhật mỗi ngày trên DanangMLS.` };
 }
 
 /** Distinct facets that currently have at least one listing (for the sitemap). */

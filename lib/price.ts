@@ -7,11 +7,12 @@ export const KRW_RATE = 1339;
 export const RUB_RATE = 85;
 
 export const VI_TYPES: Record<string, string> = {
-  'Apartment': 'Căn Hộ',
-  'House':     'Nhà Phố',
-  'Land':      'Đất Nền',
-  'Villa':     'Biệt Thự',
-  'Commercial': 'Thương Mại',
+  // Sentence case: these sit mid-sentence in titles ("Cho thuê căn hộ 3 phòng ngủ…").
+  'Apartment': 'Căn hộ',
+  'House':     'Nhà phố',
+  'Land':      'Đất nền',
+  'Villa':     'Biệt thự',
+  'Commercial': 'Thương mại',
 };
 
 export const KO_TYPES: Record<string, string> = {
@@ -118,8 +119,8 @@ export function localizedAltPrefix(
 // catalogue collectively targets all three high-volume variants without stuffing
 // any single image. Apartments/land use one typed phrase. "Đà Nẵng"/"Da Nang"
 // lives in the lead phrase only — the descriptive tail must NOT repeat it.
-const VI_SALE_HOUSE_LEADS = ['Bán Nhà Đà Nẵng', 'Nhà Bán Đà Nẵng', 'Mua Bán Nhà Đà Nẵng'];
-const VI_RENT_HOUSE_LEADS = ['Cho thuê Nhà Đà Nẵng', 'Nhà Cho thuê Đà Nẵng', 'Thuê Nhà Đà Nẵng'];
+const VI_SALE_HOUSE_LEADS = ['Bán nhà Đà Nẵng', 'Nhà bán Đà Nẵng', 'Mua bán nhà Đà Nẵng'];
+const VI_RENT_HOUSE_LEADS = ['Cho thuê nhà Đà Nẵng', 'Nhà cho thuê Đà Nẵng', 'Thuê nhà Đà Nẵng'];
 const EN_SALE_HOUSE_LEADS = ['House for Sale in Da Nang', 'Da Nang House for Sale', 'Property for Sale in Da Nang'];
 const EN_RENT_HOUSE_LEADS = ['House for Rent in Da Nang', 'Da Nang House for Rent', 'Home for Rent in Da Nang'];
 
@@ -153,14 +154,14 @@ export function firstImageAltPrefix(
     let lead: string;
     if (forSale) {
       if (isHouse)                lead = VI_SALE_HOUSE_LEADS[slugRotate(slug, VI_SALE_HOUSE_LEADS.length)];
-      else if (t === 'apartment') lead = 'Bán Căn Hộ Đà Nẵng';
-      else if (t === 'land')      lead = 'Bán Đất Đà Nẵng';
-      else                        lead = 'Mua Bán Nhà Đất Đà Nẵng';
+      else if (t === 'apartment') lead = 'Bán căn hộ Đà Nẵng';
+      else if (t === 'land')      lead = 'Bán đất Đà Nẵng';
+      else                        lead = 'Mua bán nhà đất Đà Nẵng';
     } else {
       if (isHouse)                lead = VI_RENT_HOUSE_LEADS[slugRotate(slug, VI_RENT_HOUSE_LEADS.length)];
-      else if (t === 'apartment') lead = 'Cho thuê Căn Hộ Đà Nẵng';
-      else if (t === 'land')      lead = 'Cho thuê Đất Đà Nẵng';
-      else                        lead = 'Cho thuê Nhà Đà Nẵng';
+      else if (t === 'apartment') lead = 'Cho thuê căn hộ Đà Nẵng';
+      else if (t === 'land')      lead = 'Cho thuê đất Đà Nẵng';
+      else                        lead = 'Cho thuê nhà Đà Nẵng';
     }
     const typeVi = isVilla ? 'Biệt Thự' : (type ? localizeType(type, 'vi') : 'Bất động sản');
     const beds   = hasBeds ? ` ${bedCount} phòng ngủ` : '';
@@ -190,11 +191,11 @@ export function firstImageAltPrefix(
 function vndFormat(vnd: number): string {
   if (vnd >= 1_000_000_000) {
     const ty = vnd / 1_000_000_000;
-    return `${ty % 1 === 0 ? ty : ty.toFixed(1)} tỷ ₫`;
+    return `${ty % 1 === 0 ? ty : ty.toFixed(1).replace('.', ',')} tỷ ₫`;   // Vietnamese decimal comma: 2,5 tỷ
   }
   if (vnd >= 1_000_000) {
     const trieu = vnd / 1_000_000;
-    return `${trieu % 1 === 0 ? trieu : trieu.toFixed(1)} triệu ₫`;
+    return `${trieu % 1 === 0 ? trieu : trieu.toFixed(1).replace('.', ',')} triệu ₫`;
   }
   return `${vnd.toLocaleString('vi-VN')} ₫`;
 }

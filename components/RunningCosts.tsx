@@ -43,7 +43,7 @@ export default function RunningCosts({ text }: { text?: string | null }) {
     value: isVi ? `${c.deposit.months} tháng` : `${c.deposit.months} month${c.deposit.months === 1 ? '' : 's'}`,
   });
   if (c.lease) rows.push({
-    label: isVi ? 'Thời hạn hợp đồng' : 'Lease length',
+    label: isVi ? 'Thời hạn thuê' : 'Lease length',
     value: isVi ? `${c.lease.months} tháng` : `${c.lease.months} month${c.lease.months === 1 ? '' : 's'}`,
   });
   if (!rows.length) return null;
@@ -51,11 +51,11 @@ export default function RunningCosts({ text }: { text?: string | null }) {
   return (
     <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
       <h2 className="text-lg font-semibold text-slate-900">
-        {isVi ? 'Chi phí hàng tháng' : 'Monthly running costs'}
+        {isVi ? 'Chi phí hằng tháng' : 'Monthly running costs'}
       </h2>
       <p className="mt-1 text-sm text-slate-500">
         {isVi
-          ? 'Ngoài tiền thuê. Theo thông tin trong tin đăng gốc — quý khách vui lòng xác nhận lại với chủ nhà.'
+          ? 'Tính ngoài tiền thuê nhà, theo thông tin trong tin đăng gốc. Bạn nên hỏi lại chủ nhà trước khi ký hợp đồng.'
           : 'On top of the rent. As stated in the original listing — confirm with the landlord before signing.'}
       </p>
       <dl className="mt-4 divide-y divide-slate-100">

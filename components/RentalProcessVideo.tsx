@@ -23,7 +23,7 @@ export default function RentalProcessVideo() {
         <p className="text-slate-600 mb-6">
           {forLang({
             en: 'A step-by-step walkthrough of the rental process in Da Nang — from viewing to signing the lease.',
-            vi: 'Xem hướng dẫn từng bước về quy trình thuê nhà tại Đà Nẵng — từ tham quan đến ký hợp đồng.',
+            vi: 'Hướng dẫn từng bước khi thuê nhà tại Đà Nẵng, từ lúc đi xem nhà đến khi ký hợp đồng.',
             ko: '집을 보러 가는 것부터 계약서에 서명하기까지, 다낭 임대 절차를 단계별로 안내합니다.',
             ru: 'Пошаговый разбор аренды в Дананге — от просмотра до подписания договора.',
           }, lang)}

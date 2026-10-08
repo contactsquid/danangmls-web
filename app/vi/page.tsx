@@ -15,8 +15,8 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản',
-  description: 'DanangMLS — danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An, Việt Nam. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày, có thể duyệt bằng tiếng Anh và tiếng Việt.',
+  title: 'Bất động sản Đà Nẵng – Nhà cho thuê & mua bán',
+  description: 'DanangMLS tổng hợp tin cho thuê và mua bán bất động sản Đà Nẵng và Hội An từ môi giới địa phương, cập nhật mỗi ngày. Xem bằng tiếng Việt hoặc tiếng Anh.',
   alternates: {
     canonical: 'https://danangmls.com/vi',
     languages: {
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   openGraph: {
     images: OG_DEFAULT_IMAGES,
     locale: 'vi_VN',
-    title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
-    description: 'Danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày.',
+    title: 'Bất động sản Đà Nẵng – Nhà cho thuê & mua bán | DanangMLS',
+    description: 'Tin cho thuê và mua bán bất động sản Đà Nẵng và Hội An, tổng hợp từ môi giới địa phương và cập nhật mỗi ngày.',
     url: 'https://danangmls.com/vi',
     type: 'website',
   },

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Điều khoản sử dụng',
-  description: 'Điều khoản sử dụng website DanangMLS.',
+  description: 'Điều khoản sử dụng website DanangMLS: phạm vi thông tin tin đăng, giới hạn trách nhiệm và quy định sử dụng nội dung.',
   alternates: {
     canonical: 'https://danangmls.com/vi/dieu-khoan',
     languages: {
@@ -22,34 +22,34 @@ export default function ViTermsPage() {
         <p className="text-slate-400 text-sm mb-6">Cập nhật lần cuối: Tháng 6, 2026</p>
 
         <p className="text-slate-600 leading-relaxed mb-4">
-          Bằng việc sử dụng danangmls.com (&ldquo;trang web&rdquo;), bạn đồng ý với các điều khoản này.
+          Khi sử dụng danangmls.com (&ldquo;website&rdquo;), người dùng đồng ý với các điều khoản dưới đây.
         </p>
 
-        <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Về các tin đăng</h2>
+        <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Thông tin tin đăng</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
-          DanangMLS tổng hợp các tin đăng bất động sản tại Đà Nẵng và Hội An từ các đại lý và chủ nhà tại địa
-          phương. Chúng tôi cố gắng cập nhật tin đăng, nhưng chúng tôi không sở hữu các bất động sản và không thể
-          đảm bảo tính chính xác, tình trạng còn trống, giá cả hay hiện trạng của bất kỳ tin đăng nào. Hãy luôn
-          xác nhận thông tin trực tiếp với đại lý hoặc chủ nhà trước khi đưa ra quyết định hoặc thanh toán.
+          DanangMLS tổng hợp tin đăng bất động sản tại Đà Nẵng và Hội An từ các môi giới và chủ nhà địa phương.
+          Chúng tôi cố gắng cập nhật tin đăng thường xuyên, nhưng không sở hữu các bất động sản này nên không thể
+          bảo đảm độ chính xác, tình trạng còn trống, giá hay hiện trạng của bất kỳ tin đăng nào. Người dùng cần
+          xác minh thông tin trực tiếp với môi giới hoặc chủ nhà trước khi quyết định hay thanh toán.
         </p>
 
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Không bảo đảm</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
-          Trang web được cung cấp &ldquo;nguyên trạng&rdquo; cho mục đích thông tin. Trong phạm vi pháp luật cho
-          phép, chúng tôi không chịu trách nhiệm cho bất kỳ tổn thất nào phát sinh từ việc tin tưởng vào thông tin
-          hiển thị tại đây, bao gồm lỗi tin đăng, thiếu sót hoặc hành vi của bên thứ ba.
+          Website được cung cấp theo &ldquo;nguyên trạng&rdquo; và chỉ nhằm mục đích tham khảo. Trong phạm vi
+          pháp luật cho phép, chúng tôi không chịu trách nhiệm đối với bất kỳ tổn thất nào phát sinh do dựa vào
+          thông tin hiển thị trên website, kể cả sai sót, thiếu sót trong tin đăng hoặc hành vi của bên thứ ba.
         </p>
 
-        <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Sử dụng hợp lệ</h2>
+        <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Quy định sử dụng</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
-          Không thu thập dữ liệu (scrape), sao chép hoặc đăng lại hàng loạt nội dung của trang web, và không sử
-          dụng trang web để gửi thư rác hoặc các liên lạc trái pháp luật. Nội dung và hình ảnh tin đăng vẫn thuộc
-          quyền sở hữu của chủ sở hữu tương ứng.
+          Người dùng không được thu thập tự động (scrape), sao chép hoặc đăng lại hàng loạt nội dung của website,
+          và không được dùng website để gửi thư rác hay thực hiện liên lạc trái pháp luật. Nội dung và hình ảnh
+          tin đăng thuộc quyền sở hữu của chủ sở hữu tương ứng.
         </p>
 
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Liên hệ</h2>
         <p className="text-slate-600 leading-relaxed">
-          Có câu hỏi về các điều khoản này? Gửi email tới{' '}
+          Mọi câu hỏi về các điều khoản này, vui lòng gửi email tới{' '}
           <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>.
         </p>
       </main>

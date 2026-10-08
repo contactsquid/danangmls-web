@@ -125,73 +125,73 @@ export const AGENT_COPY: Record<'en' | 'vi', AgentCopy> = {
     browseForSale: 'Browse properties for sale',
   },
   vi: {
-    directoryTitle: 'Môi Giới Bất Động Sản tại Đà Nẵng',
+    directoryTitle: 'Môi giới bất động sản tại Đà Nẵng',
     directoryIntro:
-      'Các môi giới dưới đây đăng tin bất động sản trên DanangMLS tại Đà Nẵng và Hội An — từ căn hộ view biển ở Ngũ Hành Sơn và Sơn Trà đến nhà phố cho gia đình ở Hải Châu và Cẩm Lệ. Mở hồ sơ của một môi giới để xem tất cả bất động sản họ đang chào bán và cho thuê.',
+      'Đây là các môi giới đang đăng tin trên DanangMLS tại Đà Nẵng và Hội An — từ căn hộ view biển ở Ngũ Hành Sơn, Sơn Trà đến nhà phố cho gia đình ở Hải Châu, Cẩm Lệ. Mở hồ sơ từng môi giới để xem toàn bộ nhà họ đang cho thuê và rao bán.',
     directorySections: [
       {
-        "h": "Cách Chọn Môi Giới Bất Động Sản tại Đà Nẵng",
-        "p": "**Môi giới bất động sản** tốt nhất tại Đà Nẵng là người thường xuyên làm đúng loại bất động sản và đúng khu vực bạn quan tâm. Hãy bắt đầu từ hồ sơ của môi giới: họ có bao nhiêu *tin đăng đang hoạt động*, hồ sơ đã được **xác minh** chưa, và bất động sản của họ có phù hợp với ngân sách và khu vực của bạn không. Một môi giới đang có hàng chục tin đăng tại Ngũ Hành Sơn, Sơn Trà, Hải Châu và Cẩm Lệ thường hiểu thị trường đó rõ hơn một người làm đại trà chỉ có một tin.",
+        "h": "Cách chọn môi giới bất động sản tại Đà Nẵng",
+        "p": "Một **môi giới bất động sản** đáng tin ở Đà Nẵng là người làm đúng loại nhà và đúng khu vực bạn cần, và làm đều đặn hằng tuần. Hãy bắt đầu từ hồ sơ: môi giới có bao nhiêu *tin đăng đang hoạt động*, hồ sơ đã **xác minh** chưa, nhà họ đang rao có hợp ngân sách và khu vực của bạn không. Một người đang có cả chục tin ở Ngũ Hành Sơn, Sơn Trà, Hải Châu và Cẩm Lệ thường nắm thị trường rõ hơn người làm đủ thứ mà chỉ có một tin.",
         "bullets": [
-          "**Tin đăng đang hoạt động:** nguồn hàng còn mới cho thấy môi giới đang làm việc thực sự trên thị trường.",
-          "**Dấu xác minh:** DanangMLS đã xác nhận các tin đăng của môi giới là có thật.",
-          "**Lĩnh vực chuyên môn:** có môi giới chuyên cho thuê, có người chuyên mua bán; hãy chọn đúng người theo mục tiêu của bạn.",
-          "**Ngôn ngữ:** bạn có thể xem trang bằng tiếng Việt hoặc tiếng Anh và nhắn tin ngắn gọn, rõ ràng để trao đổi dễ hơn."
+          "**Tin đăng đang hoạt động:** có nhiều tin mới, còn hàng thật nghĩa là môi giới đang bám thị trường.",
+          "**Dấu xác minh:** DanangMLS đã xác nhận tin đăng của môi giới là có thật.",
+          "**Chuyên môn:** có người chuyên cho thuê, có người chuyên mua bán; chọn người phù hợp với nhu cầu của bạn.",
+          "**Ngôn ngữ:** bạn có thể xem trang bằng tiếng Việt hoặc tiếng Anh; nhắn tin ngắn gọn, rõ ràng sẽ dễ trao đổi hơn."
         ]
       },
       {
-        "h": "Người Nước Ngoài Mua hoặc Thuê Bất Động Sản tại Đà Nẵng",
-        "p": "Người nước ngoài có thể thuê bất động sản tại Đà Nẵng theo hợp đồng thuê thông thường, và *môi giới* thường là người đầu tiên bạn liên hệ để xem nhà, trao đổi điều khoản hợp đồng và các câu hỏi với chủ nhà. Việc mua được quản lý chặt chẽ hơn: người nước ngoài nhìn chung được sở hữu căn hộ và nhà ở trong các dự án nhà ở thương mại được phép, trong một thời hạn nhất định và không sở hữu đất lâu dài. Quy định có thể thay đổi, vì vậy hãy xác nhận với luật sư trước khi đặt cọc. Môi giới có thể giải thích quy trình nhưng không thay thế tư vấn pháp lý."
+        "h": "Người nước ngoài mua hoặc thuê bất động sản tại Đà Nẵng",
+        "p": "Người nước ngoài có thể thuê nhà tại Đà Nẵng theo hợp đồng thuê thông thường. *Môi giới* thường là người bạn liên hệ đầu tiên để hẹn xem nhà, trao đổi điều khoản hợp đồng và làm việc với chủ nhà. Mua nhà thì chặt chẽ hơn: nhìn chung, người nước ngoài được sở hữu căn hộ và nhà ở trong các dự án nhà ở thương mại được phép, có thời hạn, và không được sở hữu đất. Quy định có thể thay đổi, nên hãy hỏi luật sư trước khi đặt cọc. Môi giới có thể giải thích quy trình nhưng không thay được tư vấn pháp lý."
       },
       {
-        "h": "Khu Vực Hoạt Động của Môi Giới trên DanangMLS",
-        "p": "Các môi giới trên DanangMLS đăng nhà, căn hộ và biệt thự cho thuê và bán tại Đà Nẵng và Hội An, tập trung ở các khu vực như Ngũ Hành Sơn, Sơn Trà, Hải Châu và Cẩm Lệ. Mở bất kỳ hồ sơ nào ở trên để xem bất động sản hiện có của môi giới đó, sau đó liên hệ trực tiếp để hẹn xem nhà."
+        "h": "Khu vực môi giới DanangMLS đang hoạt động",
+        "p": "Môi giới trên DanangMLS đăng nhà, căn hộ và biệt thự cho thuê và mua bán tại Đà Nẵng và Hội An, tập trung ở Ngũ Hành Sơn, Sơn Trà, Hải Châu và Cẩm Lệ. Mở một hồ sơ bất kỳ ở trên để xem nhà môi giới đó đang có, rồi liên hệ trực tiếp để hẹn xem nhà."
       }
     ],
-    faqHeading: "Môi Giới Bất Động Sản tại Đà Nẵng: Câu Hỏi Thường Gặp",
+    faqHeading: "Môi giới bất động sản tại Đà Nẵng: Câu hỏi thường gặp",
     faq: [
       {
-        "q": "Làm sao để tìm môi giới bất động sản tốt tại Đà Nẵng?",
-        "a": "Hãy xem các hồ sơ môi giới trên DanangMLS, rồi so sánh số tin đăng đang hoạt động, hồ sơ đã được **xác minh** hay chưa và bất động sản có phù hợp ngân sách, khu vực của bạn không. Nhắn tin cho hai hoặc ba môi giới và so sánh tốc độ cũng như độ rõ ràng khi họ phản hồi."
+        "q": "Làm sao để tìm môi giới bất động sản uy tín tại Đà Nẵng?",
+        "a": "Xem các hồ sơ môi giới trên DanangMLS, rồi so sánh số tin đăng đang hoạt động, hồ sơ đã **xác minh** hay chưa, và nhà của họ có hợp ngân sách, khu vực của bạn không. Nhắn cho hai, ba môi giới và xem ai trả lời nhanh, rõ ràng hơn."
       },
       {
         "q": "Người nước ngoài có được mua bất động sản tại Việt Nam không?",
-        "a": "Nhìn chung, người nước ngoài được sở hữu căn hộ và nhà ở trong các dự án nhà ở thương mại được phép, trong một thời hạn nhất định và bị giới hạn số lượng. Họ không được sở hữu đất lâu dài. Quy định có thể thay đổi, hãy hỏi luật sư về luật hiện hành trước khi quyết định."
+        "a": "Nhìn chung, người nước ngoài được sở hữu căn hộ và nhà ở trong các dự án nhà ở thương mại được phép, có thời hạn và có giới hạn số lượng. Người nước ngoài không được sở hữu đất. Quy định có thể thay đổi, vì vậy hãy hỏi luật sư về quy định hiện hành trước khi quyết định."
       },
       {
         "q": "Dấu xác minh có nghĩa là gì?",
-        "a": "DanangMLS đã xác nhận các tin đăng của môi giới là có thật. Đây là dấu hiệu tốt, nhưng bạn vẫn nên xem nhà trực tiếp trước khi thanh toán bất kỳ khoản nào."
+        "a": "DanangMLS đã xác nhận tin đăng của môi giới này là có thật. Đó là dấu hiệu tốt, nhưng bạn vẫn nên xem nhà tận nơi trước khi trả bất kỳ khoản tiền nào."
       },
       {
         "q": "Phí môi giới là bao nhiêu?",
-        "a": "Phí thay đổi tùy môi giới và từng giao dịch, và được thỏa thuận trực tiếp với môi giới. Hãy hỏi rõ ngay từ đầu xem chủ nhà hoặc người bán trả phí hay bạn là người trả."
+        "a": "Phí tùy từng môi giới và từng giao dịch, do hai bên thỏa thuận trực tiếp. Bạn nên hỏi rõ ngay từ đầu: chủ nhà, người bán hay bạn là người trả phí."
       },
       {
-        "q": "Làm sao để đăng bất động sản trên DanangMLS với tư cách môi giới?",
-        "a": "Hãy tạo hồ sơ môi giới miễn phí bằng nút bên dưới. Khi hồ sơ được kích hoạt, các tin đăng của bạn sẽ hiển thị trên đó cho khách mua và khách thuê tìm kiếm bằng cả tiếng Việt và tiếng Anh."
+        "q": "Môi giới đăng tin bất động sản lên DanangMLS như thế nào?",
+        "a": "Tạo hồ sơ môi giới miễn phí bằng nút bên dưới. Khi hồ sơ đã hoạt động, tin đăng của bạn sẽ hiện trên hồ sơ để khách thuê và khách mua tìm thấy, cả bằng tiếng Việt lẫn tiếng Anh."
       }
     ],
     emptyState: 'Chưa có hồ sơ môi giới nào.',
     createFirst: 'Tạo hồ sơ môi giới đầu tiên',
     ctaHeading: 'Bạn là môi giới tại Đà Nẵng?',
     ctaBody:
-      'Tạo hồ sơ miễn phí để giới thiệu bất động sản của bạn đến khách thuê và khách mua đang tìm kiếm trên DanangMLS bằng cả tiếng Việt và tiếng Anh.',
+      'Tạo hồ sơ miễn phí để giới thiệu nhà của bạn tới khách thuê và khách mua đang tìm trên DanangMLS, bằng cả tiếng Việt lẫn tiếng Anh.',
     ctaButton: 'Tạo hồ sơ môi giới',
     roleLabel: 'Môi giới bất động sản',
-    independent: 'Độc lập',
+    independent: 'Tự do',
     verified: 'Đã xác minh',
-    verifiedTooltip: 'DanangMLS đã xác minh các tin đăng của môi giới này',
-    joined: 'Tham gia',
-    enquire: 'Liên hệ về các bất động sản này',
+    verifiedTooltip: 'DanangMLS đã xác minh tin đăng của môi giới này',
+    joined: 'Tham gia từ',
+    enquire: 'Hỏi về các căn này',
     browseRentals: 'Xem tất cả nhà cho thuê',
     breadcrumbHome: 'Trang chủ',
     breadcrumbAgents: 'Môi giới',
     notFound: 'Không tìm thấy môi giới',
     listingCount: n => (n > 0 ? `${n} tin đăng đang hoạt động` : 'Chưa có tin đăng'),
-    propertiesBy: name => `Bất động sản đăng bởi ${name}`,
+    propertiesBy: name => `Nhà do ${name} đăng`,
     noListingsFrom: name => `Tin đăng của ${name}`,
     forRentHeading: n => `Cho thuê (${n})`,
-    forSaleHeading: n => `Bán (${n})`,
+    forSaleHeading: n => `Cần bán (${n})`,
     noneRightNow: name => `${name} hiện chưa có tin đăng nào trên DanangMLS.`,
     browseForRent: 'Xem nhà cho thuê',
     browseForSale: 'Xem nhà bán',

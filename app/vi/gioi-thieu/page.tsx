@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Giới thiệu về DanangMLS',
-  description: 'DanangMLS là dịch vụ tổng hợp tin đăng nhà, căn hộ, biệt thự và đất nền cho thuê và bán tại Đà Nẵng và Hội An — cập nhật hàng ngày từ các đại lý địa phương.',
+  title: 'Giới thiệu',
+  description: 'DanangMLS tổng hợp tin cho thuê và mua bán nhà, căn hộ, biệt thự, đất nền tại Đà Nẵng và Hội An, cập nhật mỗi ngày từ môi giới địa phương.',
   alternates: {
     canonical: 'https://danangmls.com/vi/gioi-thieu',
     languages: {
@@ -20,24 +20,24 @@ export default function ViAboutPage() {
       <main className="max-w-3xl w-full mx-auto px-4 sm:px-6 py-12 flex-1">
         <h1 className="text-3xl font-bold text-slate-900 mb-6">Giới thiệu về DanangMLS</h1>
         <p className="text-slate-600 leading-relaxed mb-4">
-          DanangMLS là dịch vụ tổng hợp tin đăng bất động sản tại <strong>Đà Nẵng và Hội An, Việt Nam</strong>.
-          Chúng tôi tập hợp nhà, căn hộ, biệt thự và đất nền cho thuê và bán vào một nơi duy nhất, dễ tìm kiếm,
-          hỗ trợ cả tiếng Việt và tiếng Anh.
+          DanangMLS là trang tổng hợp tin đăng bất động sản tại <strong>Đà Nẵng và Hội An, Việt Nam</strong>.
+          Nhà, căn hộ, biệt thự và đất nền cho thuê hay đang bán đều được gom về một chỗ để bạn dễ tìm, bằng cả
+          tiếng Việt lẫn tiếng Anh.
         </p>
         <p className="text-slate-600 leading-relaxed mb-4">
-          Tin đăng được thu thập từ các đại lý và chủ nhà tại địa phương, cập nhật hàng ngày, vì vậy những gì bạn
-          thấy phản ánh đúng thị trường hiện tại. Mỗi tin đăng kết nối bạn trực tiếp với người phụ trách bất động
-          sản đó — chúng tôi giúp việc duyệt và so sánh nguồn hàng trở nên dễ dàng.
+          Tin đăng đến từ môi giới và chủ nhà địa phương, được cập nhật mỗi ngày nên luôn sát với thị trường hiện
+          tại. Mỗi tin đăng giúp bạn liên hệ thẳng với người phụ trách bất động sản đó; phần việc của chúng tôi là
+          giúp bạn xem và so sánh các lựa chọn nhanh hơn.
         </p>
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Khu vực hoạt động</h2>
         <p className="text-slate-600 leading-relaxed mb-4">
-          Cho thuê và mua bán trên khắp các quận của Đà Nẵng — Hải Châu, Thanh Khê, Sơn Trà, Ngũ Hành Sơn, Cẩm Lệ
-          và Liên Chiểu — cùng với Hội An lân cận. Từ căn hộ ven biển gần Mỹ Khê và An Thượng đến nhà phố, biệt thự
-          và đất nền.
+          Nhà cho thuê và mua bán tại khắp các quận của Đà Nẵng (Hải Châu, Thanh Khê, Sơn Trà, Ngũ Hành Sơn, Cẩm Lệ,
+          Liên Chiểu) và Hội An lân cận: từ căn hộ ven biển gần Mỹ Khê, An Thượng đến nhà phố, biệt thự và đất
+          nền.
         </p>
         <h2 className="text-lg font-semibold text-slate-800 mt-8 mb-2">Liên hệ</h2>
         <p className="text-slate-600 leading-relaxed">
-          DanangMLS được vận hành bởi đội ngũ Da Nang Homes. Liên hệ với chúng tôi qua{' '}
+          DanangMLS do đội ngũ Da Nang Homes vận hành. Bạn có thể liên hệ với chúng tôi qua số{' '}
           <a href="tel:+84973747373" className="text-blue-600 hover:underline">+84 973 747 373</a> (Zalo / WhatsApp),
           email{' '}
           <a href="mailto:hello@danang.homes" className="text-blue-600 hover:underline">hello@danang.homes</a>,

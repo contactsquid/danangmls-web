@@ -27,7 +27,7 @@ test('the Studio chip links to it', () => {
 test('headings name studio apartments', () => {
   assert.equal(facetContent(STUDIO, 'rent', 'en', 916).h1, 'Studio Apartments for Rent in Da Nang, Vietnam');
   assert.equal(facetContent(STUDIO, 'sale', 'en', 133).h1, 'Studio Apartments for Sale in Da Nang, Vietnam');
-  assert.match(facetContent(STUDIO, 'rent', 'vi', 916).h1, /Căn Hộ Studio Cho Thuê/);
+  assert.match(facetContent(STUDIO, 'rent', 'vi', 916).h1, /Căn hộ studio cho thuê/);
   assert.match(facetContent(STUDIO, 'rent', 'ko', 916).h1, /원룸/);
   assert.match(facetContent(STUDIO, 'rent', 'ru', 916).h1, /студи/i);
 });

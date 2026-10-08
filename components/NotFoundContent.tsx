@@ -20,10 +20,10 @@ const COPY = {
     h1: '404: Không tìm thấy trang',
     body: (mode: 'rent' | 'sale') =>
       mode === 'sale'
-        ? 'Bất động sản này không còn có sẵn. Thị trường bất động sản Đà Nẵng thay đổi nhanh — hãy sử dụng ô tìm kiếm bên dưới để tìm ngôi nhà của bạn.'
-        : 'Bất động sản này không còn có sẵn. Thị trường cho thuê Đà Nẵng thay đổi nhanh — hãy sử dụng ô tìm kiếm bên dưới để tìm ngôi nhà tiếp theo của bạn.',
+        ? 'Tin đăng này không còn nữa. Thị trường nhà đất Đà Nẵng thay đổi nhanh, bạn hãy dùng ô tìm kiếm bên dưới để tìm căn phù hợp.'
+        : 'Tin đăng này không còn nữa. Nhà cho thuê ở Đà Nẵng có người thuê rất nhanh, bạn hãy dùng ô tìm kiếm bên dưới để tìm căn khác.',
     heading: (mode: 'rent' | 'sale') =>
-      mode === 'sale' ? 'Xem các bất động sản đang bán' : 'Xem các nhà cho thuê hiện có',
+      mode === 'sale' ? 'Bất động sản đang bán' : 'Nhà đang cho thuê',
   },
 };
 

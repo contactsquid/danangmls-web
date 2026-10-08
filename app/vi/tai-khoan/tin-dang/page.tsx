@@ -11,7 +11,7 @@ import { accountPaths } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Tin Đăng Của Bạn',
+  title: 'Tin đăng của tôi',
   robots: { index: false, follow: false },
 };
 

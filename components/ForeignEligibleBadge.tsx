@@ -19,17 +19,17 @@ export default function ForeignEligibleBadge({ buildingName, size = 'sm', href }
   const { lang } = useLanguage();
   const isVi = lang === 'vi';
 
-  const label = forLang({ en: 'Foreign Buyer Eligible', vi: 'Người nước ngoài mua được', ko: '외국인 구입 가능', ru: 'Доступно иностранцам' }, lang);
+  const label = forLang({ en: 'Foreign Buyer Eligible', vi: 'Người nước ngoài được mua', ko: '외국인 구입 가능', ru: 'Доступно иностранцам' }, lang);
   const tooltip = buildingName
     ? forLang({
         en: `${buildingName} is approved for foreign ownership.`,
-        vi: `Tòa nhà ${buildingName} cho phép người nước ngoài sở hữu căn hộ.`,
+        vi: `Người nước ngoài được phép sở hữu căn hộ tại ${buildingName}.`,
         ko: `${buildingName}은(는) 외국인 소유가 허용된 건물입니다.`,
         ru: `${buildingName} одобрен для покупки иностранцами.`,
       }, lang)
     : forLang({
         en: 'This building is approved for foreign ownership.',
-        vi: 'Tòa nhà này cho phép người nước ngoài sở hữu căn hộ.',
+        vi: 'Người nước ngoài được phép sở hữu căn hộ tại tòa nhà này.',
         ko: '이 건물은 외국인 소유가 허용되어 있습니다.',
         ru: 'Этот дом одобрен для покупки иностранцами.',
       }, lang);

@@ -8,7 +8,7 @@ import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Hồ Sơ Môi Giới Của Bạn',
+  title: 'Hồ sơ môi giới',
   robots: { index: false, follow: false },
 };
 

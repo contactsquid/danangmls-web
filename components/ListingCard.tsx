@@ -81,7 +81,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
         )}
         {/* Price */}
         <p className="text-lg font-bold text-slate-900 mb-1">
-          {displayPrice || <span className="text-slate-400 text-sm font-normal">{forLang({ en: 'Price on request', vi: 'Liên hệ để biết giá', ko: '가격 문의', ru: 'Цена по запросу' }, lang)}</span>}
+          {displayPrice || <span className="text-slate-400 text-sm font-normal">{forLang({ en: 'Price on request', vi: 'Giá liên hệ', ko: '가격 문의', ru: 'Цена по запросу' }, lang)}</span>}
         </p>
 
         {/* Title */}
@@ -95,7 +95,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
               (lib/propertyTypes.ts). */}
           {bedsLabel && (
             <MetaChip href={listingFieldHref('bedrooms', bedsKey, mode, lang)}
-              title={bedsKey === 'studio' ? (lang === 'vi' ? 'Xem căn hộ studio' : `Browse studio apartments ${mode === 'rent' ? 'for rent' : 'for sale'}`) : lang === 'vi' ? `Xem BĐS ${listing.bedrooms} phòng ngủ` : `Browse ${listing.bedrooms}-bedroom ${mode === 'rent' ? 'rentals' : 'homes'}`}>
+              title={bedsKey === 'studio' ? (lang === 'vi' ? 'Xem căn hộ studio' : `Browse studio apartments ${mode === 'rent' ? 'for rent' : 'for sale'}`) : lang === 'vi' ? `Xem bất động sản ${listing.bedrooms} phòng ngủ` : `Browse ${listing.bedrooms}-bedroom ${mode === 'rent' ? 'rentals' : 'homes'}`}>
               🛏 {bedsLabel}
             </MetaChip>
           )}
@@ -107,7 +107,7 @@ export default function ListingCard({ listing, priority = false }: Props) {
           )}
           {listing.district && (
             <MetaChip href={listingFieldHref('district', listing.district, mode, lang)}
-              title={lang === 'vi' ? `Xem BĐS tại ${localizeDistrict(listing.district, lang)}` : `Browse ${mode === 'rent' ? 'rentals' : 'listings'} in ${localizeDistrict(listing.district, lang)}`}>
+              title={lang === 'vi' ? `Xem bất động sản tại ${localizeDistrict(listing.district, lang)}` : `Browse ${mode === 'rent' ? 'rentals' : 'listings'} in ${localizeDistrict(listing.district, lang)}`}>
               📍 {localizeDistrict(listing.district, lang)}
             </MetaChip>
           )}
