@@ -7,7 +7,7 @@ import { agentAlternates } from '@/lib/agentCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Môi Giới Bất Động Sản tại Đà Nẵng, Việt Nam | DanangMLS',
+  title: 'Môi Giới Bất Động Sản tại Đà Nẵng, Việt Nam',
   description:
     'Danh sách môi giới bất động sản đang đăng tin nhà, căn hộ và biệt thự cho thuê và bán tại Đà Nẵng và Hội An. Xem bất động sản hiện có của từng môi giới trên DanangMLS.',
   alternates: { canonical: 'https://danangmls.com/vi/moi-gioi', ...agentAlternates('directory') },

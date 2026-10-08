@@ -23,7 +23,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 const metadata: Metadata = {
-  title: '다낭 부동산 매매 | DanangMLS',
+  title: '다낭 부동산 매매',
   description: '베트남 다낭과 호이안의 주택, 아파트, 빌라, 토지 매매 매물. 매일 업데이트됩니다.',
   alternates: {
     canonical: 'https://danangmls.com/ko/for-sale',

@@ -25,7 +25,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 const metadata: Metadata = {
-  title: '다낭 임대 주택 | DanangMLS',
+  title: '다낭 임대 주택',
   description: '베트남 다낭과 호이안의 주택, 아파트, 빌라 임대 매물. 현지 중개인이 매일 업데이트합니다.',
   alternates: {
     canonical: 'https://danangmls.com/ko/for-rent',

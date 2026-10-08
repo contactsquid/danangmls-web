@@ -9,7 +9,7 @@ import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Tạo Hồ Sơ Môi Giới | DanangMLS',
+  title: 'Tạo Hồ Sơ Môi Giới',
   description:
     'Tạo hồ sơ môi giới miễn phí trên DanangMLS để giới thiệu bất động sản của bạn tại Đà Nẵng và Hội An.',
   robots: { index: false, follow: true },

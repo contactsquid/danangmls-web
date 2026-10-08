@@ -7,7 +7,7 @@ import { ACCOUNT_COPY, accountPaths } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Đặt Lại Mật Khẩu | DanangMLS',
+  title: 'Đặt Lại Mật Khẩu',
   robots: { index: false, follow: false },
 };
 

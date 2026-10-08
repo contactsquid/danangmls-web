@@ -9,7 +9,7 @@ import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Đăng Nhập Môi Giới | DanangMLS',
+  title: 'Đăng Nhập Môi Giới',
   robots: { index: false, follow: true },
 };
 

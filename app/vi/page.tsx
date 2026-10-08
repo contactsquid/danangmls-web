@@ -15,7 +15,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản | DanangMLS',
+  title: 'Bất Động Sản Đà Nẵng - Trang Niêm Yết Bất Động Sản',
   description: 'DanangMLS — danh sách rõ ràng nhất các bất động sản cho thuê và bán tại Đà Nẵng và Hội An, Việt Nam. Tổng hợp từ các đại lý địa phương, cập nhật hàng ngày, có thể duyệt bằng tiếng Anh và tiếng Việt.',
   alternates: {
     canonical: 'https://danangmls.com/vi',

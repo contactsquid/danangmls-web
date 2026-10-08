@@ -15,7 +15,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: '다낭 부동산 — 다낭 매물 정보 서비스 | DanangMLS',
+  title: '다낭 부동산 — 다낭 매물 정보 서비스',
   description: 'DanangMLS — 베트남 다낭과 호이안의 임대 및 매매 부동산을 가장 깔끔하게 정리한 목록. 현지 중개인의 매물을 매일 업데이트하며 영어, 베트남어, 한국어, 러시아어로 볼 수 있습니다.',
   alternates: {
     canonical: 'https://danangmls.com/ko',

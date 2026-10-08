@@ -23,7 +23,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 const metadata: Metadata = {
-  title: 'Недвижимость на продажу в Дананге | DanangMLS',
+  title: 'Недвижимость на продажу в Дананге',
   description: 'Дома, квартиры, виллы и участки на продажу в Дананге и Хойане. Обновляется ежедневно.',
   alternates: {
     canonical: 'https://danangmls.com/ru/for-sale',

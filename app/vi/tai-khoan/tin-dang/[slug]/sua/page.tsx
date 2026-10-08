@@ -10,7 +10,7 @@ import { accountPaths } from '@/lib/accountCopy';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Chỉnh Sửa Tin Đăng | DanangMLS',
+  title: 'Chỉnh Sửa Tin Đăng',
   robots: { index: false, follow: false },
 };
 

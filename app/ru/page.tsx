@@ -15,7 +15,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Недвижимость в Дананге — база объявлений | DanangMLS',
+  title: 'Недвижимость в Дананге — база объявлений',
   description: 'DanangMLS — самый аккуратный список жилья в аренду и на продажу в Дананге и Хойане, Вьетнам. Объявления от местных агентов, обновляются ежедневно, доступны на английском, вьетнамском, корейском и русском.',
   alternates: {
     canonical: 'https://danangmls.com/ru',

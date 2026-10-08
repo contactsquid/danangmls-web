@@ -25,7 +25,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 const metadata: Metadata = {
-  title: 'Аренда жилья в Дананге | DanangMLS',
+  title: 'Аренда жилья в Дананге',
   description: 'Дома, квартиры и виллы в аренду в Дананге и Хойане, Вьетнам. Обновляется ежедневно от местных агентов.',
   alternates: {
     canonical: 'https://danangmls.com/ru/for-rent',

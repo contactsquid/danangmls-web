@@ -25,7 +25,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 export const dynamic = 'force-dynamic';
 
 const metadata: Metadata = {
-  title: 'Nhà Cho Thuê tại Đà Nẵng, Việt Nam | DanangMLS',
+  title: 'Nhà Cho Thuê tại Đà Nẵng, Việt Nam',
   description: 'Xem danh sách nhà, căn hộ, biệt thự cho thuê tại Đà Nẵng và Hội An. Cập nhật hàng ngày từ các đại lý bất động sản địa phương.',
   alternates: {
     canonical: 'https://danangmls.com/vi/thue',
