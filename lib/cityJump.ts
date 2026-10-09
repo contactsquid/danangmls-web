@@ -18,12 +18,18 @@ const LOTUS_SLUG: Record<string, string> = { saigon: 'ho-chi-minh-city', danang:
 type Names = Record<string, { en: string; vi: string; ko: string; ru: string }>;
 const CITY_NAMES = NAMES as Names;
 
-/** The 25 cities, the three city sites first, then the rest A–Z in the page language. */
-export function jumpCities(lang: Lang): { slug: string; label: string }[] {
+// The 12 cities with the most listings on LotusMLS, separately for rentals and for sale (Blake, 2026-10-09).
+// Counted from Supabase on that date, most listings first. Refresh them when the ranking drifts.
+const TOP_CITIES: Record<'rent' | 'sale', string[]> = {
+  rent: ['danang', 'saigon', 'can-tho', 'nha-trang', 'hanoi', 'da-lat', 'my-tho', 'buon-ma-thuot', 'phan-thiet', 'hai-phong', 'vung-tau', 'hue'],
+  sale: ['danang', 'hanoi', 'saigon', 'vung-tau', 'hai-duong', 'hue', 'nam-dinh', 'vinh-long', 'quy-nhon', 'da-lat', 'vinh', 'buon-ma-thuot'],
+};
+
+/** The 12 busiest cities for this mode. This site's own city is always kept in the list. */
+export function jumpCities(lang: Lang, mode: 'rent' | 'sale'): { slug: string; label: string }[] {
   const label = (s: string) => CITY_NAMES[s][lang as 'en'] ?? CITY_NAMES[s].en;
-  const top = ['saigon', 'hanoi', 'danang'];
-  const rest = Object.keys(CITY_NAMES).filter(s => !top.includes(s)).sort((a, b) => label(a).localeCompare(label(b), lang));
-  return [...top, ...rest].map(slug => ({ slug, label: label(slug) }));
+  const slugs = TOP_CITIES[mode].includes(SITE_CITY) ? TOP_CITIES[mode] : [SITE_CITY, ...TOP_CITIES[mode].slice(0, 11)];
+  return slugs.map(slug => ({ slug, label: label(slug) }));
 }
 
 export function cityJumpUrl(city: string, mode: 'rent' | 'sale', lang: Lang): string {

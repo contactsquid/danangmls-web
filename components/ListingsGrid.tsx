@@ -253,7 +253,7 @@ export default function ListingsGrid({ listings, types, districts, mode = 'rent'
           <select value={SITE_CITY} aria-label={CITY_LABEL[lang] ?? CITY_LABEL.en}
             onChange={e => { if (e.target.value !== SITE_CITY) window.location.href = cityJumpUrl(e.target.value, mode, lang); }}
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            {jumpCities(lang).map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}
+            {jumpCities(lang, mode).map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}
           </select>
 
           <select value={typeFilter} onChange={e => setType(e.target.value)}
