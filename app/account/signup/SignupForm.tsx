@@ -6,6 +6,7 @@ import { useActionState } from 'react';
 import { signUpAction, type ActionState } from '../actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import { ACCOUNT_COPY } from '@/lib/accountCopy';
+import { FOOTER_PAGES } from '@/lib/footerPages';
 import type { Lang } from '@/lib/translations';
 
 const initial: ActionState = {};
@@ -84,6 +85,17 @@ export default function SignupForm({ lang = 'en' }: { lang?: Lang }) {
         />
         <p className={hintClass}>{t.passwordHint}</p>
       </div>
+
+      {/* Consent (Nghị định 13/2023/NĐ-CP): explicit, unticked by default, states the purpose and links the
+          policy. The server re-checks it and records when and to which policy version it was given. */}
+      <label className="flex items-start gap-2 text-sm text-slate-600">
+        <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300" />
+        <span>
+          {t.consentPre}
+          <a href={FOOTER_PAGES.privacy[lang]} target="_blank" rel="noopener" className="text-blue-600 hover:underline">{t.consentLink}</a>
+          {t.consentPost}
+        </span>
+      </label>
 
       <button type="submit" disabled={pending} className={buttonClass}>
         {pending ? t.creatingAccount : t.createAccount}

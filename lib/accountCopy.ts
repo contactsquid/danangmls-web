@@ -21,6 +21,10 @@ export const ADD_PROPERTY_NAV = {
 export interface AccountCopy {
   // Sign up
   signupTitle: string;
+  /** Signup consent checkbox (Nghị định 13/2023/NĐ-CP): text before / link / after the privacy-policy link. */
+  consentPre: string;
+  consentLink: string;
+  consentPost: string;
   signupSubtitle: string;
   fullName: string;
   fullNameHint: string;
@@ -115,6 +119,7 @@ export interface AccountCopy {
     notConfigured: string;
     nameRequired: string;
     phoneRequired: string;
+    consentRequired: string;
     nameTooLong: string;
     emailInvalid: string;
     passwordShort: string;
@@ -142,6 +147,9 @@ export interface AccountCopy {
 export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
   en: {
     signupTitle: 'Create your agent profile',
+    consentPre: 'I agree that DanangMLS may collect and use my name, email, phone number and the profile and listing details I add, to create my agent profile, show my listings and contact me about my account, as described in the ',
+    consentLink: 'Privacy Policy',
+    consentPost: '. I can withdraw this consent at any time by deleting my account.',
     signupSubtitle: 'Free. Your listings appear on DanangMLS under your own profile.',
     fullName: 'Full name',
     fullNameHint: 'This is the name shown on your public profile.',
@@ -236,6 +244,7 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
       deleteConfirm: 'Please type DELETE exactly to confirm.',
       nameRequired: 'Please enter your full name.',
       phoneRequired: 'Please enter a valid Vietnamese mobile number, e.g. 0905 897 639.',
+      consentRequired: 'Please tick the box to agree to the Privacy Policy before creating your profile.',
       nameTooLong: 'That name is too long (80 characters max).',
       emailInvalid: 'Please enter a valid email address.',
       passwordShort: 'Password must be at least 8 characters.',
@@ -256,6 +265,9 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
   },
   vi: {
     signupTitle: 'Tạo hồ sơ môi giới',
+    consentPre: 'Tôi đồng ý để DanangMLS thu thập và sử dụng họ tên, email, số điện thoại cùng thông tin hồ sơ và tin đăng tôi cung cấp, nhằm tạo hồ sơ môi giới, hiển thị tin đăng và liên hệ với tôi về tài khoản, theo ',
+    consentLink: 'Chính sách bảo mật',
+    consentPost: '. Tôi có thể rút lại sự đồng ý bất cứ lúc nào bằng cách xóa tài khoản.',
     signupSubtitle: 'Miễn phí. Tin đăng của anh/chị hiển thị trên DanangMLS, gắn với hồ sơ riêng của anh/chị.',
     fullName: 'Họ và tên',
     fullNameHint: 'Tên này hiển thị trên hồ sơ công khai của anh/chị.',
@@ -350,6 +362,7 @@ export const ACCOUNT_COPY: Record<'en' | 'vi', AccountCopy> = {
       deleteConfirm: 'Vui lòng nhập đúng chữ XOA để xác nhận.',
       nameRequired: 'Vui lòng nhập họ và tên.',
       phoneRequired: 'Vui lòng nhập số di động Việt Nam hợp lệ, ví dụ 0905 897 639.',
+      consentRequired: 'Anh/chị vui lòng đánh dấu đồng ý với Chính sách bảo mật trước khi tạo hồ sơ.',
       nameTooLong: 'Tên quá dài (tối đa 80 ký tự).',
       emailInvalid: 'Email không hợp lệ.',
       passwordShort: 'Mật khẩu phải có ít nhất 8 ký tự.',

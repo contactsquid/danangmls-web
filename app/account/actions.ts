@@ -63,6 +63,10 @@ export async function signUpAction(
   const phone = normalizeVnPhone(phoneRaw);
   if (!phone) return { error: t.errors.phoneRequired };
 
+  // Consent is a legal requirement (Nghị định 13/2023/NĐ-CP), so it is enforced here, not just by the
+  // checkbox's `required`. The time and policy version go into the auth user's metadata as the record.
+  if (form.get('consent') !== 'on') return { error: t.errors.consentRequired };
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email,
@@ -70,7 +74,7 @@ export async function signUpAction(
     options: {
       // Read by the handle_new_user() trigger to name the profile and mint its slug.
       // Canonical 0 + 9 digits. The trigger copies both into the new profile.
-      data: { display_name: displayName, phone: `0${phone}` },
+      data: { display_name: displayName, phone: `0${phone}`, privacy_consent_at: new Date().toISOString(), privacy_policy_version: '2026-10-20' },
       emailRedirectTo: `${SITE_URL}/auth/callback?next=${forLang(accountPaths, lang).profile}`,
     },
   });
