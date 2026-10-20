@@ -10,6 +10,9 @@ test('footer pages keep the page when switching language (Blake, 2026-10-20)', (
   assert.equal(getLangUrl('/agent/vy-tran', 'vi'), '/vi/moi-gioi/vy-tran');
   assert.equal(getLangUrl('/vi/moi-gioi/vy-tran', 'en'), '/agent/vy-tran');
   assert.equal(getLangUrl('/account/listings/abc/edit', 'vi'), '/vi/tai-khoan/tin-dang/abc/sua');
+  assert.equal(getLangUrl('/knowledge', 'vi'), '/vi/hoi-dap');
+  assert.equal(getLangUrl('/vi/hoi-dap', 'en'), '/knowledge');
+  assert.equal(getLangUrl('/vi/hoi-dap', 'ko'), '/knowledge');
 });
 test('no Korean/Russian twin: stay on the English page, not the homepage', () => {
   assert.equal(getLangUrl('/about', 'ko'), '/about');

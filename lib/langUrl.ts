@@ -56,6 +56,7 @@ const VI_PAGES: [string, string][] = [
   ['/contact', '/vi/lien-he'],
   ['/privacy-policy', '/vi/chinh-sach-bao-mat'],
   ['/terms', '/vi/dieu-khoan'],
+  ['/knowledge', '/vi/hoi-dap'],
   ['/account/signup', '/vi/tai-khoan/dang-ky'],
   ['/account/login', '/vi/tai-khoan/dang-nhap'],
   ['/account/listings/new', '/vi/tai-khoan/dang-tin'],

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'DanangMLS: Facts & FAQ',
   description:
     'Structured facts and frequently asked questions about DanangMLS, renting and buying property in Da Nang and Hoi An, Vietnam, and the agent portal.',
-  alternates: { canonical: 'https://danangmls.com/knowledge' },
+  alternates: { canonical: 'https://danangmls.com/knowledge', languages: { en: 'https://danangmls.com/knowledge', vi: 'https://danangmls.com/vi/hoi-dap', 'x-default': 'https://danangmls.com/knowledge' } },
 };
 
 interface FaqGroup {

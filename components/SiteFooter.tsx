@@ -21,6 +21,7 @@ export default function SiteFooter() {
     ? [
         { href: '/vi/gioi-thieu',         label: 'Giới thiệu' },
         { href: '/vi/moi-gioi',           label: 'Môi giới' },
+        { href: '/vi/hoi-dap',            label: 'Hỏi đáp' },
         { href: '/vi/lien-he',            label: 'Liên hệ' },
         { href: '/vi/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },
         { href: '/vi/dieu-khoan',         label: 'Điều khoản' },
