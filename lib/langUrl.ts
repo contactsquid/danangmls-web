@@ -38,9 +38,54 @@ export function getLangUrl(pathname: string, targetLang: Lang): string {
       return targetLang === 'en' ? `/listing/${slug}` : `/${targetLang}/listing/${slug}`;
     }
 
-    // Anything else (about, contact, account…) has no translated twin in ko/ru,
-    // so send the visitor to that language's home rather than a 404.
-    return home;
+    // Any other page: stay on the same page (Blake, 2026-10-20 — the switcher used to dump
+    // visitors on the homepage). Vietnamese has translated twins for most pages; Korean and
+    // Russian only have home/rent/sale/listings, so they keep the English page.
+    const en = toEnglishPath(pathname, s.prefix);
+    if (en === '/') return home;
+    if (targetLang === 'en' || targetLang === 'ko' || targetLang === 'ru') return en;
+    return toVietnamesePath(en) ?? en;
   }
   return home;
+}
+
+// English page <-> its Vietnamese twin. Add a row whenever a page gets a Vietnamese version.
+const VI_PAGES: [string, string][] = [
+  ['/about', '/vi/gioi-thieu'],
+  ['/agents', '/vi/moi-gioi'],
+  ['/contact', '/vi/lien-he'],
+  ['/privacy-policy', '/vi/chinh-sach-bao-mat'],
+  ['/terms', '/vi/dieu-khoan'],
+  ['/account/signup', '/vi/tai-khoan/dang-ky'],
+  ['/account/login', '/vi/tai-khoan/dang-nhap'],
+  ['/account/listings/new', '/vi/tai-khoan/dang-tin'],
+  ['/account/listings', '/vi/tai-khoan/tin-dang'],
+  ['/account/profile', '/vi/tai-khoan/ho-so'],
+  ['/account/password', '/vi/tai-khoan/mat-khau'],
+  ['/account/reset', '/vi/tai-khoan/quen-mat-khau'],
+];
+// Pages with a slug in the middle.
+const VI_PATTERNS: [RegExp, (m: RegExpMatchArray) => string, RegExp, (m: RegExpMatchArray) => string][] = [
+  [/^\/agent\/([^/]+)$/, m => `/vi/moi-gioi/${m[1]}`, /^\/vi\/moi-gioi\/([^/]+)$/, m => `/agent/${m[1]}`],
+  [/^\/account\/listings\/([^/]+)\/edit$/, m => `/vi/tai-khoan/tin-dang/${m[1]}/sua`, /^\/vi\/tai-khoan\/tin-dang\/([^/]+)\/sua$/, m => `/account/listings/${m[1]}/edit`],
+];
+
+function toEnglishPath(pathname: string, prefix: string): string {
+  const p = pathname.replace(/\/+$/, '') || '/';
+  if (prefix === '/vi') {
+    if (p === '/vi') return '/';
+    const row = VI_PAGES.find(([, vi]) => vi === p);
+    if (row) return row[0];
+    for (const [, , viRe, toEn] of VI_PATTERNS) { const m = p.match(viRe); if (m) return toEn(m); }
+    return '/';                                  // a Vietnamese-only page with no English twin
+  }
+  if (prefix) return p.slice(prefix.length) || '/';  // /ko, /ru: English words under the prefix
+  return p;
+}
+
+function toVietnamesePath(en: string): string | null {
+  const row = VI_PAGES.find(([e]) => e === en);
+  if (row) return row[1];
+  for (const [enRe, toVi] of VI_PATTERNS) { const m = en.match(enRe); if (m) return toVi(m); }
+  return null;
 }

@@ -6,7 +6,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
-import { localizeType, localizeDistrict } from '@/lib/price';
+import { localizeType, localizeDistrict, localizedTitle, localizedText } from '@/lib/price';
 import type { Metadata } from 'next';
 import type { Listing } from '@/lib/types';
 import { getArchivedListing } from '@/lib/archive';
@@ -114,8 +114,9 @@ export default async function ViListingPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
-    name: listing.title,
-    description: listing.text || `${listing.type} tại ${listing.district}`,
+    name: localizedTitle(listing, 'vi'),   // the page's own language (was English on vi/ko/ru)
+    inLanguage: 'vi',
+    description: localizedText(listing, 'vi') || `${listing.type} tại ${listing.district}`,
     url: `https://danangmls.com/vi/listing/${listing.slug}`,
     ...listingOfferLd(listing, `https://danangmls.com/vi/listing/${listing.slug}`, archived),
     ...listingImagesLd(listing),
@@ -134,7 +135,7 @@ export default async function ViListingPage({ params }: Props) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://danangmls.com/vi' },
       { '@type': 'ListItem', position: 2, name: listing.forSale ? 'Mua bán' : 'Cho thuê', item: `https://danangmls.com/vi/${listing.forSale ? 'mua-ban' : 'thue'}` },
-      { '@type': 'ListItem', position: 3, name: listing.title },
+      { '@type': 'ListItem', position: 3, name: localizedTitle(listing, 'vi') },
     ],
   };
 
