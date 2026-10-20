@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Liên hệ',
   description: 'Liên hệ DanangMLS khi cần hỏi về nhà cho thuê hoặc bất động sản đang bán tại Đà Nẵng và Hội An. Hỗ trợ qua Zalo, WhatsApp hoặc email.',
-  alternates: {
-    canonical: 'https://danangmls.com/vi/lien-he',
-    languages: {
-      en: 'https://danangmls.com/contact',
-      vi: 'https://danangmls.com/vi/lien-he',
-      'x-default': 'https://danangmls.com/contact',
-    },
-  },
+  alternates: footerAlternates('contact', 'vi'),
   openGraph: { locale: 'vi_VN' },
 };
 

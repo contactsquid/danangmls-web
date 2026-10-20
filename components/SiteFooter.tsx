@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { useLanguage } from './LanguageProvider';
 import { forLang } from '@/lib/translations';
+import { FOOTER_PAGES, type FooterPage } from '@/lib/footerPages';
 
-// About/Agents/FAQ/Contact/Privacy/Terms exist in English and Vietnamese only, so
-// ko/ru keep the English destinations but get their own labels — a Korean reader
-// should still be able to tell what the link is.
+// Footer labels per language (Vietnamese labels are inline below).
 const FOOTER_LABELS = {
   en: ['About', 'Agents', 'FAQ', 'Contact', 'Privacy Policy', 'Terms'],
   vi: ['About', 'Agents', 'FAQ', 'Contact', 'Privacy Policy', 'Terms'],
@@ -16,18 +15,12 @@ const FOOTER_LABELS = {
 
 export default function SiteFooter() {
   const { lang, t } = useLanguage();
-  const vi = lang === 'vi';
-  const links = vi
-    ? [
-        { href: '/vi/gioi-thieu',         label: 'Giới thiệu' },
-        { href: '/vi/moi-gioi',           label: 'Môi giới' },
-        { href: '/vi/hoi-dap',            label: 'Hỏi đáp' },
-        { href: '/vi/lien-he',            label: 'Liên hệ' },
-        { href: '/vi/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },
-        { href: '/vi/dieu-khoan',         label: 'Điều khoản' },
-      ]
-    : ['/about', '/agents', '/knowledge', '/contact', '/privacy-policy', '/terms']
-        .map((href, i) => ({ href, label: forLang(FOOTER_LABELS, lang)[i] }));
+  // Every footer page exists in all four languages (lib/footerPages.ts), so each language links its own.
+  const order: FooterPage[] = ['about', 'agents', 'knowledge', 'contact', 'privacy', 'terms'];
+  const labels = lang === 'vi'
+    ? ['Giới thiệu', 'Môi giới', 'Hỏi đáp', 'Liên hệ', 'Chính sách bảo mật', 'Điều khoản']
+    : forLang(FOOTER_LABELS, lang);
+  const links = order.map((page, i) => ({ href: FOOTER_PAGES[page][lang], label: labels[i] }));
   return (
     <footer className="border-t border-slate-200 mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-3">

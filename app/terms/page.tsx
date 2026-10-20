@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Terms for using the DanangMLS website.',
-  alternates: {
-    canonical: 'https://danangmls.com/terms',
-    languages: {
-      en: 'https://danangmls.com/terms',
-      vi: 'https://danangmls.com/vi/dieu-khoan',
-      'x-default': 'https://danangmls.com/terms',
-    },
-  },
+  alternates: footerAlternates('terms', 'en'),
 };
 
 export default function TermsPage() {

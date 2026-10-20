@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Giới thiệu',
   description: 'DanangMLS tổng hợp tin cho thuê và mua bán nhà, căn hộ, biệt thự, đất nền tại Đà Nẵng và Hội An, cập nhật mỗi ngày từ môi giới địa phương.',
-  alternates: {
-    canonical: 'https://danangmls.com/vi/gioi-thieu',
-    languages: {
-      en: 'https://danangmls.com/about',
-      vi: 'https://danangmls.com/vi/gioi-thieu',
-      'x-default': 'https://danangmls.com/about',
-    },
-  },
+  alternates: footerAlternates('about', 'vi'),
   openGraph: { locale: 'vi_VN' },
 };
 
@@ -21,8 +15,8 @@ export default function ViAboutPage() {
         <h1 className="text-3xl font-bold text-slate-900 mb-6">Giới thiệu về DanangMLS</h1>
         <p className="text-slate-600 leading-relaxed mb-4">
           DanangMLS là trang tổng hợp tin đăng bất động sản tại <strong>Đà Nẵng và Hội An, Việt Nam</strong>.
-          Nhà, căn hộ, biệt thự và đất nền cho thuê hay đang bán đều được gom về một chỗ để bạn dễ tìm, bằng cả
-          tiếng Việt lẫn tiếng Anh.
+          Nhà, căn hộ, biệt thự và đất nền cho thuê hay đang bán đều được gom về một chỗ để bạn dễ tìm, bằng
+          tiếng Việt, tiếng Anh, tiếng Hàn và tiếng Nga.
         </p>
         <p className="text-slate-600 leading-relaxed mb-4">
           Tin đăng đến từ môi giới và chủ nhà địa phương, được cập nhật mỗi ngày nên luôn sát với thị trường hiện

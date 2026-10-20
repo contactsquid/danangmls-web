@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Contact DanangMLS',
   description: 'Contact the DanangMLS team about any rental or for-sale property in Da Nang and Hoi An, Vietnam. Reach us on Zalo, WhatsApp, or email.',
-  alternates: {
-    canonical: 'https://danangmls.com/contact',
-    languages: {
-      en: 'https://danangmls.com/contact',
-      vi: 'https://danangmls.com/vi/lien-he',
-      'x-default': 'https://danangmls.com/contact',
-    },
-  },
+  alternates: footerAlternates('contact', 'en'),
 };
 
 export default function ContactPage() {

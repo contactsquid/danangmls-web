@@ -1,3 +1,4 @@
+import { FOOTER_PAGES, type FooterPage } from '@/lib/footerPages';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { facetsWithInventory, facetUrl } from '@/lib/facets';
@@ -43,6 +44,12 @@ export default async function sitemap() {
         changeFrequency: 'weekly' as const,
         priority: 0.5,
       },
+      ...(['ko', 'ru'] as const).map(l => ({
+        url: `${BASE}/${l}/agent/${a.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.4,
+      })),
       {
         url: `${BASE}/vi/moi-gioi/${a.slug}`,
         lastModified: now,
@@ -90,6 +97,12 @@ export default async function sitemap() {
     { url: `${BASE}/vi/lien-he`,            lastModified: now, changeFrequency: 'yearly' as const, priority: 0.3 },
     { url: `${BASE}/vi/chinh-sach-bao-mat`, lastModified: now, changeFrequency: 'yearly' as const, priority: 0.2 },
     { url: `${BASE}/vi/dieu-khoan`,         lastModified: now, changeFrequency: 'yearly' as const, priority: 0.2 },
+    // Korean and Russian footer pages (lib/footerPages.ts)
+    ...(['ko', 'ru'] as const).flatMap(l => (Object.keys(FOOTER_PAGES) as FooterPage[]).map(page => ({
+      url: `${BASE}${FOOTER_PAGES[page][l]}`, lastModified: now,
+      changeFrequency: (page === 'agents' ? 'daily' : page === 'knowledge' ? 'weekly' : 'yearly') as 'daily' | 'weekly' | 'yearly',
+      priority: page === 'agents' ? 0.5 : 0.2,
+    }))),
     // English listings
     ...rentals.map(l => ({
       url: `${BASE}/listing/${l.slug}`,

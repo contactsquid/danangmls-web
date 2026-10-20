@@ -1,4 +1,6 @@
 import type { Lang } from './translations';
+import { AGENT_COPY_KO } from './agentCopy.ko';
+import { AGENT_COPY_RU } from './agentCopy.ru';
 
 /**
  * Copy for the agent-facing surface, in both languages.
@@ -51,7 +53,7 @@ export interface AgentCopy {
 
 // Only en/vi today — Korean and Russian read through forLang() and fall back to
 // English until this copy is translated.
-export const AGENT_COPY: Record<'en' | 'vi', AgentCopy> = {
+export const AGENT_COPY: Record<'en' | 'vi' | 'ko' | 'ru', AgentCopy> = {
   en: {
     directoryTitle: 'Real Estate Agents in Da Nang',
     directoryIntro:
@@ -196,6 +198,8 @@ export const AGENT_COPY: Record<'en' | 'vi', AgentCopy> = {
     browseForRent: 'Xem nhà cho thuê',
     browseForSale: 'Xem nhà bán',
   },
+  ko: AGENT_COPY_KO,
+  ru: AGENT_COPY_RU,
 };
 
 /** Canonical paths per language. The Vietnamese side nests the profile under the
@@ -205,6 +209,8 @@ export const AGENT_COPY: Record<'en' | 'vi', AgentCopy> = {
 export const agentPaths = {
   en: { directory: '/agents', profile: (slug: string) => `/agent/${slug}` },
   vi: { directory: '/vi/moi-gioi', profile: (slug: string) => `/vi/moi-gioi/${slug}` },
+  ko: { directory: '/ko/agents', profile: (slug: string) => `/ko/agent/${slug}` },
+  ru: { directory: '/ru/agents', profile: (slug: string) => `/ru/agent/${slug}` },
 } as const;
 
 const BASE = 'https://danangmls.com';
@@ -212,13 +218,14 @@ const BASE = 'https://danangmls.com';
 /** hreflang alternates. Both languages must point at the same pair, or Google
  *  treats them as unrelated pages and they compete instead of consolidating. */
 export function agentAlternates(kind: 'directory' | 'profile', slug = '') {
-  const en = kind === 'directory' ? agentPaths.en.directory : agentPaths.en.profile(slug);
-  const vi = kind === 'directory' ? agentPaths.vi.directory : agentPaths.vi.profile(slug);
+  const path = (l: 'en' | 'vi' | 'ko' | 'ru') => kind === 'directory' ? agentPaths[l].directory : agentPaths[l].profile(slug);
   return {
     languages: {
-      'en-US': `${BASE}${en}`,
-      'vi-VN': `${BASE}${vi}`,
-      'x-default': `${BASE}${en}`,
+      'en-US': `${BASE}${path('en')}`,
+      'vi-VN': `${BASE}${path('vi')}`,
+      'ko-KR': `${BASE}${path('ko')}`,
+      'ru-RU': `${BASE}${path('ru')}`,
+      'x-default': `${BASE}${path('en')}`,
     },
   };
 }

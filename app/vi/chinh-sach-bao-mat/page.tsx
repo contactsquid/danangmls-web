@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Chính sách bảo mật',
   description: 'Chính sách bảo mật của DanangMLS: dữ liệu nào được thu thập, cách sử dụng cookie và quyền của người dùng.',
-  alternates: {
-    canonical: 'https://danangmls.com/vi/chinh-sach-bao-mat',
-    languages: {
-      en: 'https://danangmls.com/privacy-policy',
-      vi: 'https://danangmls.com/vi/chinh-sach-bao-mat',
-      'x-default': 'https://danangmls.com/privacy-policy',
-    },
-  },
+  alternates: footerAlternates('privacy', 'vi'),
   openGraph: { locale: 'vi_VN' },
 };
 

@@ -1,5 +1,6 @@
 import type { Lang } from './translations';
 import { resolveFacet, facetUrl, facetBase } from './facets';
+import { FOOTER_PAGES } from './footerPages';
 
 // Maps the current path to its equivalent in another language. Lifted out of
 // SiteHeader so every language control shares one mapping — two copies would
@@ -43,10 +44,19 @@ export function getLangUrl(pathname: string, targetLang: Lang): string {
     // Russian only have home/rent/sale/listings, so they keep the English page.
     const en = toEnglishPath(pathname, s.prefix);
     if (en === '/') return home;
-    if (targetLang === 'en' || targetLang === 'ko' || targetLang === 'ru') return en;
-    return toVietnamesePath(en) ?? en;
+    if (targetLang === 'en') return en;
+    if (targetLang === 'vi') return toVietnamesePath(en) ?? en;
+    // Korean/Russian: footer pages and agent profiles have twins under the prefix (/ko/about,
+    // /ru/agent/<slug>); anything else (account pages) stays on the English page.
+    return hasKoRuTwin(en) ? `/${targetLang}${en}` : en;
   }
   return home;
+}
+
+// Pages that exist under /ko and /ru with the English path words.
+const KO_RU_PAGES = new Set<string>(Object.values(FOOTER_PAGES).map(p => p.en));
+function hasKoRuTwin(en: string): boolean {
+  return KO_RU_PAGES.has(en) || /^\/agent\/[^/]+$/.test(en);
 }
 
 // English page <-> its Vietnamese twin. Add a row whenever a page gets a Vietnamese version.

@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Điều khoản sử dụng',
   description: 'Điều khoản sử dụng website DanangMLS: phạm vi thông tin tin đăng, giới hạn trách nhiệm và quy định sử dụng nội dung.',
-  alternates: {
-    canonical: 'https://danangmls.com/vi/dieu-khoan',
-    languages: {
-      en: 'https://danangmls.com/terms',
-      vi: 'https://danangmls.com/vi/dieu-khoan',
-      'x-default': 'https://danangmls.com/terms',
-    },
-  },
+  alternates: footerAlternates('terms', 'vi'),
   openGraph: { locale: 'vi_VN' },
 };
 

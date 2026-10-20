@@ -1,4 +1,6 @@
 import { forLang } from '@/lib/translations';
+import { facetBase } from '@/lib/facets';
+import { FOOTER_PAGES } from '@/lib/footerPages';
 import Link from 'next/link';
 import AgentAvatar from './AgentAvatar';
 import AgentProfileContact from '@/components/AgentProfileContact';
@@ -24,13 +26,13 @@ export default function AgentProfileView({ profile, listings, lang }: Props) {
   // Vietnamese renders dates as "tháng 8 năm 2026" with this locale; en-US keeps
   // the existing "August 2026".
   const joined = new Date(profile.created_at).toLocaleDateString(
-    lang === 'vi' ? 'vi-VN' : 'en-US',
+    ({ vi: 'vi-VN', ko: 'ko-KR', ru: 'ru-RU' } as Record<string, string>)[lang] ?? 'en-US',
     { month: 'long', year: 'numeric' },
   );
 
-  const homeHref = lang === 'vi' ? '/vi' : '/';
-  const rentalsHref = lang === 'vi' ? '/vi/thue' : '/for-rent';
-  const contactHref = lang === 'vi' ? '/vi/lien-he' : '/contact';
+  const homeHref = lang === 'en' ? '/' : `/${lang}`;
+  const rentalsHref = facetBase('rent', lang);
+  const contactHref = FOOTER_PAGES.contact[lang];
 
   return (
     <main className="max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-1">

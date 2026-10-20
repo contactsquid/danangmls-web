@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { footerAlternates } from '@/lib/footerPages';
 import type { Metadata } from 'next';
 
 // Vietnamese twin of app/knowledge/page.tsx — same sections and facts, written natively in
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
   title: 'DanangMLS: Thông tin & hỏi đáp',
   description:
     'Thông tin và câu hỏi thường gặp về DanangMLS, về thuê, mua bất động sản tại Đà Nẵng, Hội An và cổng đăng tin dành cho môi giới.',
-  alternates: { canonical: 'https://danangmls.com/vi/hoi-dap', languages: { en: 'https://danangmls.com/knowledge', vi: 'https://danangmls.com/vi/hoi-dap', 'x-default': 'https://danangmls.com/knowledge' } },
+  alternates: footerAlternates('knowledge', 'vi'),
   openGraph: { locale: 'vi_VN' },
 };
 
@@ -20,7 +21,7 @@ interface FaqGroup {
 const GENERAL: FaqGroup[] = [
   {
     q: 'DanangMLS là gì?',
-    a: 'DanangMLS (danangmls.com) là hệ thống niêm yết bất động sản chung (MLS) tại Đà Nẵng và Hội An. Tại đây có nhà phố, căn hộ, biệt thự và đất cho thuê, cần bán, được tổng hợp từ môi giới và chủ nhà địa phương, cập nhật hằng ngày bằng tiếng Anh và tiếng Việt.',
+    a: 'DanangMLS (danangmls.com) là hệ thống niêm yết bất động sản chung (MLS) tại Đà Nẵng và Hội An. Tại đây có nhà phố, căn hộ, biệt thự và đất cho thuê, cần bán, được tổng hợp từ môi giới và chủ nhà địa phương, cập nhật hằng ngày bằng tiếng Việt, tiếng Anh, tiếng Hàn và tiếng Nga.',
     links: [
       { href: '/vi/thue', label: 'Xem nhà cho thuê' },
       { href: '/vi/mua-ban', label: 'Xem nhà đất cần bán' },

@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import { footerAlternates } from '@/lib/footerPages';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'How DanangMLS handles data and cookies.',
-  alternates: {
-    canonical: 'https://danangmls.com/privacy-policy',
-    languages: {
-      en: 'https://danangmls.com/privacy-policy',
-      vi: 'https://danangmls.com/vi/chinh-sach-bao-mat',
-      'x-default': 'https://danangmls.com/privacy-policy',
-    },
-  },
+  alternates: footerAlternates('privacy', 'en'),
 };
 
 export default function PrivacyPolicyPage() {
