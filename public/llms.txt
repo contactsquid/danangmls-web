@@ -7,6 +7,17 @@
 - [For Rent](https://danangmls.com/for-rent): Long-term rental apartments, houses, and villas in Da Nang and Hoi An.
 - [For Sale](https://danangmls.com/for-sale): Condos, apartments, houses, villas, and land for sale in Da Nang and Hoi An.
 
+## Browse by category
+
+- [Apartments for rent](https://danangmls.com/for-rent/apartment) · [Houses for rent](https://danangmls.com/for-rent/house) · [Villas for rent](https://danangmls.com/for-rent/villa) · [Studios for rent](https://danangmls.com/for-rent/studio)
+- [Apartments for sale](https://danangmls.com/for-sale/apartment) · [Houses for sale](https://danangmls.com/for-sale/house) · [Villas for sale](https://danangmls.com/for-sale/villa)
+
+## Key facts
+
+- Foreigners can rent any apartment, house or villa in Vietnam with a passport and visa; a deposit of 1-2 months' rent is typical.
+- Foreigners can buy apartments and condos in approved projects for up to 50 years (renewable once), capped at 30% of the units in a building. They generally cannot own land outright.
+- Listings are aggregated from local agents and owners, refreshed daily, and priced in USD with VND equivalents. Browsing and contacting agents is free.
+
 ## Agents
 
 - [Agent Directory](https://danangmls.com/agents): Real estate agents active in Da Nang and Hoi An, with their current listings.

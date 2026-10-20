@@ -1,6 +1,7 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { getSimilarListings } from '@/lib/similarListings';
 import { schemaRooms } from '@/lib/propertyTypes';
+import { listingOfferLd, listingImagesLd } from '@/lib/listingSchema';
 import { getArchivedListing } from '@/lib/archive';
 import { resolveListingRedirect } from '@/lib/redirects';
 import { agentHasWhatsApp } from '@/lib/agentChannels';
@@ -124,8 +125,8 @@ export default async function ListingPage({ params }: Props) {
     name: listing.title,
     description: listing.text || `${listing.type} in ${listing.district}`,
     url: `https://danangmls.com/listing/${listing.slug}`,
-    ...(listing.price && { price: listing.price }),
-    ...(listing.images[0] && { image: listing.images[0] }),
+    ...listingOfferLd(listing, `https://danangmls.com/listing/${listing.slug}`),
+    ...listingImagesLd(listing),
     ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {
       '@type': 'PostalAddress',

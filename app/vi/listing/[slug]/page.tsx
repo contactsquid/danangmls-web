@@ -1,6 +1,7 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { getSimilarListings } from '@/lib/similarListings';
 import { schemaRooms, bedroomsViPhrase } from '@/lib/propertyTypes';
+import { listingOfferLd, listingImagesLd } from '@/lib/listingSchema';
 import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
@@ -116,8 +117,8 @@ export default async function ViListingPage({ params }: Props) {
     name: listing.title,
     description: listing.text || `${listing.type} tại ${listing.district}`,
     url: `https://danangmls.com/vi/listing/${listing.slug}`,
-    ...(listing.price && { price: listing.price }),
-    ...(listing.images[0] && { image: listing.images[0] }),
+    ...listingOfferLd(listing, `https://danangmls.com/vi/listing/${listing.slug}`),
+    ...listingImagesLd(listing),
     ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {
       '@type': 'PostalAddress',
