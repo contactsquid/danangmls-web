@@ -113,7 +113,7 @@ export default async function KOListingPage({ params }: Props) {
     name: listing.title,
     description: listing.text || `${listing.type} — ${listing.district}`,
     url: `https://danangmls.com/ko/listing/${listing.slug}`,
-    ...listingOfferLd(listing, `https://danangmls.com/ko/listing/${listing.slug}`),
+    ...listingOfferLd(listing, `https://danangmls.com/ko/listing/${listing.slug}`, archived),
     ...listingImagesLd(listing),
     ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {

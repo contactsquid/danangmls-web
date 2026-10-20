@@ -125,7 +125,7 @@ export default async function ListingPage({ params }: Props) {
     name: listing.title,
     description: listing.text || `${listing.type} in ${listing.district}`,
     url: `https://danangmls.com/listing/${listing.slug}`,
-    ...listingOfferLd(listing, `https://danangmls.com/listing/${listing.slug}`),
+    ...listingOfferLd(listing, `https://danangmls.com/listing/${listing.slug}`, archived),
     ...listingImagesLd(listing),
     ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {

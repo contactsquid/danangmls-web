@@ -117,7 +117,7 @@ export default async function ViListingPage({ params }: Props) {
     name: listing.title,
     description: listing.text || `${listing.type} tại ${listing.district}`,
     url: `https://danangmls.com/vi/listing/${listing.slug}`,
-    ...listingOfferLd(listing, `https://danangmls.com/vi/listing/${listing.slug}`),
+    ...listingOfferLd(listing, `https://danangmls.com/vi/listing/${listing.slug}`, archived),
     ...listingImagesLd(listing),
     ...(schemaRooms(listing.type, listing.bedrooms) && { numberOfRooms: schemaRooms(listing.type, listing.bedrooms) }),
     address: {
