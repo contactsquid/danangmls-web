@@ -98,14 +98,14 @@ export const AGENT_COPY: Record<'en' | 'vi' | 'ko' | 'ru', AgentCopy> = {
       },
       {
         "q": "How do I list my properties on DanangMLS as an agent?",
-        "a": "Create a free agent profile from the button below. Once your profile is live, your listings appear on it for buyers and renters searching in English and Vietnamese."
+        "a": "Create a free agent profile from the button below. Once your profile is live, your listings appear on it for buyers and renters searching in English, Vietnamese, Korean and Russian."
       }
     ],
     emptyState: 'No agent profiles yet.',
     createFirst: 'Create the first agent profile',
     ctaHeading: 'Are you an agent in Da Nang?',
     ctaBody:
-      'Create a free profile to showcase your properties to buyers and renters searching DanangMLS in English and Vietnamese.',
+      'Create a free profile to showcase your properties to buyers and renters searching DanangMLS in English, Vietnamese, Korean and Russian.',
     ctaButton: 'Create your agent profile',
     roleLabel: 'Real estate agent',
     independent: 'Independent',
@@ -170,14 +170,14 @@ export const AGENT_COPY: Record<'en' | 'vi' | 'ko' | 'ru', AgentCopy> = {
       },
       {
         "q": "Môi giới đăng tin bất động sản lên DanangMLS như thế nào?",
-        "a": "Tạo hồ sơ môi giới miễn phí bằng nút bên dưới. Khi hồ sơ đã hoạt động, tin đăng của bạn sẽ hiện trên hồ sơ để khách thuê và khách mua tìm thấy, cả bằng tiếng Việt lẫn tiếng Anh."
+        "a": "Tạo hồ sơ môi giới miễn phí bằng nút bên dưới. Khi hồ sơ đã hoạt động, tin đăng của bạn sẽ hiện trên hồ sơ để khách thuê và khách mua tìm thấy, bằng tiếng Việt, tiếng Anh, tiếng Hàn hay tiếng Nga."
       }
     ],
     emptyState: 'Chưa có hồ sơ môi giới nào.',
     createFirst: 'Tạo hồ sơ môi giới đầu tiên',
     ctaHeading: 'Bạn là môi giới tại Đà Nẵng?',
     ctaBody:
-      'Tạo hồ sơ miễn phí để giới thiệu nhà của bạn tới khách thuê và khách mua đang tìm trên DanangMLS, bằng cả tiếng Việt lẫn tiếng Anh.',
+      'Tạo hồ sơ miễn phí để giới thiệu nhà của bạn tới khách thuê và khách mua đang tìm trên DanangMLS, bằng tiếng Việt, tiếng Anh, tiếng Hàn hay tiếng Nga.',
     ctaButton: 'Tạo hồ sơ môi giới',
     roleLabel: 'Môi giới bất động sản',
     independent: 'Tự do',
