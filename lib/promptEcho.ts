@@ -11,8 +11,15 @@ const LEAD = /^\s*1\.\s*[^\n:.]*?(?:translat|dịch|번역|перевод)[^\n:.
 // The "2. At the end of the description … contact details:" line, any language.
 const CONTACT_LINE = /^[ \t]*2\.[ \t]*(?:at the end of the description|cuối (?:phần )?mô tả|설명 마지막|в конце описания)[^\n]*\n?/gimu;
 
+// "ORIGINAL: <source-language headline>" followed by "BETTER TRANSLATION: <English headline>"
+// (Blake, 2026-10-21, listing fv6qfr): drop the ORIGINAL line, keep the English after the
+// label. Only when both labels are present, so a legitimate "Original" word is left alone.
+const ORIGINAL_BLOCK = /^[ \t*]*original[ \t*]*:[^\n]*\n+(?=[ \t*]*(?:better|improved)?[ \t]*translation)/gimu;
+const TRANSLATION_LABEL = /^([ \t*]*)(?:better|improved|english)?[ \t]*translation[ \t*]*:[ \t*]*/gimu;
+
 export function stripPromptEcho(text: string): string {
   if (!text) return text;
-  const out = text.replace(LEAD, '').replace(CONTACT_LINE, '');
+  let out = text.replace(LEAD, '').replace(CONTACT_LINE, '');
+  if (/^[ \t*]*original[ \t*]*:/im.test(out)) out = out.replace(ORIGINAL_BLOCK, '').replace(TRANSLATION_LABEL, '$1');
   return out === text ? text : out.trim();
 }
