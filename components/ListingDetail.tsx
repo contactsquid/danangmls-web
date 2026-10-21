@@ -33,6 +33,8 @@ interface Props {
   agentHasWhatsApp?: boolean;
   /** Facebook profile id, passed only when the post carried no phone at all. */
   agentMessenger?: string;
+  /** The contact came from the by-post fallback, so the sheet row may have no agent name. */
+  agentBorrowed?: boolean;
   /** Listing has left the live sheet; page stays 200 so the indexed URL survives. */
   archived?: boolean;
 }
@@ -60,7 +62,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '' }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false }: Props) {
   const { lang, t } = useLanguage();
 
   // One view per mount. React 18 StrictMode double-invokes effects in dev, and a
@@ -101,7 +103,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
     !approved &&
     !archived &&
     (Boolean(listing.agentPhone) || Boolean(agentMessenger)) &&
-    Boolean(listing.agent) &&
+    (Boolean(listing.agent) || agentBorrowed) &&
     isBelowServiceFloor(listing);
 
   // Type / bedrooms / district each link to their facet page (rent or sale) when
