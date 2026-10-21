@@ -179,3 +179,16 @@ test('Euro Village 2 (Hoa Xuan) is not the original Euro Village (Son Tra)', () 
   // …but "Euro Village 2" never lands on the original.
   assert.notEqual(at('Son Tra', 'Luxury Villa Near Euro Village 2').geoLabel, 'Euro Village');
 });
+
+test("the poster's own map link pins the listing exactly, even across a district line", () => {
+  const p = placeListing({ ...base, district: 'Hai Chau', mapPoint: [16.059041, 108.210305] }, coords);   // that point is in Thanh Khe
+  assert.deepEqual(p?.geo, [16.05904, 108.21031, PRECISION.building]);
+  assert.equal(p?.geoLabel, '');
+});
+
+test('a map link that is off the map (other city, sea) is ignored', () => {
+  const hanoi = placeListing({ ...base, mapPoint: [21.0285, 105.8542] }, coords);
+  assert.notDeepEqual(hanoi?.geo?.slice(0, 2), [21.0285, 105.8542]);
+  const sea = placeListing({ ...base, mapPoint: [16.05, 108.45] }, coords);
+  assert.notDeepEqual(sea?.geo?.slice(0, 2), [16.05, 108.45]);
+});

@@ -120,6 +120,7 @@ const R = {
   POST_URL: 14,
   DATE:     15,
   MLS_URL:  17,
+  MAP_COORDS: 32, // "lat,lng" from the poster's Google Maps link (resolve-map-links.js); '' / 'none' = no usable link
   AGENT_CONTACT: 24, // written by n8n from the RAW post text; surfaced on sub-floor rentals via AgentContact
   VI_TITLE: 25,
   VI_TEXT:  26,
@@ -152,6 +153,7 @@ const FS = {
   VI_TITLE: 21,
   VI_TEXT:  22,
   KO_TITLE: 23, KO_TEXT: 24, RU_TITLE: 25, RU_TEXT: 26,
+  MAP_COORDS: 28,
 } as const;
 
 // ─── Valid reference data ──────────────────────────────────────────────────────
@@ -228,6 +230,12 @@ function parseCSV(text: string): string[][] {
   }
   if (field || row.length) { row.push(field); rows.push(row); }
   return rows.filter(r => r.some(c => c.trim()));
+}
+
+/** "16.04522,108.22225" → [lat, lng]; anything else ('', 'none') → null. */
+function parseMapCoords(v: string): [number, number] | null {
+  const m = v.trim().match(/^(-?\d{1,3}\.\d+),\s*(-?\d{1,3}\.\d+)$/);
+  return m ? [Number(m[1]), Number(m[2])] : null;
 }
 
 function col(row: string[], idx: number): string {
@@ -326,7 +334,7 @@ function parseRows(rows: string[][]): Listing[] {
       listing.vi_text = stripAgentPhones(stripPromptEcho(listing.vi_text));
       listing.ko_text = stripAgentPhones(stripPromptEcho(listing.ko_text));
       listing.ru_text = stripAgentPhones(stripPromptEcho(listing.ru_text));
-      Object.assign(listing, placeListing(listing) ?? {});
+      Object.assign(listing, placeListing({ ...listing, mapPoint: parseMapCoords(col(r, R.MAP_COORDS)) }) ?? {});
       warnIfBadData(listing, 'Sheet1/Rentals');
       return listing;
     })
@@ -425,7 +433,7 @@ async function parseForSale(): Promise<Listing[]> {
       listing.vi_text = stripAgentPhones(stripPromptEcho(listing.vi_text));
       listing.ko_text = stripAgentPhones(stripPromptEcho(listing.ko_text));
       listing.ru_text = stripAgentPhones(stripPromptEcho(listing.ru_text));
-      Object.assign(listing, placeListing(listing) ?? {});
+      Object.assign(listing, placeListing({ ...listing, mapPoint: parseMapCoords(col(r, FS.MAP_COORDS)) }) ?? {});
       warnIfBadData(listing, 'For Sale');
       return listing;
     })

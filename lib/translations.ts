@@ -42,6 +42,7 @@ export interface Translations {
   mapOnStreet: (street: string) => string;
   mapInWard: (ward: string) => string;
   mapAtBuilding: (building: string) => string;
+  mapExact: string;
   mapNearBuilding: (building: string) => string;
   mapUnmapped: (n: number) => string;
   mapFresh: (n: number, forSale: boolean) => string;
@@ -161,6 +162,7 @@ export const translations: Record<Lang, Translations> = {
     mapOnStreet: (s) => `On ${s} Street`,
     mapInWard: (w) => `In ${w}`,
     mapAtBuilding: (b) => `At ${b}`,
+    mapExact: "Exact location (from the agent's map link)",
     mapNearBuilding: (b) => `Near ${b}`,
     mapFresh: (n, sale) => `Showing ${n} ${sale ? (n === 1 ? 'listing' : 'listings') + ' for sale' : (n === 1 ? 'rental' : 'rentals')} added in the last ${sale ? 4 : 2} weeks`,
     mapThisListing: 'This listing', mapSimilar: 'Similar listings',
@@ -278,6 +280,7 @@ export const translations: Record<Lang, Translations> = {
     mapOnStreet: (s) => `Đường ${s}`,
     mapInWard: (w) => `Phường ${w}`,
     mapAtBuilding: (b) => `Tòa ${b}`,
+    mapExact: 'Vị trí chính xác (theo liên kết bản đồ của người đăng)',
     mapNearBuilding: (b) => `Gần ${b}`,
     mapFresh: (n, sale) => `Đang hiển thị ${n} tin ${sale ? 'rao bán' : 'cho thuê'} mới đăng trong ${sale ? 4 : 2} tuần qua`,
     mapThisListing: 'Căn này', mapSimilar: 'Tin tương tự',
@@ -361,6 +364,7 @@ export const translations: Record<Lang, Translations> = {
     mapOnStreet: (s) => `${s} 거리`,
     mapInWard: (w) => `${w} 지역`,
     mapAtBuilding: (b) => b,
+    mapExact: '정확한 위치 (중개인이 공유한 지도 링크 기준)',
     mapNearBuilding: (b) => `${b} 인근`,
     mapFresh: (n, sale) => `최근 ${sale ? 4 : 2}주 이내 등록된 ${sale ? '매매' : '임대'} 매물 ${n}건 표시`,
     mapThisListing: '이 매물', mapSimilar: '비슷한 매물',
@@ -444,6 +448,7 @@ export const translations: Record<Lang, Translations> = {
     mapOnStreet: (s) => `Улица ${s}`,
     mapInWard: (w) => `Квартал ${w}`,
     mapAtBuilding: (b) => `Комплекс ${b}`,
+    mapExact: 'Точное местоположение (по ссылке на карту от агента)',
     mapNearBuilding: (b) => `Рядом с ${b}`,
     mapFresh: (n, sale) => `Показаны ${n} ${ruPlural(n, 'объявление', 'объявления', 'объявлений')} ${sale ? 'о продаже' : 'об аренде'} за последние ${sale ? '4 недели' : '2 недели'}`,
     mapThisListing: 'Этот объект', mapSimilar: 'Похожие объекты',

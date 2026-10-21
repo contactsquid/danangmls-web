@@ -22,7 +22,7 @@ export function pinHtml(l: Listing, lang: Lang, price = shortPrice(l.price, lang
 export function locationLine(l: Listing, lang: Lang, t: Translations): string {
   const [, , precision] = l.geo ?? [0, 0, 3];
   const label = l.geoLabel || '';
-  return precision === 0 ? t.mapAtBuilding(label)
+  return precision === 0 ? (label ? t.mapAtBuilding(label) : t.mapExact)
     : precision === 4 ? t.mapNearBuilding(label)
     : precision === 1 ? t.mapOnStreet(label)
     : precision === 2 ? t.mapInWard(label)

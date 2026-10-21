@@ -1,7 +1,7 @@
 import { POPULAR_BUILDINGS } from '../buildingDefs';
 import { extractStreet } from './streets';
 import { hashSeed, mulberry32, offsetPoint, type LatLng } from './geometry';
-import { hasDistrict, pointAllowed, randomAllowedPoint, wardKey } from './areas';
+import { hasDistrict, inWater, pointAllowed, randomAllowedPoint, wardAt, wardKey } from './areas';
 import COORDS from './coords.json';
 
 export const PRECISION = { building: 0, street: 1, ward: 2, district: 3, nearBuilding: 4 } as const;
@@ -100,7 +100,7 @@ const round5 = (n: number) => Math.round(n * 1e5) / 1e5;
  *  always inside its district, inside its ward when we know it, and never on water
  *  (Blake, 2026-09-26). */
 export function placeListing(
-  l: { slug: string; district: string; neighborhood: string; title: string; text: string },
+  l: { slug: string; district: string; neighborhood: string; title: string; text: string; mapPoint?: LatLng | null },
   coords: GeoCoords = COORDS as unknown as GeoCoords,
 ): Placement | null {
   if (!hasDistrict(l.district)) return null;            // covers '' and 'Not Provided'
@@ -129,6 +129,14 @@ export function placeListing(
     }
     return ok(anchor) ? anchor : null;
   };
+
+  // The poster's own Google Maps link (resolved to "Map Coords" by resolve-map-links.js) beats every guess
+  // below. It only has to be on land inside some Da Nang / Hoi An ward: the sheet's district comes from the
+  // AI and is the less reliable of the two (one sample pin sat just across a district line).
+  if (l.mapPoint) {
+    const p = r5(l.mapPoint);
+    if (wardAt(p) && !inWater(p)) return place(p, PRECISION.building, '', '');
+  }
 
   const landmark = MAP_LANDMARKS.find(m => m.pattern.test(hay) && ok(m.at));
   if (landmark) {
