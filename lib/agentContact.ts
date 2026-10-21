@@ -71,6 +71,11 @@ export function zaloLink(local9: string): string {
   return `https://zalo.me/84${local9}`;
 }
 
+/** Opens a Messenger chat with a Facebook profile id (numeric ids only). */
+export function messengerLink(id: string): string {
+  return `https://m.me/${id}`;
+}
+
 export function telLink(local9: string): string {
   return `tel:+84${local9}`;
 }

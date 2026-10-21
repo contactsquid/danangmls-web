@@ -31,6 +31,8 @@ interface Props {
   /** Resolved server-side from the agent's own post wording. False when unknown —
    *  a wa.me link to an unregistered number fails silently. */
   agentHasWhatsApp?: boolean;
+  /** Facebook profile id, passed only when the post carried no phone at all. */
+  agentMessenger?: string;
   /** Listing has left the live sheet; page stays 200 so the indexed URL survives. */
   archived?: boolean;
 }
@@ -58,7 +60,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '' }: Props) {
   const { lang, t } = useLanguage();
 
   // One view per mount. React 18 StrictMode double-invokes effects in dev, and a
@@ -98,7 +100,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
   const handOffToAgent =
     !approved &&
     !archived &&
-    Boolean(listing.agentPhone) &&
+    (Boolean(listing.agentPhone) || Boolean(agentMessenger)) &&
     Boolean(listing.agent) &&
     isBelowServiceFloor(listing);
 
@@ -294,6 +296,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
               agents={[{
                 name: listing.agent,
                 phone: listing.agentPhone || '',
+                messenger: listing.agentPhone ? undefined : agentMessenger,
                 profileSlug: agentSlug,
                 // Only when this agent's own post named it — see lib/agentChannels.ts.
                 hasWhatsApp: agentHasWhatsApp,

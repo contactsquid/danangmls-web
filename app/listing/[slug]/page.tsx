@@ -4,7 +4,8 @@ import { schemaRooms } from '@/lib/propertyTypes';
 import { listingOfferLd, listingImagesLd } from '@/lib/listingSchema';
 import { getArchivedListing } from '@/lib/archive';
 import { resolveListingRedirect } from '@/lib/redirects';
-import { agentHasWhatsApp } from '@/lib/agentChannels';
+import { isBelowServiceFloor } from '@/lib/agentContact';
+import { agentHasWhatsApp, agentFallbackForPost } from '@/lib/agentChannels';
 import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
 import { getAgentSlugForName } from '@/lib/agents';
@@ -152,6 +153,13 @@ export default async function ListingPage({ params }: Props) {
   const agentSlug = await getAgentSlugForName(listing.agent);
   // Only shown when this agent's OWN post text named WhatsApp — never assumed;
   // see lib/agentChannels.ts. Unknown numbers fall back to Zalo + Message.
+  // No number in the sheet row: borrow one the same Facebook profile gave on another
+  // post, or failing that hand over their Messenger (lib/agentChannels.ts). Only
+  // consulted for sub-floor rentals, the only listings that route to the agent.
+  const fallback = !listing.agentPhone && isBelowServiceFloor(listing)
+    ? await agentFallbackForPost(listing.postUrl)
+    : { phone: '', messenger: '' };
+  if (fallback.phone) listing = { ...listing, agentPhone: fallback.phone };
   const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
 
   return (
@@ -164,7 +172,7 @@ export default async function ListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} />
+      <ListingDetail listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );

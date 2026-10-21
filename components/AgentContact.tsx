@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { formatVnPhone, zaloLink, smsLink, whatsappLink, agencyWebsite, enquiryFor } from '@/lib/agentContact';
+import { formatVnPhone, zaloLink, messengerLink, smsLink, whatsappLink, agencyWebsite, enquiryFor } from '@/lib/agentContact';
 import { forLang, type Lang } from '@/lib/translations';
 import { reportStat, type StatKind } from '@/lib/stat';
 
 export type ContactAgent = {
   name: string;
-  phone: string;                 // 9 local digits
+  phone: string;                 // 9 local digits; '' when we only have Messenger
+  /** Facebook profile id. Used only when there is no phone: Messenger is then the
+   *  one way left to reach the agent. */
+  messenger?: string;
   profileSlug?: string | null;
   /** Only true where the agent's OWN post text named WhatsApp, or where this is
    *  the agency line. Never assumed — wa.me to an unregistered number fails
@@ -48,7 +51,7 @@ export default function AgentContact({ agents, listing, lang, agentName = null }
   // wa.me, sms: and an external site, and a server redirect through sms:/tel:
   // schemes is unreliable across browsers. sendBeacon survives the navigation.
   const onContact = (kind: StatKind) => () => reportStat(listing.slug, kind, agentName);
-  const reachable = agents.filter(a => a.phone);
+  const reachable = agents.filter(a => a.phone || a.messenger);
   if (reachable.length === 0) return null;
 
   const message = enquiryFor(listing, lang);
@@ -67,7 +70,7 @@ export default function AgentContact({ agents, listing, lang, agentName = null }
       <div className="flex flex-col gap-4">
         {reachable.map((agent, i) => (
           <div
-            key={`${agent.name}-${agent.phone}`}
+            key={`${agent.name}-${agent.phone || agent.messenger}`}
             className={i > 0 ? 'pt-4 border-t border-blue-100' : undefined}
           >
             {/* No name on the agency block: that line is DanangMLS's own number, and
@@ -80,13 +83,13 @@ export default function AgentContact({ agents, listing, lang, agentName = null }
               ) : (
                 <span className="font-semibold text-slate-800">{agent.name}</span>
               ))}
-              <span className="text-xs text-slate-500">{formatVnPhone(agent.phone)}</span>
+              {agent.phone && <span className="text-xs text-slate-500">{formatVnPhone(agent.phone)}</span>}
             </div>
 
             {/* Fixed order: WhatsApp, Zalo, Message, Website. WhatsApp only where
                 we know the number is on it; Website only for approved agents. */}
             <div className="flex flex-wrap gap-2">
-              {agent.hasWhatsApp && (
+              {agent.phone && agent.hasWhatsApp && (
                 <a
                   href={whatsappLink(agent.phone, message)}
                 onClick={onContact('whatsapp')}
@@ -97,6 +100,7 @@ export default function AgentContact({ agents, listing, lang, agentName = null }
                   WhatsApp
                 </a>
               )}
+              {agent.phone && (<>
               <a
                 href={zaloLink(agent.phone)}
                 onClick={onContact('zalo')}
@@ -115,6 +119,20 @@ export default function AgentContact({ agents, listing, lang, agentName = null }
               >
                 {forLang({ en: 'Message', vi: 'Nhắn tin', ko: '문자', ru: 'Написать' }, lang)}
               </a>
+              </>)}
+              {/* No number on file for this agent: their Facebook Messenger is the
+                  only route left. Counted as 'message' in the stats. */}
+              {!agent.phone && agent.messenger && (
+                <a
+                  href={messengerLink(agent.messenger)}
+                  onClick={onContact('sms')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#0084ff] text-white text-sm font-semibold hover:bg-[#006fd6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0084ff]"
+                >
+                  Messenger
+                </a>
+              )}
               {agent.showWebsite && (
                 <a
                   href={agencyWebsite(lang)}

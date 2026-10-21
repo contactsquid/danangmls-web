@@ -72,3 +72,59 @@ export async function agentHasWhatsApp(local9: string): Promise<boolean> {
   const map = await loadChannels();
   return map.get(local9)?.has('whatsapp') ?? false;
 }
+
+
+// ── Fallback for posts that carry NO phone number of their own ──────────────
+// ~/.openclaw/scripts/publish-agent-fallbacks.js publishes, per post URL, (p) a
+// number the same Facebook profile gave on another post and (m) that profile's
+// Messenger id. The number is only published when one number dominates the
+// profile's posts, so a shared/agency profile never lends out a guess.
+const FALLBACKS_URL = 'https://images.danang.homes/agents/by-post.json';
+
+export type AgentFallback = { phone: string; messenger: string };
+
+let fbCache: Map<string, { p?: string; m?: string }> | null = null;
+let fbCachedAt = 0;
+let fbInflight: Promise<Map<string, { p?: string; m?: string }>> | null = null;
+
+/** Same normalisation the publisher applies to its keys. */
+function postKey(url: string): string {
+  return String(url || '').trim().replace(/[?#].*$/, '').replace(/\/$/, '');
+}
+
+async function loadFallbacks() {
+  const now = Date.now();
+  if (fbCache && now - fbCachedAt < TTL_MS) return fbCache;
+  if (fbInflight) return fbInflight;
+  fbInflight = (async () => {
+    const next = new Map<string, { p?: string; m?: string }>();
+    try {
+      // revalidate, never no-store: see the note in loadChannels().
+      const res = await fetch(FALLBACKS_URL, { next: { revalidate: 300 } });
+      if (res.ok) {
+        const j = (await res.json()) as Record<string, { p?: unknown; m?: unknown }>;
+        for (const [url, e] of Object.entries(j ?? {})) {
+          const p = typeof e?.p === 'string' && PHONE_RE.test(e.p) ? e.p : undefined;
+          const m = typeof e?.m === 'string' && /^\d{5,}$/.test(e.m) ? e.m : undefined;
+          if (p || m) next.set(url, { p, m });
+        }
+      }
+      fbCache = next;
+      fbCachedAt = Date.now();
+    } catch {
+      if (!fbCache) { fbCache = next; fbCachedAt = Date.now(); }
+    } finally {
+      fbInflight = null;
+    }
+    return fbCache ?? next;
+  })();
+  return fbInflight;
+}
+
+/** Number/Messenger id to use for a listing whose own row has no agent phone. */
+export async function agentFallbackForPost(postUrl: string): Promise<AgentFallback> {
+  const empty = { phone: '', messenger: '' };
+  if (!postUrl) return empty;
+  const e = (await loadFallbacks()).get(postKey(postUrl));
+  return e ? { phone: e.p ?? '', messenger: e.m ?? '' } : empty;
+}
