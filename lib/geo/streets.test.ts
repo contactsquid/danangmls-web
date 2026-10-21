@@ -29,3 +29,11 @@ test('junk is rejected', () => {
 test('normalizeName folds diacritics and đ', () => {
   assert.equal(normalizeName('  Đống  Đa '), 'dong da');
 });
+
+test('lowercase "street" / "st" / "road" suffix still counts', () => {
+  assert.deepEqual(extractStreet('House on Nguyen Van Thoai street, near beach'),
+    { name: 'Nguyen Van Thoai', key: 'nguyen van thoai' });
+  assert.equal(extractStreet('Near Tran Cao Van st in Thanh Khe')?.key, 'tran cao van');
+  assert.equal(extractStreet('Located on Le Duan road')?.key, 'le duan');
+  assert.equal(extractStreet('Quiet main street vibes'), null);
+});

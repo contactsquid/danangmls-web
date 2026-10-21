@@ -13,7 +13,7 @@ const STOP = new Set(['near', 'on', 'at', 'off', 'located', 'main', 'front', 'th
 
 const TOKEN = String.raw`(?:\p{Lu}\p{Ll}*|\d{1,3})`;
 // "Nguyen Van Thoai Street", "Tran Cao Van St.", "An Thuong 2 Road"
-const EN = new RegExp(String.raw`((?:${TOKEN}\s+){1,5})(?:Street|St\.?|Road|Rd\.?)(?!\p{L})`, 'gu');
+const EN = new RegExp(String.raw`((?:${TOKEN}\s+){1,5})(?:[Ss]treet|[Ss]t\.?|[Rr]oad|[Rr]d\.?)(?!\p{L})`, 'gu');
 // "đường Lê Duẩn" — only the accented word: "Duong" alone is a common surname/street start.
 const VI = new RegExp(String.raw`[đĐ]ường\s+((?:${TOKEN}(?:\s+|$)){2,5})`, 'gu');
 
