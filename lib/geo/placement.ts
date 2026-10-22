@@ -31,16 +31,17 @@ const SPREAD_M = { building: 30, nearBuilding: 300, street: 150, ward: 350, dist
 // never in (parks, malls, resorts): always labelled "Near …".
 // Coordinates are OpenStreetMap features whose name/address matched — don't add a
 // place without that check: fuzzy geocoding put "Sam Towers" on Meridian Towers.
-const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number; near?: boolean }[] = [
+// `address`: the street address to SHOW (building records); only set from an address Blake gave.
+const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number; near?: boolean; address?: string }[] = [
   // Fusion Resort & Villas, Trường Sa, Ngũ Hành Sơn. Fusion Suites is a different hotel on Vo Nguyen Giap.
   { name: 'Fusion Resort & Villas', pattern: /\bfusion\b(?!\s+suites?)/i, at: [15.97242, 108.28229], spreadM: 150 },
   // Premier Village Resort, 99 Võ Nguyên Giáp (villas for rent inside it).
   { name: 'Premier Village', pattern: /\bprem(?:ier|eir)\s+village\b/i, at: [16.04362, 108.24966], spreadM: 150 },
   // Chung cư Monarchy, 535 Trần Hưng Đạo, An Hải.
-  { name: 'Monarchy', pattern: /\bmonarchy\b/i, at: [16.05484, 108.23297], spreadM: 40 },
-  // Sam Towers, Như Nguyệt / 01 Cầu Thuận Phước, Hải Châu (Blake's address) — the
-  // bridge's west-end roundabout on Như Nguyệt, per OSM.
-  { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.09333, 108.21727], spreadM: 40 },
+  { name: 'Monarchy', pattern: /\bmonarchy\b/i, at: [16.05484, 108.23297], spreadM: 40, address: '535 Trần Hưng Đạo, An Hải, Sơn Trà, Đà Nẵng' },
+  // Sam Towers, 02 Đỗ Xuân Cát, Hải Châu (Blake, 2026-10-22; replaces the earlier bridge-roundabout guess
+  // 800 m north). OSM: Đỗ Xuân Cát is a 150 m street off Như Nguyệt, No. 05 mid-street, so No. 02 is the river corner.
+  { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.08645, 108.22175], spreadM: 40, address: '02 Đỗ Xuân Cát, Hải Châu, Đà Nẵng 550000' },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
@@ -71,6 +72,12 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'APEC Park', pattern: /\bapec\s+park\b|công viên apec/i, at: [16.05875, 108.22351], spreadM: 300, near: true },
   { name: 'East Sea Park', pattern: /\beast\s+sea\s+park\b|công viên biển đông/i, at: [16.06835, 108.24593], spreadM: 300, near: true },
 ];
+
+/** A building's hand-pinned spot and street address (when Blake gave one), for its building record page. */
+export function buildingLandmark(name: string): { at: LatLng; address?: string } | undefined {
+  const m = MAP_LANDMARKS.find(m => !m.near && m.pattern.test(name));
+  return m && { at: m.at, address: m.address };
+}
 
 // "Garden house near Hyatt Regency" is not IN the Hyatt. A building name right after
 // one of these phrases places the pin around the building, labelled "Near …".

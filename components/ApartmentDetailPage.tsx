@@ -1,3 +1,4 @@
+import { buildingLandmark } from '@/lib/geo/placement';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -65,8 +66,12 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
   // One photo per listing, so the collage shows different units.
   const mid = (xs: string[]) => xs.length >= 3 ? xs[Math.floor(xs.length / 2)] : undefined;
   const photos = [b.image, ...events.map(e => mid(e.listing.images.filter(isStable))).filter(Boolean)].filter(Boolean).slice(0, 3) as string[];
+  // The building's own pin when it's hand-placed from a real address; else the best-placed listing's.
+  const landmark = buildingLandmark(b.name);
   const mapSource = events.find(e => e.listing.geo && (e.listing.geo[2] === 0 || e.listing.geo[2] === 4)) ?? events.find(e => e.listing.geo);
-  const mapListing: Listing | null = mapSource ? { ...mapSource.listing, geoLabel: b.name } : null;
+  const mapListing: Listing | null = landmark && events[0]
+    ? { ...(mapSource ?? events[0]).listing, geo: [landmark.at[0], landmark.at[1], 0], geoLabel: b.name, geoArea: '' }
+    : mapSource ? { ...mapSource.listing, geoLabel: b.name } : null;
   const districtInfo = getDistrict(district);
   const facet = `/for-rent/${slug}`;
 
@@ -75,7 +80,7 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
     '@type': 'ApartmentComplex',
     name: b.name,
     url: `${SITE}/apartmentdetails/${slug}`,
-    address: { '@type': 'PostalAddress', addressLocality: district || 'Da Nang', addressRegion: 'Da Nang', addressCountry: 'VN' },
+    address: { '@type': 'PostalAddress', ...(landmark?.address && { streetAddress: landmark.address.split(',')[0] }), addressLocality: district || 'Da Nang', addressRegion: 'Da Nang', addressCountry: 'VN' },
     ...(mapListing?.geo && { geo: { '@type': 'GeoCoordinates', latitude: mapListing.geo[0], longitude: mapListing.geo[1] } }),
     ...(photos.length && { image: photos }),
     numberOfAvailableAccommodationUnits: live.length,
@@ -133,7 +138,7 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
           <div className="flex-[999_1_560px] min-w-0 flex flex-col gap-7">
             <section className="flex flex-col gap-2.5">
               <h1 className="text-3xl font-bold text-slate-900 leading-tight">{b.name}</h1>
-              <p className="text-base text-slate-600">{[area, district, 'Da Nang'].filter(Boolean).join(', ')}</p>
+              <p className="text-base text-slate-600">{landmark?.address || [area, district, 'Da Nang'].filter(Boolean).join(', ')}</p>
               <div className="flex flex-wrap gap-x-5 gap-y-1 pt-1.5 text-base font-semibold text-slate-900">
                 <span>Apartment building</span>
                 <span>{events.length} listings tracked</span>

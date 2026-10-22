@@ -140,7 +140,7 @@ test('complexes pin at their address', () => {
     ['Ngu Hanh Son', 'Villa at Premier Village Resort', 'Premier Village', [16.04362, 108.24966], 151],
     ['Son Tra', '2BR Monarchy apartment, river view', 'Monarchy', [16.05484, 108.23297], 41],
     ['Son Tra', 'House in Euro Village', 'Euro Village', [16.05432, 108.23111], 201],
-    ['Hai Chau', 'Luxury 2BR at SAM Towers with river view', 'Sam Towers', [16.09333, 108.21727], 41],
+    ['Hai Chau', 'Luxury 2BR at SAM Towers with river view', 'Sam Towers', [16.08645, 108.22175], 41],
     ['Ngu Hanh Son', 'Sun Cosmo Residence 1BR', 'Sun Cosmo', [16.05043, 108.23331], 51],
     ['Hai Chau', 'Elysia Complex City apartment', 'Elysia', [16.03266, 108.23167], 81],
     ['Ngu Hanh Son', 'Pool villa in One River', 'One River', [15.99095, 108.26142], 401],
