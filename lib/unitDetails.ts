@@ -15,7 +15,8 @@ const ordinal = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['
 export function unitDetails(l: Pick<Listing, 'title' | 'text' | 'bedrooms'> & { vi_text?: string }): UnitDetails {
   const t = `${l.title} ${l.text || ''} ${l.vi_text || ''}`;
   const d: UnitDetails = {};
-  if (l.bedrooms && /^\d+$/.test(String(l.bedrooms))) d.beds = String(l.bedrooms);
+  // "0" in the sheet means unknown far more often than studio (an 85 m² "0-bed"), so only the word counts.
+  if (l.bedrooms && /^[1-9]\d*$/.test(String(l.bedrooms))) d.beds = String(l.bedrooms);
   else if (/studio/i.test(t)) d.beds = 'Studio';
   const b = t.match(BATHS);
   if (b) { const n = Number(b[1] || b[2]); if (n >= 1 && n <= 6) d.baths = n; }

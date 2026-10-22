@@ -61,7 +61,9 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
   }).filter(r => r.n >= 2);
   const floors = events.map(e => Number((e.unit.floor || '').match(/^(\d+)/)?.[1])).filter(n => n > 0);
   const first = events[events.length - 1];
-  const photos = [b.image, ...events.flatMap(e => e.listing.images.filter(isStable))].filter(Boolean).slice(0, 3) as string[];
+  // Skip each listing's FIRST photo: that is where agents put a WhatsApp QR code or a cover card.
+  // One photo per listing, so the collage shows different units.
+  const photos = [b.image, ...events.map(e => e.listing.images.filter(isStable)[1]).filter(Boolean)].filter(Boolean).slice(0, 3) as string[];
   const mapSource = events.find(e => e.listing.geo && (e.listing.geo[2] === 0 || e.listing.geo[2] === 4)) ?? events.find(e => e.listing.geo);
   const mapListing: Listing | null = mapSource ? { ...mapSource.listing, geoLabel: b.name } : null;
   const districtInfo = getDistrict(district);
@@ -87,7 +89,7 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
       </td>
       <td className="px-2 py-3">{unitSummary(e.unit)}</td>
       <td className="px-2 py-3 whitespace-nowrap">{e.listing.price || '—'}</td>
-      <td className="px-2 py-3"><Link href={`/listing/${e.listing.slug}`} className="font-medium text-blue-700 hover:underline">View</Link></td>
+      <td className="px-2 py-3">{e.page ? <Link href={`/listing/${e.listing.slug}`} className="font-medium text-blue-700 hover:underline">View</Link> : '—'}</td>
     </tr>
   );
 

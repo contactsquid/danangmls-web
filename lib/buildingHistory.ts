@@ -5,24 +5,27 @@
 import { getListings, getForSaleListings } from './sheets';
 import { getArchivedListing } from './archive';
 import { buildingMatches, type BuildingDef } from './buildingDefs';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase/config';
+import { createAdminClient } from './supabase/server';
 import { unitDetails, type UnitDetails } from './unitDetails';
 import type { Listing } from './types';
 
-export type BuildingEvent = { listing: Listing; live: boolean; when: number; unit: UnitDetails };
+/** `page`: false when only the database card survives (an old deletion with no archive): no page to link to. */
+export type BuildingEvent = { listing: Listing; live: boolean; page: boolean; when: number; unit: UnitDetails };
 
 type Row = { slug: string; kind: string; listed: boolean; listed_at: string | null; card: Listing | null };
 
 async function supabaseRows(b: BuildingDef): Promise<Row[]> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return [];
-  const term = encodeURIComponent(`*${b.search}*`);
+  // Server-only admin client: the listing sync writes with it, so it is known to work in production.
+  const db = createAdminClient();
+  if (!db) return [];
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/listings?source=eq.danangmls&title=ilike.${term}&select=slug,kind,listed,listed_at,card&order=listed_at.desc&limit=500`,
-      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }, next: { revalidate: 300 } },
-    );
-    return res.ok ? (await res.json()) as Row[] : [];
-  } catch { return []; }
+    const { data, error } = await db.from('listings')
+      .select('slug,kind,listed,listed_at,card')
+      .eq('source', 'danangmls').ilike('title', `%${b.search}%`)
+      .order('listed_at', { ascending: false }).limit(500);
+    if (error) { console.error('[buildingHistory]', error.message); return []; }
+    return (data ?? []) as Row[];
+  } catch (err) { console.error('[buildingHistory]', err); return []; }
 }
 
 export async function getBuildingHistory(b: BuildingDef) {
@@ -38,10 +41,11 @@ export async function getBuildingHistory(b: BuildingDef) {
 
   const events: BuildingEvent[] = [];
   await Promise.all([...slugs].map(async slug => {
-    const l = live.get(slug) ?? await getArchivedListing(slug) ?? bySlug.get(slug)?.card ?? null;
+    const archived = live.has(slug) ? null : await getArchivedListing(slug);
+    const l = live.get(slug) ?? archived ?? bySlug.get(slug)?.card ?? null;
     if (!l) return;
     const when = Date.parse(l.date) || Date.parse(bySlug.get(slug)?.listed_at || '') || 0;
-    events.push({ listing: l, live: live.has(slug), when, unit: unitDetails(l) });
+    events.push({ listing: l, live: live.has(slug), page: live.has(slug) || Boolean(archived), when, unit: unitDetails(l) });
   }));
   events.sort((a, b2) => b2.when - a.when);
   return { events, live: [...live.values()], all: [...rentals, ...forSale] };

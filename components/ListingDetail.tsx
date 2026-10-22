@@ -42,6 +42,9 @@ interface Props {
   /** The property-history page for this listing's address. Passed ONLY for off-market (archived) listings:
    *  agents keep addresses secret, so an active listing must never link to it. */
   historyHref?: string;
+  /** The building record (/apartmentdetails/<building>) for an apartment listing. Fine on ACTIVE listings too:
+   *  a building's address doesn't reveal the unit (Blake, 2026-10-22). Houses never get this. */
+  building?: { name: string; href: string };
 }
 
 // Vietnamese fallback title for listings without vi_title — keeps the H1
@@ -67,7 +70,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false, address, historyHref }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false, address, historyHref, building }: Props) {
   const { lang, t } = useLanguage();
 
   // One view per mount. React 18 StrictMode double-invokes effects in dev, and a
@@ -238,6 +241,11 @@ export default function ListingDetail({ listing, archived = false, similarListin
           )}
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">{displayTitle}</h1>
           {address && <p className="text-base font-semibold text-slate-700 mb-1">📍 {address}</p>}
+          {building && (
+            <Link href={building.href} className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:underline">
+              {forLang({ en: `${building.name}: building record and listing history`, vi: `${building.name}: lịch sử tin đăng của tòa nhà`, ko: `${building.name}: 건물 매물 이력`, ru: `${building.name}: история объявлений в здании` }, lang)} →
+            </Link>
+          )}
           {(listing.type || listing.district) && (
             <h2 className="text-base font-medium text-slate-500 mb-6">
               {[

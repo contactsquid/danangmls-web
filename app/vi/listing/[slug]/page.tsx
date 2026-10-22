@@ -1,4 +1,6 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
+import { POPULAR_BUILDINGS, buildingMatches, buildingSlug, BUILDING_PAGE_MIN_LISTINGS } from '@/lib/buildingDefs';
+import { canonicalType } from '@/lib/propertyTypes';
 import { getAddressForListing, addressRoute } from '@/lib/addresses';
 import { getSimilarListings } from '@/lib/similarListings';
 import { schemaRooms, bedroomsViPhrase } from '@/lib/propertyTypes';
@@ -157,6 +159,10 @@ export default async function ViListingPage({ params }: Props) {
   const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
 
   const addr = await getAddressForListing(listing.slug);
+  // Apartments link to their building record even when active: the building is public, the unit is not.
+  const bdef = canonicalType(listing.type, listing.forSale) === 'Apartment' ? POPULAR_BUILDINGS.find(b => buildingMatches(b, listing!)) : undefined;
+  const building = bdef && listings.filter(l => buildingMatches(bdef, l)).length >= BUILDING_PAGE_MIN_LISTINGS
+    ? { name: bdef.name, href: `/apartmentdetails/${buildingSlug(bdef.name)}` } : undefined;
   // Agents keep addresses secret, so ONLY an off-market (archived) listing links to its history page (Blake, 2026-10-22).
   const historyHref = addr && archived ? `/${addressRoute(listing)}/${addr.addrSlug}` : undefined;
   // A posted address pins the map: exact from Blake's Maps link, else the street. The address itself is not shown.
@@ -171,7 +177,7 @@ export default async function ViListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail historyHref={historyHref} listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} agentBorrowed={Boolean(fallback.phone || fallback.messenger)} />
+      <ListingDetail historyHref={historyHref} building={building} listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} agentBorrowed={Boolean(fallback.phone || fallback.messenger)} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );
