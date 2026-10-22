@@ -61,9 +61,10 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
   }).filter(r => r.n >= 2);
   const floors = events.map(e => Number((e.unit.floor || '').match(/^(\d+)/)?.[1])).filter(n => n > 0);
   const first = events[events.length - 1];
-  // Skip each listing's FIRST photo: that is where agents put a WhatsApp QR code or a cover card.
+  // Each listing's MIDDLE photo: agents put WhatsApp QR codes and cover cards at the start (sometimes two deep) or the end.
   // One photo per listing, so the collage shows different units.
-  const photos = [b.image, ...events.map(e => e.listing.images.filter(isStable)[1]).filter(Boolean)].filter(Boolean).slice(0, 3) as string[];
+  const mid = (xs: string[]) => xs.length >= 3 ? xs[Math.floor(xs.length / 2)] : undefined;
+  const photos = [b.image, ...events.map(e => mid(e.listing.images.filter(isStable))).filter(Boolean)].filter(Boolean).slice(0, 3) as string[];
   const mapSource = events.find(e => e.listing.geo && (e.listing.geo[2] === 0 || e.listing.geo[2] === 4)) ?? events.find(e => e.listing.geo);
   const mapListing: Listing | null = mapSource ? { ...mapSource.listing, geoLabel: b.name } : null;
   const districtInfo = getDistrict(district);
