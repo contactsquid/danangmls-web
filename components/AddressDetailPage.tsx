@@ -86,6 +86,10 @@ export default async function AddressDetailPage({ kind, addr }: { kind: Kind; ad
   const photos = (l.images.filter(isStable).length ? l.images.filter(isStable) : l.images).slice(0, 3);
   const district = getDistrict(l.district);
   const similar = getSimilarListings(l, all);
+  // The address's own pin (from Blake's Maps link or the street) beats the listing's estimate.
+  const mapListing: Listing = entry.geo
+    ? { ...l, geo: [entry.geo.lat, entry.geo.lng, entry.geo.precision], geoLabel: entry.geo.precision === 0 ? '' : (entry.geo.label || street), geoArea: '' }
+    : l;
   const first = events[events.length - 1];
   const mode = l.forSale ? 'for-sale' : 'for-rent';
   const listingHref = (e: Event) => `/listing/${e.listing.slug}`;
@@ -97,7 +101,7 @@ export default async function AddressDetailPage({ kind, addr }: { kind: Kind; ad
     name: entry.address,
     url,
     address: { '@type': 'PostalAddress', streetAddress: street, addressLocality: l.district || 'Da Nang', addressRegion: 'Da Nang', addressCountry: 'VN' },
-    ...(l.geo && { geo: { '@type': 'GeoCoordinates', latitude: l.geo[0], longitude: l.geo[1] } }),
+    ...(mapListing.geo && { geo: { '@type': 'GeoCoordinates', latitude: mapListing.geo[0], longitude: mapListing.geo[1] } }),
     ...(kind === 'homedetails' && /^\d+$/.test(String(l.bedrooms)) && { numberOfBedrooms: Number(l.bedrooms) }),
     ...(photos.length && { image: photos }),
   };
@@ -248,9 +252,9 @@ export default async function AddressDetailPage({ kind, addr }: { kind: Kind; ad
                 {l.forSale ? 'Find similar homes for sale' : 'Find similar homes for rent'}
               </Link>
             </div>
-            {l.geo && (
+            {mapListing.geo && (
               <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-                <ListingMapSection listing={l} similar={similar} />
+                <ListingMapSection listing={mapListing} similar={similar} />
               </div>
             )}
           </aside>

@@ -16,15 +16,22 @@ async function loadIndex(): Promise<Record<string, unknown>> {
 }
 
 /** One street address and every listing of it over time, newest first (its property history). */
-export type AddressEntry = { address: string; slugs: string[] };
-type RawEntry = { address?: unknown; slug?: unknown; slugs?: unknown };
+/** `geo`: the address's own pin (publish-home-addresses.js): precision 0 = from Blake's Google Maps link,
+ *  1 = the street. Beats the listing's own pin, which is often only ward-level. */
+export type AddressGeo = { lat: number; lng: number; precision: number; label?: string };
+export type AddressEntry = { address: string; slugs: string[]; geo?: AddressGeo };
+type RawEntry = { address?: unknown; slug?: unknown; slugs?: unknown; geo?: unknown };
 
 /** Reads both shapes: the old { slug, address } and the history { slugs: [...], address }. */
 function normalize(raw: RawEntry | undefined): AddressEntry | null {
   if (!raw || typeof raw.address !== 'string') return null;
   const slugs = Array.isArray(raw.slugs) ? raw.slugs.filter((x): x is string => typeof x === 'string')
     : typeof raw.slug === 'string' ? [raw.slug] : [];
-  return slugs.length ? { address: raw.address, slugs } : null;
+  const g = raw.geo as Partial<AddressGeo> | undefined;
+  const geo = g && Number.isFinite(g.lat) && Number.isFinite(g.lng) && Number.isFinite(g.precision)
+    ? { lat: g.lat as number, lng: g.lng as number, precision: g.precision as number, ...(typeof g.label === 'string' && { label: g.label }) }
+    : undefined;
+  return slugs.length ? { address: raw.address, slugs, ...(geo && { geo }) } : null;
 }
 
 export async function getAddressEntry(addrSlug: string): Promise<AddressEntry | null> {
