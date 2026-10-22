@@ -69,6 +69,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Wyndham Soleil, 194 Võ Nguyên Giáp, Phước Mỹ (Blake, 2026-10-22); OSM's "Wyndham Soleil Danang" footprint
   // reaches the beach road. Not plain "wyndham": Wyndham Golden Bay is its own landmark.
   { name: 'Wyndham Soleil', pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, at: [16.07096, 108.24382], spreadM: 40, address: '194 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng' },
+  // Times Square / FUTA Residence, Đình Nghệ, An Hải (Blake, 2026-10-22: Plus Code 369V+JMJ → 7P8C369V+JMJ),
+  // beside OSM's "Times Square Đà Nẵng CT1/CT2".
+  { name: 'Times Square FUTA Residence', pattern: /times\s*square|futa\s*residence/i, at: [16.06909, 108.24414], spreadM: 50, address: 'Đình Nghệ, An Hải, Đà Nẵng 550000' },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
@@ -87,8 +90,8 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // A Cẩm Lệ listing saying just "Euro Village" means Euro Village 2: the original is
   // in another district, so the entry above never applies to it.
   { name: 'Euro Village 2', pattern: /\beuro\s*vill(?:age|a)\b/i, at: [16.02394, 108.22569], spreadM: 200 },
-  // The Ori Garden, Liên Chiểu.
-  { name: 'The Ori Garden', pattern: /\bori\s+garden\b/i, at: [16.10009, 108.12951], spreadM: 60 },
+  // The Ori Garden, Lô B42 Nguyễn Thành Long, Liên Chiểu (Blake, 2026-10-22); inside OSM's "The Ori Garden" area.
+  { name: 'The Ori Garden', pattern: /\bori\s+garden\b/i, at: [16.10009, 108.12951], spreadM: 60, address: 'Lô B42 Nguyễn Thành Long, Quan Nam, Hải Vân, Đà Nẵng' },
   // Wyndham Danang Golden Bay, 01 Lê Văn Duyệt, Sơn Trà.
   { name: 'Golden Bay', pattern: /\bgolden\s*bay\b/i, at: [16.09806, 108.22438], spreadM: 40, address: '01 Lê Văn Duyệt, Nại Hiên Đông, Sơn Trà, Đà Nẵng' },
   { name: 'Mikazuki', pattern: /\bmikazuki\b/i, at: [16.09358, 108.14436], spreadM: 150, near: true },
