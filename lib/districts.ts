@@ -53,7 +53,7 @@ export const DISTRICTS: Record<string, DistrictInfo> = {
     name:   'Thanh Khe',
     viName: 'Thanh Khê',
     description:
-      `Thanh Khe is a densely populated residential district immediately west of Hai Chau, running along Da Nang's western bay. Known for its authentic local markets, affordable housing, and easy access to the city centre, it attracts families and long-term residents who want to live like a local. The district borders Da Nang International Airport and offers strong transport links across the city.`,
+      `Thanh Khe is a densely populated residential district immediately west of Hai Chau, running along Da Nang's western bay. Known for its authentic local markets, affordable housing, and easy access to the city center, it attracts families and long-term residents who want to live like a local. The district borders Da Nang International Airport and offers strong transport links across the city.`,
     viDescription:
       `Thanh Khê là quận dân cư đông đúc nằm ngay phía tây Hải Châu, trải dọc vịnh phía tây Đà Nẵng. Chợ dân sinh đậm chất địa phương, giá nhà vừa túi tiền và đường vào trung tâm thuận tiện khiến nhiều gia đình và người ở lâu dài chọn Thanh Khê để sống đúng kiểu người Đà Nẵng. Quận giáp Sân bay quốc tế Đà Nẵng, từ đây đi các nơi trong thành phố đều dễ dàng.`,
     bbox: [108.160, 16.042, 108.200, 16.082],
@@ -75,7 +75,7 @@ export const DISTRICTS: Record<string, DistrictInfo> = {
     name:   'Cam Le',
     viName: 'Cẩm Lệ',
     description:
-      `Cam Le is a southern mainland district connecting Da Nang's urban core to the surrounding countryside. The Hoa Xuan riverside township has attracted significant investment and offers spacious villas and townhouses at competitive prices. Its location along the Han River provides scenic views and easy access to the city centre, Ngu Hanh Son, and the Marble Mountains tourist area.`,
+      `Cam Le is a southern mainland district connecting Da Nang's urban core to the surrounding countryside. The Hoa Xuan riverside township has attracted significant investment and offers spacious villas and townhouses at competitive prices. Its location along the Han River provides scenic views and easy access to the city center, Ngu Hanh Son, and the Marble Mountains tourist area.`,
     viDescription:
       `Cẩm Lệ là quận nằm trong đất liền ở phía nam, nối khu trung tâm Đà Nẵng với vùng ven. Khu đô thị ven sông Hòa Xuân đã đón nhiều vốn đầu tư, có biệt thự và nhà phố rộng rãi với giá cạnh tranh. Nằm dọc sông Hàn, Cẩm Lệ có cảnh sông đẹp, đi vào trung tâm, sang quận Ngũ Hành Sơn hay khu danh thắng Ngũ Hành Sơn đều thuận tiện.`,
     bbox: [108.170, 15.965, 108.230, 16.025],
