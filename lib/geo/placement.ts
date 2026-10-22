@@ -45,6 +45,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Chung cư Mường Thanh, 357 Trần Bạch Đằng (Blake, 2026-10-22); OSM's "Chung cư Mường Thanh Sơn Trà" on that street.
   // Our ward map puts it in Ngũ Hành Sơn / Mỹ An, where most Muong Thanh listings say they are.
   { name: 'Muong Thanh', pattern: /\bm[ưu][ờo]ng\s+thanh\b/i, at: [16.05340, 108.24682], spreadM: 40, address: '357 Trần Bạch Đằng, Bắc Mỹ Phú, Sơn Trà, Đà Nẵng 550000' },
+  // The Filmore (Blake, 2026-10-22): the lot bounded by Bạch Đằng, Trần Văn Trứ and Bình Minh 5, Hải Châu; no house number.
+  // Pinned on Bạch Đằng just south of Bình Minh 5 (OSM street geometry), spread over the block.
+  { name: 'The Filmore', pattern: /\bfil+more\b/i, at: [16.0545, 108.2233], spreadM: 60, address: 'Bạch Đằng, Trần Văn Trứ & Bình Minh 5, Hải Châu, Đà Nẵng 550000' },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
