@@ -39,6 +39,8 @@ interface Props {
   archived?: boolean;
   /** Street address (posted manually), shown on /homedetails and /propertydetails pages. */
   address?: string;
+  /** The property-history page for this listing's address, when Blake has posted one. */
+  historyHref?: string;
 }
 
 // Vietnamese fallback title for listings without vi_title — keeps the H1
@@ -64,7 +66,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false, address }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false, address, historyHref }: Props) {
   const { lang, t } = useLanguage();
 
   // One view per mount. React 18 StrictMode double-invokes effects in dev, and a
@@ -160,7 +162,17 @@ export default function ListingDetail({ listing, archived = false, similarListin
               ru: 'Объект снят с рынка. Информация ниже сохранена для справки — посмотрите похожие объекты ниже или весь актуальный список.',
             }, lang)}
           </p>
+          {historyHref && (
+            <Link href={historyHref} className="mt-2 inline-block font-semibold text-blue-700 hover:underline">
+              {forLang({ en: "See this property's history", vi: 'Xem lịch sử của căn nhà này', ko: '이 부동산의 이력 보기', ru: 'История этого объекта' }, lang)} →
+            </Link>
+          )}
         </div>
+      )}
+      {!archived && historyHref && (
+        <Link href={historyHref} className="mb-4 mr-4 inline-block text-sm font-semibold text-blue-700 hover:underline">
+          {forLang({ en: "This property's history", vi: 'Lịch sử của căn nhà này', ko: '이 부동산의 이력', ru: 'История объекта' }, lang)} →
+        </Link>
       )}
       <Link href={facetBase(listing.forSale ? 'sale' : 'rent', lang)} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,7 +182,17 @@ export default function ListingDetail({ listing, archived = false, similarListin
       </Link>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <Carousel images={images} title={listing.title} altPrefix={altPrefix} firstAltPrefix={firstAltPrefix} />
+        {/* Off market badge on the main photo (Zillow-style, Blake 2026-10-22): kept listings stay up so the
+            property-history page can link to them. */}
+        <div className="relative">
+          <Carousel images={images} title={listing.title} altPrefix={altPrefix} firstAltPrefix={firstAltPrefix} />
+          {archived && (
+            <span className="pointer-events-none absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-900 shadow">
+              <span className="h-2 w-2 rounded-full bg-slate-500" aria-hidden="true" />
+              {forLang({ en: 'Off market', vi: 'Ngừng giao dịch', ko: '거래 종료', ru: 'Снято с продажи' }, lang)}
+            </span>
+          )}
+        </div>
 
         <div className="p-6 sm:p-8">
           {/* Price + badges */}

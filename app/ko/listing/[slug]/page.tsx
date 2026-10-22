@@ -1,4 +1,5 @@
 import { getListings, getForSaleListings } from '@/lib/sheets';
+import { getAddressForListing, addressRoute } from '@/lib/addresses';
 import { getSimilarListings } from '@/lib/similarListings';
 import { schemaRooms } from '@/lib/propertyTypes';
 import { listingOfferLd, listingImagesLd } from '@/lib/listingSchema';
@@ -151,6 +152,8 @@ export default async function KOListingPage({ params }: Props) {
   if (fallback.phone) listing = { ...listing, agentPhone: fallback.phone };
   const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
 
+  const addr = await getAddressForListing(listing.slug);
+  const historyHref = addr ? `/${addressRoute(listing)}/${addr.addrSlug}` : undefined;
   return (
     <div className="bg-slate-50">
       <script
@@ -161,7 +164,7 @@ export default async function KOListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} agentBorrowed={Boolean(fallback.phone || fallback.messenger)} />
+      <ListingDetail historyHref={historyHref} listing={listing} archived={archived} similarListings={getSimilarListings(listing, listings)} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} agentBorrowed={Boolean(fallback.phone || fallback.messenger)} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );
