@@ -66,6 +66,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Blooming Tower, Nguyễn Tất Thành / Xuân Diệu, Thuận Phước (Blake, 2026-10-22: Plus Code 36R8+63 → 7P8C36R8+63),
   // beside True Friends Tower; listings say "foot of Thuận Phước Bridge".
   { name: 'Blooming Tower', pattern: /\bblooming\b/i, at: [16.09056, 108.21519], spreadM: 40, address: 'Nguyễn Tất Thành, Thuận Phước, Hải Châu, Đà Nẵng 550000' },
+  // Wyndham Soleil, 194 Võ Nguyên Giáp, Phước Mỹ (Blake, 2026-10-22); OSM's "Wyndham Soleil Danang" footprint
+  // reaches the beach road. Not plain "wyndham": Wyndham Golden Bay is its own landmark.
+  { name: 'Wyndham Soleil', pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, at: [16.07096, 108.24382], spreadM: 40, address: '194 Võ Nguyên Giáp, Phước Mỹ, Sơn Trà, Đà Nẵng' },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
