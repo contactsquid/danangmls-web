@@ -344,6 +344,12 @@ function parseRows(rows: string[][]): Listing[] {
     .filter(listing => listing.images.length > 0);
 }
 
+/** Newest listing first; rows without a parseable date go last, in their sheet order. */
+export function newestFirst(ls: Listing[]): Listing[] {
+  const t = (l: Listing) => { const n = Date.parse(l.date); return Number.isNaN(n) ? -Infinity : n; };
+  return ls.map((l, i) => ({ l, i, t: t(l) })).sort((a, b) => b.t - a.t || a.i - b.i).map(x => x.l);
+}
+
 export async function getListings(): Promise<Listing[]> {
   if (rentalsParsed.value !== null && Date.now() - rentalsParsed.at < CACHE_TTL_MS) {
     return rentalsParsed.value;
@@ -351,7 +357,10 @@ export async function getListings(): Promise<Listing[]> {
   if (rentalsInFlight) return rentalsInFlight;
   rentalsInFlight = (async () => {
     const text = await fetchCSV(CSV_RENTALS, rentalsCache);
-    const parsed = parseRows(parseCSV(text).slice(1));
+    // Newest first by the Date column (a full timestamp on every rental row). Sheet order is NOT
+    // listing order: maintain-sheet.js dedupes and rewrites rows, which buried a day-old villa at
+    // #6,102 of the grid (2026-10-22). For Sale has always sorted this way (parseForSale).
+    const parsed = newestFirst(parseRows(parseCSV(text).slice(1)));
     rentalsParsed.value = parsed;
     rentalsParsed.at = Date.now();
     return parsed;
