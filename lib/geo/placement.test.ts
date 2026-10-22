@@ -26,7 +26,7 @@ test('building wins', () => {
   const p = placeListing({ ...base, text: 'Studio in Hiyori, Ho Nghinh Street' }, coords)!;
   assert.equal(p.geo[2], PRECISION.building);
   assert.equal(p.geoLabel, 'Hiyori Garden Tower');
-  assert.ok(distanceM([p.geo[0], p.geo[1]], [16.0694, 108.2345]) <= 31);
+  assert.ok(distanceM([p.geo[0], p.geo[1]], [16.06126, 108.23562]) <= 31);   // hand-pinned (Blake's address) beats the fixture
 });
 test('street next', () => {
   const p = placeListing({ ...base, text: 'House on Ho Nghinh Street' }, coords)!;
