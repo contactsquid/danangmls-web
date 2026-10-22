@@ -37,6 +37,8 @@ interface Props {
   agentBorrowed?: boolean;
   /** Listing has left the live sheet; page stays 200 so the indexed URL survives. */
   archived?: boolean;
+  /** Street address (posted manually), shown on /homedetails and /propertydetails pages. */
+  address?: string;
 }
 
 // Vietnamese fallback title for listings without vi_title — keeps the H1
@@ -62,7 +64,7 @@ function districtHeading(name: string, lang: string): string {
   return `About ${name} District, Da Nang`;
 }
 
-export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false }: Props) {
+export default function ListingDetail({ listing, archived = false, similarListings = [], agentSlug = null, agentHasWhatsApp = false, agentMessenger = '', agentBorrowed = false, address }: Props) {
   const { lang, t } = useLanguage();
 
   // One view per mount. React 18 StrictMode double-invokes effects in dev, and a
@@ -217,6 +219,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
             </div>
           )}
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">{displayTitle}</h1>
+          {address && <p className="text-base font-semibold text-slate-700 mb-1">📍 {address}</p>}
           {(listing.type || listing.district) && (
             <h2 className="text-base font-medium text-slate-500 mb-6">
               {[
