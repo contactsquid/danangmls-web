@@ -86,6 +86,28 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
     numberOfAvailableAccommodationUnits: live.length,
   };
 
+  // Phones get a stacked card per listing instead of the 5-column table (Blake: the table is busy on mobile).
+  const card = (e: BuildingEvent) => {
+    const body = (
+      <>
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-semibold text-slate-900">{e.listing.price || '—'}</span>
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${e.live ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-100 text-slate-700'}`}>{e.live ? 'Active' : 'Off market'}</span>
+        </div>
+        <div className="text-slate-700">{unitSummary(e.unit)}</div>
+        <div className="text-[13px] text-slate-500">{fmtDate(e.when)} · {e.listing.forSale ? 'For sale' : 'For rent'}{e.page && <span className="text-blue-700"> · View →</span>}</div>
+      </>
+    );
+    return (
+      <li key={e.listing.slug} className="border-b border-slate-100 last:border-0">
+        {e.page
+          ? <Link href={`/listing/${e.listing.slug}`} className="flex flex-col gap-0.5 py-3 active:bg-slate-50">{body}</Link>
+          : <div className="flex flex-col gap-0.5 py-3">{body}</div>}
+      </li>
+    );
+  };
+  const MOBILE_FIRST = 10;
+
   const row = (e: BuildingEvent) => (
     <tr key={e.listing.slug} className="border-b border-slate-100 last:border-0">
       <td className="px-2 py-3 whitespace-nowrap">{fmtDate(e.when)}</td>
@@ -160,7 +182,16 @@ export default async function ApartmentDetailPage({ slug }: { slug: string }) {
             {/* Listing history: one row per unit listed */}
             <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <h2 className="text-xl font-semibold text-slate-900 mb-3.5">Listing history</h2>
-              <div className="overflow-x-auto">
+              <div className="sm:hidden text-sm">
+                <ul>{events.slice(0, MOBILE_FIRST).map(card)}</ul>
+                {events.length > MOBILE_FIRST && (
+                  <details className="group">
+                    <summary className="cursor-pointer list-none py-3 text-center font-semibold text-blue-700 group-open:hidden">Show all {events.length} listings</summary>
+                    <ul>{events.slice(MOBILE_FIRST).map(card)}</ul>
+                  </details>
+                )}
+              </div>
+              <div className="hidden sm:block overflow-x-auto">
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-slate-200 text-left text-slate-600">
