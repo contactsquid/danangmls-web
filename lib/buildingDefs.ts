@@ -34,7 +34,8 @@ export const POPULAR_BUILDINGS: BuildingDef[] = [
   { name: 'Panoma',                     pattern: /panoma/i,                          search: 'Panoma' },
   { name: 'Monarchy',                   pattern: /monarchy/i,                        search: 'Monarchy' },
   { name: 'FPT Plaza / F.Home',         pattern: /(f\.?home|fpt\s*plaza)/i,          search: 'FPT' },
-  { name: 'Wyndham Soleil',             pattern: /(wyndham|soleil)/i,                search: 'Soleil' },
+  // Not just "wyndham": Wyndham Golden Bay is a different building (below).
+  { name: 'Wyndham Soleil',             pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, search: 'Soleil' },
   { name: 'Times Square FUTA Residence',pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA' },
   { name: 'Muong Thanh',                pattern: /m[ưu][ờo]ng\s+thanh/i,             search: 'Muong Thanh' },
   { name: 'One River',                  pattern: /one\s+river/i,                      search: 'One River' },
@@ -53,4 +54,8 @@ export const POPULAR_BUILDINGS: BuildingDef[] = [
   { name: 'The Song',                   pattern: /the\s+song\b/i,                     search: 'The Song' },
   { name: 'Ariyana',                    pattern: /ariyana/i,                          search: 'Ariyana' },
   { name: 'Newtown Diamond',            pattern: /new\s*town\s*diamond/i,             search: 'Newtown Diamond' },
+  // Added 2026-10-22 from Blake's addresses (pins in lib/geo/placement.ts MAP_LANDMARKS).
+  { name: 'Vista Residence',            pattern: /\bvista\s+(?:residences?|apartments?|building|tower)\b/i, search: 'Vista' },
+  { name: 'Wyndham Golden Bay',         pattern: /golden\s*bay/i,                    search: 'Golden Bay' },
+  { name: 'The Ori Garden',             pattern: /\bori\s+garden\b/i,               search: 'Ori Garden' },
 ];

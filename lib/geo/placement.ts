@@ -63,6 +63,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'FPT Plaza 4', pattern: /\bfpt\s*plaza\s*(?:4|iv)\b/i, at: [15.98184, 108.26220], spreadM: 50 },
   // No tower named: the middle of the four, spread across them (the old building point was Plaza 4's footprint).
   { name: 'FPT Plaza', pattern: /\bfpt\s*plaza\b|\bf\.?\s*home\b/i, at: [15.98245, 108.26100], spreadM: 120 },
+  // Blooming Tower, Nguyễn Tất Thành / Xuân Diệu, Thuận Phước (Blake, 2026-10-22: Plus Code 36R8+63 → 7P8C36R8+63),
+  // beside True Friends Tower; listings say "foot of Thuận Phước Bridge".
+  { name: 'Blooming Tower', pattern: /\bblooming\b/i, at: [16.09056, 108.21519], spreadM: 40, address: 'Nguyễn Tất Thành, Thuận Phước, Hải Châu, Đà Nẵng 550000' },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
@@ -72,7 +75,7 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // the centre of Song Hào (~1.2 km), spread to cover most of the street.
   { name: 'One River', pattern: /\bone\s+river\b/i, at: [15.99095, 108.26142], spreadM: 400 },
   // Vista Residence, 40 Xô Viết Nghệ Tĩnh, Hòa Cường (Blake; OSM has that house number).
-  { name: 'Vista Residence', pattern: /\bvista\s+(?:residences?|apartments?|building|tower)\b/i, at: [16.03295, 108.22207], spreadM: 40 },
+  { name: 'Vista Residence', pattern: /\bvista\s+(?:residences?|apartments?|building|tower)\b/i, at: [16.03295, 108.22207], spreadM: 40, address: '40 Xô Viết Nghệ Tĩnh, Hòa Cường, Hải Châu, Đà Nẵng' },
   // Euro Village 2, Hòa Xuân, Cẩm Lệ (Blake: Plus Code 26FG+H7 → 7P8C26FG+H7). Checked
   // before the original so "Euro Village 2" never lands in Sơn Trà.
   { name: 'Euro Village 2', pattern: /\beuro\s*vill(?:age|a)\s*(?:2|ii|two)\b/i, at: [16.02394, 108.22569], spreadM: 200 },
@@ -84,7 +87,7 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // The Ori Garden, Liên Chiểu.
   { name: 'The Ori Garden', pattern: /\bori\s+garden\b/i, at: [16.10009, 108.12951], spreadM: 60 },
   // Wyndham Danang Golden Bay, 01 Lê Văn Duyệt, Sơn Trà.
-  { name: 'Golden Bay', pattern: /\bgolden\s*bay\b/i, at: [16.09806, 108.22438], spreadM: 40 },
+  { name: 'Golden Bay', pattern: /\bgolden\s*bay\b/i, at: [16.09806, 108.22438], spreadM: 40, address: '01 Lê Văn Duyệt, Nại Hiên Đông, Sơn Trà, Đà Nẵng' },
   { name: 'Mikazuki', pattern: /\bmikazuki\b/i, at: [16.09358, 108.14436], spreadM: 150, near: true },
   { name: 'Furama Resort', pattern: /\bfurama\b/i, at: [16.03975, 108.25134], spreadM: 150, near: true },
   // Asia Park, since renamed Sun World Danang Wonders / Da Nang Downtown.

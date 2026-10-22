@@ -1,3 +1,4 @@
+import { POPULAR_BUILDINGS, buildingMatches, buildingSlug, BUILDING_PAGE_MIN_LISTINGS } from '@/lib/buildingDefs';
 import { FOOTER_PAGES, type FooterPage } from '@/lib/footerPages';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
@@ -82,6 +83,9 @@ export default async function sitemap() {
     { url: `${BASE}/vi/mua-ban`,      lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     // Facet pages
     ...facetEntries,
+    // Building records (/apartmentdetails), same inventory floor as the building facet pages
+    ...POPULAR_BUILDINGS.filter(b => [...rentals, ...forSale].filter(l => buildingMatches(b, l)).length >= BUILDING_PAGE_MIN_LISTINGS)
+      .map(b => ({ url: `${BASE}/apartmentdetails/${buildingSlug(b.name)}`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.6 })),
     // Agent directory + profiles
     { url: `${BASE}/agents`,         lastModified: now, changeFrequency: 'daily'   as const, priority: 0.6 },
     { url: `${BASE}/vi/moi-gioi`,    lastModified: now, changeFrequency: 'daily'   as const, priority: 0.6 },

@@ -1,4 +1,6 @@
-import type { Lang } from '@/lib/translations';
+import { forLang, type Lang } from '@/lib/translations';
+import Link from 'next/link';
+import { buildingSlug } from '@/lib/buildingDefs';
 import { searchDistricts } from '@/lib/searchDistricts';
 import { RENT_TYPES, SALE_TYPES } from '@/lib/propertyTypes';
 import { getListings, getForSaleListings } from '@/lib/sheets';
@@ -79,6 +81,13 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <PageHero mode={mode} count={filtered.length} h1Override={c.h1} subtitleOverride={c.subtitle} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+        {facet.kind === 'building' && (
+          <p className="pt-4 text-sm">
+            <Link href={`/apartmentdetails/${buildingSlug(facet.value)}`} className="font-semibold text-blue-700 hover:underline">
+              {forLang({ en: `${facet.value}: building record and listing history`, vi: `${facet.value}: lịch sử tin đăng của tòa nhà`, ko: `${facet.value}: 건물 매물 이력`, ru: `${facet.value}: история объявлений в здании` }, lang)} →
+            </Link>
+          </p>
+        )}
         {/* Only the first screenful renders server-side — /for-rent/sam-towers was
             shipping all 4,219 listings to display 42. The grid pulls the full set
             from /api/grid-listings after paint, and the seeded filters below
