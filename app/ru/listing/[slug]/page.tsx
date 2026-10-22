@@ -156,8 +156,10 @@ export default async function RUListingPage({ params }: Props) {
   const addr = await getAddressForListing(listing.slug);
   // Apartments link to their building record even when active: the building is public, the unit is not.
   const bdef = canonicalType(listing.type, listing.forSale) === 'Apartment' ? POPULAR_BUILDINGS.find(b => buildingMatches(b, listing!)) : undefined;
+  const sameKind = bdef ? listings.filter(l => buildingMatches(bdef, l) && Boolean(l.forSale) === Boolean(listing!.forSale)) : [];
   const building = bdef && listings.filter(l => buildingMatches(bdef, l)).length >= BUILDING_PAGE_MIN_LISTINGS
-    ? { name: bdef.name, href: `/apartmentdetails/${buildingSlug(bdef.name)}` } : undefined;
+    ? { name: bdef.name, href: `/apartmentdetails/${buildingSlug(bdef.name)}`, units: sameKind.length,
+        unitsHref: `${listing.forSale ? '/ru/for-sale' : '/ru/for-rent'}/${buildingSlug(bdef.name)}` } : undefined;
   // Agents keep addresses secret, so ONLY an off-market (archived) listing links to its history page (Blake, 2026-10-22).
   const historyHref = addr && archived ? `/${addressRoute(listing)}/${addr.addrSlug}` : undefined;
   // A posted address pins the map: exact from Blake's Maps link, else the street. The address itself is not shown.
