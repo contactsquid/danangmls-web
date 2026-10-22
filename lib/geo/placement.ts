@@ -53,6 +53,10 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Panoma 1 & 2, side by side on Phạm Hữu Kính, Mỹ An (Blake, 2026-10-22): Panoma 1 = Plus Code 362P+CFC
   // (7P8C362P+CFC), Panoma 2 = 14 Phạm Hữu Kính. One building page covers both, so the spread covers both towers.
   { name: 'Panoma', pattern: /\bpanoma\b/i, at: [16.05106, 108.23614], spreadM: 60, address: '14 Phạm Hữu Kính, Mỹ An, Ngũ Hành Sơn, Đà Nẵng 550000' },
+  // FPT Plaza towers, FPT City, Hòa Hải (Blake, 2026-10-22). FPT Plaza is a group of towers: the building page stays one
+  // page ("FPT Plaza / F.Home", pinned at the complex); a listing that names its tower goes on that tower.
+  // Plaza 2 = Plus Code X7M5+4X8 (7P7CX7M5+4X8), Võ Quí Huân.
+  { name: 'FPT Plaza 2', pattern: /\bfpt\s*plaza\s*(?:2|ii)\b/i, at: [15.98279, 108.25995], spreadM: 30 },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
