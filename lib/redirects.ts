@@ -19,6 +19,11 @@ const REDIRECT_BASE = 'https://images.danang.homes/redirects';
 // one of those, and matches the slug alphabet slugFromMlsUrl() already enforces.
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+// A removed listing can also point at a rent/sale page, e.g. a rented commercial space -> "for-rent/commercial"
+// (Blake, 2026-10-22). Same anti-open-redirect stance: only these two roots plus one slug-shaped segment.
+const PAGE_TARGET_RE = /^(for-rent|for-sale)(\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/;
+export function isPageTarget(t: string): boolean { return PAGE_TARGET_RE.test(t); }
+
 // A chain forms when a survivor is itself later deduped (A -> B, then B -> C).
 // Following it here means Google and the visitor get a single hop to the final
 // destination instead of a chain of 308s, which loses PageRank at each step.
@@ -70,7 +75,7 @@ async function loadManifest(): Promise<Map<string, string>> {
           const t = to.trim().toLowerCase();
           // Same validation as the per-slug path: this file is fetched from
           // outside the app, so it is an open-redirect surface.
-          if (f && t && f !== t && SLUG_RE.test(f) && SLUG_RE.test(t)) next.set(f, t);
+          if (f && t && f !== t && SLUG_RE.test(f) && (SLUG_RE.test(t) || PAGE_TARGET_RE.test(t))) next.set(f, t);
         }
       }
       // A 404 is normal before the first duplicate is ever redirected.
@@ -99,6 +104,7 @@ export async function lookupRedirectSlug(slug: string): Promise<string | null> {
   let current = slug;
   const seen = new Set<string>([slug]);
   for (let hop = 0; hop < MAX_HOPS; hop++) {
+    if (PAGE_TARGET_RE.test(current)) break;   // a rent/sale page is always the final stop
     const next = map.get(current);
     if (!next) break;
     // A cycle means the manifest disagrees with itself — two rows each claiming

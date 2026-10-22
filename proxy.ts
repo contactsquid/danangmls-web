@@ -77,7 +77,15 @@ async function listingRedirect(request: NextRequest): Promise<NextResponse | nul
     const { lookupRedirectSlug } = await import('@/lib/redirects');
     const to = await lookupRedirectSlug(m[1].toLowerCase());
     if (!to) return null;
+    const { isPageTarget } = await import('@/lib/redirects');
     const url = request.nextUrl.clone();
+    if (isPageTarget(to)) {
+      // A rent/sale page target (e.g. a rented listing -> for-rent/commercial), in the visitor's language.
+      const { getLangUrl } = await import('@/lib/langUrl');
+      const lang = (/^\/(vi|ko|ru)\//.exec(request.nextUrl.pathname)?.[1] ?? 'en') as 'en' | 'vi' | 'ko' | 'ru';
+      url.pathname = getLangUrl(`/${to}`, lang);
+      return NextResponse.redirect(url, 308);
+    }
     // Keep the visitor in the language they were reading.
     url.pathname = request.nextUrl.pathname.replace(/\/listing\/[a-z0-9-]+\/?$/i, `/listing/${to}`);
     return NextResponse.redirect(url, 308);
