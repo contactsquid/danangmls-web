@@ -55,8 +55,14 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'Panoma', pattern: /\bpanoma\b/i, at: [16.05106, 108.23614], spreadM: 60, address: '14 Phạm Hữu Kính, Mỹ An, Ngũ Hành Sơn, Đà Nẵng 550000' },
   // FPT Plaza towers, FPT City, Hòa Hải (Blake, 2026-10-22). FPT Plaza is a group of towers: the building page stays one
   // page ("FPT Plaza / F.Home", pinned at the complex); a listing that names its tower goes on that tower.
-  // Plaza 2 = Plus Code X7M5+4X8 (7P7CX7M5+4X8), Võ Quí Huân.
+  // Each tower is an OSM building named "FPT Plaza N", matching Blake's streets: Plaza 2 = Plus Code X7M5+4X8 (23 m from
+  // OSM), Plaza 1 Trần Quốc Vượng, Plaza 4 Hoàng Minh Thắng (the two at that corner), Plaza 3 west of Plaza 2.
+  { name: 'FPT Plaza 1', pattern: /\bfpt\s*plaza\s*1\b/i, at: [15.98289, 108.26203], spreadM: 40 },
   { name: 'FPT Plaza 2', pattern: /\bfpt\s*plaza\s*(?:2|ii)\b/i, at: [15.98279, 108.25995], spreadM: 30 },
+  { name: 'FPT Plaza 3', pattern: /\bfpt\s*plaza\s*(?:3|iii)\b/i, at: [15.98206, 108.25978], spreadM: 40 },
+  { name: 'FPT Plaza 4', pattern: /\bfpt\s*plaza\s*(?:4|iv)\b/i, at: [15.98184, 108.26220], spreadM: 50 },
+  // No tower named: the middle of the four, spread across them (the old building point was Plaza 4's footprint).
+  { name: 'FPT Plaza', pattern: /\bfpt\s*plaza\b|\bf\.?\s*home\b/i, at: [15.98245, 108.26100], spreadM: 120 },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
