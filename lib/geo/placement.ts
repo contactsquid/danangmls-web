@@ -42,6 +42,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Sam Towers, 02 Đỗ Xuân Cát, Hải Châu (Blake, 2026-10-22; replaces the earlier bridge-roundabout guess
   // 800 m north). OSM: Đỗ Xuân Cát is a 150 m street off Như Nguyệt, No. 05 mid-street, so No. 02 is the river corner.
   { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.08645, 108.22175], spreadM: 40, address: '02 Đỗ Xuân Cát, Hải Châu, Đà Nẵng 550000' },
+  // Chung cư Mường Thanh, 357 Trần Bạch Đằng (Blake, 2026-10-22); OSM's "Chung cư Mường Thanh Sơn Trà" on that street.
+  // Our ward map puts it in Ngũ Hành Sơn / Mỹ An, where most Muong Thanh listings say they are.
+  { name: 'Muong Thanh', pattern: /\bm[ưu][ờo]ng\s+thanh\b/i, at: [16.05340, 108.24682], spreadM: 40, address: '357 Trần Bạch Đằng, Bắc Mỹ Phú, Sơn Trà, Đà Nẵng 550000' },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
