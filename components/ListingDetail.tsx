@@ -39,7 +39,8 @@ interface Props {
   archived?: boolean;
   /** Street address (posted manually), shown on /homedetails and /propertydetails pages. */
   address?: string;
-  /** The property-history page for this listing's address, when Blake has posted one. */
+  /** The property-history page for this listing's address. Passed ONLY for off-market (archived) listings:
+   *  agents keep addresses secret, so an active listing must never link to it. */
   historyHref?: string;
 }
 
@@ -168,11 +169,6 @@ export default function ListingDetail({ listing, archived = false, similarListin
             </Link>
           )}
         </div>
-      )}
-      {!archived && historyHref && (
-        <Link href={historyHref} className="mb-4 mr-4 inline-block text-sm font-semibold text-blue-700 hover:underline">
-          {forLang({ en: "This property's history", vi: 'Lịch sử của căn nhà này', ko: '이 부동산의 이력', ru: 'История объекта' }, lang)} →
-        </Link>
       )}
       <Link href={facetBase(listing.forSale ? 'sale' : 'rent', lang)} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

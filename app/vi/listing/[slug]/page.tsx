@@ -157,7 +157,10 @@ export default async function ViListingPage({ params }: Props) {
   const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
 
   const addr = await getAddressForListing(listing.slug);
-  const historyHref = addr ? `/${addressRoute(listing)}/${addr.addrSlug}` : undefined;
+  // Agents keep addresses secret, so ONLY an off-market (archived) listing links to its history page (Blake, 2026-10-22).
+  const historyHref = addr && archived ? `/${addressRoute(listing)}/${addr.addrSlug}` : undefined;
+  // A posted address pins the map: exact from Blake's Maps link, else the street. The address itself is not shown.
+  if (addr?.geo) listing = { ...listing, geo: [addr.geo.lat, addr.geo.lng, addr.geo.precision], geoLabel: addr.geo.precision === 0 ? '' : (addr.geo.label || ''), geoArea: '' };
   return (
     <div className="bg-slate-50">
       <script

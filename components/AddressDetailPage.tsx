@@ -93,6 +93,16 @@ export default async function AddressDetailPage({ kind, addr }: { kind: Kind; ad
   const first = events[events.length - 1];
   const mode = l.forSale ? 'for-sale' : 'for-rent';
   const listingHref = (e: Event) => `/listing/${e.listing.slug}`;
+  // History rows: every listing of this address plus Blake's dated notes ("Rented", "Sold"), newest first.
+  type Row = { key: string; when: number; label: string; badge?: string; price: string; href?: string };
+  const rows: Row[] = [
+    ...events.map(e => ({ key: e.listing.slug, when: e.when, label: `Listed ${e.listing.forSale ? 'for sale' : 'for rent'}`,
+      badge: e.live ? 'Active' : 'Off market', price: e.listing.price || '—', href: listingHref(e) })),
+    ...entry.notes.map((n, i) => {
+      const ev = events.find(e => e.listing.slug === n.slug);
+      return { key: `note-${i}`, when: n.at, label: n.note.charAt(0).toUpperCase() + n.note.slice(1), price: '—', href: ev ? listingHref(ev) : undefined };
+    }),
+  ].sort((a, b) => b.when - a.when);
 
   const url = urlFor(kind, addr);
   const placeLd = {
@@ -196,17 +206,17 @@ export default async function AddressDetailPage({ kind, addr }: { kind: Kind; ad
                     </tr>
                   </thead>
                   <tbody>
-                    {events.map(e => (
-                      <tr key={e.listing.slug} className="border-b border-slate-100 last:border-0">
-                        <td className="px-2 py-3 whitespace-nowrap">{fmtDate(e.when)}</td>
+                    {rows.map(r => (
+                      <tr key={r.key} className="border-b border-slate-100 last:border-0">
+                        <td className="px-2 py-3 whitespace-nowrap">{fmtDate(r.when)}</td>
                         <td className="px-2 py-3">
-                          Listed {e.listing.forSale ? 'for sale' : 'for rent'}
-                          <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-semibold ${e.live ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-100 text-slate-700'}`}>
-                            {e.live ? 'Active' : 'Off market'}
-                          </span>
+                          {r.label}
+                          {r.badge && (
+                            <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-semibold ${r.badge === 'Active' ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-100 text-slate-700'}`}>{r.badge}</span>
+                          )}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap">{e.listing.price || '—'}</td>
-                        <td className="px-2 py-3"><Link href={listingHref(e)} className="font-medium text-blue-700 hover:underline">View listing</Link></td>
+                        <td className="px-2 py-3 whitespace-nowrap">{r.price}</td>
+                        <td className="px-2 py-3">{r.href ? <Link href={r.href} className="font-medium text-blue-700 hover:underline">View listing</Link> : '—'}</td>
                       </tr>
                     ))}
                   </tbody>
