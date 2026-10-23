@@ -42,9 +42,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Sam Towers, 02 Đỗ Xuân Cát, Hải Châu (Blake, 2026-10-22; replaces the earlier bridge-roundabout guess
   // 800 m north). OSM: Đỗ Xuân Cát is a 150 m street off Như Nguyệt, No. 05 mid-street, so No. 02 is the river corner.
   { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.08645, 108.22175], spreadM: 40, address: '02 Đỗ Xuân Cát, Hải Châu, Đà Nẵng 550000' },
-  // Chung cư Mường Thanh, 357 Trần Bạch Đằng (Blake, 2026-10-22); OSM's "Chung cư Mường Thanh Sơn Trà" on that street.
-  // Our ward map puts it in Ngũ Hành Sơn / Mỹ An, where most Muong Thanh listings say they are.
-  { name: 'Muong Thanh', pattern: /\bm[ưu][ờo]ng\s+thanh\b/i, at: [16.05340, 108.24682], spreadM: 40, address: '357 Trần Bạch Đằng, Bắc Mỹ Phú, Sơn Trà, Đà Nẵng 550000' },
+  // Chung cư Mường Thanh, Trần Bạch Đằng; OSM's "Chung cư Mường Thanh Sơn Trà" on that street (pin unchanged).
+  // Address corrected by Blake 2026-10-23 (was 357 Trần Bạch Đằng, Sơn Trà); Ngũ Hành Sơn is where most listings say it is.
+  { name: 'Muong Thanh', pattern: /\bm[ưu][ờo]ng\s+thanh\b/i, at: [16.05340, 108.24682], spreadM: 40, address: '51 Trần Bạch Đằng, Ngũ Hành Sơn, Đà Nẵng 550000' },
   // The Filmore (Blake, 2026-10-22): the lot bounded by Bạch Đằng, Trần Văn Trứ and Bình Minh 5, Hải Châu; no house number.
   // Pinned on Bạch Đằng just south of Bình Minh 5 (OSM street geometry), spread over the block.
   { name: 'The Filmore', pattern: /\bfil+more\b/i, at: [16.0545, 108.2233], spreadM: 60, address: 'Bạch Đằng, Trần Văn Trứ & Bình Minh 5, Hải Châu, Đà Nẵng 550000' },
