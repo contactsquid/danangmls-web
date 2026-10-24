@@ -8,6 +8,8 @@ import { forMap } from '@/lib/homeMap';
 import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
 import { fetchBlogPool } from '@/lib/featuredBlogs';
+import VideoTours from '@/components/VideoTours';
+import { getRecentVideoTours } from '@/lib/listingVideos';
 import type { Metadata } from 'next';
 import { OG_DEFAULT_IMAGES } from '@/lib/ogImage';
 
@@ -50,10 +52,11 @@ async function LatestVideoSlot() {
 }
 
 export default async function RUHomePage() {
-  const [rentals, forSale, blogPool] = await Promise.all([
+  const [rentals, forSale, blogPool, videoTours] = await Promise.all([
     getListings(),
     getForSaleListings(),
     fetchBlogPool(),
+    getRecentVideoTours(4).catch(() => []),
   ]);
 
   return (
@@ -68,6 +71,7 @@ export default async function RUHomePage() {
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
       <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />
       <FeaturedBlogs posts={blogPool} />
+      <VideoTours videos={videoTours} />
     </div>
   );
 }

@@ -57,3 +57,25 @@ export async function setPosted(
   if (error) return { error: error.message };
   return { completedAt: (data?.completed_at as string | null) ?? null };
 }
+
+export interface VideoTour {
+  videoId: string;
+  title: string;
+  thumbUrl: string | null;
+  mlsUrl: string | null;
+}
+
+/** The newest `n` listing Shorts on the @DaNangHomes43 channel, for the homepage
+ *  "Video Tours" row. Read from listing_videos (written by the daily publish step)
+ *  rather than YouTube's RSS/scrape, which throttles datacenter IPs. */
+export async function getRecentVideoTours(n = 4): Promise<VideoTour[]> {
+  const rows = await getListingVideos();
+  const out: VideoTour[] = [];
+  for (const r of rows) {
+    const videoId = r.youtube_url?.match(/(?:shorts\/|youtu\.be\/|v=)([A-Za-z0-9_-]{11})/)?.[1];
+    if (!videoId) continue;
+    out.push({ videoId, title: r.title, thumbUrl: r.thumb_url, mlsUrl: r.mls_url });
+    if (out.length === n) break;
+  }
+  return out;
+}
