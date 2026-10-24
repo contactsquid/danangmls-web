@@ -31,3 +31,6 @@ export function addBasemap(L: any, map: any): void {
     // Attribution once, on the base layer.
     L.tileLayer(url, i === 0 ? BASEMAP_OPTIONS : { ...BASEMAP_OPTIONS, attribution: '' }).addTo(map));
 }
+
+/** Where maps start before they fit to their data: central Da Nang (Dragon Bridge area). */
+export const DANANG_CENTER: [number, number] = [16.06, 108.22];

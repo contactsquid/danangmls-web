@@ -3,6 +3,8 @@ import { getListings, getForSaleListings } from '@/lib/sheets';
 import { getLatestVideoByLang } from '@/lib/youtube';
 import HomeHero from '@/components/HomeHero';
 import LatestVideo from '@/components/LatestVideo';
+import HomeMap from '@/components/HomeMap';
+import { forMap } from '@/lib/homeMap';
 import FeaturedListings from '@/components/FeaturedListings';
 import FeaturedBlogs from '@/components/FeaturedBlogs';
 import { fetchBlogPool } from '@/lib/featuredBlogs';
@@ -57,6 +59,8 @@ export default async function HomePage() {
       <Suspense fallback={null}>
         <LatestVideoSlot />
       </Suspense>
+      {/* Blake 2026-10-24: the 12 newest rentals and 12 newest for sale on a map. */}
+      <HomeMap rentals={forMap(rentals, 12)} forSale={forMap(forSale, 12)} />
       {/* Only 3 are shown (FeaturedListings slices to 3). Slice on the server so we
           don't serialize thousands of full listings into the homepage HTML (was 38MB). */}
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
