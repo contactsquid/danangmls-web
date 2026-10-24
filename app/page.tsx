@@ -60,7 +60,7 @@ export default async function HomePage() {
         <LatestVideoSlot />
       </Suspense>
       {/* Blake 2026-10-24: the 12 newest rentals and 12 newest for sale on a map. */}
-      <HomeMap rentals={forMap(rentals, 12)} forSale={forMap(forSale, 12)} />
+      <HomeMap rentals={forMap(rentals, 12)} forSale={forMap(forSale, 12)} rentTotal={rentals.length} saleTotal={forSale.length} />
       {/* Only 3 are shown (FeaturedListings slices to 3). Slice on the server so we
           don't serialize thousands of full listings into the homepage HTML (was 38MB). */}
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />

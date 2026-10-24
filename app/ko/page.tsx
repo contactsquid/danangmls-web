@@ -63,7 +63,7 @@ export default async function KOHomePage() {
         <LatestVideoSlot />
       </Suspense>
       {/* Blake 2026-10-24: the 12 newest rentals and 12 newest for sale on a map. */}
-      <HomeMap rentals={forMap(rentals, 12)} forSale={forMap(forSale, 12)} />
+      <HomeMap rentals={forMap(rentals, 12)} forSale={forMap(forSale, 12)} rentTotal={rentals.length} saleTotal={forSale.length} />
       {/* Slice on the server — FeaturedListings only shows 3 (avoids serializing thousands). */}
       <FeaturedListings listings={rentals.slice(0, 3)} mode="rent" />
       <FeaturedListings listings={forSale.slice(0, 3)} mode="sale" />

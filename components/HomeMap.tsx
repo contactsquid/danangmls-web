@@ -14,7 +14,8 @@ const HomeMapLeaflet = dynamic(() => import('./HomeMapLeaflet'), {
   loading: () => <div className="w-full h-full bg-slate-100 animate-pulse" />,
 });
 
-export default function HomeMap({ rentals, forSale }: { rentals: Listing[]; forSale: Listing[] }) {
+// rentTotal / saleTotal: how many listings the site has in all (Blake, 2026-10-24), shown in the legend.
+export default function HomeMap({ rentals, forSale, rentTotal, saleTotal }: { rentals: Listing[]; forSale: Listing[]; rentTotal: number; saleTotal: number }) {
   const { lang } = useLanguage();
   const boxRef = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
@@ -40,11 +41,13 @@ export default function HomeMap({ rentals, forSale }: { rentals: Listing[]; forS
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3 text-sm">
         <span className="inline-flex items-center gap-1.5 text-slate-600">
           <span className="inline-block w-3 h-3 rounded-full bg-blue-600" aria-hidden="true" />
-          {forLang({ en: 'For rent', vi: 'Cho thuê', ko: '임대', ru: 'Аренда' }, lang)}
+          {forLang({ en: 'For rent', vi: 'Cho thuê', ko: '임대', ru: 'Аренда' }, lang)}{' '}
+          <span className="font-semibold text-slate-800">({rentTotal.toLocaleString('en-US')})</span>
         </span>
         <span className="inline-flex items-center gap-1.5 text-slate-600">
           <span className="inline-block w-3 h-3 rounded-full bg-emerald-600" aria-hidden="true" />
-          {forLang({ en: 'For sale', vi: 'Bán', ko: '매매', ru: 'Продажа' }, lang)}
+          {forLang({ en: 'For sale', vi: 'Bán', ko: '매매', ru: 'Продажа' }, lang)}{' '}
+          <span className="font-semibold text-slate-800">({saleTotal.toLocaleString('en-US')})</span>
         </span>
       </div>
     </section>
