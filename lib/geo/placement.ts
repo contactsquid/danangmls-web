@@ -32,7 +32,7 @@ const SPREAD_M = { building: 30, nearBuilding: 300, street: 150, ward: 350, dist
 // Coordinates are OpenStreetMap features whose name/address matched — don't add a
 // place without that check: fuzzy geocoding put "Sam Towers" on Meridian Towers.
 // `address`: the street address to SHOW (building records); only set from an address Blake gave.
-const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number; near?: boolean; address?: string }[] = [
+const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: number; near?: boolean; address?: string; trustOverDistrict?: boolean }[] = [
   // Fusion Resort & Villas, Trường Sa, Ngũ Hành Sơn. Fusion Suites is a different hotel on Vo Nguyen Giap.
   { name: 'Fusion Resort & Villas', pattern: /\bfusion\b(?!\s+suites?)/i, at: [15.97242, 108.28229], spreadM: 150 },
   // Premier Village Resort, 99 Võ Nguyên Giáp (villas for rent inside it).
@@ -73,7 +73,8 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // beside OSM's "Times Square Đà Nẵng CT1/CT2".
   { name: 'Times Square FUTA Residence', pattern: /times\s*square|futa\s*residence/i, at: [16.06909, 108.24414], spreadM: 50, address: 'Đình Nghệ, An Hải, Đà Nẵng 550000' },
   // Newtown Diamond, Ngũ Hành Sơn (Blake, 2026-10-24: Plus Code X7JG+48 → 7P7CX7JG+48); the old building point sat well off.
-  { name: 'Newtown Diamond', pattern: /new\s*-?\s*town\s*diamond/i, at: [15.98031, 108.27581], spreadM: 40 },
+  // trustOverDistrict: the AI-filled district is often wrong (one listing said Sơn Trà), so the building wins over it.
+  { name: 'Newtown Diamond', pattern: /new\s*-?\s*town\s*diamond/i, at: [15.98031, 108.27581], spreadM: 40, trustOverDistrict: true },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
@@ -177,11 +178,13 @@ export function placeListing(
     if (wardAt(p) && !inWater(p)) return place(p, PRECISION.building, '', '');
   }
 
-  const landmark = MAP_LANDMARKS.find(m => m.pattern.test(hay) && ok(m.at));
+  const landmark = MAP_LANDMARKS.find(m => m.pattern.test(hay) && (ok(m.at) || (m.trustOverDistrict && wardAt(r5(m.at)) && !inWater(r5(m.at)))));
   if (landmark) {
     const idx = hay.search(landmark.pattern);
     const near = landmark.near || NEAR_BEFORE.test(hay.slice(Math.max(0, idx - 40), idx));
-    const p = around(landmark.at, near ? Math.max(SPREAD_M.nearBuilding, landmark.spreadM) : landmark.spreadM);
+    const p = landmark.trustOverDistrict && !ok(landmark.at)
+      ? offsetPoint(landmark.at, seed, landmark.spreadM)
+      : around(landmark.at, near ? Math.max(SPREAD_M.nearBuilding, landmark.spreadM) : landmark.spreadM);
     if (p) return place(p, near ? PRECISION.nearBuilding : PRECISION.building, landmark.name);
   }
 
