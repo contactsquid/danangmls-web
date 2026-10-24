@@ -72,6 +72,8 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Times Square / FUTA Residence, Đình Nghệ, An Hải (Blake, 2026-10-22: Plus Code 369V+JMJ → 7P8C369V+JMJ),
   // beside OSM's "Times Square Đà Nẵng CT1/CT2".
   { name: 'Times Square FUTA Residence', pattern: /times\s*square|futa\s*residence/i, at: [16.06909, 108.24414], spreadM: 50, address: 'Đình Nghệ, An Hải, Đà Nẵng 550000' },
+  // Newtown Diamond, Ngũ Hành Sơn (Blake, 2026-10-24: Plus Code X7JG+48 → 7P7CX7JG+48); the old building point sat well off.
+  { name: 'Newtown Diamond', pattern: /new\s*-?\s*town\s*diamond/i, at: [15.98031, 108.27581], spreadM: 40 },
   // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
   // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
   { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
