@@ -1,8 +1,5 @@
-import { Suspense } from 'react';
 import { getListings, getForSaleListings } from '@/lib/sheets';
-import { getLatestVideoByLang } from '@/lib/youtube';
 import HomeHero from '@/components/HomeHero';
-import LatestVideo from '@/components/LatestVideo';
 import HomeMap from '@/components/HomeMap';
 import { forMap } from '@/lib/homeMap';
 import FeaturedListings from '@/components/FeaturedListings';
@@ -39,18 +36,6 @@ export const metadata: Metadata = {
   },
 };
 
-// The featured video depends on YouTube, which we do not control and which
-// throttles datacenter IPs. Rendering it inside a Suspense boundary means the
-// page streams without waiting on it: a slow YouTube can no longer add to TTFB,
-// it just fills in a moment later. LatestVideo renders nothing when the lookup
-// comes back empty, so `null` is the honest fallback.
-async function LatestVideoSlot() {
-  const video = await // The YouTube channel publishes English and Vietnamese only, so Korean and
-    // Russian visitors get the English video rather than none.
-    getLatestVideoByLang('en');
-  return <LatestVideo video={video} />;
-}
-
 export default async function KOHomePage() {
   const [rentals, forSale, blogPool, videoTours] = await Promise.all([
     getListings(),
@@ -62,9 +47,6 @@ export default async function KOHomePage() {
   return (
     <div className="bg-slate-50">
       <HomeHero />
-      <Suspense fallback={null}>
-        <LatestVideoSlot />
-      </Suspense>
       {/* Blake 2026-10-24: the 12 newest rentals and 12 newest for sale on a map. */}
       <HomeMap rentals={forMap(rentals, 12)} forSale={forMap(forSale, 12)} rentTotal={rentals.length} saleTotal={forSale.length} />
       {/* Slice on the server — FeaturedListings only shows 3 (avoids serializing thousands). */}

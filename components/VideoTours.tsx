@@ -30,8 +30,14 @@ function Tour({ video, playLabel }: { video: VideoTour; playLabel: string }) {
             aria-label={`${playLabel}: ${video.title}`}
             className="absolute inset-0 w-full h-full group"
           >
+            {/* The stored thumb is a 380x676 card: logo band on top, photo at y 162-507, title below.
+                Blurred copy fills the frame; the sharp photo band is cropped out and centred, so no logo/title shows. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={thumb} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={thumb} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover scale-150 blur-2xl opacity-80" loading="lazy" />
+            <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 block overflow-hidden" style={{ aspectRatio: '380 / 345' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={thumb} alt={video.title} className="absolute left-0 w-full max-w-none" style={{ height: '195.9%', top: '-47%' }} loading="lazy" />
+            </span>
             <span className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/25 transition-colors">
               <span className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
                 <svg viewBox="0 0 24 24" className="w-7 h-7 text-red-600 ml-0.5" fill="currentColor" aria-hidden="true">
@@ -42,7 +48,6 @@ function Tour({ video, playLabel }: { video: VideoTour; playLabel: string }) {
           </button>
         )}
       </div>
-      <h3 className="p-3 text-sm font-semibold text-slate-900 line-clamp-2">{video.title}</h3>
     </div>
   );
 }
