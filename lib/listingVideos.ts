@@ -62,6 +62,7 @@ export interface VideoTour {
   videoId: string;
   title: string;
   thumbUrl: string | null;
+  price: string | null;
   mlsUrl: string | null;
 }
 
@@ -74,7 +75,7 @@ export async function getRecentVideoTours(n = 4): Promise<VideoTour[]> {
   for (const r of rows) {
     const videoId = r.youtube_url?.match(/(?:shorts\/|youtu\.be\/|v=)([A-Za-z0-9_-]{11})/)?.[1];
     if (!videoId) continue;
-    out.push({ videoId, title: r.title, thumbUrl: r.thumb_url, mlsUrl: r.mls_url });
+    out.push({ videoId, title: r.title, thumbUrl: r.thumb_url, price: r.price, mlsUrl: r.mls_url });
     if (out.length === n) break;
   }
   return out;
