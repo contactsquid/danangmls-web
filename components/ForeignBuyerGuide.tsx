@@ -26,16 +26,18 @@ const T = {
       'The developer or the seller files for the pink book in your name at the Da Nang land registration office.',
     ],
     costs: 'Typical costs: 10% VAT on new units (usually included in the price), a 2% maintenance fund on new units, a 0.5% registration fee, and 2% personal income tax on a resale (usually paid by the seller). Have a lawyer review the contract before you pay a deposit.',
-    approvedH: 'Projects approved for foreign ownership',
-    approvedNote: 'Published by the Da Nang Department of Construction in seven batches, 2019 to 2026. Districts use the pre-2025 names most people still use.',
-    cols: ['Project', 'District', 'Approved', 'Foreign quota', 'For sale now'],
+    approvedH: 'Projects approved for foreign ownership/long-term lease',
+    approvedNote: 'Ownership approvals were published by the Da Nang Department of Construction in seven batches, 2019 to 2026. “Long-term lease” projects sit on commercial land and sell to foreigners by lease; “Per developer” means the developer offers units to foreigners but we have not found it in the city’s batches yet. Districts use the pre-2025 names most people still use.',
+    leaseLabel: 'Long-term lease',
+    developerLabel: 'Per developer',
+    cols: ['Project', 'District', 'Status', 'Foreign quota', 'For sale now'],
     official: 'official name',
     see: 'See',
     unlistedH: 'Marketed to foreign buyers, but not on the city’s lists',
     unlistedNote: 'Agents advertise these projects to foreigners, but they do not appear on any list the Department of Construction has published. Ask the developer for the project’s foreign-ownership approval before you pay a deposit.',
     notH: 'Not open to foreign ownership',
-    leaseH: 'Open to foreigners on a long-term lease',
-    lease: 'These projects sit on commercial or tourism land, so they are not housing and never appear on the city’s housing lists. Foreigners can still buy here, on a long-term lease or condotel contract (usually up to 50 years) instead of a pink book. Your rights come from the contract, so have a lawyer read it.',
+    leaseH: 'How a long-term lease differs',
+    lease: 'Projects marked “Long-term lease” in the table sit on commercial or tourism land, so they are not housing and never appear on the city’s housing lists. Foreigners can still buy here, on a long-term lease or condotel contract (usually up to 50 years) instead of a pink book. Your rights come from the contract, so have a lawyer read it.',
     source: 'Sources: Da Nang Department of Construction announcements, batches 1 to 7 (2019 to 2026); Housing Law 2023. Last checked October 25, 2026. This is general information, not legal advice.',
   },
   vi: {
@@ -57,16 +59,18 @@ const T = {
       'Chủ đầu tư hoặc bên bán nộp hồ sơ cấp sổ hồng đứng tên người mua tại Văn phòng đăng ký đất đai Đà Nẵng.',
     ],
     costs: 'Chi phí thường gặp: 10% VAT với nhà mới (thường đã gồm trong giá), 2% phí bảo trì với nhà mới, 0,5% lệ phí trước bạ và 2% thuế thu nhập cá nhân khi bán lại (thường do bên bán nộp). Nên nhờ luật sư xem hợp đồng trước khi đặt cọc.',
-    approvedH: 'Dự án được phép bán cho người nước ngoài',
-    approvedNote: 'Do Sở Xây dựng Đà Nẵng công bố qua bảy đợt, từ năm 2019 đến năm 2026. Tên quận theo địa giới trước năm 2025.',
-    cols: ['Dự án', 'Quận', 'Đợt công bố', 'Hạn mức', 'Đang bán'],
+    approvedH: 'Dự án được phép bán cho người nước ngoài/thuê dài hạn',
+    approvedNote: 'Danh mục cho phép sở hữu do Sở Xây dựng Đà Nẵng công bố qua bảy đợt, từ năm 2019 đến năm 2026. Dự án “Thuê dài hạn” nằm trên đất thương mại, bán cho người nước ngoài theo hợp đồng thuê; “Theo chủ đầu tư” là dự án chủ đầu tư chào bán cho người nước ngoài nhưng chúng tôi chưa thấy trong các đợt công bố. Tên quận theo địa giới trước năm 2025.',
+    leaseLabel: 'Thuê dài hạn',
+    developerLabel: 'Theo chủ đầu tư',
+    cols: ['Dự án', 'Quận', 'Tình trạng', 'Hạn mức', 'Đang bán'],
     official: 'tên pháp lý',
     see: 'Xem',
     unlistedH: 'Được quảng cáo cho người nước ngoài nhưng chưa có trong danh sách',
     unlistedNote: 'Các dự án này được môi giới chào bán cho người nước ngoài nhưng chưa có trong danh sách Sở Xây dựng đã công bố. Hãy đề nghị chủ đầu tư cung cấp văn bản cho phép người nước ngoài sở hữu trước khi đặt cọc.',
     notH: 'Không cho phép người nước ngoài sở hữu',
-    leaseH: 'Người nước ngoài mua theo hình thức thuê dài hạn',
-    lease: 'Các dự án này nằm trên đất thương mại, dịch vụ hoặc đất du lịch nên không phải nhà ở và không có trong danh sách nhà ở của thành phố. Người nước ngoài vẫn mua được theo hợp đồng thuê dài hạn hoặc hợp đồng condotel (thường đến 50 năm) thay vì được cấp sổ hồng. Quyền lợi theo hợp đồng, vì vậy nên nhờ luật sư xem kỹ.',
+    leaseH: 'Thuê dài hạn khác sở hữu thế nào',
+    lease: 'Các dự án ghi “Thuê dài hạn” trong bảng nằm trên đất thương mại, dịch vụ hoặc đất du lịch nên không phải nhà ở và không có trong danh sách nhà ở của thành phố. Người nước ngoài vẫn mua được theo hợp đồng thuê dài hạn hoặc hợp đồng condotel (thường đến 50 năm) thay vì được cấp sổ hồng. Quyền lợi theo hợp đồng, vì vậy nên nhờ luật sư xem kỹ.',
     source: 'Nguồn: các đợt công bố của Sở Xây dựng Đà Nẵng, đợt 1 đến đợt 7 (2019 đến 2026); Luật Nhà ở 2023. Cập nhật ngày 25/10/2026. Thông tin tham khảo, không phải tư vấn pháp lý.',
   },
 };
@@ -75,9 +79,12 @@ export default function ForeignBuyerGuide({ lang, forSale }: { lang: Lang; forSa
   const t = lang === 'vi' ? T.vi : T.en;
   const base = lang === 'vi' ? '/vi/mua-ban' : lang === 'en' ? '/for-sale' : `/${lang}/for-sale`;
   const count = (p: RegExp) => forSale.filter(l => p.test(`${l.title} ${l.text}`)).length;
-  const approved = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'approved');
-  const unlisted = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'unlisted');
-  const leased = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'lease');
+  // One alphabetical table: city-approved, long-term-lease, and the developer-stated ones Blake added.
+  const approved = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status !== 'unlisted' || b.inTable)
+    .sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+  const status = (b: (typeof FOREIGN_APPROVED_BUILDINGS)[number]) =>
+    b.status === 'approved' ? b.batch : b.status === 'lease' ? t.leaseLabel : t.developerLabel;
+  const unlisted = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'unlisted' && !b.inTable);
   const seeLink = (b: (typeof FOREIGN_APPROVED_BUILDINGS)[number]) => {
     const n = count(b.pattern);
     return n > 0 ? <> · <Link href={`${base}?q=${encodeURIComponent(b.search || b.name)}`} className="font-medium text-blue-700 hover:underline">{t.see} {n} →</Link></> : null;
@@ -130,8 +137,8 @@ export default function ForeignBuyerGuide({ lang, forSale }: { lang: Lang; forSa
                         {b.officialName && <span className="block text-xs text-slate-500">{t.official}: {b.officialName}</span>}
                       </td>
                       <td className="px-2 py-2.5 whitespace-nowrap">{b.district}</td>
-                      <td className="px-2 py-2.5 whitespace-nowrap">{b.batch}</td>
-                      <td className="px-2 py-2.5">{b.foreignUnits || '30%'}</td>
+                      <td className="px-2 py-2.5 whitespace-nowrap">{status(b)}</td>
+                      <td className="px-2 py-2.5">{b.foreignUnits || (b.status === 'lease' ? '—' : '30%')}</td>
                       <td className="px-2 py-2.5 whitespace-nowrap">
                         {n > 0 ? <Link href={`${base}?q=${encodeURIComponent(b.search || b.name)}`} className="font-medium text-blue-700 hover:underline">{t.see} {n} →</Link> : '—'}
                       </td>
@@ -163,12 +170,7 @@ export default function ForeignBuyerGuide({ lang, forSale }: { lang: Lang; forSa
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
           <h3 className="text-lg font-semibold text-slate-900 mb-1.5">{t.leaseH}</h3>
-          <p className="text-[15px] text-slate-700 leading-relaxed mb-3">{t.lease}</p>
-          <ul className="text-sm text-slate-700 flex flex-col gap-1.5">
-            {leased.map(b => (
-              <li key={b.name}><span className="font-semibold text-slate-900">{b.name}</span>{lang !== 'vi' && b.note && <span className="text-slate-600">: {b.note}</span>}{seeLink(b)}</li>
-            ))}
-          </ul>
+          <p className="text-[15px] text-slate-700 leading-relaxed">{t.lease}</p>
         </div>
 
         <p className="text-xs text-slate-500 leading-relaxed">{t.source}</p>

@@ -31,6 +31,8 @@ export interface ForeignApprovedBuilding {
   status: 'approved' | 'lease' | 'unlisted';
   /** One line shown on the page for 'lease' and 'unlisted' entries. */
   note?: string;
+  /** Show in the main project table although not city-approved (Blake 2026-10-25: FUTA, Altara). */
+  inTable?: boolean;
   batch?: string;
   foreignUnits?: string;
 }
@@ -69,8 +71,8 @@ export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   { name: 'Nobu Residences Danang', district: 'Son Tra', pattern: /\bnobu\b/i, search: 'Nobu', status: 'lease', note: 'Long-term lease for foreign buyers; commercial-service land to 2060' },
   { name: 'One River (villas)', district: 'Ngu Hanh Son', pattern: /one\s+river/i, search: 'One River', status: 'unlisted' },
   { name: 'The Point (villas)', district: 'Ngu Hanh Son', pattern: /the\s+point/i, search: 'The Point', status: 'unlisted' },
-  { name: 'Alphanam Luxury Apartment / Altara Suites', developer: 'Alphanam', district: 'Son Tra', pattern: /alphanam|altara/i, search: 'Alphanam', status: 'unlisted' },
-  { name: 'Times Square FUTA Residence', developer: 'Kim Long Nam', district: 'Son Tra', pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA', status: 'unlisted', note: 'Developer states 30% of units for foreign buyers on a 50-year term; not yet found in the city’s published batches' },
+  { name: 'Alphanam Luxury Apartment / Altara Suites', developer: 'Alphanam', district: 'Son Tra', pattern: /alphanam|altara/i, search: 'Alphanam', status: 'unlisted', inTable: true, note: 'Developer markets units to foreign buyers; not yet found in the city’s published batches' },
+  { name: 'Times Square FUTA Residence', developer: 'Kim Long Nam', district: 'Son Tra', pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA', status: 'unlisted', inTable: true, note: 'Developer states 30% of units for foreign buyers on a 50-year term; not yet found in the city’s published batches' },
 ];
 
 /** Projects the Department of Construction listed as NOT open to foreign ownership (2021 list), plus
