@@ -97,14 +97,15 @@ function foreignEn(): FacetSeoBody {
   return {
     h2: `Foreign-Buyer-Eligible Homes for Sale in Da Nang`,
     intro: [
-      `These are the **Da Nang** homes foreigners can legally **buy**. Under Vietnamese law, foreign buyers can own **apartments** and condos within approved buildings — up to 30% of a building's units — on a **50-year, renewable ownership certificate** (pink book). Landed **houses** and **land** remain reserved for Vietnamese nationals.`,
-      `Every listing here sits in a foreign-ownership-approved building, so international buyers can purchase with confidence. Compare buildings, floors, views, and USD pricing above, and ask the **agent** about the remaining foreign quota and the ownership certificate for any unit.`,
+      `These are the **Da Nang** homes foreigners can legally **buy**. Under the 2023 Housing Law, foreign buyers can own **apartments**, and individual **houses** or villas, in commercial housing projects the city has opened to foreign ownership: up to 30% of a building's apartments and 250 houses per ward, on an ownership certificate (pink book) of up to **50 years, extendable once**. **Land** itself stays reserved for Vietnamese owners.`,
+      `Each listing here names a project on the Da Nang Department of Construction's approved list, or comes from our curated foreign-buyer group. The full project list, the rules and the buying steps are below. Ask the **agent** to confirm the remaining foreign quota for any unit.`,
     ],
     faqHeading: `Frequently Asked Questions About Foreign Property Ownership in Da Nang`,
     faq: [
-      { q: 'Can foreigners own property in Da Nang, Vietnam?', a: `Yes — foreigners can legally own **apartments** and condos in approved buildings in **Da Nang**, on a 50-year renewable ownership certificate. Foreigners may own up to 30% of the units in any one building.` },
-      { q: 'What can foreigners not buy in Vietnam?', a: `Foreigners generally cannot own **land** or landed **houses** outright — those require Vietnamese nationality. Foreign ownership is limited to eligible **apartments** and condominium **units**.` },
-      { q: 'Can foreigners resell or rent out their Da Nang apartment?', a: `Yes. Foreign owners can **rent** out their **apartment** for income and resell it, subject to the terms of the ownership certificate. Many buyers purchase eligible **units** specifically for rental yield and appreciation.` },
+      { q: 'Can foreigners own property in Da Nang, Vietnam?', a: `Yes. Foreigners can own **apartments**, and houses or villas, in projects the city has approved for foreign ownership, on a certificate of up to 50 years that can be extended once. Foreigners together may own up to 30% of the apartments in one building.` },
+      { q: 'What can foreigners not buy in Vietnam?', a: `**Land**, homes outside approved commercial housing projects, and anything in national defense or security zones. Projects on the city's not-approved list (for example Indochina Riverside Tower) are also off limits.` },
+      { q: 'How do I know a building is approved for foreign buyers?', a: `The Da Nang Department of Construction publishes the approved projects in batches. Our list below covers batches 1 to 7 (2019 to 2026). If a project is not on it, ask the developer for its foreign-ownership approval before you pay a deposit.` },
+      { q: 'Can foreigners resell or rent out their Da Nang apartment?', a: `Yes. Foreign owners can **rent** out, sell, give away or bequeath their home. A Vietnamese buyer gets long-term ownership; a foreign buyer takes over the remaining term.` },
     ],
   };
 }
@@ -190,14 +191,15 @@ function foreignVi(): FacetSeoBody {
   return {
     h2: `Bất động sản người nước ngoài được phép mua tại Đà Nẵng`,
     intro: [
-      `Đây là những bất động sản tại **Đà Nẵng** mà người nước ngoài được phép **mua** hợp pháp. Theo luật Việt Nam, người nước ngoài được sở hữu **căn hộ** trong các tòa nhà được phép, tối đa 30% số căn của mỗi tòa, theo **giấy chứng nhận quyền sở hữu thời hạn 50 năm, có thể gia hạn** (sổ hồng). Riêng **nhà** gắn liền với đất và **đất** vẫn chỉ dành cho công dân Việt Nam.`,
-      `Mọi tin đăng ở đây đều nằm trong tòa nhà được phép bán cho người nước ngoài. Bạn có thể so sánh tòa nhà, tầng, hướng nhìn và giá (USD) ở phía trên, đồng thời hỏi **môi giới** xem hạn mức dành cho người nước ngoài còn bao nhiêu căn và giấy chứng nhận của từng căn ra sao.`,
+      `Đây là những bất động sản tại **Đà Nẵng** mà người nước ngoài được phép **mua** hợp pháp. Theo Luật Nhà ở 2023, người nước ngoài được sở hữu **căn hộ** và **nhà ở riêng lẻ**, biệt thự trong dự án nhà ở thương mại đã được cho phép: tối đa 30% số căn hộ của một tòa nhà và 250 căn nhà trên một phường, với giấy chứng nhận (sổ hồng) thời hạn tối đa **50 năm, được gia hạn một lần**. **Đất** vẫn chỉ dành cho người Việt Nam.`,
+      `Mỗi tin đăng ở đây thuộc dự án có trong danh sách được phép của Sở Xây dựng Đà Nẵng hoặc đến từ nhóm tin đăng dành cho người mua nước ngoài do chúng tôi chọn lọc. Danh sách dự án, quy định và trình tự mua có ở phía dưới. Hãy hỏi **môi giới** về hạn mức còn lại cho người nước ngoài của từng căn.`,
     ],
     faqHeading: `Câu hỏi thường gặp về việc người nước ngoài sở hữu bất động sản tại Đà Nẵng`,
     faq: [
-      { q: 'Người nước ngoài có được sở hữu bất động sản tại Đà Nẵng không?', a: `Có. Người nước ngoài được sở hữu hợp pháp **căn hộ** trong các tòa nhà được phép tại **Đà Nẵng**, theo giấy chứng nhận 50 năm có thể gia hạn. Mỗi tòa nhà chỉ cho người nước ngoài sở hữu tối đa 30% số căn.` },
-      { q: 'Người nước ngoài không được mua loại bất động sản nào ở Việt Nam?', a: `Nhìn chung, người nước ngoài không được đứng tên **đất** hay **nhà** gắn liền với đất, vì những tài sản này yêu cầu quốc tịch Việt Nam. Người nước ngoài chỉ được sở hữu **căn hộ** đủ điều kiện.` },
-      { q: 'Người nước ngoài có được bán lại hoặc cho thuê căn hộ tại Đà Nẵng không?', a: `Được. Chủ sở hữu nước ngoài có thể **cho thuê** căn hộ để có thu nhập, cũng như bán lại, theo đúng điều khoản trên giấy chứng nhận sở hữu. Nhiều người mua **căn hộ** đủ điều kiện chính là để cho thuê và chờ tăng giá.` },
+      { q: 'Người nước ngoài có được sở hữu bất động sản tại Đà Nẵng không?', a: `Có. Người nước ngoài được sở hữu **căn hộ** và nhà ở riêng lẻ, biệt thự trong các dự án đã được cho phép, với giấy chứng nhận tối đa 50 năm và được gia hạn một lần. Người nước ngoài được sở hữu tối đa 30% số căn hộ của một tòa nhà.` },
+      { q: 'Người nước ngoài không được mua loại bất động sản nào ở Việt Nam?', a: `**Đất**, nhà ở ngoài dự án nhà ở thương mại được cho phép và nhà ở trong khu vực bảo đảm quốc phòng, an ninh. Các dự án trong danh sách không cho phép (ví dụ Indochina Riverside Tower) cũng không được mua.` },
+      { q: 'Làm sao biết một tòa nhà được phép bán cho người nước ngoài?', a: `Sở Xây dựng Đà Nẵng công bố danh mục dự án được phép theo từng đợt. Danh sách bên dưới gồm đợt 1 đến đợt 7 (2019 đến 2026). Nếu dự án chưa có trong danh sách, hãy đề nghị chủ đầu tư cung cấp văn bản cho phép trước khi đặt cọc.` },
+      { q: 'Người nước ngoài có được bán lại hoặc cho thuê căn hộ tại Đà Nẵng không?', a: `Được. Chủ sở hữu nước ngoài được **cho thuê**, bán, tặng cho hoặc để thừa kế. Người mua là người Việt Nam được sở hữu lâu dài; người mua là người nước ngoài được sở hữu trong thời hạn còn lại.` },
     ],
   };
 }

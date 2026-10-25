@@ -8,7 +8,7 @@ import { placeListing } from './geo/placement';
 import { stripPromptEcho } from './promptEcho';
 import { stripAgentPhones } from './agentPhones';
 import { canonicalType, RENT_TYPES, SALE_TYPES } from './propertyTypes';
-import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules } from './foreignEligibleBuildings';
+import { isForeignEligible, detectForeignApprovedBuilding, isFromForeignEligibleGroup, passesForeignOwnershipRules, namesNotApprovedBuilding } from './foreignEligibleBuildings';
 
 const SPREADSHEET_ID = '14hGuwUcb308n3h1ODyby97WqHa7uRUyyYAKMHgWnyUE';
 // Using the plain /export CSV endpoint (keyed by gid), NOT /gviz/tq?tqx=out:csv.
@@ -399,7 +399,8 @@ async function parseForSale(): Promise<Listing[]> {
       // Curated foreign-buyer group is trusted for the BUILDING, but still gated by the legal
       // ownership rules (apartment, not land/house/villa/whole-building) — so an agent's off-rule
       // post in the group doesn't get the badge. See passesForeignOwnershipRules().
-      const fromCuratedGroup = isFromForeignEligibleGroup(postUrlForCheck) && passesForeignOwnershipRules({ type, title, text });
+      const fromCuratedGroup = isFromForeignEligibleGroup(postUrlForCheck) && passesForeignOwnershipRules({ type, title, text })
+        && !namesNotApprovedBuilding(title + ' ' + text);   // e.g. an Indochina Riverside unit posted in the group
       const foreignBuilding = isForeignEligible({ type, title, text })
         ? detectForeignApprovedBuilding(title + ' ' + text)
         : null;

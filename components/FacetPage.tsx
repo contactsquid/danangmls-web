@@ -13,6 +13,7 @@ import PageSeoSection from '@/components/PageSeoSection';
 import PageFaq from '@/components/PageFaq';
 import PopularBuildings from '@/components/PopularBuildings';
 import DistrictMap from '@/components/DistrictMap';
+import ForeignBuyerGuide from '@/components/ForeignBuyerGuide';
 import { listingsItemListLd } from '@/lib/schema';
 import { socialImages } from '@/lib/ogImage';
 import { resolveFacet, facetMatches, facetContent, facetInitialFilters, facetUrl, facetSlug, facetImage, type Mode } from '@/lib/facets';
@@ -107,6 +108,7 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
         />
       </main>
       {facet.kind === 'district' && <DistrictMap district={facet.value} lang={lang} />}
+      {facet.kind === 'foreign' && <ForeignBuyerGuide lang={lang} forSale={all} />}
       <PopularBuildings buildings={popularBuildings(all, mode, lang)} lang={lang} />
       <PageSeoSection mode={mode} districtImages={districtImageMap(all)}
         seoOverride={body ? { h2: body.h2, intro: body.intro } : undefined} />
