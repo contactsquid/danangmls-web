@@ -68,6 +68,7 @@ export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   { name: 'Cora Tower', developer: 'Sun Group', district: 'Cam Le (Hoa Xuan)', pattern: /cora tower/i, search: 'Cora', status: 'unlisted' },
   // ── Sold to foreigners on a long-term lease (not housing, so not on the housing lists) ──
   { name: 'The Soleil / Wyndham Soleil', district: 'Son Tra', pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, search: 'Soleil', status: 'lease', note: 'Condotel (tourism apartments) on commercial land, operated by Wyndham' },
+  { name: 'TTC Plaza', developer: 'Nguyen Kim Da Nang JSC', pattern: /\bttc\s*plaza\b/i, search: 'TTC Plaza', status: 'lease', note: 'Tourism apartments (condotel) on State-leased land to 2064; foreign buyers hold a long-term lease, not a residential pink book (Blake, 2026-10-25)' },
   { name: 'Nobu Residences Danang', district: 'Son Tra', pattern: /\bnobu\b/i, search: 'Nobu', status: 'lease', note: 'Long-term lease for foreign buyers; commercial-service land to 2060' },
   { name: 'One River (villas)', district: 'Ngu Hanh Son', pattern: /one\s+river/i, search: 'One River', status: 'unlisted' },
   { name: 'The Point (villas)', district: 'Ngu Hanh Son', pattern: /the\s+point/i, search: 'The Point', status: 'unlisted' },
