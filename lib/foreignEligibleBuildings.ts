@@ -25,8 +25,12 @@ export interface ForeignApprovedBuilding {
   // not the regex). Defaults to `name` when omitted.
   search?: string;
   /** 'approved' = on a published Department of Construction list (batch + foreign quota below).
+   *  'lease' = sold to foreigners on a long-term lease (condotel / commercial-service land), not as housing,
+   *  so never on the housing lists (Blake 2026-10-25: these ARE open to foreign buyers).
    *  'unlisted' = marketed to foreign buyers but on none of the city's published lists (2026-10-25 check). */
-  status: 'approved' | 'unlisted';
+  status: 'approved' | 'lease' | 'unlisted';
+  /** One line shown on the page for 'lease' and 'unlisted' entries. */
+  note?: string;
   batch?: string;
   foreignUnits?: string;
 }
@@ -53,19 +57,20 @@ export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   { name: 'Harmony Tower', developer: 'Mien Trung Real Estate', district: 'Son Tra', pattern: /harmony\s+tower/i, search: 'Harmony', status: 'approved', batch: 'Batch 1 (2019)' },
   { name: 'The Summit', developer: 'Dat Kinh Tuyen So 1', district: 'Son Tra', pattern: /the\s+summit/i, search: 'Summit', status: 'approved', batch: 'Batch 1 (2019)' },
   { name: 'The Filmore', developer: 'Filmore Real Estate Development', district: 'Hai Chau', pattern: /fil+more/i, search: 'Filmore', status: 'approved', batch: 'Batch 3 (Nov 2023)', foreignUnits: '61 of 206' },
-  { name: 'Sun Cosmo Residence', officialName: 'Apartment buildings on lots B4-1 & B4-2, Han River tourism zone', developer: 'Cu Lao Cham (Sun Group)', district: 'Ngu Hanh Son', pattern: /sun\s+cosmo/i, search: 'Sun Cosmo', status: 'approved', batch: 'Batch 4 (Nov 2024)', foreignUnits: '203' },
+  { name: 'Sun Cosmo Residence (The Panoma 1 & 2)', officialName: 'Apartment buildings on lots B4-1 & B4-2, Han River tourism zone', developer: 'Cu Lao Cham (Sun Group)', district: 'Ngu Hanh Son', pattern: /sun\s+cosmo|panoma/i, search: 'Sun Cosmo', status: 'approved', batch: 'Batch 4 (Nov 2024)', foreignUnits: '203' },
   { name: 'Newtown Diamond', officialName: 'New Town commercial & sports urban area', developer: 'New Town Development', district: 'Ngu Hanh Son', pattern: /new\s*town\s*diamond/i, search: 'Newtown Diamond', status: 'approved', batch: 'Batch 4 (Nov 2024)', foreignUnits: '519 apartments + 250 villas' },
   { name: 'Olalani Riverside Towers', developer: 'My Phuc', district: 'Son Tra', pattern: /olalani/i, search: 'Olalani', status: 'approved', batch: 'Batch 4 (Nov 2024)' },
   { name: 'Capital Square 2 & 3', developer: 'Mega Assets / SIH Real Estate', district: 'Son Tra', pattern: /capital\s*square\s*(?:2|3|ii|iii)\b/i, search: 'Capital Square', status: 'approved', batch: 'Batch 5 (Feb 2025)', foreignUnits: '502 + 512' },
   { name: 'Masteri Rivera Danang', officialName: 'Tuyên Sơn high-rise apartments (formerly The Estuary)', developer: 'Tuyen Son Housing Development (Masterise Homes)', district: 'Hai Chau', pattern: /masteri\s*rivera|the\s+estuary/i, search: 'Masteri', status: 'approved', batch: 'Batch 6 (Feb 2026)', foreignUnits: '332 of 1,112' },
   // ── Marketed to foreign buyers, but on none of the city's published lists (pending Blake's call) ──
   { name: 'Cora Tower', developer: 'Sun Group', district: 'Cam Le (Hoa Xuan)', pattern: /cora tower/i, search: 'Cora', status: 'unlisted' },
-  { name: 'The Soleil / Wyndham Soleil', district: 'Son Tra', pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, search: 'Soleil', status: 'unlisted' },
-  { name: 'Panoma', district: 'Ngu Hanh Son', pattern: /panoma/i, search: 'Panoma', status: 'unlisted' },
+  // ── Sold to foreigners on a long-term lease (not housing, so not on the housing lists) ──
+  { name: 'The Soleil / Wyndham Soleil', district: 'Son Tra', pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, search: 'Soleil', status: 'lease', note: 'Condotel (tourism apartments) on commercial land, operated by Wyndham' },
+  { name: 'Nobu Residences Danang', district: 'Son Tra', pattern: /\bnobu\b/i, search: 'Nobu', status: 'lease', note: 'Long-term lease for foreign buyers; commercial-service land to 2060' },
   { name: 'One River (villas)', district: 'Ngu Hanh Son', pattern: /one\s+river/i, search: 'One River', status: 'unlisted' },
   { name: 'The Point (villas)', district: 'Ngu Hanh Son', pattern: /the\s+point/i, search: 'The Point', status: 'unlisted' },
   { name: 'Alphanam Luxury Apartment / Altara Suites', developer: 'Alphanam', district: 'Son Tra', pattern: /alphanam|altara/i, search: 'Alphanam', status: 'unlisted' },
-  { name: 'Times Square FUTA Residence', district: 'Son Tra', pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA', status: 'unlisted' },
+  { name: 'Times Square FUTA Residence', developer: 'Kim Long Nam', district: 'Son Tra', pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA', status: 'unlisted', note: 'Developer states 30% of units for foreign buyers on a 50-year term; not yet found in the city’s published batches' },
 ];
 
 /** Projects the Department of Construction listed as NOT open to foreign ownership (2021 list), plus

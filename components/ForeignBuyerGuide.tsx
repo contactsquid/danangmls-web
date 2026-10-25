@@ -34,8 +34,8 @@ const T = {
     unlistedH: 'Marketed to foreign buyers, but not on the city’s lists',
     unlistedNote: 'Agents advertise these projects to foreigners, but they do not appear on any list the Department of Construction has published. Ask the developer for the project’s foreign-ownership approval before you pay a deposit.',
     notH: 'Not open to foreign ownership',
-    leaseH: 'Long-term leases are not ownership',
-    lease: 'Some resort villas, branded residences and condotels on tourism or commercial land are sold to foreigners on long-term leases (often up to 50 years) instead of with a pink book. Your rights then come from the contract, not from a residential ownership certificate, so read it closely.',
+    leaseH: 'Open to foreigners on a long-term lease',
+    lease: 'These projects sit on commercial or tourism land, so they are not housing and never appear on the city’s housing lists. Foreigners can still buy here, on a long-term lease or condotel contract (usually up to 50 years) instead of a pink book. Your rights come from the contract, so have a lawyer read it.',
     source: 'Sources: Da Nang Department of Construction announcements, batches 1 to 7 (2019 to 2026); Housing Law 2023. Last checked October 25, 2026. This is general information, not legal advice.',
   },
   vi: {
@@ -65,8 +65,8 @@ const T = {
     unlistedH: 'Được quảng cáo cho người nước ngoài nhưng chưa có trong danh sách',
     unlistedNote: 'Các dự án này được môi giới chào bán cho người nước ngoài nhưng chưa có trong danh sách Sở Xây dựng đã công bố. Hãy đề nghị chủ đầu tư cung cấp văn bản cho phép người nước ngoài sở hữu trước khi đặt cọc.',
     notH: 'Không cho phép người nước ngoài sở hữu',
-    leaseH: 'Thuê dài hạn không phải là sở hữu',
-    lease: 'Một số biệt thự nghỉ dưỡng, căn hộ thương hiệu và condotel trên đất du lịch, thương mại được bán cho người nước ngoài theo hình thức thuê dài hạn (thường đến 50 năm) thay vì cấp sổ hồng. Quyền lợi khi đó theo hợp đồng, không theo giấy chứng nhận quyền sở hữu nhà ở, vì vậy cần đọc kỹ hợp đồng.',
+    leaseH: 'Người nước ngoài mua theo hình thức thuê dài hạn',
+    lease: 'Các dự án này nằm trên đất thương mại, dịch vụ hoặc đất du lịch nên không phải nhà ở và không có trong danh sách nhà ở của thành phố. Người nước ngoài vẫn mua được theo hợp đồng thuê dài hạn hoặc hợp đồng condotel (thường đến 50 năm) thay vì được cấp sổ hồng. Quyền lợi theo hợp đồng, vì vậy nên nhờ luật sư xem kỹ.',
     source: 'Nguồn: các đợt công bố của Sở Xây dựng Đà Nẵng, đợt 1 đến đợt 7 (2019 đến 2026); Luật Nhà ở 2023. Cập nhật ngày 25/10/2026. Thông tin tham khảo, không phải tư vấn pháp lý.',
   },
 };
@@ -77,6 +77,11 @@ export default function ForeignBuyerGuide({ lang, forSale }: { lang: Lang; forSa
   const count = (p: RegExp) => forSale.filter(l => p.test(`${l.title} ${l.text}`)).length;
   const approved = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'approved');
   const unlisted = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'unlisted');
+  const leased = FOREIGN_APPROVED_BUILDINGS.filter(b => b.status === 'lease');
+  const seeLink = (b: (typeof FOREIGN_APPROVED_BUILDINGS)[number]) => {
+    const n = count(b.pattern);
+    return n > 0 ? <> · <Link href={`${base}?q=${encodeURIComponent(b.search || b.name)}`} className="font-medium text-blue-700 hover:underline">{t.see} {n} →</Link></> : null;
+  };
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="max-w-4xl flex flex-col gap-8">
@@ -142,7 +147,11 @@ export default function ForeignBuyerGuide({ lang, forSale }: { lang: Lang; forSa
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
             <h3 className="font-semibold text-slate-900 mb-1.5">{t.unlistedH}</h3>
             <p className="text-sm text-slate-700 leading-relaxed mb-2">{t.unlistedNote}</p>
-            <p className="text-sm font-medium text-slate-900">{unlisted.map(b => b.name).join(' · ')}</p>
+            <ul className="text-sm text-slate-700 flex flex-col gap-1.5">
+              {unlisted.map(b => (
+                <li key={b.name}><span className="font-medium text-slate-900">{b.name}</span>{lang !== 'vi' && b.note && <span className="text-slate-600">: {b.note}</span>}{seeLink(b)}</li>
+              ))}
+            </ul>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
             <h3 className="font-semibold text-slate-900 mb-1.5">{t.notH}</h3>
@@ -152,9 +161,14 @@ export default function ForeignBuyerGuide({ lang, forSale }: { lang: Lang; forSa
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="text-lg font-semibold text-slate-900">{t.leaseH}</h3>
-          <p className="text-[15px] text-slate-700 leading-relaxed">{t.lease}</p>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+          <h3 className="text-lg font-semibold text-slate-900 mb-1.5">{t.leaseH}</h3>
+          <p className="text-[15px] text-slate-700 leading-relaxed mb-3">{t.lease}</p>
+          <ul className="text-sm text-slate-700 flex flex-col gap-1.5">
+            {leased.map(b => (
+              <li key={b.name}><span className="font-semibold text-slate-900">{b.name}</span>{lang !== 'vi' && b.note && <span className="text-slate-600">: {b.note}</span>}{seeLink(b)}</li>
+            ))}
+          </ul>
         </div>
 
         <p className="text-xs text-slate-500 leading-relaxed">{t.source}</p>
