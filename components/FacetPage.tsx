@@ -14,6 +14,7 @@ import PageFaq from '@/components/PageFaq';
 import PopularBuildings from '@/components/PopularBuildings';
 import DistrictMap from '@/components/DistrictMap';
 import ForeignBuyerGuide from '@/components/ForeignBuyerGuide';
+import { detectForeignApprovedBuilding } from '@/lib/foreignEligibleBuildings';
 import { listingsItemListLd } from '@/lib/schema';
 import { socialImages } from '@/lib/ogImage';
 import { resolveFacet, facetMatches, facetContent, facetInitialFilters, facetUrl, facetSlug, facetImage, type Mode } from '@/lib/facets';
@@ -109,7 +110,10 @@ export default async function FacetPage({ mode, lang, filterSlug }: { mode: Mode
       </main>
       {facet.kind === 'district' && <DistrictMap district={facet.value} lang={lang} />}
       {facet.kind === 'foreign' && <ForeignBuyerGuide lang={lang} forSale={all} />}
-      <PopularBuildings buildings={popularBuildings(all, mode, lang)} lang={lang} />
+      {/* On the foreign-buyer page, only buildings on the city's approved list (no Muong Thanh card). */}
+      <PopularBuildings buildings={facet.kind === 'foreign'
+        ? popularBuildings(all, mode, lang).filter(c => detectForeignApprovedBuilding(c.name)?.status === 'approved')
+        : popularBuildings(all, mode, lang)} lang={lang} />
       <PageSeoSection mode={mode} districtImages={districtImageMap(all)}
         seoOverride={body ? { h2: body.h2, intro: body.intro } : undefined} />
       {/* Image from the FACET's listings, not the whole set — a Sam Towers page
