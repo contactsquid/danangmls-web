@@ -14,7 +14,7 @@ const T = {
     rules: [
       ['Who can buy', 'Foreign individuals allowed to enter Vietnam (a passport with a valid entry stamp; people with diplomatic immunity are excluded), and foreign organizations operating in Vietnam.'],
       ['What you can own', 'Apartments, and individual houses or villas, in commercial housing projects the city has opened to foreign ownership. Not land, and nothing in national defense or security zones.'],
-      ['How much', 'Foreigners together may own at most 30% of the apartments in one building, and at most 250 individual houses in one ward.'],
+      ['How much', 'Foreigners together may own at most 30% of the apartments in one building. For houses and villas: at most 10% of the houses in a project, and never more than 250 in one ward.'],
       ['For how long', 'You receive an ownership certificate (the “pink book”) valid for up to 50 years from issue, extendable once. Vietnamese owners hold the same homes long term.'],
       ['Renting out and selling', 'You may rent the home out, sell it, give it away or leave it to heirs. A Vietnamese buyer of your unit gets long-term ownership; a foreign buyer takes over the rest of your term.'],
     ],
@@ -45,7 +45,7 @@ const T = {
     rules: [
       ['Đối tượng', 'Cá nhân nước ngoài được phép nhập cảnh vào Việt Nam (hộ chiếu có dấu nhập cảnh hợp lệ, trừ người được hưởng quyền ưu đãi, miễn trừ ngoại giao) và tổ chức nước ngoài hoạt động tại Việt Nam.'],
       ['Loại nhà ở', 'Căn hộ chung cư và nhà ở riêng lẻ, biệt thự trong dự án nhà ở thương mại đã được cho phép người nước ngoài sở hữu. Không bao gồm đất và khu vực bảo đảm quốc phòng, an ninh.'],
-      ['Số lượng', 'Tối đa 30% số căn hộ của một tòa nhà và tối đa 250 căn nhà ở riêng lẻ trên địa bàn một phường.'],
+      ['Số lượng', 'Tối đa 30% số căn hộ của một tòa nhà. Với nhà ở riêng lẻ, biệt thự: tối đa 10% số căn trong một dự án và không quá 250 căn trên địa bàn một phường.'],
       ['Thời hạn', 'Giấy chứng nhận (sổ hồng) có thời hạn tối đa 50 năm kể từ ngày cấp, được gia hạn một lần. Người Việt Nam sở hữu lâu dài.'],
       ['Cho thuê và chuyển nhượng', 'Chủ sở hữu được cho thuê, bán, tặng cho hoặc để thừa kế. Người mua là người Việt Nam được sở hữu lâu dài; người mua là người nước ngoài được sở hữu trong thời hạn còn lại.'],
     ],

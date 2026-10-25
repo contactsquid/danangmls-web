@@ -40,7 +40,7 @@ export interface ForeignApprovedBuilding {
 // city's NOT-approved list, so it no longer rides along with FPT Plaza.
 export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   // ── On the city's published lists ──
-  { name: 'SAM Towers', officialName: 'P.A Tower', developer: 'PAVNC', district: 'Hai Chau', pattern: /\bsam\s*towers?\b/i, search: 'Sam Tower', status: 'approved', batch: 'Batch 1 (2019)' },
+  { name: 'SAM Towers (Risemount)', officialName: 'P.A Tower', developer: 'PAVNC', district: 'Hai Chau', pattern: /\bsam\s*towers?\b|\brisemount\b/i, search: 'Sam Tower', status: 'approved', batch: 'Batch 1 (2019)' },
   { name: 'Blooming Tower', developer: 'Korea Investment & Development', district: 'Hai Chau', pattern: /\bblooming\b/i, search: 'Blooming', status: 'approved', batch: 'Batch 1 (2019)' },
   { name: 'Monarchy', developer: 'Danang Housing Investment Development', district: 'Son Tra', pattern: /monarchy/i, search: 'Monarchy', status: 'approved', batch: 'Batch 1 (2019)' },
   { name: 'Hiyori Garden Tower', officialName: 'Tháp Vườn', developer: 'Sun Frontier Da Nang', district: 'Son Tra', pattern: /hiyori/i, search: 'Hiyori', status: 'approved', batch: 'Batch 1 (2019)' },
@@ -59,13 +59,12 @@ export const FOREIGN_APPROVED_BUILDINGS: ForeignApprovedBuilding[] = [
   { name: 'Capital Square 2 & 3', developer: 'Mega Assets / SIH Real Estate', district: 'Son Tra', pattern: /capital\s*square\s*(?:2|3|ii|iii)\b/i, search: 'Capital Square', status: 'approved', batch: 'Batch 5 (Feb 2025)', foreignUnits: '502 + 512' },
   { name: 'Masteri Rivera Danang', officialName: 'Tuyên Sơn high-rise apartments (formerly The Estuary)', developer: 'Tuyen Son Housing Development (Masterise Homes)', district: 'Hai Chau', pattern: /masteri\s*rivera|the\s+estuary/i, search: 'Masteri', status: 'approved', batch: 'Batch 6 (Feb 2026)', foreignUnits: '332 of 1,112' },
   // ── Marketed to foreign buyers, but on none of the city's published lists (pending Blake's call) ──
-  { name: 'Cora Tower', developer: 'Sun Group', district: 'Cam Le', pattern: /cora tower/i, search: 'Cora', status: 'unlisted' },
+  { name: 'Cora Tower', developer: 'Sun Group', district: 'Cam Le (Hoa Xuan)', pattern: /cora tower/i, search: 'Cora', status: 'unlisted' },
   { name: 'The Soleil / Wyndham Soleil', district: 'Son Tra', pattern: /soleil|wyndham(?!\s*(?:da\s*nang\s*|danang\s*)?golden)/i, search: 'Soleil', status: 'unlisted' },
   { name: 'Panoma', district: 'Ngu Hanh Son', pattern: /panoma/i, search: 'Panoma', status: 'unlisted' },
-  { name: 'One River', district: 'Ngu Hanh Son', pattern: /one\s+river/i, search: 'One River', status: 'unlisted' },
-  { name: 'The Point Villas', district: 'Ngu Hanh Son', pattern: /the\s+point/i, search: 'The Point', status: 'unlisted' },
-  { name: 'Risemount', district: 'Hai Chau', pattern: /risemount/i, search: 'Risemount', status: 'unlisted' },
-  { name: 'Alphanam Luxury Apartment', district: 'Ngu Hanh Son', pattern: /alphanam/i, search: 'Alphanam', status: 'unlisted' },
+  { name: 'One River (villas)', district: 'Ngu Hanh Son', pattern: /one\s+river/i, search: 'One River', status: 'unlisted' },
+  { name: 'The Point (villas)', district: 'Ngu Hanh Son', pattern: /the\s+point/i, search: 'The Point', status: 'unlisted' },
+  { name: 'Alphanam Luxury Apartment / Altara Suites', developer: 'Alphanam', district: 'Son Tra', pattern: /alphanam|altara/i, search: 'Alphanam', status: 'unlisted' },
   { name: 'Times Square FUTA Residence', district: 'Son Tra', pattern: /times\s*square|futa\s*residence/i, search: 'Times Square FUTA', status: 'unlisted' },
 ];
 

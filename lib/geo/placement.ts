@@ -41,7 +41,7 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'Monarchy', pattern: /\bmonarchy\b/i, at: [16.05484, 108.23297], spreadM: 40, address: '535 Trần Hưng Đạo, An Hải, Sơn Trà, Đà Nẵng' },
   // Sam Towers, 02 Đỗ Xuân Cát, Hải Châu (Blake, 2026-10-22; replaces the earlier bridge-roundabout guess
   // 800 m north). OSM: Đỗ Xuân Cát is a 150 m street off Như Nguyệt, No. 05 mid-street, so No. 02 is the river corner.
-  { name: 'Sam Towers', pattern: /\bsam\s*towers?\b/i, at: [16.08645, 108.22175], spreadM: 40, address: '02 Đỗ Xuân Cát, Hải Châu, Đà Nẵng 550000' },
+  { name: 'Sam Towers', pattern: /\bsam\s*towers?\b|\brisemount\b/i, at: [16.08645, 108.22175], spreadM: 40, address: '02 Đỗ Xuân Cát, Hải Châu, Đà Nẵng 550000' },
   // Chung cư Mường Thanh, Trần Bạch Đằng; OSM's "Chung cư Mường Thanh Sơn Trà" on that street (pin unchanged).
   // Address corrected by Blake 2026-10-23 (was 357 Trần Bạch Đằng, Sơn Trà); Ngũ Hành Sơn is where most listings say it is.
   { name: 'Muong Thanh', pattern: /\bm[ưu][ờo]ng\s+thanh\b/i, at: [16.05340, 108.24682], spreadM: 40, address: '51 Trần Bạch Đằng, Ngũ Hành Sơn, Đà Nẵng 550000' },
