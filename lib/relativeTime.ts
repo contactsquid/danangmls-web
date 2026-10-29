@@ -41,7 +41,7 @@ export function relativeTime(dateStr: string | undefined | null, langIn: Lang): 
       if (lang === 'vi') return `${mins} phút trước`;
       if (lang === 'ko') return `${mins}분 전`;
       if (lang === 'ru') return `${mins} ${ruPlural(mins, 'минуту', 'минуты', 'минут')} назад`;
-      return `${mins} minutes ago`;
+      return `${mins} mins ago`;
     }
     if (lang === 'vi') return '1 giờ trước';
     if (lang === 'ko') return '1시간 전';
