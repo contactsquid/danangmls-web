@@ -4,6 +4,7 @@ import { forLang } from '@/lib/translations';
 
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
+import { prepareListingPhotos } from '@/lib/shrinkPhotos';
 import { updateListingAction, type ListingActionState } from '@/app/account/listings/actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import {
@@ -21,8 +22,6 @@ const initial: ListingActionState = {};
 // Mirrors MAX_PHOTO_BYTES in app/account/listings/actions.ts + the extension
 // allowlist backing extensionFor() in lib/r2.ts — see ListingForm.tsx for why
 // this also needs a client-side check, not just the server action's.
-const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 /** Pulls the numeric part out of a stored price string ("$1,521/month" → 1521).
  *  Sheet prices are always USD, so the currency selector starts on USD; an agent
@@ -256,20 +255,15 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
           <label className={labelClass} htmlFor="photos">{t.addMorePhotos}</label>
           <input
             id="photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple
-            onChange={e => {
-              const picked = Array.from(e.target.files ?? []);
-              const valid = picked.filter(
-                f => ALLOWED_PHOTO_TYPES.includes(f.type) && f.size <= MAX_PHOTO_BYTES,
-              );
-              if (valid.length < picked.length) {
-                const dt = new DataTransfer();
-                valid.forEach(f => dt.items.add(f));
-                e.target.files = dt.files;
-                setPhotoError(t.uploadFailed);
-              } else {
-                setPhotoError(null);
-              }
-              setAddCount(valid.length);
+            onChange={async e => {
+              const input = e.target;
+              const picked = Array.from(input.files ?? []);
+              const { files, rejected } = await prepareListingPhotos(picked);
+              const dt = new DataTransfer();
+              files.forEach(f => dt.items.add(f));
+              input.files = dt.files;
+              setPhotoError(rejected > 0 ? t.uploadFailed : null);
+              setAddCount(files.length);
             }}
             className="w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
           />

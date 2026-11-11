@@ -4,6 +4,7 @@ import { forLang } from '@/lib/translations';
 
 import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { prepareListingPhotos } from '@/lib/shrinkPhotos';
 import { submitListingAction, type ListingActionState } from '@/app/account/listings/actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import {
@@ -22,8 +23,6 @@ const initial: ListingActionState = {};
 // multipart body, it's easy to trip next.config.ts's serverActions
 // bodySizeLimit ('6mb') before the action's own per-file checks ever run,
 // which surfaces as a raw crash instead of our nice inline error.
-const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 export default function ListingForm({ lang, profileSlug }: { lang: Lang; profileSlug: string }) {
   const t = forLang(LISTING_FORM_COPY, lang);
@@ -303,18 +302,15 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
           accept="image/jpeg,image/png,image/webp"
           multiple
           required={photos.length === 0}
-          onChange={e => {
+          onChange={async e => {
             const picked = Array.from(e.target.files ?? []);
-            const valid = picked.filter(
-              f => ALLOWED_PHOTO_TYPES.includes(f.type) && f.size <= MAX_PHOTO_BYTES,
-            );
-            // Selecting again replaces the whole set (native <input type=file>
-            // behaviour) — rebuild the input's FileList with only the valid
-            // files, so a rejected file (wrong type, or over 5 MB) can't be
-            // submitted, and reset order to selection order.
-            syncFileInput(valid);
-            setPhotoError(valid.length < picked.length ? t.uploadFailed : null);
-            setPhotos(valid);
+            // Photos are downscaled in the browser first (lib/shrinkPhotos.ts)
+            // so ten phone photos fit under the request body cap.
+            setPhotoError(null);
+            const { files, rejected } = await prepareListingPhotos(picked);
+            syncFileInput(files.slice(0, 10));
+            setPhotoError(rejected > 0 ? t.uploadFailed : null);
+            setPhotos(files.slice(0, 10));
           }}
           className="w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
         />
