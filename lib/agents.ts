@@ -208,6 +208,18 @@ export async function getAgentSlugForName(agent: string | null | undefined): Pro
   return (await getVerifiedAgentSlugs()).get(name) ?? null;
 }
 
+/** Profile slug for a listing's agent name: the portal poster first (proven by
+ *  the image path, no claim or admin approval needed), else a verified name
+ *  claim. Only returns slugs that have a public profile page. */
+export async function getAgentSlugForListing(listing: Listing): Promise<string | null> {
+  const posted = portalOwnerSlug(listing);
+  if (posted) {
+    const profiles = await getAgentProfiles();
+    if (profiles.some(p => p.slug === posted)) return posted;
+  }
+  return getAgentSlugForName(listing.agent);
+}
+
 /** Profiles are self-serve, so the site will accumulate near-empty ones. An
  *  indexable page with no bio and no inventory is textbook thin content, and at
  *  scale it drags the whole domain down — so those get noindex,follow until the

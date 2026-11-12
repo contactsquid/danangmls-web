@@ -7,7 +7,7 @@ import { schemaRooms } from '@/lib/propertyTypes';
 import { listingOfferLd, listingImagesLd } from '@/lib/listingSchema';
 import { notFound, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
-import { getAgentSlugForName } from '@/lib/agents';
+import { getAgentSlugForListing } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import { localizeType, localizeDistrict, localizedTitle, localizedText } from '@/lib/price';
 import type { Metadata } from 'next';
@@ -138,7 +138,7 @@ export default async function RUListingPage({ params }: Props) {
     ],
   };
 
-  const agentSlug = await getAgentSlugForName(listing.agent);
+  const agentSlug = await getAgentSlugForListing(listing);
 
   // Only shown when this agent's OWN post text named WhatsApp — never assumed;
 

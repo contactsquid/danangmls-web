@@ -11,7 +11,7 @@ import { isBelowServiceFloor } from '@/lib/agentContact';
 import { agentHasWhatsApp, agentFallbackForPost } from '@/lib/agentChannels';
 import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
-import { getAgentSlugForName } from '@/lib/agents';
+import { getAgentSlugForListing } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import type { Metadata } from 'next';
 import { socialImages } from '@/lib/ogImage';
@@ -153,7 +153,7 @@ export default async function ListingPage({ params }: Props) {
   const similarListings = getSimilarListings(listing, listings);
   // Links "Listed by" through to the agent profile when they have a verified
   // one. Resolves to null (plain text) for the vast majority of sheet agents.
-  const agentSlug = await getAgentSlugForName(listing.agent);
+  const agentSlug = await getAgentSlugForListing(listing);
   // Only shown when this agent's OWN post text named WhatsApp — never assumed;
   // see lib/agentChannels.ts. Unknown numbers fall back to Zalo + Message.
   // No number in the sheet row: borrow one the same Facebook profile gave on another
