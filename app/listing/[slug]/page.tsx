@@ -11,7 +11,7 @@ import { isBelowServiceFloor } from '@/lib/agentContact';
 import { agentHasWhatsApp, agentFallbackForPost } from '@/lib/agentChannels';
 import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import ListingDetail from '@/components/ListingDetail';
-import { getAgentSlugForListing } from '@/lib/agents';
+import { getAgentSlugForListing, getProfileContactForSlug } from '@/lib/agents';
 import RentalProcessVideo from '@/components/RentalProcessVideo';
 import type { Metadata } from 'next';
 import { socialImages } from '@/lib/ogImage';
@@ -163,7 +163,10 @@ export default async function ListingPage({ params }: Props) {
     ? await agentFallbackForPost(listing.postUrl)
     : { phone: '', messenger: '' };
   if (fallback.phone) listing = { ...listing, agentPhone: fallback.phone };
-  const agentWhatsApp = listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
+  // Portal-posted (no scraped number): use the poster's own profile phone, not Vy's.
+  const profileContact = !listing.agentPhone && isBelowServiceFloor(listing) ? await getProfileContactForSlug(agentSlug) : null;
+  if (profileContact) listing = { ...listing, agentPhone: profileContact.phone };
+  const agentWhatsApp = profileContact ? profileContact.whatsapp : listing.agentPhone ? await agentHasWhatsApp(listing.agentPhone) : false;
 
   const addr = await getAddressForListing(listing.slug);
   // Apartments link to their building record even when active: the building is public, the unit is not.
@@ -186,7 +189,7 @@ export default async function ListingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <ListingDetail historyHref={historyHref} building={building} listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} agentBorrowed={Boolean(fallback.phone || fallback.messenger)} />
+      <ListingDetail historyHref={historyHref} building={building} listing={listing} archived={archived} similarListings={similarListings} agentSlug={agentSlug} agentHasWhatsApp={agentWhatsApp} agentMessenger={fallback.messenger} agentBorrowed={Boolean(fallback.phone || fallback.messenger || profileContact)} />
       {!listing.forSale && <RentalProcessVideo />}
     </div>
   );

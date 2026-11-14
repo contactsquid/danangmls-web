@@ -1,4 +1,5 @@
 import 'server-only';
+import { normalizeVnPhone } from './agentContact';
 
 import { cache } from 'react';
 import { createPublicClient, createClient } from '@/lib/supabase/server';
@@ -261,3 +262,15 @@ export const getOwnProfile = cache(async (): Promise<OwnAgentProfile | null> => 
 
   return { ...data, verified: data.listing_agent_name_verified } as OwnAgentProfile;
 });
+
+
+/** Contact for a portal-posted listing that has no scraped number: the poster's own
+ *  profile phone (and whether they said it is on WhatsApp). Portal listings never
+ *  get an "Agent Contact" value (only the Facebook scraper writes it), so without
+ *  this a sub-floor listing fell back to the agency line instead of its poster. */
+export async function getProfileContactForSlug(slug: string | null): Promise<{ phone: string; whatsapp: boolean } | null> {
+  if (!slug) return null;
+  const p = (await getAgentProfiles()).find(x => x.slug === slug);
+  const phone = normalizeVnPhone(p?.phone);
+  return p && phone ? { phone, whatsapp: Boolean(p.has_whatsapp) } : null;
+}
