@@ -97,6 +97,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   { name: 'The Ori Garden', pattern: /\bori\s+garden\b/i, at: [16.10009, 108.12951], spreadM: 60, address: 'Lô B42 Nguyễn Thành Long, Quan Nam, Hải Vân, Đà Nẵng' },
   // Wyndham Danang Golden Bay, 01 Lê Văn Duyệt, Sơn Trà.
   { name: 'Golden Bay', pattern: /\bgolden\s*bay\b/i, at: [16.09806, 108.22438], spreadM: 40, address: '01 Lê Văn Duyệt, Nại Hiên Đông, Sơn Trà, Đà Nẵng' },
+  // Mia Plaza / Mia Center Point, 61 Ngô Thì Nhậm, Liên Chiểu (Blake, 2026-11-17, Google Maps "Căn Hộ Mia Plaza").
+  // Pin = OSM's "Mia Center Point" building (Trần Văn Kỷ side); OSM No. 63 Ngô Thì Nhậm is 80 m away, so it matches.
+  { name: 'Mia Center Point', pattern: /\bmia\s+(?:center\s*point|plaza)\b/i, at: [16.07127, 108.15430], spreadM: 40, address: '61 Ngô Thì Nhậm, Liên Chiểu, Đà Nẵng 550000' },
   { name: 'Mikazuki', pattern: /\bmikazuki\b/i, at: [16.09358, 108.14436], spreadM: 150, near: true },
   { name: 'Furama Resort', pattern: /\bfurama\b/i, at: [16.03975, 108.25134], spreadM: 150, near: true },
   // Asia Park, since renamed Sun World Danang Wonders / Da Nang Downtown.
