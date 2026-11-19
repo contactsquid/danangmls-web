@@ -11,6 +11,7 @@ import { SITE_URL, isSupabaseConfigured } from '@/lib/supabase/config';
 import { notifyAdmins } from '@/lib/notify';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { normalizeAgentName } from '@/lib/agents';
+import { claimPhoneEvidence, describePhoneEvidence } from '@/lib/claimPhoneMatch';
 import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
 import { searchAgentNames, type NameCandidate } from '@/lib/agentNameSearch';
 import type { Lang } from '@/lib/translations';
@@ -358,12 +359,19 @@ export async function updateProfileAction(
       const matching = [...rentals, ...forSale]
         .filter(l => normalizeAgentName(l.agent) === target).length;
 
+      const ev = claimPhoneEvidence(listingName, phone, [...rentals, ...forSale]);
+
       await notifyAdmins({
         type: 'listing_claim',
         display_name: displayName,
         profile_url: `${SITE_URL}/agent/${before?.slug ?? ''}`,
         claimed_name: listingName,
         matching_listings: matching,
+        phone_check: describePhoneEvidence(ev),
+        profile_phone: phone || null,
+        phone_matching_listings: ev?.matching ?? 0,
+        phone_listings_with_number: ev?.withPhone ?? 0,
+        same_phone_other_names: ev?.otherNames ?? [],
       });
     });
   }

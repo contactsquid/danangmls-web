@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import AdminAgentRow, { type AdminAgent } from './AdminAgentRow';
 import { createClient } from '@/lib/supabase/server';
 import { getOwnProfile, normalizeAgentName } from '@/lib/agents';
+import { claimPhoneEvidence, describePhoneEvidence } from '@/lib/claimPhoneMatch';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 
 export const dynamic = 'force-dynamic';
@@ -49,6 +50,7 @@ export default async function AdminAgentsPage() {
   }
 
   const counts = new Map<string, number>();
+  const phoneChecks = new Map<string, string>();
   if (claimed.size > 0) {
     const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
     for (const listing of [...rentals, ...forSale]) {
@@ -56,12 +58,21 @@ export default async function AdminAgentsPage() {
       if (!ids) continue;
       for (const id of ids) counts.set(id, (counts.get(id) ?? 0) + 1);
     }
+    const all = [...rentals, ...forSale];
+    for (const r of rows) {
+      if (!r.listing_agent_name) continue;
+      const ev = claimPhoneEvidence(r.listing_agent_name, r.phone, all);
+      let text = describePhoneEvidence(ev);
+      if (ev?.otherNames.length) text += `; same number also on listings by ${ev.otherNames.join(', ')}`;
+      phoneChecks.set(r.id, text);
+    }
   }
 
   const agents: AdminAgent[] = rows.map(r => ({
     ...r,
     status: r.status === 'suspended' ? 'suspended' : 'active',
     claimedListingCount: counts.get(r.id) ?? 0,
+    phoneCheck: phoneChecks.get(r.id) ?? '',
   }));
 
   const pending = agents.filter(a => a.listing_agent_name && !a.listing_agent_name_verified);

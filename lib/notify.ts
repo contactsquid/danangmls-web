@@ -28,6 +28,12 @@ export type NotifyEvent =
       /** How many sheet listings that claim would attach. A big number on a new
        *  account is the signal worth looking at. */
       matching_listings: number;
+      /** Phone evidence (see lib/claimPhoneMatch.ts). Plain-English line for the email. */
+      phone_check: string;
+      profile_phone: string | null;
+      phone_matching_listings: number;
+      phone_listings_with_number: number;
+      same_phone_other_names: string[];
     };
 
 /**

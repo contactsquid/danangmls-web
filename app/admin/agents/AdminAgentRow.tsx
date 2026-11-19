@@ -27,6 +27,8 @@ export interface AdminAgent {
   created_at: string;
   /** Listings in the sheet matching their claimed name, verified or not. */
   claimedListingCount: number;
+  /** Phone-match evidence line for the claim ('' when no claim). */
+  phoneCheck: string;
 }
 
 function SmallButton({
@@ -103,6 +105,9 @@ export default function AdminAgentRow({ agent }: { agent: AdminAgent }) {
               <span className="text-slate-400">No listing name claimed</span>
             )}
           </p>
+          {agent.listing_agent_name && agent.phoneCheck && (
+            <p className="text-xs text-slate-500 mt-0.5">Phone check: {agent.phoneCheck}</p>
+          )}
 
           {agent.bio.trim() && (
             <p className="text-sm text-slate-600 mt-2 line-clamp-3 whitespace-pre-line">{agent.bio.trim()}</p>
