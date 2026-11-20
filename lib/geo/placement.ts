@@ -100,6 +100,9 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Mia Plaza / Mia Center Point, 61 Ngô Thì Nhậm, Liên Chiểu (Blake, 2026-11-17, Google Maps "Căn Hộ Mia Plaza").
   // Pin = OSM's "Mia Center Point" building (Trần Văn Kỷ side); OSM No. 63 Ngô Thì Nhậm is 80 m away, so it matches.
   { name: 'Mia Center Point', pattern: /\bmia\s+(?:center\s*point|plaza)\b/i, at: [16.07127, 108.15430], spreadM: 40, address: '61 Ngô Thì Nhậm, Liên Chiểu, Đà Nẵng 550000' },
+  // Nguyen Tat Thanh beach (Bãi biển Nguyễn Tất Thành), Thanh Khê (Blake, 2026-11-20: Plus Code 35GG+V96 → 7P8C35GG+V96).
+  // Beach only: plain "Nguyen Tat Thanh" is a long street, so it never matches here.
+  { name: 'Nguyen Tat Thanh Beach', pattern: /nguy[eêễ]n\s*t[aáấ]t\s*thanh\s*beach|beach\s*(?:on|at|of)?\s*nguy[eêễ]n\s*t[aáấ]t\s*thanh|b[aãạ]i\s*bi[eêể]n\s*nguy[eêễ]n\s*t[aáấ]t\s*th[aàạ]nh/i, at: [16.07719, 108.17589], spreadM: 150, near: true, address: 'Bãi biển Nguyễn Tất Thành, Thanh Khê, Đà Nẵng' },
   { name: 'Mikazuki', pattern: /\bmikazuki\b/i, at: [16.09358, 108.14436], spreadM: 150, near: true },
   { name: 'Furama Resort', pattern: /\bfurama\b/i, at: [16.03975, 108.25134], spreadM: 150, near: true },
   // Asia Park, since renamed Sun World Danang Wonders / Da Nang Downtown.
