@@ -17,6 +17,9 @@ const RETIRED_TYPE_REDIRECTS = [
     Object.entries(RETIRED_EN).map(([from, to]) => ({ source: `${base}/${from}`, destination: `${base}/${to}`, permanent: true }))),
   ...['/vi/thue', '/vi/mua-ban'].flatMap(base =>
     Object.entries(RETIRED_VI).map(([from, to]) => ({ source: `${base}/${from}`, destination: `${base}/${to}`, permanent: true }))),
+  // Sun Cosmo Residence is Panoma 1: one building page.
+  ...['/for-rent', '/for-sale', '/ko/for-rent', '/ko/for-sale', '/ru/for-rent', '/ru/for-sale', '/vi/thue', '/vi/mua-ban', '/apartmentdetails'].map(base =>
+    ({ source: `${base}/sun-cosmo`, destination: `${base}/panoma`, permanent: true })),
   // Land for rent is commercial.
   { source: '/for-rent/land', destination: '/for-rent/commercial', permanent: true },
   { source: '/ko/for-rent/land', destination: '/ko/for-rent/commercial', permanent: true },

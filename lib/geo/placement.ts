@@ -51,8 +51,8 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Hiyori Garden Tower, A2 Võ Văn Kiệt, An Hải (Blake, 2026-10-22); matches OSM's "Hiyori Garden Tower" building.
   { name: 'Hiyori Garden Tower', pattern: /\bhiyori\b/i, at: [16.06126, 108.23562], spreadM: 30, address: 'A2 Võ Văn Kiệt, An Hải, Sơn Trà, Đà Nẵng' },
   // Panoma 1 & 2, side by side on Phạm Hữu Kính, Mỹ An (Blake, 2026-10-22): Panoma 1 = Plus Code 362P+CFC
-  // (7P8C362P+CFC), Panoma 2 = 14 Phạm Hữu Kính. One building page covers both, so the spread covers both towers.
-  { name: 'Panoma', pattern: /\bpanoma\b/i, at: [16.05106, 108.23614], spreadM: 60, address: '14 Phạm Hữu Kính, Mỹ An, Ngũ Hành Sơn, Đà Nẵng 550000' },
+  // (7P8C362P+CFC), Panoma 2 = 14 Phạm Hữu Kính. Sun Cosmo Residence is Panoma 1's other name. One building page covers both, so the spread covers both towers.
+  { name: 'Panoma', pattern: /\bpanoma\b|\bsun\s*cosmo\b/i, at: [16.05106, 108.23614], spreadM: 60, address: '14 Phạm Hữu Kính, Mỹ An, Ngũ Hành Sơn, Đà Nẵng 550000' },
   // FPT Plaza towers, FPT City, Hòa Hải (Blake, 2026-10-22). FPT Plaza is a group of towers: the building page stays one
   // page ("FPT Plaza / F.Home", pinned at the complex); a listing that names its tower goes on that tower.
   // Each tower is an OSM building named "FPT Plaza N", matching Blake's streets: Plaza 2 = Plus Code X7M5+4X8 (23 m from
@@ -75,9 +75,7 @@ const MAP_LANDMARKS: { name: string; pattern: RegExp; at: LatLng; spreadM: numbe
   // Newtown Diamond, Ngũ Hành Sơn (Blake, 2026-10-24: Plus Code X7JG+48 → 7P7CX7JG+48); the old building point sat well off.
   // trustOverDistrict: the AI-filled district is often wrong (one listing said Sơn Trà), so the building wins over it.
   { name: 'Newtown Diamond', pattern: /new\s*-?\s*town\s*diamond/i, at: [15.98031, 108.27581], spreadM: 40, trustOverDistrict: true },
-  // Sun Cosmo Residence: Trần Hưng Đạo × Chương Dương × Nguyễn Văn Thoại, Ngũ Hành Sơn
-  // (Blake) — the Trần Hưng Đạo/Chương Dương junction at the Trần Thị Lý bridge's east foot.
-  { name: 'Sun Cosmo', pattern: /\bsun\s*cosmo\b/i, at: [16.05043, 108.23331], spreadM: 50 },
+  // Sun Cosmo Residence = Panoma 1 (same building, two names; Blake 2026-10-23): matched by the Panoma entry above.
   // Elysia Complex City, Vũ Trọng Phụng, Hòa Cường (Blake: Plus Code 26MJ+3M7 → 7P8C26MJ+3M7).
   { name: 'Elysia', pattern: /\belysia\b/i, at: [16.03266, 108.23167], spreadM: 80 },
   // One River villas, Song Hào, Hòa Hải (Blake). Not in OSM as a place: pinned at

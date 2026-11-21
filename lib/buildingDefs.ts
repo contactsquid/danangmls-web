@@ -31,7 +31,8 @@ export function buildingMatches(b: BuildingDef, l: Listing): boolean {
 
 export const POPULAR_BUILDINGS: BuildingDef[] = [
   { name: 'Hiyori Garden Tower',        pattern: /hiyori/i,                          search: 'Hiyori' },
-  { name: 'Panoma',                     pattern: /panoma/i,                          search: 'Panoma' },
+  // Sun Cosmo Residence is Panoma 1: one building, two names (Blake, 2026-10-23); merged 2026-11-22.
+  { name: 'Panoma',                     pattern: /panoma|sun\s*cosmo/i,              search: 'Panoma' },
   { name: 'Monarchy',                   pattern: /monarchy/i,                        search: 'Monarchy' },
   { name: 'FPT Plaza / F.Home',         pattern: /(f\.?home|fpt\s*plaza)/i,          search: 'FPT' },
   // Not just "wyndham": Wyndham Golden Bay is a different building (below).
@@ -40,7 +41,6 @@ export const POPULAR_BUILDINGS: BuildingDef[] = [
   { name: 'Muong Thanh',                pattern: /m[ưu][ờo]ng\s+thanh/i,             search: 'Muong Thanh' },
   { name: 'One River',                  pattern: /one\s+river/i,                      search: 'One River' },
   { name: 'Alphanam Luxury',            pattern: /alphanam/i,                         search: 'Alphanam' },
-  { name: 'Sun Cosmo',                  pattern: /sun\s*cosmo/i,                      search: 'Sun Cosmo' },
   { name: 'Cora Tower',                 pattern: /cora\s+tower/i,                     search: 'Cora' },
   { name: 'Blooming Tower',             pattern: /blooming/i,                         search: 'Blooming' },
   { name: 'The Filmore',                pattern: /filmore/i,                          search: 'Filmore' },

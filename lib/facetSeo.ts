@@ -238,7 +238,7 @@ const BUILDING_SEO_VI: Record<string, BuildingSeoVi> = {
   },
   'Panoma': {
     blurb: [
-      'Panoma nằm bên bờ sông Hàn phía Ngũ Hành Sơn, hiện là tòa có nhiều tin đăng nhất trên DanangMLS, nên bạn có nhiều lựa chọn căn trong cùng một địa chỉ.',
+      'Panoma (còn gọi là Sun Cosmo Residence) nằm bên bờ sông Hàn phía Ngũ Hành Sơn, hiện là tòa có nhiều tin đăng nhất trên DanangMLS, nên bạn có nhiều lựa chọn căn trong cùng một địa chỉ.',
       'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio. Giá thuê hiện khoảng 532–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
       'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym và view sông. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
     ],
@@ -247,19 +247,6 @@ const BUILDING_SEO_VI: Record<string, BuildingSeoVi> = {
       { q: 'Panoma nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
       { q: 'Căn hộ tại Panoma có mấy phòng ngủ?', a: 'Chủ yếu là căn 1 phòng ngủ và 2 phòng ngủ, kèm khá nhiều căn studio.' },
       { q: 'Căn hộ tại Panoma có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
-    ],
-  },
-  'Sun Cosmo': {
-    blurb: [
-      'Sun Cosmo là tòa căn hộ ven sông tại Ngũ Hành Sơn, chạy xe vài phút là tới biển Mỹ Khê và khu An Thượng.',
-      'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ. Giá thuê hiện khoảng 551–2.090 USD mỗi tháng, phổ biến quanh mức 950 USD. Tất cả tin đăng tại đây đều là căn hộ.',
-      'Tin đăng ở đây thường nhắc tới hồ bơi, phòng gym, ban công và view sông. Đa số căn cho thuê full nội thất, có sẵn bếp, máy lạnh, máy giặt và wifi, chỉ việc xách vali vào ở. Bạn có thể so sánh các căn bên dưới theo số phòng ngủ, diện tích và giá thuê; tin đăng được môi giới địa phương cập nhật hằng ngày.',
-    ],
-    faq: [
-      { q: 'Giá thuê căn hộ tại Sun Cosmo khoảng bao nhiêu?', a: 'Các tin đăng hiện có giá khoảng **551–2.090 USD** mỗi tháng, phổ biến quanh **950 USD**, tùy diện tích và hướng nhìn.' },
-      { q: 'Sun Cosmo nằm ở đâu?', a: 'Tại **quận Ngũ Hành Sơn**, Đà Nẵng. Bạn có thể xem trang của quận để thấy toàn bộ tin đăng trong khu vực.' },
-      { q: 'Căn hộ tại Sun Cosmo có mấy phòng ngủ?', a: 'Phần lớn là căn 1 phòng ngủ, bên cạnh studio và căn 2 phòng ngủ.' },
-      { q: 'Căn hộ tại Sun Cosmo có sẵn nội thất không?', a: 'Đa số cho thuê **full nội thất**, có sẵn bếp, máy lạnh, máy giặt và wifi. Một số căn cho thuê nhà trống với giá thấp hơn, tin đăng có ghi rõ.' },
     ],
   },
   'The Filmore': {
@@ -385,7 +372,7 @@ const BUILDING_SEO: Record<string, BuildingSeo> = {
   'Panoma': {
     district: 'Ngu Hanh Son',
     blurb: [
-      'Panoma sits on the Ngu Hanh Son side of the Han River, and it is the busiest building on this site — usually the widest choice of units in one address.',
+      'Panoma (also called Sun Cosmo Residence) sits on the Ngu Hanh Son side of the Han River, and it is the busiest building on this site — usually the widest choice of units in one address.',
       'Current listings are one- and two-bedroom units, with a good supply of studios. Rents run from around $532 to $2,090 a month, with the typical unit near $950 — every unit listed here is an apartment rather than a house or villa.',
       'Listings mention a pool, a gym and river outlooks, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
     ],
@@ -394,20 +381,6 @@ const BUILDING_SEO: Record<string, BuildingSeo> = {
       { q: 'Where is Panoma in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
       { q: 'How many bedrooms do Panoma apartments have?', a: 'Listings are one- and two-bedroom units, with a good supply of studios. Every unit listed at Panoma is an apartment.' },
       { q: 'Are Panoma apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
-    ],
-  },
-  'Sun Cosmo': {
-    district: 'Ngu Hanh Son',
-    blurb: [
-      'Sun Cosmo is a riverside development in Ngu Hanh Son, a short ride from My Khe Beach and the An Thuong expat pocket.',
-      'Current listings are mostly one-bedroom apartments, with studios and two-bedroom units alongside. Rents run from around $551 to $2,090 a month, with the typical unit near $950 — every unit listed here is an apartment rather than a house or villa.',
-      'Listings mention a pool, a gym, balconies and river views, and most are let fully furnished with kitchen appliances, air conditioning, a washing machine and wifi already in place. Compare the current apartments below by bedrooms, size and monthly price; a single building turns over a limited number of units, so it is worth checking back.',
-    ],
-    faq: [
-      { q: 'How much is an apartment for rent at Sun Cosmo?', a: 'Current listings run from about **$551** to **$2,090** per month, with the typical unit around **$950**. Smaller layouts sit at the lower end.' },
-      { q: 'Where is Sun Cosmo in Da Nang?', a: 'In **Ngu Hanh Son**. See the Ngu Hanh Son page for everything currently available across that district.' },
-      { q: 'How many bedrooms do Sun Cosmo apartments have?', a: 'Listings are mostly one-bedroom apartments, with studios and two-bedroom units alongside. Every unit listed at Sun Cosmo is an apartment.' },
-      { q: 'Are Sun Cosmo apartments furnished?', a: 'Generally yes — most are let **fully furnished** with kitchen appliances, air conditioning, a washing machine and wifi. The listing states which.' },
     ],
   },
   'The Filmore': {
