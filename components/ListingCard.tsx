@@ -34,7 +34,7 @@ function MetaChip({ href, title, children }: { href: string | null; title?: stri
 // Pattern: "Cho thuê Nhà 3 phòng ngủ tại Sơn Trà, Đà Nẵng"
 function viFallbackTitle(listing: Listing): string {
   const verb  = listing.forSale ? 'Bán' : 'Cho thuê';
-  const type  = listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản';
+  const type  = (listing.type ? localizeType(listing.type, 'vi') : 'Bất động sản').replace(/^./, c => c.toLowerCase());   // mid-sentence: "Cho thuê căn hộ…"
   const beds  = bedroomsViPhrase(listing.type, listing.bedrooms);
   const place = listing.district
     ? `${localizeDistrict(listing.district, 'vi')}, Đà Nẵng`
