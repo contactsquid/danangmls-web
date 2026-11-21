@@ -1,7 +1,7 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
 import { createAdminClient } from './supabase/server';
-import { getListings, getForSaleListings } from './sheets';
+import { getListingsFromSheet as getListings, getForSaleListingsFromSheet as getForSaleListings } from './sheets';
 import { priceLow } from './price';
 import type { Listing } from './types';
 

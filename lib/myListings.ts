@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { getListings, getForSaleListings } from './sheets';
+import { getListingsFromSheet as getListings, getForSaleListingsFromSheet as getForSaleListings } from './sheets';
 import type { Listing } from './types';
 
 /**

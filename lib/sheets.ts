@@ -350,7 +350,7 @@ export function newestFirst(ls: Listing[]): Listing[] {
   return ls.map((l, i) => ({ l, i, t: t(l) })).sort((a, b) => b.t - a.t || a.i - b.i).map(x => x.l);
 }
 
-export async function getListings(): Promise<Listing[]> {
+export async function getListingsFromSheet(): Promise<Listing[]> {
   if (rentalsParsed.value !== null && Date.now() - rentalsParsed.at < CACHE_TTL_MS) {
     return rentalsParsed.value;
   }
@@ -372,7 +372,7 @@ export async function getListings(): Promise<Listing[]> {
   }
 }
 
-export async function getForSaleListings(): Promise<Listing[]> {
+export async function getForSaleListingsFromSheet(): Promise<Listing[]> {
   if (forSaleParsed.value !== null && Date.now() - forSaleParsed.at < CACHE_TTL_MS) {
     return forSaleParsed.value;
   }
@@ -481,4 +481,26 @@ export function getUniqueValues(listings: Listing[], key: keyof Listing): string
     .flatMap(v => v.split(',').map(s => s.trim()))
     .filter(Boolean);
   return [...new Set(values)].sort();
+}
+
+// ── Serving layer (Sheets-to-Supabase step 3, pilot on saigonmls) ──
+// LISTINGS_SOURCE=supabase makes the pages read the shared Supabase `listings` table (kept
+// current by lib/listingSync.ts every 10 minutes) instead of parsing the sheet CSVs. Any
+// Supabase error falls back to the sheet, so flipping the switch can't take the site down.
+// The sync itself and "my listings" keep reading the sheet (getListingsFromSheet) — the sync
+// must see the source of truth, and an agent who just edited a listing expects to see it now.
+import { loadListingsFromDb } from './listingsDb';
+
+const useDb = () => process.env.LISTINGS_SOURCE === 'supabase';
+
+export async function getListings(): Promise<Listing[]> {
+  if (!useDb()) return getListingsFromSheet();
+  try { return await loadListingsFromDb('rent'); }
+  catch (e) { console.error('[listings] Supabase read failed, using the sheet:', e); return getListingsFromSheet(); }
+}
+
+export async function getForSaleListings(): Promise<Listing[]> {
+  if (!useDb()) return getForSaleListingsFromSheet();
+  try { return await loadListingsFromDb('sale'); }
+  catch (e) { console.error('[listings] Supabase read failed, using the sheet:', e); return getForSaleListingsFromSheet(); }
 }
