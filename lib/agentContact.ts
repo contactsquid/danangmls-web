@@ -58,10 +58,13 @@ function priceToUsd(price: string): number | null {
  * the safe direction, since the cost of wrongly handing away a premium lead is
  * higher than the cost of one sub-floor lead still reaching Blake.
  */
+const SALE_AGENT_CEILING_USD = 200_000;   // for-sale price under this routes to the listing agent
+
 export function isBelowServiceFloor(listing: { price: string; forSale: boolean }): boolean {
-  if (listing.forSale) return false;
   const usd = priceToUsd(listing.price);
   if (usd === null) return false;
+  // Blake 2026-11-22: for-sale listings under $200,000 also go to the listing agent, not Vy.
+  if (listing.forSale) return usd < SALE_AGENT_CEILING_USD;
   return usd < SERVICE_FLOOR_USD;
 }
 
