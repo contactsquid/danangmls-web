@@ -1,4 +1,4 @@
-import type { Lang } from './translations';
+import { ruPlural, type Lang } from './translations';
 
 /**
  * Copy for the agent account flow (sign up, sign in, reset, profile), in both
@@ -414,3 +414,53 @@ export function safeNext(next: string | undefined, fallback: string): string {
   return next;
 }
 
+
+/** Unique agent names and the signup "Are these yours?" step (2026-11-26), in all
+ *  four languages. Kept out of AccountCopy (EN/VI only) so ko/ru do not fall back
+ *  to English on the one message that tells an agent why signup stopped. */
+export interface AgentNameCopy {
+  /** Another profile already has this name (agentNameKey). */
+  nameTaken: (name: string) => string;
+  /** The agent said the scraped listings under this name are someone else's. */
+  nameIsSomeoneElse: string;
+  claimPrompt: (count: number, name: string) => string;
+  claimYes: string;
+  claimNo: string;
+  /** Profile notice when a listing-name claim was approved by phone match. */
+  claimAutoApproved: string;
+}
+
+export const AGENT_NAME_COPY: Record<Lang, AgentNameCopy> = {
+  en: {
+    nameTaken: name => `An agent named “${name}” already has a profile. Please add something that tells you apart, such as your surname, agency or area (for example “Bích Ngọc Sơn Trà”).`,
+    nameIsSomeoneElse: 'Then please choose a name that tells you apart from that agent, such as adding your surname, agency or area.',
+    claimPrompt: (n, name) => `We found ${n} listing${n === 1 ? '' : 's'} posted as “${name}”. Are these yours?`,
+    claimYes: 'Yes, these are mine',
+    claimNo: "No, that's someone else",
+    claimAutoApproved: 'Profile saved. Your phone number matches those listings, so they are now linked to your profile.',
+  },
+  vi: {
+    nameTaken: name => `Đã có môi giới tên “${name}” trên trang. Anh/chị vui lòng thêm thông tin để phân biệt, như họ, công ty hoặc khu vực hoạt động (ví dụ “Bích Ngọc Sơn Trà”).`,
+    nameIsSomeoneElse: 'Vậy anh/chị vui lòng chọn tên khác để phân biệt với môi giới đó, ví dụ thêm họ, công ty hoặc khu vực hoạt động.',
+    claimPrompt: (n, name) => `Chúng tôi tìm thấy ${n} tin đăng dưới tên “${name}”. Đây có phải tin của anh/chị không?`,
+    claimYes: 'Đúng, đây là tin của tôi',
+    claimNo: 'Không, đó là người khác',
+    claimAutoApproved: 'Đã lưu hồ sơ. Số điện thoại của anh/chị khớp với các tin đăng này nên các tin đã được liên kết vào hồ sơ.',
+  },
+  ko: {
+    nameTaken: name => `“${name}” 이름의 중개인 프로필이 이미 있습니다. 성, 소속 회사 또는 활동 지역 등 구별할 수 있는 정보를 추가해 주세요(예: “Bích Ngọc Sơn Trà”).`,
+    nameIsSomeoneElse: '그렇다면 성, 소속 회사 또는 활동 지역을 덧붙여 해당 중개인과 구별되는 이름을 정해 주세요.',
+    claimPrompt: (n, name) => `“${name}” 이름으로 올라온 매물 ${n}건을 찾았습니다. 본인의 매물인가요?`,
+    claimYes: '네, 제 매물입니다',
+    claimNo: '아니요, 다른 사람입니다',
+    claimAutoApproved: '프로필이 저장되었습니다. 전화번호가 해당 매물과 일치하여 매물이 프로필에 연결되었습니다.',
+  },
+  ru: {
+    nameTaken: name => `Агент с именем «${name}» уже зарегистрирован. Добавьте то, что вас отличает, например фамилию, агентство или район (например, «Bích Ngọc Sơn Trà»).`,
+    nameIsSomeoneElse: 'Тогда выберите имя, которое отличает вас от этого агента: добавьте фамилию, агентство или район.',
+    claimPrompt: (n, name) => `Мы нашли ${n} ${ruPlural(n, 'объявление', 'объявления', 'объявлений')} от имени «${name}». Это ваши?`,
+    claimYes: 'Да, это мои',
+    claimNo: 'Нет, это другой человек',
+    claimAutoApproved: 'Профиль сохранен. Ваш номер телефона совпадает с номером в этих объявлениях, поэтому они привязаны к вашему профилю.',
+  },
+};

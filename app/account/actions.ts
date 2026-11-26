@@ -4,7 +4,7 @@ import { forLang } from '@/lib/translations';
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient, createPublicClient } from '@/lib/supabase/server';
 import { after } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SITE_URL, isSupabaseConfigured } from '@/lib/supabase/config';
@@ -12,14 +12,27 @@ import { notifyAdmins } from '@/lib/notify';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import { normalizeAgentName } from '@/lib/agents';
 import { claimPhoneEvidence, describePhoneEvidence } from '@/lib/claimPhoneMatch';
-import { ACCOUNT_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
-import { searchAgentNames, type NameCandidate } from '@/lib/agentNameSearch';
+import { ACCOUNT_COPY, AGENT_NAME_COPY, accountPaths, safeNext } from '@/lib/accountCopy';
+import { searchAgentNames, listingsForNameKey, type NameCandidate } from '@/lib/agentNameSearch';
+import { agentNameKey } from '@/lib/agentNameKey';
+import { shouldAutoApproveClaim } from '@/lib/agentOwnership';
+import { listingHref } from '@/lib/facets';
 import type { Lang } from '@/lib/translations';
 import { normalizeVnPhone } from '@/lib/agentContact';
+
+export interface ClaimPrompt {
+  /** The name as written on the listings (most common spelling). */
+  name: string;
+  count: number;
+  samples: { title: string; url: string }[];
+}
 
 export interface ActionState {
   error?: string;
   notice?: string;
+  /** Signup paused: scraped listings exist under this name. The form asks
+   *  "Are these yours?" and resubmits with claim_choice=yes|no. */
+  claimPrompt?: ClaimPrompt;
 }
 
 /** Every action reads the language from a hidden field the form renders, so the
@@ -30,6 +43,36 @@ function langOf(form: FormData): Lang {
 
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+/** All four languages, for the copy that has all four (AGENT_NAME_COPY). */
+function fullLangOf(form: FormData): Lang {
+  const l = form.get('lang');
+  return l === 'vi' || l === 'ko' || l === 'ru' ? l : 'en';
+}
+
+/** Postgres unique_violation: the agent_profiles name-key index (0008). */
+const UNIQUE_VIOLATION = '23505';
+
+/**
+ * Whether another profile already has this name, by agentNameKey (the same key as
+ * the unique index in 0008_unique_agent_names.sql). Reads ALL profiles with the
+ * service role so a suspended profile, which the public view hides but the index
+ * still counts, is caught here too; falls back to the public view without the key.
+ * Fails open on a read error: the database index is the backstop.
+ */
+async function nameTaken(displayName: string, exceptSlug?: string | null): Promise<boolean> {
+  const key = agentNameKey(displayName);
+  if (!key) return false;
+  const admin = createAdminClient();
+  const { data, error } = admin
+    ? await admin.from('agent_profiles').select('slug, display_name')
+    : await createPublicClient().from('agent_public').select('slug, display_name');
+  if (error) {
+    console.error('[account] name check failed:', error.message);
+    return false;
+  }
+  return (data ?? []).some(p => p.slug !== exceptSlug && agentNameKey(p.display_name) === key);
+}
 
 function str(form: FormData, key: string): string {
   const v = form.get(key);
@@ -68,8 +111,29 @@ export async function signUpAction(
   // checkbox's `required`. The time and policy version go into the auth user's metadata as the record.
   if (form.get('consent') !== 'on') return { error: t.errors.consentRequired };
 
+  // ─ Unique names (Blake, 2026-11-25): two profiles that read as the same name
+  // leave no way to know which one a lead belongs to.
+  const nameT = forLang(AGENT_NAME_COPY, fullLangOf(form));
+  if (await nameTaken(displayName)) return { error: nameT.nameTaken(displayName) };
+
+  // ─ "We found N listings posted as X. Are these yours?" Exact name-key match on
+  // scraped listings. Revealing that a public name has listings is fine (they are
+  // on the site); whether an EMAIL exists is still never revealed.
+  const claimChoice = str(form, 'claim_choice');
+  if (claimChoice === 'no') return { error: nameT.nameIsSomeoneElse };
+  const group = await listingsForNameKey(displayName);
+  if (group && claimChoice !== 'yes') {
+    return {
+      claimPrompt: {
+        name: group.name,
+        count: group.listings.length,
+        samples: group.listings.slice(0, 3).map(l => ({ title: (lang === 'vi' && l.vi_title) || l.title, url: listingHref(l.slug, lang) })),
+      },
+    };
+  }
+
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -84,13 +148,48 @@ export async function signUpAction(
   // a Vietnamese agent should not hit a wall of English at the last step.
   if (error) {
     console.error('[account] signup failed:', error.message);
+    // The unique name index fires inside handle_new_user(), which surfaces as a
+    // generic "Database error saving new user": a race with another signup under
+    // the same name. Re-check so the agent gets the actionable message.
+    if (await nameTaken(displayName)) return { error: nameT.nameTaken(displayName) };
     return { error: t.errors.signupFailed };
+  }
+
+  // "Yes, these are mine": record the claim on the new profile with the spelling
+  // used on the listings, and approve it outright when the signup phone is on every
+  // phone-bearing listing under that name (lib/agentOwnership.ts). Otherwise it
+  // waits for an admin, as a claim from the profile page does. Service role,
+  // because the guard trigger stops a user from setting the verified flag.
+  // For an already-registered email Supabase returns a placeholder user whose id
+  // matches no profile, so this updates nothing and reveals nothing.
+  let claimStatus: 'auto-approved' | 'pending' | undefined;
+  const userId = data.user?.id;
+  if (group && claimChoice === 'yes' && userId) {
+    const admin = createAdminClient();
+    const auto = shouldAutoApproveClaim(group.name, phone, group.listings);
+    if (admin) {
+      const { error: claimError } = await admin
+        .from('agent_profiles')
+        .update({ listing_agent_name: group.name, listing_agent_name_verified: auto })
+        .eq('id', userId);
+      if (claimError) console.error('[account] signup claim failed:', claimError.message);
+      else claimStatus = auto ? 'auto-approved' : 'pending';
+    } else {
+      console.error('[account] signup claim skipped: no service role key');
+    }
   }
 
   // Moderation is post-hoc, so this ping is the review trigger. after() runs it
   // once the response is out — a slow webhook must not make signup feel broken.
   after(async () => {
-    await notifyAdmins({ type: 'agent_signup', display_name: displayName, email });
+    await notifyAdmins({
+      type: 'agent_signup',
+      display_name: displayName,
+      email,
+      ...(claimStatus && group
+        ? { claimed_name: group.name, matching_listings: group.listings.length, claim_status: claimStatus }
+        : {}),
+    });
   });
 
   // Supabase returns success for an already-registered address too (it will not
@@ -278,6 +377,22 @@ export async function updateProfileAction(
   // asked for one: they cannot save any profile change without supplying it.
   if (!normalizeVnPhone(phone)) return { error: t.errors.phoneRequired };
 
+  // Read the current row first: the claim (to tell a *new* claim, which needs a
+  // human, from an unrelated bio edit) and the name (for the uniqueness check).
+  const { data: before } = await supabase
+    .from('agent_profiles')
+    .select('slug, display_name, listing_agent_name')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  // Unique names: only when the name's key actually changes, so an agent whose
+  // name predates the rule is never locked out of saving their profile.
+  const nameT = forLang(AGENT_NAME_COPY, fullLangOf(form));
+  if (agentNameKey(displayName) !== agentNameKey(before?.display_name)
+      && await nameTaken(displayName, before?.slug)) {
+    return { error: nameT.nameTaken(displayName) };
+  }
+
   // Photo is optional on every save — only replace it when a new file arrives.
   let photoUrl: string | undefined;
   const file = form.get('photo');
@@ -308,14 +423,6 @@ export async function updateProfileAction(
     photoUrl = `${pub.publicUrl}?v=${Date.now()}`;
   }
 
-  // Read the current claim first, so we can tell a *new* claim (which needs a
-  // human to look at it) from an unrelated bio edit.
-  const { data: before } = await supabase
-    .from('agent_profiles')
-    .select('slug, listing_agent_name')
-    .eq('id', user.id)
-    .maybeSingle();
-
   const { error } = await supabase
     .from('agent_profiles')
     .update({
@@ -334,6 +441,7 @@ export async function updateProfileAction(
 
   if (error) {
     console.error('[account] profile save failed:', error.message);
+    if (error.code === UNIQUE_VIOLATION) return { error: nameT.nameTaken(displayName) };
     return { error: t.errors.saveFailed };
   }
 
@@ -346,20 +454,44 @@ export async function updateProfileAction(
     revalidatePath(`/vi/moi-gioi/${before.slug}`);
   }
 
-  // A newly claimed listing name is the one edit that needs a human decision,
-  // so it gets its own ping — with the number of listings it would attach,
-  // which is what makes an implausible claim obvious at a glance.
+  // A newly claimed listing name needs a decision. When the agent's phone is on
+  // every phone-bearing listing under that name, the evidence decides it and the
+  // claim is approved here (service role: the guard trigger stops the user's own
+  // session from setting the flag). Anything else waits for an admin, who gets a
+  // ping with the number of listings it would attach — which is what makes an
+  // implausible claim obvious at a glance.
   const claimChanged =
     listingName && normalizeAgentName(listingName) !== normalizeAgentName(before?.listing_agent_name);
 
   if (claimChanged) {
-    after(async () => {
-      const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
-      const target = normalizeAgentName(listingName);
-      const matching = [...rentals, ...forSale]
-        .filter(l => normalizeAgentName(l.agent) === target).length;
+    const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
+    const all = [...rentals, ...forSale];
 
-      const ev = claimPhoneEvidence(listingName, phone, [...rentals, ...forSale]);
+    if (shouldAutoApproveClaim(listingName, phone, all)) {
+      const admin = createAdminClient();
+      const { error: approveError } = admin
+        ? await admin
+          .from('agent_profiles')
+          .update({ listing_agent_name_verified: true })
+          .eq('id', user.id)
+          // Guards a race with a second save that changed the claim meanwhile.
+          .eq('listing_agent_name', listingName)
+        : { error: { message: 'no service role key' } };
+      if (!approveError) {
+        if (before?.slug) {
+          revalidatePath(`/agent/${before.slug}`);
+          revalidatePath(`/vi/moi-gioi/${before.slug}`);
+        }
+        return { notice: nameT.claimAutoApproved };
+      }
+      console.error('[account] claim auto-approve failed:', approveError.message);
+    }
+
+    after(async () => {
+      const target = normalizeAgentName(listingName);
+      const matching = all.filter(l => normalizeAgentName(l.agent) === target).length;
+
+      const ev = claimPhoneEvidence(listingName, phone, all);
 
       await notifyAdmins({
         type: 'listing_claim',

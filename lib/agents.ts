@@ -6,6 +6,8 @@ import { createPublicClient, createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
+import { normalizeAgentName } from './agentNameKey';
+import { buildOwnerIndex, listingOwnerSlug } from './agentOwnership';
 
 /** A profile as the public site sees it. Mirrors the agent_public view, which
  *  is where the private columns are stripped — see the migration. */
@@ -41,26 +43,9 @@ export interface OwnAgentProfile extends AgentProfile {
 // which makes the query resolve to GenericStringError[] instead of the row type.
 const PUBLIC_COLUMNS = 'slug, display_name, bio, photo_url, workplace, listing_agent_name, verified, created_at, phone, has_whatsapp, has_zalo';
 
-/** Agent names in the sheet arrive with inconsistent spacing and casing
- *  (they originate from scraped Facebook posts), so every comparison against
- *  them goes through this.
- *
- *  Emoji are stripped too. Facebook agents routinely decorate their display
- *  names — "Vy Tran🏡✨", "A. Nhật🌟" — and 1,078 distinct names across the sheet
- *  carry them. Exact matching missed every one: Vy Tran alone had 23 listings
- *  split off from her own 235 by nothing but a house and a sparkle.
- *
- *  Only pictographs and their joiners go; letters, punctuation and diacritics
- *  are untouched, so "Ms. Vy" and "Phan Vy" stay the distinct people they are. */
-const PICTOGRAPHS = /[\p{Extended_Pictographic}‍️⃣]/gu;
-
-export function normalizeAgentName(name: string | null | undefined): string {
-  return (name ?? '')
-    .replace(PICTOGRAPHS, '')
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, ' ');
-}
+// normalizeAgentName moved to the client-safe lib/agentNameKey.ts (2026-11-26) so the
+// ownership rule in lib/agentOwnership.ts can be unit-tested; re-exported for callers.
+export { normalizeAgentName };
 
 /** All publicly visible profiles, newest first. */
 export const getAgentProfiles = cache(async (): Promise<AgentProfile[]> => {
@@ -96,26 +81,6 @@ export const getAgentProfile = cache(async (slug: string): Promise<AgentProfile 
   return (data as AgentProfile | null) ?? null;
 });
 
-const OWNED_PREFIX = 'https://images.danang.homes/agent-listings/';
-
-/** The profile slug that posted this listing through the portal, or null for a
- *  scraped Facebook row.
- *
- *  The prefix is written server-side as `agent-listings/${profile.slug}/` from
- *  the AUTHENTICATED session (app/account/listings/actions.ts), never from user
- *  input — so an agent cannot put a listing under someone else's slug. That
- *  makes upload provenance strictly stronger evidence of ownership than the
- *  self-declared `listing_agent_name`, which is why it needs no admin approval. */
-function portalOwnerSlug(listing: Listing): string | null {
-  for (const url of listing.images) {
-    if (!url.startsWith(OWNED_PREFIX)) continue;
-    const rest = url.slice(OWNED_PREFIX.length);
-    const slash = rest.indexOf('/');
-    if (slash > 0) return rest.slice(0, slash);
-  }
-  return null;
-}
-
 /** Every listing (rental + sale) belonging to this profile, newest first.
  *
  *  TWO routes to ownership, and they are not equivalent:
@@ -126,6 +91,8 @@ function portalOwnerSlug(listing: Listing): string | null {
  *     carry the agent's name. The view serves this as NULL until an admin
  *     verifies it, so an unapproved claim still cannot pull another agent's
  *     portfolio onto a profile page.
+ *  3. **Name + phone** — a scraped row whose agent name matches the display name
+ *     (agentNameKey) and whose scraped phone matches the profile phone.
  *
  *  Route 1 was missing until 2026-09-24: an agent signed up, posted a listing
  *  through the portal, and her profile showed nothing, because the only path to
@@ -133,16 +100,17 @@ function portalOwnerSlug(listing: Listing): string | null {
  *  listing not appearing on its own author's profile is the one case that can
  *  never be a mis-claim. */
 export async function getAgentListings(profile: AgentProfile): Promise<Listing[]> {
-  const claimed = normalizeAgentName(profile.listing_agent_name);
+  // The whole pool goes into the index, not just this profile, so a portal post or
+  // verified claim belonging to someone else beats a weaker route to this one.
+  const pool = await getAgentProfiles();
+  const idx = buildOwnerIndex(pool.some(p => p.slug === profile.slug) ? pool : [...pool, profile]);
 
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
 
   const seen = new Set<string>();
   const mine: Listing[] = [];
   for (const l of [...rentals, ...forSale]) {
-    const owned = portalOwnerSlug(l) === profile.slug
-      || (claimed !== '' && normalizeAgentName(l.agent) === claimed);
-    if (!owned || seen.has(l.slug)) continue;   // a row can match both routes
+    if (listingOwnerSlug(l, idx) !== profile.slug || seen.has(l.slug)) continue;
     seen.add(l.slug);
     mine.push(l);
   }
@@ -155,28 +123,13 @@ export async function getAgentListingCounts(
   profiles: AgentProfile[],
 ): Promise<Map<string, number>> {
   const counts = new Map<string, number>();
-  const wanted = new Map<string, string>(); // normalized sheet name -> profile slug
-
-  for (const p of profiles) {
-    const claimed = normalizeAgentName(p.listing_agent_name);
-    counts.set(p.slug, 0);
-    if (claimed) wanted.set(claimed, p.slug);
-  }
-  // NB: no early return on an empty `wanted`. Portal-posted listings are counted
-  // by image path, so a profile with no verified name claim can still have a
-  // real count — that bug showed the /agents directory "0 listings" for an agent
-  // who had just posted one.
+  for (const p of profiles) counts.set(p.slug, 0);
+  const idx = buildOwnerIndex(profiles);
 
   const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
   for (const listing of [...rentals, ...forSale]) {
-    // Upload provenance wins over the name claim, and `continue` stops a listing
-    // that matches both routes from being counted twice.
-    const posted = portalOwnerSlug(listing);
-    if (posted && counts.has(posted)) {
-      counts.set(posted, (counts.get(posted) ?? 0) + 1);
-      continue;
-    }
-    const slug = wanted.get(normalizeAgentName(listing.agent));
+    // One owner per listing (lib/agentOwnership.ts), so nothing is counted twice.
+    const slug = listingOwnerSlug(listing, idx);
     if (slug) counts.set(slug, (counts.get(slug) ?? 0) + 1);
   }
   return counts;
@@ -209,16 +162,14 @@ export async function getAgentSlugForName(agent: string | null | undefined): Pro
   return (await getVerifiedAgentSlugs()).get(name) ?? null;
 }
 
-/** Profile slug for a listing's agent name: the portal poster first (proven by
- *  the image path, no claim or admin approval needed), else a verified name
- *  claim. Only returns slugs that have a public profile page. */
+/** The ownership index over every public profile, built once per request. */
+const getOwnerIndex = cache(async () => buildOwnerIndex(await getAgentProfiles()));
+
+/** Profile slug for a listing: the portal poster first (proven by the image path),
+ *  else a verified name claim, else a name + phone match (lib/agentOwnership.ts).
+ *  Only returns slugs that have a public profile page. */
 export async function getAgentSlugForListing(listing: Listing): Promise<string | null> {
-  const posted = portalOwnerSlug(listing);
-  if (posted) {
-    const profiles = await getAgentProfiles();
-    if (profiles.some(p => p.slug === posted)) return posted;
-  }
-  return getAgentSlugForName(listing.agent);
+  return listingOwnerSlug(listing, await getOwnerIndex());
 }
 
 /** Profiles are self-serve, so the site will accumulate near-empty ones. An

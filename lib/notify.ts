@@ -19,6 +19,11 @@ export type NotifyEvent =
       type: 'agent_signup';
       display_name: string;
       email: string;
+      /** Set when the agent answered "Yes, these are mine" at signup. */
+      claimed_name?: string;
+      matching_listings?: number;
+      /** 'auto-approved' = phone matched every listing under the name; 'pending' = needs an admin. */
+      claim_status?: 'auto-approved' | 'pending';
     }
   | {
       type: 'listing_claim';

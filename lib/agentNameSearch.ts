@@ -2,6 +2,8 @@ import 'server-only';
 
 import { getListings, getForSaleListings } from './sheets';
 import { normalizeAgentName } from './agents';
+import { agentNameKey } from './agentNameKey';
+import { groupByNameKey } from './agentOwnership';
 
 /**
  * Finds the names an agent's listings are actually posted under, so claiming can
@@ -153,4 +155,12 @@ export async function searchAgentNames(query: string): Promise<NameCandidate[]> 
     ...exact.slice(0, MAX_CANDIDATES),
     ...similar.slice(0, MAX_SIMILAR).map(s => s.candidate),
   ];
+}
+
+// ─── Exact name-key match (signup "Are these yours?") ─────────────────────────
+
+/** Every rental + sale listing posted under this name's key. */
+export async function listingsForNameKey(name: string) {
+  const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
+  return groupByNameKey([...rentals, ...forSale], agentNameKey(name));
 }
