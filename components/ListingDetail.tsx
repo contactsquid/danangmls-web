@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
 import { reportStat } from '@/lib/stat';
 import RunningCosts from './RunningCosts';
 import AgentContact from './AgentContact';
-import { isBelowServiceFloor, isApprovedAgent, AGENCY_PHONE } from '@/lib/agentContact';
+import { isBelowServiceFloor, isApprovedAgent, AGENCY_PHONE, displayAgentName } from '@/lib/agentContact';
 import type { Listing } from '@/lib/types';
 import { forLang } from '@/lib/translations';
 import { convertPrice, localizeType, localizeDistrict, localizedAltPrefix, firstImageAltPrefix, localizedTitle, localizedText } from '@/lib/price';
@@ -290,10 +290,10 @@ export default function ListingDetail({ listing, archived = false, similarListin
                     text for the majority of listings. */}
                 {agentSlug ? (
                   <Link href={`/agent/${agentSlug}`} className="font-semibold text-blue-700 hover:underline">
-                    {listing.agent}
+                    {displayAgentName(listing.agent)}
                   </Link>
                 ) : (
-                  <p className="font-semibold text-slate-800">{listing.agent}</p>
+                  <p className="font-semibold text-slate-800">{displayAgentName(listing.agent)}</p>
                 )}
               </div>
             )}
@@ -320,7 +320,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           {approved ? (
             <AgentContact
               agents={[{
-                name: listing.agent,
+                name: displayAgentName(listing.agent),
                 phone: AGENCY_PHONE,
                 profileSlug: agentSlug,
                 hasWhatsApp: true,     // the agency line is on WhatsApp
@@ -333,7 +333,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           ) : handOffToAgent ? (
             <AgentContact
               agents={[{
-                name: listing.agent,
+                name: displayAgentName(listing.agent),
                 phone: listing.agentPhone || '',
                 messenger: listing.agentPhone ? undefined : agentMessenger,
                 profileSlug: agentSlug,

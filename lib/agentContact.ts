@@ -235,3 +235,9 @@ export function whatsappLink(local9: string, body?: string): string {
 export function agencyWebsite(lang: Lang): string {
   return lang === 'vi' ? 'https://danang.homes/vi' : 'https://danang.homes';
 }
+
+/** An agent name for display: emoji and other pictographs from Facebook names removed
+ *  ("Bích Ngọc🏡" → "Bích Ngọc"; Blake 2026-11-26), spaces collapsed. */
+export function displayAgentName(name: string | undefined | null): string {
+  return String(name ?? '').replace(/[\p{Extended_Pictographic}\u200D\uFE0F\u20E3]/gu, '').replace(/\s+/g, ' ').trim();
+}
