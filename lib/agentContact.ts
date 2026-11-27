@@ -14,8 +14,8 @@ import { KO_DISTRICTS, RU_DISTRICTS } from './price';
 import { ruPlural, type Lang } from './translations';
 
 const VND_RATE = 26300;                       // matches lib/price.ts
-const SERVICE_FLOOR_VND = 25_000_000;         // Blake's monthly floor
-const SERVICE_FLOOR_USD = SERVICE_FLOOR_VND / VND_RATE;   // ≈ $951
+const SERVICE_FLOOR_VND = 30_000_000;         // Blake's monthly floor (25M -> 30M, 2026-11-27)
+const SERVICE_FLOOR_USD = SERVICE_FLOOR_VND / VND_RATE;   // ≈ $1,141
 
 /**
  * Normalises a Vietnamese mobile number to its 9 local digits ("905897639"),

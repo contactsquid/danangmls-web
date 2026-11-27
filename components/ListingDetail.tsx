@@ -312,7 +312,7 @@ export default function ListingDetail({ listing, archived = false, similarListin
           {listing.postUrl && <AdminFbLinkPanel postUrl={listing.postUrl} />}
 
           {/* Contact.
-              Sub-floor rentals (< 25,000,000 ₫/mo) route to the agent who holds the
+              Sub-floor rentals (< 30,000,000 ₫/mo) route to the agent who holds the
               listing instead of the agency line — those are enquiries DanangMLS does
               not service, and sending them back to Facebook was a dead end. Falls
               through to the agency block whenever there is no usable number
