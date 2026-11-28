@@ -75,7 +75,7 @@ export default async function sitemap() {
   ];
 
   const comboEntries = ([['rent', rentals], ['sale', forSale]] as const).flatMap(([m, ls]) =>
-    combosWithInventory(ls, [...SEO_DISTRICTS]).map(c => ({ url: comboUrl(m, c), lastModified: now, changeFrequency: 'daily' as const, priority: 0.6 })));
+    combosWithInventory(ls, [...SEO_DISTRICTS]).flatMap(c => (['en', 'vi', 'ko', 'ru'] as const).map(l => ({ url: comboUrl(m, c, l), lastModified: now, changeFrequency: 'daily' as const, priority: l === 'en' ? 0.6 : 0.5 }))));
 
   return [
     // English

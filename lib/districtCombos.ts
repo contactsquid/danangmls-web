@@ -2,7 +2,8 @@
 // /for-sale/binh-thanh/3-bedrooms. They target "apartments for rent in District 2" style
 // searches (people and AI assistants). English only. A page with fewer than COMBO_MIN_INDEX
 // matching listings is noindex and left out of the sitemap; with none at all it 404s.
-import { resolveFacet, facetMatches, facetSlug, type Facet, type Mode } from './facets';
+import { resolveFacet, facetMatches, facetSlug, facetBase, type Facet, type Mode } from './facets';
+import type { Lang } from './translations';
 import { priceLow } from './price';
 import type { Listing } from './types';
 
@@ -20,12 +21,14 @@ export function resolveCombo(districtSlug: string, subSlug: string): Combo | nul
   return { district: d.value, sub: s };
 }
 
-export const comboPath = (mode: Mode, c: Combo) =>
-  `/${mode === 'rent' ? 'for-rent' : 'for-sale'}/${facetSlug({ kind: 'district', value: c.district }, 'en')}/${facetSlug(c.sub, 'en')}`;
-export const comboUrl = (mode: Mode, c: Combo) => SITE_BASE + comboPath(mode, c);
+// vi uses its own path words and sub slugs (/vi/thue/quan-2/can-ho); ko/ru use the English ones under their prefix.
+export const comboPath = (mode: Mode, c: Combo, lang: Lang = 'en') =>
+  `${facetBase(mode, lang)}/${facetSlug({ kind: 'district', value: c.district }, lang)}/${facetSlug(c.sub, lang)}`;
+export const comboUrl = (mode: Mode, c: Combo, lang: Lang = 'en') => SITE_BASE + comboPath(mode, c, lang);
 export const comboMatches = (l: Listing, c: Combo) =>
   facetMatches(l, { kind: 'district', value: c.district }) && facetMatches(l, c.sub);
 
+export const usd = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
 const PLURAL: Record<string, string> = { House: 'Houses', Apartment: 'Apartments', Villa: 'Villas', Land: 'Land', Commercial: 'Commercial Properties' };
 
 function noun(sub: Facet): { tc: string; lc: string } {
@@ -34,13 +37,12 @@ function noun(sub: Facet): { tc: string; lc: string } {
   return { tc: `${sub.value}-Bedroom Homes`, lc: `${sub.value}-bedroom homes` };
 }
 
-function stats(listings: Listing[]) {
+export function stats(listings: Listing[]) {
   const prices = listings.map(l => priceLow(l.price)).filter(n => n > 0).sort((a, b) => a - b);
   if (!prices.length) return null;
   const q = (p: number) => prices[Math.min(prices.length - 1, Math.floor(p * prices.length))];
   return { min: prices[0], median: q(0.5), p90: q(0.9), n: prices.length };
 }
-const usd = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
 
 export function comboContent(mode: Mode, c: Combo, matches: Listing[]) {
   const { tc, lc } = noun(c.sub);

@@ -42,8 +42,13 @@ export function agentProfileLd(agent: {
   return {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
+    // One stable entity per agent across en/vi/ko/ru profile pages, so AI assistants and
+    // search engines merge the language pages into a single agent.
+    '@id': `${BASE}/agent/${agent.slug}#agent`,
     name: agent.display_name,
     url: `${BASE}/agent/${agent.slug}`,
+    identifier: agent.slug,
+    address: { '@type': 'PostalAddress', addressLocality: 'Da Nang', addressCountry: 'VN' },
     ...(agent.photo_url ? { image: agent.photo_url } : {}),
     ...(agent.bio ? { description: agent.bio } : {}),
     ...(independent ? {} : { worksFor: { '@type': 'Organization', name: agent.workplace } }),
