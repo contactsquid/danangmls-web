@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { getListingsFromSheet as getListings, getForSaleListingsFromSheet as getForSaleListings } from './sheets';
+import { getCrossCityListings, ownedByPortalSlug } from './crossCityEdit';
 import type { Listing } from './types';
 
 /**
@@ -20,19 +21,17 @@ import type { Listing } from './types';
  * portal are editable. Scraped Facebook listings have no owner to speak of.
  */
 
-const OWNED_PREFIX = 'https://images.danang.homes/agent-listings/';
-
 export function isOwnedBy(listing: Listing, profileSlug: string): boolean {
-  if (!profileSlug) return false;
-  const prefix = `${OWNED_PREFIX}${profileSlug}/`;
-  return listing.images.some(url => url.startsWith(prefix));
+  // Any MLS site's portal folder counts: a listing posted from another site into this
+  // site's city keeps its photos in the uploading site's folder (lib/crossCityEdit.ts).
+  return ownedByPortalSlug(listing.images, profileSlug);
 }
 
 /** Every listing this agent posted through the portal, newest first. */
 export async function getMyListings(profileSlug: string): Promise<Listing[]> {
-  const [rentals, forSale] = await Promise.all([getListings(), getForSaleListings()]);
-  return [...rentals, ...forSale]
-    .filter(l => isOwnedBy(l, profileSlug))
+  const [rentals, forSale, otherCities] = await Promise.all([getListings(), getForSaleListings(), getCrossCityListings(profileSlug)]);
+  // Listings posted into other cities live in those cities' tabs (lib/crossCityEdit.ts).
+  return [...[...rentals, ...forSale].filter(l => isOwnedBy(l, profileSlug)), ...otherCities]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 

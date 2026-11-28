@@ -76,7 +76,7 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
   const bedroomChoices: string[] = propertyType === listing.type && listing.bedrooms && offered.length && !offered.includes(listing.bedrooms)
     ? [...offered, listing.bedrooms] : offered;
 
-  const known = district ? (NEIGHBORHOODS[district] ?? []) : [];
+  const known = district && !listing.crossCity ? (NEIGHBORHOODS[district] ?? []) : [];
   // A listing saved under a name no longer in the list (e.g. "An Bang" before the
   // list moved to real wards) keeps it as an option, so saving doesn't wipe it.
   const neighborhoods = listing.neighborhood && known.length && !known.includes(listing.neighborhood)
@@ -115,18 +115,23 @@ export default function EditListingForm({ listing, lang }: { listing: Listing; l
         </div>
         <div>
           <label className={labelClass} htmlFor="district">{t.district}</label>
-          <select
-            id="district"
-            name="district"
-            required
-            value={district}
-            onChange={e => setDistrict(e.target.value)}
-            className={inputClass}
-          >
-            {SUBMITTABLE_DISTRICTS.map(d => (
-              <option key={d} value={d}>{lang === 'vi' ? localizeDistrict(d, 'vi') : d}</option>
-            ))}
-          </select>
+          {listing.crossCity && !listing.crossCity.districts ? (
+            // A city outside Da Nang / Saigon / Hanoi: districts are free text there (as on the add form).
+            <input id="district" name="district" required maxLength={80} value={district} onChange={e => setDistrict(e.target.value)} className={inputClass} />
+          ) : (
+            <select
+              id="district"
+              name="district"
+              required
+              value={district}
+              onChange={e => setDistrict(e.target.value)}
+              className={inputClass}
+            >
+              {(listing.crossCity?.districts ?? SUBMITTABLE_DISTRICTS).map(d => (
+                <option key={d} value={d}>{lang === 'vi' ? localizeDistrict(d, 'vi') : d}</option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 

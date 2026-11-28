@@ -31,7 +31,7 @@ export default function MyListingsView({ listings, lang }: { listings: Listing[]
             <img src={l.images[0]} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0 bg-slate-100" />
           )}
           <div className="min-w-0 flex-1">
-            <Link href={`${publicBase}/${l.slug}`} className="font-medium text-slate-900 hover:underline line-clamp-1">
+            <Link href={l.crossCity ? `${l.crossCity.siteUrl}/listing/${l.slug}` : `${publicBase}/${l.slug}`} className="font-medium text-slate-900 hover:underline line-clamp-1">
               {l.title}
             </Link>
             <p className="text-sm text-slate-500">

@@ -27,6 +27,8 @@ export interface Listing {
   // ~92% of sub-floor rentals have one. Used to hand sub-floor leads to the agent.
   agentPhone?:  string;
   forSale:      boolean;
+  // Set only on a listing the agent posted into ANOTHER city's tab (see lib/crossCityEdit.ts).
+  crossCity?:   { city: string; tab: string; siteUrl: string; districts: string[] | null };
   foreignEligible?: boolean;        // For Sale only — true if in a known foreign-approved building
   foreignEligibleBuilding?: string; // Building name for the badge tooltip
   // Map placement, computed in lib/sheets.ts by lib/geo/placement.ts:

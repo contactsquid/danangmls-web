@@ -175,6 +175,19 @@ export async function findRowByColumn(
   return null;
 }
 
+/** Reads a whole tab (A onward, `width` columns), padded. Row i of the result is sheet row i+1. */
+export async function readTab(tabName: string, width = 31): Promise<string[][]> {
+  const token = await getAccessToken();
+  const range = encodeURIComponent(`${tabName}!A1:${columnName(width)}`);
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`,
+    { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(25_000), cache: 'no-store' },
+  );
+  if (!res.ok) throw new Error(`Sheet read failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  const data = (await res.json()) as { values?: string[][] };
+  return (data.values ?? []).map(r => Array.from({ length: width }, (_, i) => r[i] ?? ''));
+}
+
 /** Reads one row's cells, A onward. Editing patches the cells it owns and writes
  *  the rest back untouched, so columns this app knows nothing about (the alt-text
  *  columns, the Vietnamese title/text on For Sale) survive an edit. */

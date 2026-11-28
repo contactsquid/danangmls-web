@@ -11,6 +11,7 @@ import {
 } from '@/lib/listingSubmit';
 import { getMyListing } from '@/lib/myListings';
 import { buildCrossCityRow, checkCityDistrict } from '@/lib/crossCityRow';
+import { updateCrossCityRow } from '@/lib/crossCityEdit';
 import { SITE_CITY } from '@/lib/cityJump';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
 import type { Lang } from '@/lib/translations';
@@ -209,8 +210,23 @@ export async function updateListingAction(
     agentName: profile.display_name,
   };
 
-  const check = validateSubmission(submission);
+  // A listing posted into another city's tab keeps that city's district list and layout.
+  const cc = existing.crossCity;
+  const check = validateSubmission(submission, { skipDistrict: !!cc });
   if (!check.ok && check.code) return { error: t.errors[check.code] };
+  if (cc) {
+    const bad = checkCityDistrict(cc.city, submission.district);
+    if (bad) return { error: t.errors[bad] };
+    try {
+      await updateCrossCityRow(existing, submission, images);
+    } catch (err) {
+      console.error('[listing-edit] cross-city sheet update failed:', err);
+      return { error: t.sheetFailed };
+    }
+    revalidatePath(`/agent/${profile.slug}`);
+    revalidatePath(`/vi/moi-gioi/${profile.slug}`);
+    return { url: `${cc.siteUrl}/listing/${existing.slug}`, edited: true };
+  }
 
   try {
     const { tab, postUrlColumn, indices } = sheetShape(forSale);

@@ -48,14 +48,18 @@ const DESTS: Record<Dest, DestInfo> = {
   },
 };
 
+export const DEST_LIST: Dest[] = ['danang', 'saigon', 'hanoi', 'lotus'];
+export const destInfo = (d: Dest): DestInfo => DESTS[d];
+export type { Dest };
+
 /** Districts the three city sites accept (their own vocab, = lotusmls public/data/districts). */
-const CITY_SITE_DISTRICTS: Record<string, string[]> = {
+export const CITY_SITE_DISTRICTS: Record<string, string[]> = {
   danang: ['Cam Le', 'Hai Chau', 'Hoa Vang', 'Hoi An', 'Lien Chieu', 'Ngu Hanh Son', 'Son Tra', 'Thanh Khe'],
   saigon: ['Binh Chanh', 'Binh Tan', 'Binh Thanh', 'Can Gio', 'Cu Chi', 'District 1', 'District 2', 'District 3', 'District 4', 'District 5', 'District 6', 'District 7', 'District 8', 'District 9', 'District 10', 'District 11', 'District 12', 'Go Vap', 'Hoc Mon', 'Nha Be', 'Phu Nhuan', 'Tan Binh', 'Tan Phu', 'Thu Duc'],
   hanoi: ['Ba Dinh', 'Ba Vi', 'Bac Tu Liem', 'Cau Giay', 'Chuong My', 'Dan Phuong', 'Dong Anh', 'Dong Da', 'Gia Lam', 'Ha Dong', 'Hai Ba Trung', 'Hoai Duc', 'Hoan Kiem', 'Hoang Mai', 'Long Bien', 'Me Linh', 'My Duc', 'Nam Tu Liem', 'Phu Xuyen', 'Phuc Tho', 'Quoc Oai', 'Soc Son', 'Son Tay', 'Tay Ho', 'Thach That', 'Thanh Oai', 'Thanh Tri', 'Thuong Tin', 'Ung Hoa'],
 };
 
-const destFor = (city: string): Dest => (city === 'danang' || city === 'saigon' || city === 'hanoi' ? city : 'lotus');
+export const destFor = (city: string): Dest => (city === 'danang' || city === 'saigon' || city === 'hanoi' ? city : 'lotus');
 
 /** null = fine, otherwise the validation code to report. */
 export function checkCityDistrict(city: string, district: string): 'city' | 'district' | null {
