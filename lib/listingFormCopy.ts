@@ -146,6 +146,7 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
     backToListings: 'Back to your listings',
     errors: {
       type: 'Please choose a property type.',
+      city: 'Please choose the city or town from the list.',
       district: 'Please choose a district.',
       price: 'Please enter a price.',
       rentRange: 'That monthly rent looks wrong. Check the amount and the currency.',
@@ -225,6 +226,7 @@ export const LISTING_FORM_COPY: Record<'en' | 'vi', ListingFormCopy> = {
     backToListings: 'Quay lại tin đăng của tôi',
     errors: {
       type: 'Vui lòng chọn loại hình.',
+      city: 'Vui lòng chọn thành phố trong danh sách.',
       district: 'Vui lòng chọn quận/huyện.',
       price: 'Vui lòng nhập giá.',
       rentRange: 'Giá thuê có vẻ chưa đúng. Vui lòng kiểm tra lại số tiền và đơn vị tiền.',

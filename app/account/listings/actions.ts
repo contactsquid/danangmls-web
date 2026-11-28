@@ -10,6 +10,8 @@ import {
   buildRow, validateSubmission, formatPrice, sheetShape, type ListingSubmission,
 } from '@/lib/listingSubmit';
 import { getMyListing } from '@/lib/myListings';
+import { buildCrossCityRow, checkCityDistrict } from '@/lib/crossCityRow';
+import { SITE_CITY } from '@/lib/cityJump';
 import { LISTING_FORM_COPY } from '@/lib/listingFormCopy';
 import type { Lang } from '@/lib/translations';
 
@@ -101,11 +103,19 @@ export async function submitListingAction(
     agentName: profile.display_name,
   };
 
-  const check = validateSubmission(submission, { requireBathrooms: true });
+  // Own city (the default) uses this site's tab + validation, unchanged. Any other
+  // city is routed to that city's tab (Da Nang/Saigon/Hanoi) or the Lotus tab.
+  const city = str(form, 'city') || SITE_CITY;
+  const cross = city !== SITE_CITY;
+  const check = validateSubmission(submission, { requireBathrooms: true, skipDistrict: cross });
   if (!check.ok && check.code) return { error: t.errors[check.code] };
+  if (cross) {
+    const bad = checkCityDistrict(city, submission.district);
+    if (bad) return { error: t.errors[bad] };
+  }
 
   // ─── Append ─────────────────────────────────────────────────────────────────
-  const built = buildRow(submission);
+  const built = cross ? buildCrossCityRow(submission, city) : buildRow(submission);
   try {
     await appendRow(built.tab, built.row);
   } catch (err) {

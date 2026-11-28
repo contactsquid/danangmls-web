@@ -132,7 +132,7 @@ export function autoTitle(s: Pick<ListingSubmission, 'bedrooms' | 'propertyType'
 }
 
 export type ValidationCode =
-  | 'type' | 'district' | 'price' | 'rentRange' | 'saleRange'
+  | 'type' | 'city' | 'district' | 'price' | 'rentRange' | 'saleRange'
   | 'description' | 'photos' | 'agentName' | 'bedrooms' | 'bathrooms';
 
 export interface ValidationResult {
@@ -144,9 +144,9 @@ export interface ValidationResult {
 
 /** `requireBathrooms`: the add form collects bathrooms; the edit form has no
  *  bathrooms field (they live in the description text, not a column). */
-export function validateSubmission(s: ListingSubmission, opts: { requireBathrooms?: boolean } = {}): ValidationResult {
+export function validateSubmission(s: ListingSubmission, opts: { requireBathrooms?: boolean; skipDistrict?: boolean } = {}): ValidationResult {
   if (!propertyTypesFor(s.forSale).includes(s.propertyType)) return { ok: false, code: 'type' };
-  if (!VALID_DISTRICTS.has(s.district)) return { ok: false, code: 'district' };
+  if (!opts.skipDistrict && !VALID_DISTRICTS.has(s.district)) return { ok: false, code: 'district' };
   // Rooms by type (lib/propertyTypes.ts): Studio only for apartments, 0 allowed for
   // commercial, none for land.
   const beds = bedroomOptions(s.propertyType), baths = bathroomOptions(s.propertyType);

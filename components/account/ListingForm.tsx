@@ -8,11 +8,12 @@ import { prepareListingPhotos } from '@/lib/shrinkPhotos';
 import { submitListingAction, type ListingActionState } from '@/app/account/listings/actions';
 import { inputClass, labelClass, buttonClass, hintClass, FormMessage } from '@/components/account/ui';
 import {
-  LISTING_FORM_COPY, TYPE_LABELS, SUBMITTABLE_DISTRICTS,
+  LISTING_FORM_COPY, TYPE_LABELS,
 } from '@/lib/listingFormCopy';
+import CityDistrictFields from '@/components/account/CityDistrictFields';
+import { SITE_CITY } from '@/lib/cityJump';
 import { NEIGHBORHOODS } from '@/lib/neighborhoods';
 import { propertyTypesFor, bedroomOptions, bathroomOptions } from '@/lib/propertyTypes';
-import { localizeDistrict } from '@/lib/price';
 import type { Lang } from '@/lib/translations';
 
 const initial: ListingActionState = {};
@@ -30,6 +31,7 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
   const [forSale, setForSale] = useState(false);
   const [district, setDistrict] = useState('');
+  const [city, setCity] = useState<string>(SITE_CITY);
   const [propertyType, setPropertyType] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
@@ -72,7 +74,7 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
 
   // Neighbourhood options follow the district, exactly like the listing search
   // filters do (components/ListingsGrid.tsx) — same source of truth.
-  const neighborhoods = district ? (NEIGHBORHOODS[district] ?? []) : [];
+  const neighborhoods = district && city === SITE_CITY ? (NEIGHBORHOODS[district] ?? []) : [];
 
   // Types follow rent/sale (Land is sale-only); rooms follow the type
   // (lib/propertyTypes.ts). A type that isn't offered after switching rent/sale
@@ -166,24 +168,10 @@ export default function ListingForm({ lang, profileSlug }: { lang: Lang; profile
             ))}
           </select>
         </div>
-
-        <div>
-          <label className={labelClass} htmlFor="district">{t.district}</label>
-          <select
-            id="district"
-            name="district"
-            required
-            value={district}
-            onChange={e => setDistrict(e.target.value)}
-            className={inputClass}
-          >
-            <option value="" disabled>{t.choose}</option>
-            {SUBMITTABLE_DISTRICTS.map(d => (
-              <option key={d} value={d}>{lang === 'vi' ? localizeDistrict(d, 'vi') : d}</option>
-            ))}
-          </select>
-        </div>
       </div>
+
+      {/* City defaults to this site's city; any city in Vietnam can be picked (Blake, 2026-11-28). */}
+      <CityDistrictFields lang={lang} onChange={(c, d) => { setCity(c); setDistrict(d); }} />
 
       {/* Only rendered once a district with known wards is chosen — same rule as
           the search filters, so agents never face an empty dropdown. */}
