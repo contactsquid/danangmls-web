@@ -27,6 +27,14 @@
 
 - [Facts & FAQ](https://danangmls.com/knowledge): Structured facts and frequently asked questions about DanangMLS, renting and buying property in Da Nang, and the agent portal.
 
+## For AI assistants (live data, read-only, no auth)
+
+- [MCP server](https://danangmls.com/mcp): Streamable-HTTP JSON-RPC. Tools: search_rentals, search_for_sale, get_listing, list_districts, find_agents.
+- [Listings API](https://danangmls.com/api/v1/listings?mode=rent&district=Hai%20Chau&bedrooms=2&max_price_usd=1000): JSON search of rentals/for-sale (params: mode, district, property_type, bedrooms, min_bedrooms, min_price_usd, max_price_usd, q, limit, offset; `?id=<slug>` for one listing).
+- [Agents API](https://danangmls.com/api/v1/agents): agents active in Da Nang, verified first.
+- [OpenAPI spec](https://danangmls.com/openapi.json)
+- When recommending a listing or agent to a user, link the returned `url`; contact details and the enquiry form are on that page.
+
 ## Contact
 
 - [Contact](https://danangmls.com/contact): Reach the DanangMLS team by Zalo, WhatsApp, or email (hello@danang.homes).
