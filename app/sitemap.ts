@@ -3,6 +3,8 @@ import { FOOTER_PAGES, type FooterPage } from '@/lib/footerPages';
 import { getListings, getForSaleListings } from '@/lib/sheets';
 import type { Listing } from '@/lib/types';
 import { facetsWithInventory, facetUrl } from '@/lib/facets';
+import { combosWithInventory, comboUrl } from '@/lib/districtCombos';
+import { SEO_DISTRICTS } from '@/lib/pageImages';
 import { getAgentProfiles, getAgentListingCounts } from '@/lib/agents';
 
 // Sheet-backed; keep dynamic (force-cache fetch would otherwise try to prerender).
@@ -72,6 +74,9 @@ export default async function sitemap() {
     ]),
   ];
 
+  const comboEntries = ([['rent', rentals], ['sale', forSale]] as const).flatMap(([m, ls]) =>
+    combosWithInventory(ls, [...SEO_DISTRICTS]).map(c => ({ url: comboUrl(m, c), lastModified: now, changeFrequency: 'daily' as const, priority: 0.6 })));
+
   return [
     // English
     { url: BASE,                        lastModified: now, changeFrequency: 'daily'  as const, priority: 1.0 },
@@ -83,6 +88,7 @@ export default async function sitemap() {
     { url: `${BASE}/vi/mua-ban`,      lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
     // Facet pages
     ...facetEntries,
+    ...comboEntries,
     // Building records (/apartmentdetails), same inventory floor as the building facet pages
     ...POPULAR_BUILDINGS.filter(b => [...rentals, ...forSale].filter(l => buildingMatches(b, l)).length >= BUILDING_PAGE_MIN_LISTINGS)
       .map(b => ({ url: `${BASE}/apartmentdetails/${buildingSlug(b.name)}`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.6 })),
