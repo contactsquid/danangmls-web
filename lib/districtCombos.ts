@@ -9,7 +9,7 @@ import type { Listing } from './types';
 export const COMBO_MIN_INDEX = 5;
 export const SITE_BASE = 'https://danangmls.com';
 export const SITE_CITY_NAME = 'Da Nang';
-export const SITE_BRAND = 'DaNangMLS';
+export const SITE_BRAND = 'DanangMLS';
 
 export interface Combo { district: string; sub: Facet }
 
